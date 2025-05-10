@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linq AI - Your Energy Questions Answered</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0A; /* Modern Black background */
+            color: #E0E0E0; /* Light gray for primary text */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: #1A1A1A; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
+        ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
+
+        /* Top Bar */
+        .top-bar {
+            background-color: #121212;
+            color: #A0A0A0;
+            font-size: 0.8rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #282828;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        .top-bar-item .positive { color: #22C55E; }
+        .top-bar-item .negative { color: #EF4444; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Main Navigation */
+        .main-nav {
+            background-color: rgba(18, 18, 18, 0.85);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            padding: 0.875rem 0;
+            border-bottom: 1px solid #282828;
+            position: fixed;
+            width: 100%;
+            top: 36px;
+            left: 0;
+            z-index: 999;
+        }
+        .main-nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: -0.5px;
+        }
+        .nav-links-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+         @media (min-width: 640px) {
+            .nav-links-group {
+                gap: 1.25rem;
+            }
+        }
+        .nav-link {
+            font-weight: 500;
+            color: #B0B0B0;
+            opacity: 0.9;
+            font-size: 0.95rem;
+            padding: 0.375rem 0.25rem;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+        }
+        .nav-link:hover {
+            color: #FFFFFF;
+            opacity: 1;
+            border-bottom-color: #00BFFF;
+        }
+        .nav-button {
+            color: #B0B0B0;
+            opacity: 0.9;
+            transition: color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+        }
+        .nav-button:hover {
+            color: #FFFFFF;
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* Main content area */
+        .chat-container-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding-top: 120px;
+            padding-bottom: 100px;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Chat Page Title & Subtitle */
+        .page-heading-container { /* Wrapper for title and subtitle */
+            text-align: center;
+            margin-bottom: 2rem; /* Same margin as before for the title block */
+            padding: 0 1rem;
+        }
+        .chat-page-title {
+            font-size: 2.75rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            /* margin-bottom removed as it's on the container now */
+        }
+        .chat-page-title .accent-text { color: #00BFFF; }
+        .chat-page-subtitle {
+            font-size: 1.125rem; /* text-lg */
+            color: #9CA3AF; /* text-slate-400 equivalent, adjust if needed */
+            margin-top: 0.5rem; /* mt-2 */
+            font-weight: 400;
+        }
+
+
+        /* Chat Window */
+        .chat-window {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Message Bubbles - Enhanced */
+        .message-bubble {
+            padding: 1rem 1.5rem;
+            border-radius: 1.25rem;
+            max-width: 80%;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+            border: 1px solid transparent;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .message-bubble.user {
+            background: linear-gradient(135deg, #00AFFF, #007ACC);
+            color: #FFFFFF;
+            align-self: flex-end;
+            border-radius: 1.25rem 1.25rem 0.5rem 1.25rem;
+            box-shadow: 0 8px 25px -8px rgba(0, 175, 255, 0.4);
+        }
+        .message-bubble.ai {
+            background-color: #1E293B;
+            color: #CBD5E1;
+            align-self: flex-start;
+            border-radius: 1.25rem 1.25rem 1.25rem 0.5rem;
+            display: flex;
+            align-items: flex-start;
+            box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.4);
+            border: 1px solid #2D3748;
+        }
+        .ai-icon {
+            width: 2.25rem;
+            height: 2.25rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #00BFFF, #6A0DAD);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.5);
+            animation: pulseIcon 2s infinite ease-in-out;
+        }
+        @keyframes pulseIcon { 0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(0, 191, 255, 0.3); } 50% { transform: scale(1.05); box-shadow: 0 0 25px rgba(0, 191, 255, 0.5); } }
+        .ai-icon svg, .ai-icon i { width: 1.25rem; height: 1.25rem; color: #FFFFFF; }
+
+        .message-content { word-wrap: break-word; }
+        .message-timestamp {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.55);
+            margin-top: 0.375rem;
+            display: block;
+        }
+        .message-bubble.ai .message-timestamp { color: #718096; }
+        .message-bubble.user .message-timestamp { text-align: right; }
+
+        /* Typing Indicator */
+        .typing-indicator { padding: 1rem; }
+        .typing-indicator .message-content span {
+            height: 10px; width: 10px; margin: 0 3px; background-color: #718096;
+            border-radius: 50%; display: inline-block;
+            animation: bounceTyping 1.4s infinite ease-in-out both;
+        }
+        .typing-indicator .message-content span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator .message-content span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounceTyping { 0%, 80%, 100% { transform: scale(0.5); opacity: 0.5; } 40% { transform: scale(1.0); opacity: 1;} }
+
+        /* Chat Input Area - Enhanced */
+        .chat-input-area {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background-color: rgba(18, 18, 18, 0.9);
+            backdrop-filter: blur(10px) saturate(150%);
+            -webkit-backdrop-filter: blur(10px) saturate(150%);
+            border-top: 1px solid #282828;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 900;
+        }
+        .chat-input-form {
+            display: flex;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            gap: 1rem;
+        }
+        .chat-input {
+            flex-grow: 1;
+            padding: 1rem 1.5rem;
+            background-color: #1A1A1A;
+            border: 1px solid #333333;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            color: #E0E0E0;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+        .chat-input::placeholder { color: #777777; }
+        .chat-input:focus {
+            outline: none;
+            border-color: #00BFFF;
+            background-color: #222222;
+            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.25), 0 0 10px rgba(0, 191, 255, 0.15) inset;
+        }
+        .send-button {
+            padding: 1rem;
+            background: linear-gradient(135deg, #00BFFF, #0095CC);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 20px -6px rgba(0, 191, 255, 0.4);
+        }
+        .send-button svg, .send-button i { width: 1.5rem; height: 1.5rem; }
+        .send-button:hover {
+            background: linear-gradient(135deg, #00AADD, #00BFFF);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 10px 25px -8px rgba(0, 191, 255, 0.6);
+        }
+        .send-button:active { transform: translateY(0px) scale(1); }
+
+        /* Suggested Questions - Enhanced */
+        .suggested-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem 1.5rem 1rem;
+            justify-content: center;
+            max-width: 900px;
+            margin: 0 auto 1rem auto;
+        }
+        .suggested-question-btn {
+            background-color: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(5px);
+            border: 1px solid #333333;
+            color: #A0A0A0;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .suggested-question-btn:hover {
+            background-color: rgba(0, 191, 255, 0.15);
+            color: #00BFFF;
+            border-color: rgba(0, 191, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 191, 255, 0.2);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #080808;
+            color: #A0A0A0;
+            padding: 2.5rem 1rem;
+            border-top: 1px solid #1A1A1A;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+        .footer a { color: #B0B0B0; transition: color 0.2s ease; }
+        .footer a:hover { color: #00BFFF; }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .chat-page-title { font-size: 2.25rem; }
+            .chat-page-subtitle { font-size: 1rem; } /* Slightly smaller subtitle on mobile */
+            .message-bubble { max-width: 88%; font-size: 0.9rem; padding: 0.875rem 1.25rem;}
+            .ai-icon { width: 2rem; height: 2rem; margin-right: 0.75rem;}
+            .ai-icon svg, .ai-icon i { width: 1rem; height: 1rem;}
+            .chat-input { padding: 0.875rem 1.25rem; font-size: 0.95rem; }
+            .send-button { padding: 0.875rem; }
+            .send-button svg, .send-button i { width: 1.25rem; height: 1.25rem; }
+            .top-bar { font-size: 0.75rem; padding: 0.375rem 0; }
+            .main-nav { top: 34px; padding: 0.75rem 0;}
+            .chat-container-wrapper { padding-top: 100px; padding-bottom: 90px; }
+            .page-heading-container { margin-bottom: 1.5rem; }
+            .suggested-questions { padding: 0.75rem 0.5rem 1rem 0.5rem; gap: 0.5rem;}
+            .suggested-question-btn { font-size: 0.75rem; padding: 0.5rem 1rem; }
+        }
+        @media (max-width: 480px) {
+            .message-bubble { max-width: 92%; }
+            .nav-logo { font-size: 1.5rem; }
+            .main-nav .container { padding-left: 0.75rem; padding-right: 0.75rem; }
+            .nav-links-group { gap: 0.5rem; }
+            .main-nav .nav-link { font-size: 0.85rem; }
+            .main-nav .nav-button { margin-left: 0.5rem !important; }
+            .chat-page-title { font-size: 1.85rem;}
+            .chat-page-subtitle { font-size: 0.9rem; }
+        }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="top-bar">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <div class="flex space-x-3 sm:space-x-4 overflow-x-auto whitespace-nowrap py-1 scrollbar-hide">
+                <span class="top-bar-item">WTI: <span class="positive">$78.50 +0.5%</span></span>
+                <span class="top-bar-item">BRENT: <span class="negative">$82.30 -0.2%</span></span>
+                <span class="top-bar-item">GAS: <span class="positive">$2.75 +2.3%</span></span>
+                <span class="top-bar-item hidden sm:inline">XOM: <span class="positive">$112.78 +0.25%</span></span>
+            </div>
+            <div class="text-xs hidden sm:block">Global Energy Clock: <span id="global-time"></span></div>
+        </div>
+    </div>
+
+    <nav class="main-nav">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <a href="#" class="nav-logo">LINQ</a>
+            <div class="flex items-center">
+                <div class="nav-links-group">
+                    <a href="#news" class="nav-link">News</a>
+                    <a href="#community" class="nav-link">Community</a>
+                    <a href="#favorites" class="nav-link">Favorites</a>
+                </div>
+                <button type="button" class="nav-button ml-3 sm:ml-4 p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-sky-500">
+                    <span class="sr-only">Open user menu</span>
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="chat-container-wrapper px-2 sm:px-4">
+        <div class="page-heading-container">
+            <h1 class="chat-page-title">Linq <span class="accent-text">AI</span></h1>
+            <p class="chat-page-subtitle">Your Energy Questions Answered</p>
+        </div>
+
+        <div id="chat-window" class="chat-window">
+            <div class="message-bubble ai">
+                <div class="ai-icon">
+                    <i class="fas fa-brain fa-lg"></i>
+                </div>
+                <div class="message-content">
+                    Hello! I am Linq's AI Energy Analyst, equipped with the latest market data and insights. How may I illuminate your energy queries today?
+                    <span class="message-timestamp">Just now</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="suggested-questions" class="suggested-questions">
+            <button class="suggested-question-btn">Future of Green Hydrogen?</button>
+            <button class="suggested-question-btn">Latest on Carbon Capture?</button>
+            <button class="suggested-question-btn">Oil Price Volatility Factors?</button>
+            <button class="suggested-question-btn hidden sm:inline-block">Nuclear Energy Renaissance?</button>
+        </div>
+    </div>
+
+
+    <div class="chat-input-area">
+        <form id="chat-form" class="chat-input-form">
+            <input type="text" id="chat-input" class="chat-input" placeholder="Ask Linq AI..." autocomplete="off">
+            <button type="submit" class="send-button" aria-label="Send message">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
+
+
+    <footer class="footer">
+        <p>&copy; <span id="current-year"></span> Linq Energy Intelligence. Advanced AI for a Brighter Future.</p>
+        <nav class="text-xs space-x-3 mt-2">
+            <a href="#">Privacy Policy</a> |
+            <a href="#">Terms of Service</a> |
+            <a href="#">Contact Us</a> |
+            <a href="#">API Status</a>
+        </nav>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const chatWindow = document.getElementById('chat-window');
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+        const suggestedQuestionsContainer = document.getElementById('suggested-questions');
+
+        // Update current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Update global time in top bar
+        function updateGlobalTime() {
+            const now = new Date();
+            const options = { timeZone: 'UTC', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            const timeString = now.toLocaleTimeString('en-GB', options);
+            const globalTimeEl = document.getElementById('global-time');
+            if (globalTimeEl) {
+                globalTimeEl.textContent = timeString + ' UTC';
+            }
+        }
+        updateGlobalTime();
+        setInterval(updateGlobalTime, 1000);
+
+
+        // Function to add a message to the chat window
+        function addMessageToChat(message, type, timestamp) {
+            const messageBubble = document.createElement('div');
+            messageBubble.classList.add('message-bubble', type);
+
+            let contentHTML = '';
+            if (type === 'ai') {
+                contentHTML += `
+                    <div class="ai-icon">
+                        <i class="fas fa-brain fa-lg"></i>
+                    </div>
+                `;
+            }
+            const sanitizedMessage = message.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+            contentHTML += `<div class="message-content">${sanitizedMessage}<span class="message-timestamp">${timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span></div>`;
+            messageBubble.innerHTML = contentHTML;
+
+            chatWindow.appendChild(messageBubble);
+            chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
+        }
+
+        // Function to show typing indicator
+        function showTypingIndicator() {
+            if (document.querySelector('.typing-indicator')) return;
+
+            const typingIndicator = document.createElement('div');
+            typingIndicator.classList.add('message-bubble', 'ai', 'typing-indicator');
+            typingIndicator.innerHTML = `
+                <div class="ai-icon">
+                    <i class="fas fa-brain fa-lg"></i>
+                </div>
+                <div class="message-content">
+                    <span></span><span></span><span></span>
+                </div>
+            `;
+            chatWindow.appendChild(typingIndicator);
+            chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
+            return typingIndicator;
+        }
+
+        // Function to remove typing indicator
+        function removeTypingIndicator() {
+            const indicatorElement = document.querySelector('.typing-indicator');
+            if (indicatorElement && indicatorElement.parentNode === chatWindow) {
+                chatWindow.removeChild(indicatorElement);
+            }
+        }
+
+        // Handle chat form submission
+        chatForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const userMessage = chatInput.value.trim();
+
+            if (userMessage) {
+                addMessageToChat(userMessage, 'user');
+                chatInput.value = '';
+                chatInput.focus();
+
+                showTypingIndicator();
+
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    let aiResponse = "Thinking about: '" + userMessage.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "'. ";
+                    if (userMessage.toLowerCase().includes("solar")) {
+                        aiResponse += "Solar technology is advancing rapidly! Perovskite solar cells are showing incredible promise, potentially offering higher efficiencies and lower manufacturing costs compared to traditional silicon-based panels. We're also seeing bifacial panels, which capture light from both sides, becoming more common.";
+                    } else if (userMessage.toLowerCase().includes("oil") || userMessage.toLowerCase().includes("wti")) {
+                        aiResponse += "Global oil markets are currently navigating a complex landscape of demand recovery post-pandemic, geopolitical tensions affecting supply chains (like events in Eastern Europe or the Middle East), and the ongoing strategic decisions by OPEC+. Inventory levels and economic growth forecasts in major economies like the US and China also play a crucial role.";
+                    } else if (userMessage.toLowerCase().includes("hydrogen")) {
+                        aiResponse += "Green hydrogen is a key focus for decarbonization. The main challenges are reducing the cost of electrolysis (splitting water using renewable energy) and building out the necessary infrastructure for storage and transport. Significant investments and policy support are driving innovation in these areas.";
+                    } else if (userMessage.toLowerCase().includes("carbon capture") || userMessage.toLowerCase().includes("ccus")) {
+                        aiResponse += "Carbon Capture, Utilization, and Storage (CCUS) technologies are critical for industries that are hard to decarbonize. Innovations are focused on more efficient capture solvents, direct air capture (DAC) advancements, and finding viable, long-term storage solutions or utilization pathways like converting CO2 into fuels or building materials.";
+                    } else {
+                        aiResponse += "That's an insightful question! My knowledge base covers a vast array of energy topics, from renewable innovations to market dynamics and policy impacts. Feel free to ask more specifics!";
+                    }
+                    addMessageToChat(aiResponse, 'ai');
+                }, 1200 + Math.random() * 1300);
+            }
+        });
+
+        // Handle suggested questions click
+        suggestedQuestionsContainer.addEventListener('click', function(event) {
+            if (event.target.classList.contains('suggested-question-btn')) {
+                const question = event.target.textContent;
+                chatInput.value = question;
+                chatInput.focus();
+                chatForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+            }
+        });
+
+        chatInput.focus();
+        // Update placeholder text for the input field
+        const chatInputField = document.getElementById('chat-input');
+        if(chatInputField) {
+            chatInputField.placeholder = "Ask Linq AI...";
+        }
+
+    </script>
+
+</body>
+</html>
