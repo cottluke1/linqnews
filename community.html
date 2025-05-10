@@ -732,5 +732,19 @@
         });
       });
     </script>
+    <script>
+        auth.onAuthStateChanged(user => {
+            const authLink = document.getElementById('authLink');
+            if (authLink) {
+                if (user) {
+                    authLink.textContent = 'Profile';
+                    authLink.href = 'profile.html';
+                } else {
+                    authLink.textContent = 'Login';
+                    authLink.href = 'login.html';
+                }
+            }
+        });
+    </script>
 </body>
 </html>
