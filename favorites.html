@@ -101,6 +101,16 @@
             font-weight: 500;
             margin-left: 0.5rem;
         }
+        .category-tag {
+            display: inline-block;
+            background: #e5e5e5;
+            color: #333333;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            margin-left: 0.5rem;
+        }
         .news-link {
             color: #3b82f6;
             text-decoration: none;
@@ -189,6 +199,16 @@
         }
         .news-image:hover {
             transform: scale(1.05);
+        }
+        .favorite-btn {
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        .favorite-btn:hover {
+            color: #3b82f6;
+            transform: scale(1.2);
+        }
+        .favorited {
+            color: #3b82f6;
         }
         @media (max-width: 1024px) {
             .favorites-section {
@@ -415,19 +435,20 @@
             } else {
                 favoriteArticles.forEach(article => {
                     newsFavoritesContainer.innerHTML += `
-                    <div class="flex items-center justify-between bg-white rounded-xl shadow px-6 py-4 mb-4 border">
-                        <div class="flex items-center space-x-4">
-                            <img src="${article.image}" alt="${article.title}" class="w-16 h-16 object-cover rounded-md">
-                            <div>
-                                <h3 class="text-lg font-medium text-gray-900">${article.title}</h3>
-                                <p class="text-sm text-gray-600">${article.date} • ${article.source} <span class="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full ml-2">${article.category}</span></p>
+                        <article class="news-card rounded-lg shadow-lg flex flex-col sm:flex-row items-start sm:items-center overflow-hidden" data-id="${article.id}">
+                            <img src="${article.image}" alt="${article.title}" class="news-image m-4 sm:m-0 sm:mr-4">
+                            <div class="p-4 flex-1">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h2 class="text-lg text-gray-800 hover:text-blue-400">
+                                            <a href="${article.link}" target="_blank">${article.title}</a>
+                                        </h2>
+                                        <p class="text-gray-600 text-sm mt-1">${article.date} • ${article.source} <span class="category-tag">${article.category}</span></p>
+                                    </div>
+                                    <button class="favorite-btn mt-1 favorited" onclick="toggleFavorite(${article.id}, 'news')">☆</button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <a href="${article.link}" target="_blank" class="text-blue-600 hover:underline text-sm font-medium">Read more</a>
-                            <button class="favorite-btn favorited" onclick="toggleFavorite(${article.id}, 'news')">★</button>
-                        </div>
-                    </div>
+                        </article>
                     `;
                 });
             }
@@ -517,5 +538,5 @@
         }, 500); // delay by 500ms to wait for auth state
     });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93d5e1e429dfdd1c',t:'MTc0Njg0MjgzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93d5e1e429dfdd1c',t:'MTc0Njg0MjgzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93d99b4f8ac67bae',t:'MTc0Njg4MTg5MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
