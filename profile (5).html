@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account - Linq</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lexend', sans-serif;
+            background-color: #f9fbfd;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s, color 0.3s;
+            font-weight: 400;
+        }
+
+        body.dark-mode {
+            background-color: #1e2527;
+            color: #d0d7de;
+        }
+
+        .nav-link {
+            color: #000;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #3b82f6;
+        }
+
+        main {
+            flex: 1;
+            padding: 6rem 2rem 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2a2f32;
+            font-size: 2.25rem;
+            margin-bottom: 3rem;
+            font-weight: 400;
+        }
+
+        .dark-mode h1 {
+            color: #d0d7de;
+        }
+
+        .account-section {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .dark-mode .account-section {
+            background: #2a2f32;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .account-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: #2a2f32;
+            font-weight: 400;
+        }
+
+        .dark-mode .account-section h2 {
+            color: #d0d7de;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: #4a5568;
+            font-weight: 400;
+        }
+
+        .dark-mode label {
+            color: #a0aec0;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d9e6;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Lexend', sans-serif;
+            box-sizing: border-box;
+            transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        .dark-mode input,
+        .dark-mode textarea {
+            background-color: #3a4144;
+            border-color: #4a5568;
+            color: #d0d7de;
+        }
+
+        textarea {
+            height: 120px;
+            resize: none;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #1a73e8, #1557b0);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Lexend', sans-serif;
+            cursor: pointer;
+            transition: transform 0.1s, background 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .danger-btn {
+            background: linear-gradient(135deg, #dc3545, #b02a37);
+        }
+
+        .secondary-btn {
+            background: linear-gradient(135deg, #6b7280, #4a5568);
+        }
+
+        .toggle {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .toggle input {
+            width: auto;
+            margin-right: 0.75rem;
+        }
+
+        footer {
+            background: linear-gradient(135deg, #ffffff, #f0f4f8);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #4a5568;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode footer {
+            background: linear-gradient(135deg, #2a2f32, #1e2527);
+            color: #a0aec0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        footer a {
+            color: #1a73e8;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 400;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #1557b0;
+        }
+
+        .dark-mode footer a {
+            color: #8ab4f8;
+        }
+
+        .dark-mode footer a:hover {
+            color: #c6d7f8;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                padding: 5rem 1.5rem 1.5rem;
+            }
+
+            .account-section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-white py-4 shadow fixed top-0 left-0 w-full z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+        <a href="index.html" class="text-4xl text-black font-bold">Linq</a>
+        <div class="flex items-center space-x-6">
+          <a href="index.html#news" class="nav-link text-base">News</a>
+          <a href="favorites.html" class="nav-link text-base">Favorites</a>
+          <a href="community.html" class="nav-link text-base">Community</a>
+          <a href="login.html" id="authLink" class="nav-link">Login</a>
+        </div>
+      </div>
+    </header>
+
+
+    <main>
+        <h1>Account Settings</h1>
+
+        <!-- Profile Information -->
+        <div class="account-section">
+            <h2>Profile Information</h2>
+            <div class="form-group">
+                <label for="display-email">Email</label>
+                <input type="email" id="display-email" readonly>
+            </div>
+            <div class="form-group">
+                <label for="edit-name">Name</label>
+                <input type="text" id="edit-name" placeholder="Update Name">
+            </div>
+            <div class="form-group">
+                <label for="edit-bio">Profile Bio</label>
+                <textarea id="edit-bio" placeholder="Update Profile Bio"></textarea>
+            </div>
+            <button onclick="updateProfile()">Update Profile</button>
+        </div>
+
+        <!-- Security Settings -->
+        <div class="account-section">
+            <h2>Security Settings</h2>
+            <div class="form-group">
+                <label for="edit-password">Update Password</label>
+                <input type="password" id="edit-password" placeholder="New Password">
+            </div>
+            <button onclick="updateSecurity()">Update Password</button>
+        </div>
+
+        <!-- Notification Preferences -->
+        <div class="account-section">
+            <h2>Notification Preferences</h2>
+            <div class="toggle">
+                <input type="checkbox" id="email-notifications" onchange="updateNotifications()">
+                <label for="email-notifications">Receive Email Notifications</label>
+            </div>
+        </div>
+
+        <!-- Appearance -->
+        <div class="account-section">
+            <h2>Appearance</h2>
+            <div class="toggle">
+                <input type="checkbox" id="dark-mode" onchange="toggleDarkMode()">
+                <label for="dark-mode">Enable Dark Mode</label>
+            </div>
+        </div>
+
+        <!-- Account Actions -->
+        <div class="account-section">
+            <h2>Account Actions</h2>
+            <button class="secondary-btn" onclick="logout()">Log Out</button>
+            <button class="danger-btn" onclick="deleteAccount()">Delete Account</button>
+        </div>
+    </main>
+
+    <footer>
+        <div>© 2025 Linq. All rights reserved.</div>
+        <div>
+            <a href="#" onclick="showTerms(event)">Terms of Service</a>
+            <a href="#" onclick="showPrivacy(event)">Privacy Policy</a>
+            <a href="mailto:support@linq.com">Contact Us</a>
+        </div>
+    </footer>
+
+    <!-- Terms Modal -->
+    <div id="termsContent" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-6 rounded-lg max-w-2xl dark-mode:bg-gray-800">
+            <h2 class="text-2xl font-bold mb-4 dark-mode:text-white">Terms of Service</h2>
+            <p class="text-gray-600 dark-mode:text-gray-300">Your terms of service content goes here...</p>
+            <button onclick="closeTerms()" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Close</button>
+        </div>
+    </div>
+
+    <!-- Privacy Modal -->
+    <div id="privacyContent" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-6 rounded-lg max-w-2xl dark-mode:bg-gray-800">
+            <h2 class="text-2xl font-bold mb-4 dark-mode:text-white">Privacy Policy</h2>
+            <p class="text-gray-600 dark-mode:text-gray-300">Your privacy policy content goes here...</p>
+            <button onclick="closePrivacy()" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Close</button>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script>
+        // Firebase Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+        authDomain: "linq-b27a8.firebaseapp.com",
+        projectId: "linq-b27a8",
+        storageBucket: "linq-b27a8.firebasestorage.app",
+        messagingSenderId: "1067901051826",
+        appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+    };
+
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore():
+        
+        // Check Authentication State
+    function checkAuthState() {
+    const authLink = document.getElementById('authLink');
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            authLink.textContent = 'Profile';
+            authLink.href = 'profile.html';
+        } else {
+            authLink.textContent = 'Login';
+            authLink.href = 'login.html';
+
+            // Optional: if on profile page, redirect to login
+            if (window.location.pathname.includes('profile.html')) {
+                window.location.href = 'login.html';
+            }
+        }
+    });
+}
+
+
+
+
+
+
+        // Load User Profile
+        async function loadUserProfile(user) {
+            try {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                const userData = userDoc.exists ? userDoc.data() : {};
+                document.getElementById('display-email').value = user.email || 'Not available';
+                document.getElementById('edit-name').value = userData.name || '';
+                document.getElementById('edit-bio').value = userData.bio || '';
+                document.getElementById('email-notifications').checked = userData.emailNotifications !== false;
+            } catch (error) {
+                console.error('Error loading user profile:', error);
+                alert('Error loading profile: ' + error.message);
+            }
+        }
+
+        // Update Profile
+        async function updateProfile() {
+            const user = auth.currentUser;
+            if (!user) {
+                alert('No user logged in.');
+                return;
+            }
+            const newName = document.getElementById('edit-name').value;
+            const newBio = document.getElementById('edit-bio').value;
+            try {
+                await db.collection('users').doc(user.uid).set({
+                    name: newName,
+                    bio: newBio,
+                    emailNotifications: document.getElementById('email-notifications').checked
+                }, { merge: true });
+                alert('Profile updated successfully!');
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Error updating profile: ' + error.message);
+            }
+        }
+
+        // Update Security (Password)
+        async function updateSecurity() {
+            const user = auth.currentUser;
+            if (!user) {
+                alert('No user logged in.');
+                return;
+            }
+            const newPassword = document.getElementById('edit-password').value;
+            if (newPassword && newPassword.length < 6) {
+                alert('New password must be at least 6 characters long.');
+                return;
+            }
+            if (newPassword) {
+                try {
+                    await user.updatePassword(newPassword);
+                    alert('Password updated successfully!');
+                    document.getElementById('edit-password').value = '';
+                } catch (error) {
+                    console.error('Error updating password:', error);
+                    alert('Error updating password: ' + error.message);
+                }
+            }
+        }
+
+        // Update Notification Preferences
+        async function updateNotifications() {
+            const user = auth.currentUser;
+            if (!user) {
+                alert('No user logged in.');
+                return;
+            }
+            try {
+                await db.collection('users').doc(user.uid).set({
+                    emailNotifications: document.getElementById('email-notifications').checked
+                }, { merge: true });
+            } catch (error) {
+                console.error('Error updating notifications:', error);
+                alert('Error updating notifications: ' + error.message);
+            }
+        }
+
+        // Toggle Dark Mode
+        function toggleDarkMode() {
+            const isDarkMode = document.getElementById('dark-mode').checked;
+            document.body.classList.toggle('dark-mode', isDarkMode);
+            localStorage.setItem('darkMode', isDarkMode);
+        }
+
+        // Load Preferences
+        function loadPreferences() {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            document.getElementById('dark-mode').checked = isDarkMode;
+            document.body.classList.toggle('dark-mode', isDarkMode);
+        }
+
+        // Log Out
+        function logout() {
+            auth.signOut().then(() => {
+                window.location.href = 'login.html';
+            }).catch(error => {
+                console.error('Logout error:', error);
+                alert('Error logging out: ' + error.message);
+            });
+        }
+
+        // Delete Account
+        async function deleteAccount() {
+            const user = auth.currentUser;
+            if (!user) {
+                alert('No user logged in.');
+                return;
+            }
+            if (confirm('Are you sure you want to delete your account? This cannot be undone.')) {
+                try {
+                    await db.collection('users').doc(user.uid).delete();
+                    await user.delete();
+                    alert('Account deleted successfully.');
+                    window.location.href = 'login.html';
+                } catch (error) {
+                    console.error('Error deleting account:', error);
+                    alert('Error deleting account: ' + error.message);
+                }
+            }
+        }
+
+        // Terms and Privacy Modals
+        function showTerms(event) {
+            event.preventDefault();
+            document.getElementById('termsContent').style.display = 'flex';
+        }
+
+        function closeTerms() {
+            document.getElementById('termsContent').style.display = 'none';
+        }
+
+        function showPrivacy(event) {
+            event.preventDefault();
+            document.getElementById('privacyContent').style.display = 'flex';
+        }
+
+        function closePrivacy() {
+            document.getElementById('privacyContent').style.display = 'none';
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            checkAuthState();
+            loadPreferences();
+        });
+
+        // Modal Close on Outside Click
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('termsContent')) {
+                closeTerms();
+            }
+            if (event.target === document.getElementById('privacyContent')) {
+                closePrivacy();
+            }
+        };
+    </script>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
+      import { getAuth, onAuthStateChanged, signOut, updatePassword, deleteUser } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
+      import { getFirestore, doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
+    
+      // Firebase config (from login.html / linq-b27a8)
+      const firebaseConfig = {
+        apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+        authDomain: "linq-b27a8.firebaseapp.com",
+        projectId: "linq-b27a8",
+        storageBucket: "linq-b27a8.firebasestorage.app",
+        messagingSenderId: "1067901051826",
+        appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+      };
+    
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+    
+      // Auth check
+      function checkAuthState() {
+        const authLink = document.getElementById('authLink');
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            authLink.textContent = 'Profile';
+            authLink.href = 'profile.html';
+            await loadUserProfile(user);
+          } else {
+            authLink.textContent = 'Login';
+            authLink.href = 'login.html';
+            if (!user && window.location.pathname.includes('profile.html')) {
+    setTimeout(() => {
+        window.location.href = 'login.html';
+    }, 100);
+}
+
+            }
+          }
+        });
+      }
+    
+      // Load profile
+      async function loadUserProfile(user) {
+        try {
+          const userRef = doc(db, 'users', user.uid);
+          const userSnap = await getDoc(userRef);
+          const data = userSnap.exists() ? userSnap.data() : {};
+    
+          document.getElementById('display-email').value = user.email || '';
+          document.getElementById('edit-name').value = data.name || '';
+          document.getElementById('edit-bio').value = data.bio || '';
+          document.getElementById('email-notifications').checked = data.emailNotifications !== false;
+        } catch (error) {
+          console.error('Failed to load profile:', error);
+          alert('Failed to load profile: ' + error.message);
+        }
+      }
+    
+      // Update profile
+      window.updateProfile = async () => {
+        const user = auth.currentUser;
+        if (!user) return alert('No user logged in.');
+    
+        try {
+          const userRef = doc(db, 'users', user.uid);
+          await setDoc(userRef, {
+            name: document.getElementById('edit-name').value,
+            bio: document.getElementById('edit-bio').value,
+            emailNotifications: document.getElementById('email-notifications').checked
+          }, { merge: true });
+    
+          alert('Profile updated.');
+        } catch (error) {
+          console.error(error);
+          alert('Error updating profile: ' + error.message);
+        }
+      };
+    
+      // Update password
+      window.updateSecurity = async () => {
+        const user = auth.currentUser;
+        const newPassword = document.getElementById('edit-password').value;
+    
+        if (!user) return alert('No user logged in.');
+        if (!newPassword || newPassword.length < 6) return alert('Password must be at least 6 characters.');
+    
+        try {
+          await updatePassword(user, newPassword);
+          alert('Password updated!');
+          document.getElementById('edit-password').value = '';
+        } catch (error) {
+          console.error(error);
+          alert('Error updating password: ' + error.message);
+        }
+      };
+    
+      // Notifications toggle
+      window.updateNotifications = async () => {
+        const user = auth.currentUser;
+        if (!user) return alert('No user logged in.');
+    
+        try {
+          const userRef = doc(db, 'users', user.uid);
+          await setDoc(userRef, {
+            emailNotifications: document.getElementById('email-notifications').checked
+          }, { merge: true });
+        } catch (error) {
+          console.error(error);
+          alert('Error saving preference: ' + error.message);
+        }
+      };
+    
+      // Dark mode
+      window.toggleDarkMode = () => {
+        const isDark = document.getElementById('dark-mode').checked;
+        document.body.classList.toggle('dark-mode', isDark);
+        localStorage.setItem('darkMode', isDark);
+      };
+    
+      function loadPreferences() {
+        const dark = localStorage.getItem('darkMode') === 'true';
+        document.getElementById('dark-mode').checked = dark;
+        document.body.classList.toggle('dark-mode', dark);
+      }
+    
+      // Logout
+      window.logout = async () => {
+        try {
+        await signOut(auth);
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 200);
+
+        } catch (error) {
+          console.error('Logout failed:', error);
+          alert('Logout error: ' + error.message);
+        }
+      };
+    
+      // Delete account
+      window.deleteAccount = async () => {
+        const user = auth.currentUser;
+        if (!user) return alert('No user logged in.');
+        if (!confirm('Are you sure you want to delete your account?')) return;
+    
+        try {
+          await deleteDoc(doc(db, 'users', user.uid));
+          await deleteUser(user);
+          alert('Account deleted.');
+          window.location.href = 'login.html';
+        } catch (error) {
+          console.error(error);
+          alert('Error deleting account: ' + error.message);
+        }
+      };
+    
+      // Terms & privacy modals
+      window.showTerms = (e) => {
+        e.preventDefault();
+        document.getElementById('termsContent').style.display = 'flex';
+      };
+      window.closeTerms = () => document.getElementById('termsContent').style.display = 'none';
+    
+      window.showPrivacy = (e) => {
+        e.preventDefault();
+        document.getElementById('privacyContent').style.display = 'flex';
+      };
+      window.closePrivacy = () => document.getElementById('privacyContent').style.display = 'none';
+    
+      // Outside modal click close
+      window.onclick = (e) => {
+        if (e.target === document.getElementById('termsContent')) closeTerms();
+        if (e.target === document.getElementById('privacyContent')) closePrivacy();
+      };
+    
+      // Init
+      window.addEventListener('load', () => {
+        checkAuthState();
+        loadPreferences();
+      });
+    </script>
+</body>
+</html>
