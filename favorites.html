@@ -68,6 +68,9 @@
         }
         .news-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100px; /* Match the height of the image */
+            display: flex;
+            align-items: center;
         }
         .news-card:hover {
             transform: translateY(-5px);
@@ -106,16 +109,6 @@
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 500;
-            margin-left: 0.5rem;
-        }
-        .category-tag {
-            display: inline-block;
-            background: #e5e5e5;
-            color: #333333;
-            font-size: 0.75rem;
-            font-weight: 500;
-            padding: 0.25rem 0.5rem;
-            border-radius: 9999px;
             margin-left: 0.5rem;
         }
         .news-link {
@@ -194,6 +187,15 @@
         }
         .news-image:hover {
             transform: scale(1.05);
+        }
+        .news-title {
+            font-size: 0.9rem; /* Smaller font for title */
+            font-weight: 500;
+            color: #1f2937;
+        }
+        .news-meta {
+            font-size: 0.75rem; /* Smaller font for meta */
+            color: #6b7280;
         }
         @media (max-width: 1024px) {
             .favorites-section {
@@ -412,15 +414,15 @@
             } else {
                 favoriteArticles.forEach(article => {
                     newsFavoritesContainer.innerHTML += `
-                        <article class="rounded-lg shadow-lg flex flex-col sm:flex-row items-start sm:items-center overflow-hidden" data-id="${article.id}">
+                        <article class="news-card rounded-lg shadow-lg flex flex-col sm:flex-row items-start sm:items-center overflow-hidden" data-id="${article.id}">
                             <img src="${article.image}" alt="${article.title}" class="news-image m-4 sm:m-0 sm:mr-4">
-                            <div class="p-4 flex-1">
+                            <div class="p-2 flex-1">
                                 <div class="flex justify-between items-start">
                                     <div>
-                                        <h2 class="text-lg text-gray-800 hover:text-blue-400">
+                                        <h2 class="news-title text-gray-800 hover:text-blue-400">
                                             <a href="${article.link}" target="_blank">${article.title}</a>
                                         </h2>
-                                        <p class="text-gray-600 text-sm mt-1">${article.date} • ${article.source} <span class="category-tag">${article.category}</span></p>
+                                        <p class="news-meta mt-1">${article.date} • ${article.source}</p>
                                     </div>
                                     <button class="favorite-btn mt-1 favorited" onclick="toggleFavorite(${article.id}, 'news')">☆</button>
                                 </div>
