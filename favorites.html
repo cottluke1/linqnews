@@ -67,10 +67,13 @@
             padding-bottom: 0.5rem;
         }
         .news-card {
+            background: #ffffff;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            height: 100px; /* Match the height of the image */
+            height: 100px;
             display: flex;
             align-items: center;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .news-card:hover {
             transform: translateY(-5px);
@@ -90,26 +93,16 @@
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
             border-color: #3b82f6;
         }
-        .news-title, .community-title {
-            font-size: 1.3rem;
-            font-weight: 500;
+        .news-title {
+            font-size: 1rem;
+            font-weight: 700;
             color: #1f2937;
-            margin: 0 0 0.75rem;
-            line-height: 1.5;
+            line-height: 1.2;
         }
-        .news-meta, .community-meta {
-            font-size: 0.9rem;
+        .news-meta {
+            font-size: 0.65rem;
             color: #6b7280;
-            margin: 0.5rem 0;
-        }
-        .category-label {
-            background: #dbeafe;
-            color: #1e40af;
-            padding: 0.3rem 0.9rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-left: 0.5rem;
+            line-height: 1.2;
         }
         .news-link {
             color: #3b82f6;
@@ -144,6 +137,8 @@
         .favorite-btn {
             transition: color 0.2s ease, transform 0.2s ease;
             color: #3b82f6;
+            font-size: 1.2rem;
+            padding: 0 0.5rem;
         }
         .favorite-btn:hover {
             color: #1e40af;
@@ -178,26 +173,18 @@
         .nav-link:hover {
             color: #3b82f6;
         }
-        .news-image {
-            width: 150px;
-            height: 100px;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.3s ease;
+        .news-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            margin: 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .news-image:hover {
-            transform: scale(1.05);
-        }
-        .news-title {
-            font-size: 0.75rem; /* Significantly smaller font for title */
-            font-weight: 500;
-            color: #1f2937;
-            line-height: 1.2;
-        }
-        .news-meta {
-            font-size: 0.65rem; /* Significantly smaller font for meta */
-            color: #6b7280;
-            line-height: 1.2;
+        .news-logo img {
+            max-width: 100%;
+            max-height: 100%;
         }
         @media (max-width: 1024px) {
             .favorites-section {
@@ -217,14 +204,11 @@
             .community-card {
                 padding: 1.2rem;
             }
-            .news-title, .community-title {
-                font-size: 1.2rem;
+            .news-title {
+                font-size: 0.9rem;
             }
-            .news-meta, .community-meta {
-                font-size: 0.85rem;
-            }
-            .category-label {
-                font-size: 0.8rem;
+            .news-meta {
+                font-size: 0.6rem;
             }
         }
         @media (max-width: 640px) {
@@ -240,8 +224,8 @@
             .community-card {
                 padding: 1rem;
             }
-            .news-title, .community-title {
-                font-size: 1.1rem;
+            .news-title {
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -402,8 +386,9 @@
         ];
 
         document.addEventListener('DOMContentLoaded', () => {
-        renderFavorites(); // No need to call checkAuthState() here anymore
-    });
+            renderFavorites();
+        });
+
         function renderFavorites() {
             const newsFavoritesContainer = document.getElementById('newsFavorites');
             const communityFavoritesContainer = document.getElementById('communityFavorites');
@@ -415,20 +400,26 @@
                 newsFavoritesContainer.innerHTML = '<p class="no-favorites">No favorite articles yet.</p>';
             } else {
                 favoriteArticles.forEach(article => {
+                    let logoHtml = '';
+                    if (article.source === 'Reuters') {
+                        logoHtml = '<div class="news-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Reuters_logo_by_Serhiy_Kohut.png" alt="Reuters Logo"></div>';
+                    } else if (article.source === 'Financial Times') {
+                        logoHtml = '<div class="news-logo" style="background-color: #ffcc00;"><span style="color: #000; font-weight: bold;">FT</span></div>';
+                    } else if (article.source === 'Wall Street Journal') {
+                        logoHtml = '<div class="news-logo" style="background-color: #000;"><span style="color: #fff; font-weight: bold;">WSJ</span></div>';
+                    } else {
+                        logoHtml = '<div class="news-logo"></div>'; // Default empty logo
+                    }
                     newsFavoritesContainer.innerHTML += `
-                        <article class="news-card rounded-lg shadow-lg flex flex-col sm:flex-row items-start sm:items-center overflow-hidden" data-id="${article.id}">
-                            <img src="${article.image}" alt="${article.title}" class="news-image m-4 sm:m-0 sm:mr-4">
-                            <div class="p-2 flex-1">
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <h2 class="news-title text-gray-800 hover:text-blue-400">
-                                            <a href="${article.link}" target="_blank">${article.title}</a>
-                                        </h2>
-                                        <p class="news-meta mt-1">${article.date} • ${article.source}</p>
-                                    </div>
-                                    <button class="favorite-btn favorited" onclick="toggleFavorite(${article.id}, 'news')">☆</button>
-                                </div>
+                        <article class="news-card flex items-center p-2 rounded-lg shadow-lg" data-id="${article.id}">
+                            ${logoHtml}
+                            <div class="flex-1">
+                                <h2 class="news-title">
+                                    <a href="${article.link}" target="_blank" class="news-link">${article.title}</a>
+                                </h2>
+                                <p class="news-meta">${article.date} • ${article.source}</p>
                             </div>
+                            <button class="favorite-btn favorited" onclick="toggleFavorite(${article.id}, 'news')">☆</button>
                         </article>
                     `;
                 });
@@ -459,7 +450,6 @@
                         `;
                     }
                 });
-                // Load Twitter widget script after rendering tweets
                 const script = document.createElement('script');
                 script.src = 'https://platform.twitter.com/widgets.js';
                 script.async = true;
@@ -485,7 +475,6 @@
             confirmation.classList.remove('hidden');
             setTimeout(() => confirmation.classList.add('hidden'), 2000);
 
-            // Re-render favorites after removal
             renderFavorites();
         }
 
@@ -500,24 +489,23 @@
         }
     </script>
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const authLink = document.getElementById('authLink');
-    
-        // Delay check to ensure Firebase is ready
-        setTimeout(() => {
-            auth.onAuthStateChanged(user => {
-                if (authLink) {
-                    if (user) {
-                        authLink.textContent = 'Profile';
-                        authLink.href = 'profile.html';
-                    } else {
-                        authLink.textContent = 'Login';
-                        authLink.href = 'login.html';
+        document.addEventListener('DOMContentLoaded', () => {
+            const authLink = document.getElementById('authLink');
+            setTimeout(() => {
+                auth.onAuthStateChanged(user => {
+                    if (authLink) {
+                        if (user) {
+                            authLink.textContent = 'Profile';
+                            authLink.href = 'profile.html';
+                        } else {
+                            authLink.textContent = 'Login';
+                            authLink.href = 'login.html';
+                        }
                     }
-                }
-            });
-        }, 500); // delay by 500ms to wait for auth state
-    });
+                });
+            }, 500);
+        });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93d5e1e429dfdd1c',t:'MTc0Njg0MjgzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93d99b4f8ac67bae',t:'MTc0Njg4MTg5MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93d5e1e429dfdd1c',t:'MTc0Njg0MjgzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93d99b4f8ac67bae',t:'MTc0Njg4MTg5MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
 </html>
