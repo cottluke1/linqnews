@@ -6,6 +6,8 @@
     <title>Linq - Your Energy News (Super Modern)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <style>
         /* Custom base styles */
         body {
@@ -14,7 +16,7 @@
             color: #E0E0E0; /* Light gray for primary text */
         }
 
-        /* Scrollbar styling for a more modern look (WebKit browsers) */
+        /* Scrollbar styling */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -31,56 +33,90 @@
             background-color: #4A4A4A;
         }
 
-
-        /* Styles for the top bar holding stock tickers */
+        /* Top bar */
         .top-bar {
-            background-color: #121212; /* Slightly lighter dark for top bar */
-            color: #A0A0A0; /* Softer light gray for less emphasis */
-            font-size: 0.75rem; /* Even smaller font for ticker items */
-            padding-top: 0.375rem; /* 6px */
-            padding-bottom: 0.375rem; /* 6px */
-            border-bottom: 1px solid #282828; /* Subtle border */
+            background-color: #121212;
+            color: #A0A0A0;
+            font-size: 0.75rem;
+            padding-top: 0.375rem;
+            padding-bottom: 0.375rem;
+            border-bottom: 1px solid #282828;
         }
         .top-bar-item .positive {
-            color: #22C55E; /* Brighter Green */
+            color: #22C55E;
         }
         .top-bar-item .negative {
-            color: #EF4444; /* Brighter Red */
+            color: #EF4444;
         }
+         .ticker-banner {
+            background: #121212; /* Darker than top-bar for depth */
+            color: #A0A0A0;
+            padding: 0.625rem 0; /* 10px */
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative; /* Ensure it can be layered if needed */
+            /* top: 0; Removed as it might conflict with fixed nav */
+            width: 100%;
+            z-index: 35; /* Below nav but above most content */
+            font-size: 0.8rem; /* Slightly larger than top-bar items */
+            line-height: 1.3;
+            border-bottom: 1px solid #282828; /* Consistent border */
+        }
+        .ticker-content {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker-scroll 60s linear infinite;
+        }
+        @keyframes ticker-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        .ticker-item {
+            display: inline-block;
+            margin-right: 1.75rem; /* More spacing */
+        }
+        .ticker-item .positive { color: #22C55E; }
+        .ticker-item .negative { color: #EF4444; }
 
-        /* Navigation link styling */
+
+        /* Nav */
         .nav-link {
             transition: color 0.2s ease, opacity 0.2s ease;
             font-weight: 500;
-            color: #B0B0B0; /* Medium light gray for nav links */
+            color: #B0B0B0;
             opacity: 0.8;
         }
         .nav-link:hover {
-            color: #FFFFFF; /* White on hover */
+            color: #FFFFFF;
             opacity: 1;
         }
+         /* Adjusted Nav for fixed positioning */
+        nav.fixed {
+            background-color: rgba(10, 10, 10, 0.85); /* Dark, slightly transparent */
+            backdrop-filter: blur(10px) saturate(150%);
+            -webkit-backdrop-filter: blur(10px) saturate(150%);
+            border-bottom: 1px solid #222222;
+        }
 
-        /* Hero section styling */
+        /* Hero */
         .hero-section {
-            /* Darker gradient, or a solid very dark color */
-            background: #0D0D0D; /* Slightly different dark shade for depth */
-            padding: 6rem 1rem; /* Ample padding */
+            background: #0D0D0D;
+            padding: 6rem 1rem;
             text-align: center;
         }
         .hero-title {
-            font-size: 3.25rem; /* Larger, more impactful title */
-            font-weight: 800; /* Extra bold */
-            color: #FFFFFF; /* Pure white for max contrast */
+            font-size: 3.25rem;
+            font-weight: 800;
+            color: #FFFFFF;
             margin-bottom: 1rem;
-            /* Subtle text shadow for depth */
             text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3);
         }
         .hero-title .accent-text {
-            color: #00BFFF; /* Deep Sky Blue / Bright Cyan - a common modern accent */
+            color: #00BFFF;
         }
         .hero-subtitle {
             font-size: 1.1rem;
-            color: #A0A0A0; /* Softer light gray */
+            color: #A0A0A0;
             margin-bottom: 2.5rem;
             max-width: 650px;
             margin-left: auto;
@@ -90,92 +126,114 @@
         .explore-button {
             background-color: #00BFFF;
             color: #FFFFFF;
-            padding: 0.875rem 2.5rem; /* 14px 40px */
-            border-radius: 0.375rem; /* 6px - standard rounded */
+            padding: 0.875rem 2.5rem;
+            border-radius: 0.375rem;
             font-weight: 600;
             transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 15px -3px rgba(0, 191, 255, 0.4); /* Glow effect */
+            box-shadow: 0 4px 15px -3px rgba(0, 191, 255, 0.4);
         }
         .explore-button:hover {
-            background-color: #00A9E0; /* Slightly darker blue */
+            background-color: #00A9E0;
             transform: translateY(-2px) scale(1.02);
             box-shadow: 0 6px 20px -3px rgba(0, 191, 255, 0.5);
         }
 
-        /* Section title styling */
+        /* Section title */
         .section-title {
-            font-size: 2rem; /* Larger section titles */
-            font-weight: 700; /* Bolder */
-            color: #F0F0F0; /* Very light gray / off-white */
+            font-size: 2rem;
+            font-weight: 700;
+            color: #F0F0F0;
             margin-bottom: 2rem;
             padding-bottom: 0.75rem;
-            border-bottom: 1px solid #333333; /* Darker, subtle underline */
+            border-bottom: 1px solid #333333;
         }
 
-        /* Market data table styling - Modern Dark */
+        /* Market data table */
         .market-data-table-container {
-            background-color: #121212; /* Card-like background for the table */
-            border-radius: 0.5rem; /* 8px */
-            padding: 0.5rem; /* Padding around the table */
+            background-color: #121212;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
             box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.5);
             border: 1px solid #2a2a2a;
         }
         .market-data-table th, .market-data-table td {
-            padding: 1rem 1.25rem; /* More padding in cells */
+            padding: 1rem 1.25rem;
             text-align: left;
-            border-bottom: 1px solid #282828; /* Darker border */
-            font-size: 0.875rem; /* 14px */
+            border-bottom: 1px solid #282828;
+            font-size: 0.875rem;
         }
         .market-data-table th {
-            color: #B0B0B0; /* Header text color */
+            color: #B0B0B0;
             font-weight: 600;
-            background-color: transparent; /* No separate header background, rely on container */
+            background-color: transparent;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
         .market-data-table td {
-            color: #D0D0D0; /* Data text color */
+            color: #D0D0D0;
         }
         .market-data-table tr:last-child td {
             border-bottom: none;
         }
-        .market-data-table td .text-xs { /* For percentage changes */
-            font-size: 0.7rem;
+         .market-tabs {
+            display: flex;
+            gap: 0.5rem; /* Reduced gap */
+            margin-bottom: 1.5rem; /* Increased margin */
+            border-bottom: 1px solid #282828; /* Underline for tabs container */
         }
+        .market-tab {
+            cursor: pointer;
+            color: #888888; /* Softer color for inactive tabs */
+            padding: 0.75rem 1.25rem; /* More padding */
+            transition: color 0.2s ease, border-bottom-color 0.2s ease;
+            border-bottom: 2px solid transparent; /* For active indicator */
+            font-weight: 500;
+        }
+        .market-tab:hover {
+            color: #E0E0E0;
+        }
+        .market-tab.active {
+            color: #00BFFF; /* Accent color for active tab */
+            border-bottom-color: #00BFFF;
+            font-weight: 600;
+        }
+        .market-content { display: none; }
+        .market-content.active { display: block; }
 
 
-        /* News card styling - Super Modern */
+        /* News card */
         .news-card {
-            background-color: rgba(28, 28, 28, 0.8); /* Dark, slightly transparent background */
-            backdrop-filter: blur(10px) saturate(150%); /* Frosted glass effect */
+            background-color: rgba(28, 28, 28, 0.8);
+            backdrop-filter: blur(10px) saturate(150%);
             -webkit-backdrop-filter: blur(10px) saturate(150%);
-            border-radius: 0.75rem; /* 12px */
-            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle light border */
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255,255,255,0.05); /* Outer shadow and inner highlight */
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255,255,255,0.05);
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            margin-bottom: 2rem; /* More space between cards */
+            margin-bottom: 2rem;
         }
         .news-card:hover {
             transform: translateY(-5px) scale(1.01);
             box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255,255,255,0.08);
-            border-color: rgba(0, 191, 255, 0.5); /* Accent border on hover */
+            border-color: rgba(0, 191, 255, 0.5);
         }
         .news-card-content {
-            padding: 1.5rem; /* Generous padding */
+            padding: 1.5rem;
         }
-        .news-source-logo {
+        .news-source-logo { /* Applied to the image directly if preferred, or a container */
             height: 2rem; /* 32px */
             width: auto;
+            max-width: 80px; /* Ensure logos don't get too wide */
             margin-right: 1rem;
             border-radius: 0.25rem; /* 4px */
-            object-fit: contain;
-            filter: grayscale(30%) brightness(1.2); /* Subtle filter for logos on dark bg */
+            object-fit: contain; /* Changed to contain for better logo display */
+            filter: grayscale(30%) brightness(1.2);
         }
         .news-title {
-            font-size: 1.2rem; /* Larger title */
+            font-size: 1.2rem;
             font-weight: 600;
-            color: #FFFFFF; /* White title */
+            color: #FFFFFF;
             margin-bottom: 0.5rem;
             line-height: 1.4;
         }
@@ -184,19 +242,19 @@
              transition: color 0.2s ease;
         }
         .news-title a:hover {
-            color: #00BFFF; /* Accent color on hover */
+            color: #00BFFF;
         }
         .news-meta {
-            font-size: 0.8rem; /* 13px */
-            color: #888888; /* Darker gray for meta */
+            font-size: 0.8rem;
+            color: #888888;
             margin-bottom: 0.75rem;
         }
-        .news-tag {
-            background-color: rgba(0, 191, 255, 0.15); /* Accent color with low opacity */
-            color: #00BFFF; /* Accent color text */
+        .news-tag, .category-tag /* Combining for consistency */ {
+            background-color: rgba(0, 191, 255, 0.15);
+            color: #00BFFF;
             padding: 0.3rem 0.75rem;
             border-radius: 9999px;
-            font-size: 0.7rem; /* 11px */
+            font-size: 0.7rem;
             font-weight: 500;
             margin-right: 0.5rem;
             display: inline-block;
@@ -204,13 +262,13 @@
             border: 1px solid rgba(0, 191, 255, 0.3);
         }
 
-        /* Sidebar and filter styling - Modern Dark */
-        .filter-sidebar {
-            background-color: rgba(22, 22, 22, 0.7); /* Darker, slightly transparent */
+        /* Sidebar and filter */
+        .filter-sidebar, .filter-panel /* Combining for consistency */ {
+            background-color: rgba(22, 22, 22, 0.7);
             backdrop-filter: blur(8px) saturate(130%);
             -webkit-backdrop-filter: blur(8px) saturate(130%);
             padding: 1.5rem;
-            border-radius: 0.5rem; /* 8px */
+            border-radius: 0.5rem;
             box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
             border: 1px solid #2a2a2a;
         }
@@ -220,114 +278,201 @@
             color: #E0E0E0;
             margin-bottom: 1.25rem;
         }
-        .filter-button {
+        .filter-button, .category /* Combining for consistency */ {
             display: block;
             width: 100%;
             text-align: left;
             padding: 0.75rem 1rem;
             margin-bottom: 0.5rem;
-            border-radius: 0.375rem; /* 6px */
+            border-radius: 0.375rem;
             color: #B0B0B0;
             font-weight: 500;
             transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease;
-            border-left: 3px solid transparent;
+            border-left: 3px solid transparent; /* For consistent active state indication */
+            background-color: transparent; /* Ensure default is transparent */
+            border: 1px solid #333333; /* Match search input border */
         }
-        .filter-button:hover {
+        .filter-button:hover, .category:hover {
             background-color: rgba(0, 191, 255, 0.1);
             color: #FFFFFF;
-            border-left-color: #00BFFF;
+            border-left-color: #00BFFF; /* Keep for filter buttons */
+            border-color: #00BFFF; /* For category buttons */
         }
-        .filter-button.active {
+        .filter-button.active, .category.active /* Combining for consistency */ {
             background-color: rgba(0, 191, 255, 0.2);
             color: #FFFFFF;
             font-weight: 600;
-            border-left-color: #00BFFF;
+            border-left-color: #00BFFF; /* Keep for filter buttons */
+            border-color: #00BFFF; /* For category buttons */
         }
 
 
-        /* Search input styling - Modern Dark */
+        /* Search input */
         .search-input {
             width: 100%;
             padding: 0.75rem 1rem;
-            background-color: #1A1A1A; /* Dark input background */
-            border: 1px solid #333333; /* Dark border */
-            border-radius: 0.375rem; /* 6px */
+            background-color: #1A1A1A;
+            border: 1px solid #333333;
+            border-radius: 0.375rem;
             margin-bottom: 1rem;
             font-size: 0.9rem;
-            color: #E0E0E0; /* Light text color */
+            color: #E0E0E0;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
         .search-input::placeholder {
-            color: #666666; /* Placeholder text color */
+            color: #666666;
         }
         .search-input:focus {
             outline: none;
-            border-color: #00BFFF; /* Accent border on focus */
-            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3); /* Accent glow on focus */
+            border-color: #00BFFF;
+            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3);
             background-color: #1F1F1F;
         }
 
-        /* Star icon styling */
-        .star-icon {
-            width: 1.25rem; /* 20px */
+        /* Star icon */
+        .star-icon, .favorite-btn /* Combining for consistency */ {
+            width: 1.25rem;
             height: 1.25rem;
-            color: #777777; /* Default star color (medium gray) */
+            color: #777777;
             cursor: pointer;
             transition: color 0.2s ease, transform 0.2s ease;
+            background: none; /* Ensure button style is removed */
+            border: none; /* Ensure button style is removed */
+            padding: 0; /* Ensure button style is removed */
+            display: inline-flex; /* For alignment */
+            align-items: center;
+            justify-content: center;
         }
-        .star-icon:hover {
-            color: #FFD700; /* Gold on hover */
+        .star-icon:hover, .favorite-btn:hover {
+            color: #FFD700;
             transform: scale(1.15);
         }
-        .star-icon.favorited {
-            color: #FFD700; /* Gold for favorited */
+        .star-icon.favorited, .favorite-btn.favorited {
+            color: #FFD700;
             fill: #FFD700;
         }
+         .favorite-btn svg { /* If star is SVG inside button */
+            width: 100%;
+            height: 100%;
+        }
 
-        /* Footer styling - Modern Dark */
+        /* Footer */
         .footer {
-            background-color: #080808; /* Even darker footer */
-            color: #888888; /* Medium gray text */
+            background-color: #080808;
+            color: #888888;
             padding: 3rem 1rem;
             margin-top: 4rem;
             border-top: 1px solid #222222;
         }
         .footer a {
-            color: #A0A0A0; /* Lighter gray for links */
+            color: #A0A0A0;
             transition: color 0.2s ease;
         }
         .footer a:hover {
-            color: #00BFFF; /* Accent color on hover */
+            color: #00BFFF;
         }
         .scrollbar-hide::-webkit-scrollbar {
-            display: none; /* For Webkit browsers */
+            display: none;
         }
         .scrollbar-hide {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+         /* Terms and Privacy Modals - Themed */
+        .terms-privacy-content {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(22, 22, 22, 0.9); /* Dark, slightly transparent */
+            backdrop-filter: blur(10px) saturate(150%);
+            -webkit-backdrop-filter: blur(10px) saturate(150%);
+            padding: 2.5rem; /* More padding */
+            border-radius: 0.75rem; /* 12px */
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7);
+            z-index: 100; /* Ensure it's on top */
+            color: #E0E0E0; /* Light text */
+            border: 1px solid rgba(0, 191, 255, 0.3); /* Accent border */
+            max-width: 700px; /* Max width */
+            width: 90%; /* Responsive width */
+        }
+        .terms-privacy-content h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #00BFFF;
+            padding-bottom: 0.75rem;
+        }
+        .terms-privacy-content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            color: #C0C0C0; /* Slightly softer light gray for paragraph text */
+        }
+        .terms-privacy-content strong {
+            color: #00BFFF; /* Accent color for strong text */
+            font-weight: 600;
+        }
+        .terms-privacy-content a {
+            color: #00BFFF;
+            text-decoration: underline;
+            transition: color 0.2s ease;
+        }
+        .terms-privacy-content a:hover {
+            color: #00A9E0;
+        }
+        .close-btn {
+            position: absolute;
+            top: 1.5rem; /* Adjusted for more padding */
+            right: 1.5rem;
+            font-size: 1.75rem; /* Larger close button */
+            cursor: pointer;
+            color: #A0A0A0;
+            transition: color 0.2s ease, transform 0.2s ease;
+            line-height: 1;
+        }
+        .close-btn:hover {
+            color: #FFFFFF;
+            transform: rotate(90deg) scale(1.1);
         }
 
     </style>
 </head>
-<body class="antialiased"> <div class="top-bar">
+<body class="antialiased">
+    <nav class="fixed top-0 left-0 w-full z-50 shadow-md py-3">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <div class="flex space-x-4 overflow-x-auto whitespace-nowrap py-1 scrollbar-hide">
-                <span class="top-bar-item">BKR: <span class="positive">$36.49 +0.61%</span></span>
-                <span class="top-bar-item">KMI: <span class="negative">$27.31 -1.00%</span></span>
-                <span class="top-bar-item">WMB: <span class="positive">$57.66 +1.05%</span></span>
-                <span class="top-bar-item">XOM: <span class="positive">$112.78 +0.25%</span></span>
-                <span class="top-bar-item">CVX: <span class="negative">$158.42 -0.15%</span></span>
-                <span class="top-bar-item">SLB: <span class="positive">$45.50 +0.80%</span></span>
-                <span class="top-bar-item">HAL: <span class="negative">$33.20 -0.45%</span></span>
+            <a href="#" class="text-3xl font-bold text-white">Linq<span class="text-cyan-400">.</span></a>
+            <div class="hidden md:flex space-x-5 items-center">
+                <a href="#news" class="nav-link text-sm">News</a>
+                <a href="favorites.html" class="nav-link text-sm">Favorites</a>
+                <a href="community.html" class="nav-link text-sm">Community</a>
+                <a href="login.html" id="authLink" class="nav-link text-sm bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-md transition-colors">Login</a>
             </div>
-            <nav class="hidden md:flex space-x-5 items-center">
-                <a href="#" class="nav-link text-sm">News</a>
-                <a href="#" class="nav-link text-sm">Favorites</a>
-                <a href="#" class="nav-link text-sm">Community</a>
-                <a href="#" class="nav-link text-sm">Profile</a>
-            </nav>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-gray-900 bg-opacity-90 backdrop-blur-md">
+            <a href="#news" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a>
+            <a href="favorites.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Favorites</a>
+            <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Community</a>
+            <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Login</a>
+        </div>
+    </nav>
+
+    <div class="ticker-banner mt-16"> {/* Added mt-16 for spacing below fixed nav */}
+        <div class="ticker-content" id="tickerContent">
+            {/* Ticker items will be injected by JavaScript */}
         </div>
     </div>
+
 
     <header class="hero-section">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -335,142 +480,164 @@
             <p class="hero-subtitle">
                 Navigate the energy landscape with cutting-edge insights, real-time data, and comprehensive market intelligence.
             </p>
-            <button class="explore-button">
+            <button onclick="document.getElementById('news').scrollIntoView({ behavior: 'smooth' })" class="explore-button">
                 Explore Insights
             </button>
         </div>
     </header>
 
+    <section class="market-data-table-container container mx-auto p-4 sm:p-6 lg:p-8 my-10">
+        <div class="market-tabs mb-6">
+            <div id="tabCommodities" class="market-tab active">Commodities</div>
+            <div id="tabUS" class="market-tab">Equities</div>
+            <div id="tabTreasuries" class="market-tab">Treasuries</div>
+        </div>
+
+        <div id="marketCommoditiesContent" class="market-content active">
+            <table class="w-full market-data-table">
+                <thead>
+                    <tr>
+                        <th class="w-1/3">Commodity</th>
+                        <th>Price</th>
+                        <th>Change</th>
+                        <th>% Change</th>
+                    </tr>
+                </thead>
+                <tbody id="commoditiesTableBody">
+                    <tr>
+                        <td>WTI Crude</td>
+                        <td id="wti-crude-price">Loading...</td>
+                        <td id="wti-crude-change" class="positive">Loading...</td>
+                        <td id="wti-crude-percent" class="positive">Loading...</td>
+                    </tr>
+                    <tr>
+                        <td>Brent Crude</td>
+                        <td id="brent-crude-price">Loading...</td>
+                        <td id="brent-crude-change" class="negative">Loading...</td>
+                        <td id="brent-crude-percent" class="negative">Loading...</td>
+                    </tr>
+                     <tr>
+                        <td>RBOB Gasoline</td>
+                        <td id="rbob-gasoline-price">Loading...</td>
+                        <td id="rbob-gasoline-change" class="positive">Loading...</td>
+                        <td id="rbob-gasoline-percent" class="positive">Loading...</td>
+                    </tr>
+                    <tr>
+                        <td>Natural Gas (HH)</td>
+                        <td id="natural-gas-price">Loading...</td>
+                        <td id="natural-gas-change" class="positive">Loading...</td>
+                        <td id="natural-gas-percent" class="positive">Loading...</td>
+                    </tr>
+                    <tr>
+                        <td>Heating Oil</td>
+                        <td id="heating-oil-price">Loading...</td>
+                        <td id="heating-oil-change" class="negative">Loading...</td>
+                        <td id="heating-oil-percent" class="negative">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="marketUSContent" class="market-content">
+            <table class="w-full market-data-table">
+                 <thead>
+                    <tr>
+                        <th class="w-1/3">Index</th>
+                        <th>Level</th>
+                        <th>Change</th>
+                        <th>% Change</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Dow Jones</td>
+                        <td>41,317.43</td>
+                        <td class="positive">+564.47</td>
+                        <td class="positive">+1.39%</td>
+                    </tr>
+                    <tr>
+                        <td>S&P 500</td>
+                        <td>5,686.68</td>
+                        <td class="positive">+82.54</td>
+                        <td class="positive">+1.47%</td>
+                    </tr>
+                    <tr>
+                        <td>Nasdaq</td>
+                        <td>17,977.73</td>
+                        <td class="positive">+266.99</td>
+                        <td class="positive">+1.51%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="marketTreasuriesContent" class="market-content">
+            <table class="w-full market-data-table">
+                <thead>
+                    <tr>
+                        <th class="w-1/3">Treasury</th>
+                        <th>Yield</th>
+                        <th>Change (bps)</th>
+                        <th>% Change (Basis)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>10-Year Treasury</td>
+                        <td>4.40%</td>
+                        <td class="positive">+2.0</td>
+                        <td class="positive">+0.46%</td>
+                    </tr>
+                    <tr>
+                        <td>2-Year Treasury</td>
+                        <td>4.15%</td>
+                        <td class="positive">+1.0</td>
+                        <td class="positive">+0.24%</td>
+                    </tr>
+                    <tr>
+                        <td>30-Year Treasury</td>
+                        <td>4.65%</td>
+                        <td class="positive">+3.0</td>
+                        <td class="positive">+0.65%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
     <main class="container mx-auto p-4 sm:p-6 lg:p-8">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-10"> <div class="lg:col-span-8">
-
-                <section class="mb-10 market-data-table-container">
-                    <table class="w-full market-data-table">
-                        <thead>
-                            <tr>
-                                <th class="w-1/3">Commodities</th>
-                                <th>Current Price</th>
-                                <th>Change</th>
-                                <th>Futures (Next Month)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>WTI Crude</td>
-                                <td>$78.50</td>
-                                <td><span class="text-xs positive">(+0.50%)</span></td>
-                                <td>CLJ24: $78.65</td>
-                            </tr>
-                            <tr>
-                                <td>Brent Crude</td>
-                                <td>$82.30</td>
-                                <td><span class="text-xs negative">(-0.20%)</span></td>
-                                <td>CBK24: $82.45</td>
-                            </tr>
-                            <tr>
-                                <td>RBOB Gasoline</td>
-                                <td>$2.45/gal</td>
-                                <td><span class="text-xs positive">(+1.10%)</span></td>
-                                <td>RBJ24: $2.4550</td>
-                            </tr>
-                            <tr>
-                                <td>Natural Gas (HH)</td>
-                                <td>$2.75/MMBtu</td>
-                                <td><span class="text-xs positive">(+2.30%)</span></td>
-                                <td>NGK24: $2.780</td>
-                            </tr>
-                            <tr>
-                                <td>Heating Oil</td>
-                                <td>$2.80/gal</td>
-                                <td><span class="text-xs negative">(-0.50%)</span></td>
-                                <td>HOK24: $2.8050</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
-
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-10">
+            <div class="lg:col-span-8" id="news">
                 <section>
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
                         <h2 class="section-title !mb-3 sm:!mb-0 !border-none">Latest Intelligence</h2>
-                        <input type="search" placeholder="Search intelligence..." class="search-input !mb-0 w-full sm:w-auto sm:max-w-md">
+                        <div class="relative w-full sm:w-auto sm:max-w-md">
+                            <input type="search" id="searchInput" placeholder="Search intelligence..." class="search-input !mb-0 pl-10">
+                            <svg class="w-5 h-5 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
                     </div>
 
-                    <div class="space-y-8">
-                        <article class="news-card flex items-start">
-                            <img src="https://placehold.co/80x80/000000/00BFFF?text=RTRS&font=Inter" alt="Reuters Logo" class="news-source-logo mt-1 flex-shrink-0">
-                            <div class="news-card-content flex-grow !pt-0">
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <h3 class="news-title">
-                                            <a href="#">Oil Prices Surge Amid Escalating Geopolitical Tensions and Supply Concerns</a>
-                                        </h3>
-                                        <p class="news-meta">May 10, 2025 • Reuters</p>
-                                    </div>
-                                    <svg class="star-icon flex-shrink-0 ml-4 mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                                </div>
-                                <div>
-                                    <span class="news-tag">Crude Oil</span>
-                                    <span class="news-tag">Geopolitics</span>
-                                    <span class="news-tag">Market Alert</span>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="news-card flex items-start">
-                             <img src="https://placehold.co/80x80/000000/00BFFF?text=BBG&font=Inter" alt="Bloomberg Logo" class="news-source-logo mt-1 flex-shrink-0">
-                            <div class="news-card-content flex-grow !pt-0">
-                               <div class="flex justify-between items-start">
-                                    <div>
-                                        <h3 class="news-title">
-                                            <a href="#">OPEC+ Considers Deeper Production Cuts as Demand Outlook Weakens</a>
-                                        </h3>
-                                        <p class="news-meta">May 9, 2025 • Bloomberg</p>
-                                    </div>
-                                    <svg class="star-icon favorited flex-shrink-0 ml-4 mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                                </div>
-                                <div>
-                                    <span class="news-tag">OPEC</span>
-                                    <span class="news-tag">Production Policy</span>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="news-card flex items-start">
-                            <img src="https://placehold.co/80x80/000000/00BFFF?text=CNBC&font=Inter" alt="CNBC Logo" class="news-source-logo mt-1 flex-shrink-0">
-                            <div class="news-card-content flex-grow !pt-0">
-                               <div class="flex justify-between items-start">
-                                    <div>
-                                        <h3 class="news-title">
-                                            <a href="#">Natural Gas Prices Rally on Forecasts of Hotter Summer Weather & Increased LNG Exports</a>
-                                        </h3>
-                                        <p class="news-meta">May 10, 2025 • CNBC</p>
-                                    </div>
-                                    <svg class="star-icon flex-shrink-0 ml-4 mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                                </div>
-                                <div>
-                                    <span class="news-tag">Natural Gas</span>
-                                    <span class="news-tag">Weather Impact</span>
-                                    <span class="news-tag">LNG</span>
-                                </div>
-                            </div>
-                        </article>
+                    <div class="space-y-8" id="newsGrid">
+                        {/* News articles will be dynamically inserted here by JavaScript */}
                     </div>
                 </section>
             </div>
 
             <aside class="lg:col-span-4 space-y-8">
-                <div class="filter-sidebar">
+                <div class="filter-panel p-6">
                     <h3 class="filter-title">Filter by Category</h3>
-                    <button class="filter-button active">All Intelligence</button>
-                    <button class="filter-button">Market Analysis</button>
-                    <button class="filter-button">Policy & Regulation</button>
-                    <button class="filter-button">Crude Oil Insights</button>
-                    <button class="filter-button">Natural Gas Insights</button>
-                    <button class="filter-button">Renewable Energy</button>
-                    <button class="filter-button">Corporate Strategy</button>
+                    <div id="categoryList" class="space-y-3">
+                        <button class="category filter-button w-full" data-category="All">All Intelligence</button>
+                        <button class="category filter-button w-full" data-category="Crude Oil">Crude Oil</button>
+                        <button class="category filter-button w-full" data-category="Natural Gas">Natural Gas</button>
+                        <button class="category filter-button w-full" data-category="Petrochemicals">Petrochemicals</button>
+                        <button class="category filter-button w-full" data-category="Power">Power</button>
+                        <button class="category filter-button w-full" data-category="Renewables">Renewables</button>
+                        <button class="category filter-button w-full" data-category="Company News">Company News</button>
+                        <button class="category filter-button w-full" data-category="Earnings">Earnings</button>
+                    </div>
                 </div>
-
-                <div class="filter-sidebar">
+                 <div class="filter-sidebar">
                     <h3 class="filter-title">Trending Signals</h3>
                     <a href="#" class="filter-button">Global LNG Bottlenecks</a>
                     <a href="#" class="filter-button">Energy Transition Pace</a>
@@ -478,7 +645,6 @@
                     <a href="#" class="filter-button">AI in Energy Trading</a>
                 </div>
             </aside>
-
         </div>
     </main>
 
@@ -486,44 +652,369 @@
         <div class="container mx-auto">
             <p class="mb-2 text-sm">&copy; 2025 Linq Energy Intelligence. All Rights Reserved.</p>
             <nav class="text-xs space-x-3 sm:space-x-4">
-                <a href="#">About Linq</a> |
+                <a href="#terms" onclick="showTerms(event)">Terms of Service</a> |
+                <a href="#privacy" onclick="showPrivacy(event)">Privacy Policy</a> |
                 <a href="#">Contact Support</a> |
-                <a href="#">Privacy Policy</a> |
-                <a href="#">Terms of Service</a> |
                 <a href="#">Careers</a>
             </nav>
         </div>
     </footer>
 
-    <script>
-        // JavaScript for basic interactivity
+    <div id="termsContent" class="terms-privacy-content">
+        <span class="close-btn" onclick="closeTerms()">×</span>
+        <h2>Terms of Service</h2>
+        <p>Welcome to Linq. By accessing or using our website, you agree to comply with and be bound by the following terms and conditions. These terms govern your use of the site and any services provided.</p>
+        <p>1. <strong>Acceptance of Terms</strong>: By using this site, you accept these terms in full. If you disagree, please do not use the site.</p>
+        <p>2. <strong>User Conduct</strong>: You agree not to use the site for illegal or unauthorized purposes.</p>
+        <p>3. <strong>Content Ownership</strong>: All content on this site is owned by Linq or its licensors unless otherwise stated.</p>
+        <p>4. <strong>Limitation of Liability</strong>: We are not liable for any indirect or consequential damages arising from your use of the site.</p>
+        <p>For the most current version, please contact us at <a href="mailto:support@linq.com">support@linq.com</a>.</p>
+    </div>
 
-        // Star icon toggle functionality
-        document.querySelectorAll('.star-icon').forEach(star => {
-            star.addEventListener('click', function() {
-                this.classList.toggle('favorited');
-                if (this.classList.contains('favorited')) {
-                    this.setAttribute('fill', 'currentColor'); // Or your favorited color like #FFD700
+    <div id="privacyContent" class="terms-privacy-content">
+        <span class="close-btn" onclick="closePrivacy()">×</span>
+        <h2>Privacy Policy</h2>
+        <p>At Linq, we are committed to protecting your privacy. This policy outlines how we collect, use, and safeguard your information.</p>
+        <p>1. <strong>Information Collection</strong>: We collect personal information such as your name and email when you sign up or submit articles.</p>
+        <p>2. <strong>Use of Information</strong>: Your data is used to personalize your experience and improve our services.</p>
+        <p>3. <strong>Data Security</strong>: We implement reasonable measures to protect your information from unauthorized access.</p>
+        <p>4. <strong>Third-Party Sharing</strong>: We do not sell or share your personal data with third parties except as required by law.</p>
+        <p>For questions, contact us at <a href="mailto:support@linq.com">support@linq.com</a>.</p>
+    </div>
+
+
+    <script>
+        const FINNHUB_API_KEY = 'd0d0dlpr01qm2sk76g3gd0d0dlpr01qm2sk76g40'; //
+        const ENERGY_STOCKS = [
+            'XOM', 'CVX', 'COP', 'OXY', 'SLB', 'HAL', 'PSX', 'VLO', 'MPC', 'BKR',
+            'KMI', 'WMB', 'PXD', 'EOG', 'HES', 'DVN', 'APA', 'FANG', 'CHRD', 'CTRA',
+            'MTDR', 'CLR', 'SM', 'CIVI', 'HP'
+        ];
+
+        async function fetchFinnhubQuote(symbol) {
+            const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`; //
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                const price = data.c !== undefined ? data.c.toFixed(2) : 'N/A';
+                const change = data.d !== undefined ? data.d.toFixed(2) : 'N/A';
+                const percent = data.dp !== undefined ? data.dp.toFixed(2) : 'N/A';
+                return { price, change, percent };
+            } catch (err) {
+                console.error(`Error fetching ${symbol} from Finnhub:`, err); //
+                return { price: 'N/A', change: 'N/A', percent: 'N/A' };
+            }
+        }
+
+        async function updateTickerBanner() {
+            const tickerContent = document.getElementById('tickerContent');
+            if (!tickerContent) return;
+            tickerContent.innerHTML = ''; // Clear previous items
+            let allItemsHTML = '';
+            for (const symbol of ENERGY_STOCKS) {
+                const data = await fetchFinnhubQuote(symbol);
+                const changeClass = data.percent !== 'N/A' ? (parseFloat(data.percent) >= 0 ? 'positive' : 'negative') : '';
+                const percentDisplay = data.percent !== 'N/A' ? `${parseFloat(data.percent) >= 0 ? '+' : ''}${data.percent}%` : 'N/A';
+                allItemsHTML += `<span class="ticker-item">${symbol}: <span class="text-white">$${data.price}</span> <span class="${changeClass}">${percentDisplay}</span></span>`;
+            }
+            // Repeat content for smooth scrolling effect
+            tickerContent.innerHTML = allItemsHTML.repeat(Math.ceil(window.innerWidth / (ENERGY_STOCKS.length * 150)) + 2); // Adjust multiplier as needed
+        }
+
+
+        // Commodity data fetching (using Alpha Vantage as in original, simplified for brevity)
+        async function fetchCommodityData(symbol, name, priceId, changeId, percentId) {
+             // This is a placeholder. In a real scenario, you'd fetch live data.
+            // For now, using static example data or a mock.
+            const mockData = {
+                'CL': { price: 78.50, change: 0.39, percent: 0.50 },
+                'BZ': { price: 82.30, change: -0.16, percent: -0.20 },
+                'RB': { price: 2.45, change: 0.027, percent: 1.10 },
+                'NG': { price: 2.75, change: 0.063, percent: 2.30 },
+                'HO': { price: 2.80, change: -0.014, percent: -0.50 }
+            };
+            const data = mockData[symbol] || { price: 'N/A', change: 'N/A', percent: 'N/A' };
+
+            document.getElementById(priceId).textContent = data.price !== 'N/A' ? `$${data.price.toFixed(2)}` : 'N/A';
+            const changeEl = document.getElementById(changeId);
+            const percentEl = document.getElementById(percentId);
+
+            if (data.change !== 'N/A') {
+                changeEl.textContent = `${parseFloat(data.change) >= 0 ? '+' : ''}${data.change.toFixed(2)}`;
+                changeEl.className = parseFloat(data.change) >= 0 ? 'positive' : 'negative';
+            } else {
+                changeEl.textContent = 'N/A';
+                changeEl.className = '';
+            }
+
+            if (data.percent !== 'N/A') {
+                percentEl.textContent = `${parseFloat(data.percent) >= 0 ? '+' : ''}${data.percent.toFixed(2)}%`;
+                percentEl.className = parseFloat(data.percent) >= 0 ? 'positive' : 'negative';
+            } else {
+                percentEl.textContent = 'N/A';
+                percentEl.className = '';
+            }
+        }
+
+        async function updateCommoditiesTable() {
+            fetchCommodityData('CL', 'WTI Crude', 'wti-crude-price', 'wti-crude-change', 'wti-crude-percent');
+            fetchCommodityData('BZ', 'Brent Crude', 'brent-crude-price', 'brent-crude-change', 'brent-crude-percent');
+            fetchCommodityData('RB', 'RBOB Gasoline', 'rbob-gasoline-price', 'rbob-gasoline-change', 'rbob-gasoline-percent');
+            fetchCommodityData('NG', 'Natural Gas', 'natural-gas-price', 'natural-gas-change', 'natural-gas-percent');
+            fetchCommodityData('HO', 'Heating Oil', 'heating-oil-price', 'heating-oil-change', 'heating-oil-percent');
+        }
+
+
+        const articlesData = [
+            // Using placeholder images that match the new theme
+            { id: 1, category: 'Crude Oil', title: 'Oil Prices Surge Amid Escalating Geopolitical Tensions and Supply Concerns', date: 'May 10, 2025', source: 'Reuters', link: '#', image: 'https://placehold.co/150x100/0A0A0A/00BFFF?text=Oil&font=Inter' },
+            { id: 2, category: 'Crude Oil', title: 'OPEC+ Considers Deeper Production Cuts as Demand Outlook Weakens', date: 'May 9, 2025', source: 'Bloomberg', link: '#', image: 'https://placehold.co/150x100/0A0A0A/00BFFF?text=OPEC&font=Inter' },
+            { id: 3, category: 'Natural Gas', title: 'Natural Gas Prices Rally on Forecasts of Hotter Summer Weather & Increased LNG Exports', date: 'May 10, 2025', source: 'CNBC', link: '#', image: 'https://placehold.co/150x100/0A0A0A/00BFFF?text=NatGas&font=Inter' },
+            { id: 4, category: 'Petrochemicals', title: 'Petrochemical Demand Shifts with New Green Policies', date: 'May 8, 2025', source: 'Forbes', link: '#', image: 'https://placehold.co/150x100/0A0A0A/00BFFF?text=Petro&font=Inter' },
+            { id: 5, category: 'Power', title: 'Global Power Grids Under Strain from Extreme Weather Events', date: 'May 10, 2025', source: 'BBC News', link: '#', image: 'https://placehold.co/150x100/0A0A0A/00BFFF?text=Power&font=Inter' },
+            { id: 6, category: 'Renewables', title: 'Solar Panel Efficiency Reaches New Heights, Driving Adoption', date: 'May 9, 2025', source: 'Seeking Alpha', link: '#', image: 'https://placehold.co/150x100/0A0A0A/00BFFF?text=Solar&font=Inter' },
+            { id: 7, category: 'Company News', title: 'ExxonMobil Announces Major Investment in Carbon Capture Technology', date: 'May 10, 2025', source: 'Wall Street Journal', link: '#', image: 'https://placehold.co/150x100/0A0A0A/00BFFF?text=XOM&font=Inter' },
+            { id: 8, category: 'Earnings', title: 'Chevron Reports Strong Q1 Earnings Driven by Upstream Performance', date: 'May 8, 2025', source: 'Financial Times', link: '#', image: 'https://placehold.co/150x100/0A0A0A/00BFFF?text=CVX&font=Inter' },
+        ];
+
+
+        const newsGrid = document.getElementById('newsGrid');
+        let displayedArticles = articlesData; // Initially, all articles
+
+        function displayArticles(articlesToDisplay) {
+            if (!newsGrid) return;
+            newsGrid.innerHTML = ''; // Clear existing articles
+            articlesToDisplay.forEach(article => {
+                const articleElement = document.createElement('article');
+                articleElement.className = 'news-card flex flex-col sm:flex-row items-start'; // Use news-card for styling
+                articleElement.setAttribute('data-category', article.category);
+
+                // Determine logo based on source or use a generic placeholder
+                let logoSrc = `https://placehold.co/80x80/121212/00BFFF?text=${article.source.substring(0,4).toUpperCase()}&font=Inter`;
+                if (article.source.toLowerCase().includes('reuters')) logoSrc = 'https://placehold.co/80x80/121212/00BFFF?text=RTRS&font=Inter';
+                else if (article.source.toLowerCase().includes('bloomberg')) logoSrc = 'https://placehold.co/80x80/121212/00BFFF?text=BBG&font=Inter';
+                else if (article.source.toLowerCase().includes('cnbc')) logoSrc = 'https://placehold.co/80x80/121212/00BFFF?text=CNBC&font=Inter';
+                // Add more specific logos as needed
+
+                articleElement.innerHTML = `
+                    <img src="${logoSrc}" alt="${article.source} Logo" class="news-source-logo mt-1 sm:mt-0 flex-shrink-0 self-center sm:self-start">
+                    <div class="news-card-content flex-grow !pt-0 sm:!pt-0"> {/* Adjusted padding for better alignment */}
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="news-title">
+                                    <a href="${article.link}" target="_blank">${article.title}</a>
+                                </h3>
+                                <p class="news-meta">${article.date} &bull; ${article.source}</p>
+                            </div>
+                            <button class="favorite-btn star-icon flex-shrink-0 ml-4 mt-1" data-id="${article.id}" aria-label="Favorite article">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                            </button>
+                        </div>
+                        <div>
+                            <span class="news-tag">${article.category}</span>
+                            ${article.category === 'Crude Oil' ? '<span class="news-tag">Market Alert</span>' : ''}
+                             ${article.category === 'Natural Gas' ? '<span class="news-tag">Weather Impact</span>' : ''}
+                        </div>
+                    </div>
+                `;
+                newsGrid.appendChild(articleElement);
+            });
+            updateFavoriteIcons();
+            addFavoriteButtonListeners(); // Re-add listeners after re-rendering
+        }
+
+        function filterArticles() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const activeCategoryButton = document.querySelector('.category.filter-button.active');
+            const selectedCategory = activeCategoryButton ? activeCategoryButton.getAttribute('data-category') : 'All';
+
+
+            let filteredArticles = articlesData;
+
+            if (selectedCategory !== 'All') {
+                filteredArticles = filteredArticles.filter(article => article.category === selectedCategory);
+            }
+
+            if (searchQuery) {
+                filteredArticles = filteredArticles.filter(article =>
+                    article.title.toLowerCase().includes(searchQuery) ||
+                    article.source.toLowerCase().includes(searchQuery) ||
+                    article.category.toLowerCase().includes(searchQuery)
+                );
+            }
+            displayArticles(filteredArticles);
+        }
+
+
+        let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || [];
+
+        function toggleFavorite(articleId) {
+            const idStr = String(articleId);
+            const index = favorites.indexOf(idStr);
+            if (index > -1) {
+                favorites.splice(index, 1); // Remove if already favorited
+            } else {
+                favorites.push(idStr); // Add if not favorited
+            }
+            localStorage.setItem('linqFavoritesV2', JSON.stringify(favorites));
+            updateFavoriteIcons();
+            // If on favorites page, re-render favorites
+            if (document.getElementById('favoritesGrid')) {
+                 displayFavoriteArticles();
+            }
+        }
+
+        function updateFavoriteIcons() {
+            document.querySelectorAll('.favorite-btn.star-icon').forEach(button => {
+                const articleId = String(button.getAttribute('data-id'));
+                if (favorites.includes(articleId)) {
+                    button.classList.add('favorited');
+                    button.querySelector('svg').setAttribute('fill', 'currentColor');
                 } else {
-                    this.setAttribute('fill', 'none');
+                    button.classList.remove('favorited');
+                    button.querySelector('svg').setAttribute('fill', 'none');
+                }
+            });
+        }
+
+        function addFavoriteButtonListeners() {
+            document.querySelectorAll('.favorite-btn.star-icon').forEach(button => {
+                // Remove existing listener to prevent duplicates
+                button.removeEventListener('click', handleFavoriteClick);
+                // Add new listener
+                button.addEventListener('click', handleFavoriteClick);
+            });
+        }
+
+        function handleFavoriteClick(event) {
+            const button = event.currentTarget;
+            const articleId = button.getAttribute('data-id');
+            toggleFavorite(articleId);
+        }
+
+
+        // Market Tabs Functionality
+        const marketTabs = document.querySelectorAll('.market-tab');
+        const marketContents = document.querySelectorAll('.market-content');
+
+        marketTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                marketTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const targetContentId = `market${tab.id.substring(3)}Content`; // e.g., marketCommoditiesContent
+                marketContents.forEach(content => {
+                    if (content.id === targetContentId) {
+                        content.classList.add('active');
+                    } else {
+                        content.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Modal Functionality
+        function showTerms(event) {
+            event.preventDefault();
+            document.getElementById('termsContent').style.display = 'block';
+        }
+        function closeTerms() {
+            document.getElementById('termsContent').style.display = 'none';
+        }
+        function showPrivacy(event) {
+            event.preventDefault();
+            document.getElementById('privacyContent').style.display = 'block';
+        }
+        function closePrivacy() {
+            document.getElementById('privacyContent').style.display = 'none';
+        }
+        // Close modal if clicked outside
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('termsContent')) {
+                closeTerms();
+            }
+            if (event.target == document.getElementById('privacyContent')) {
+                closePrivacy();
+            }
+        };
+
+
+        // Category Filter Buttons
+        const categoryButtons = document.querySelectorAll('.category.filter-button');
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                filterArticles();
+            });
+        });
+         // Set "All Intelligence" as active by default
+        const allButton = document.querySelector('.category.filter-button[data-category="All"]');
+        if (allButton) {
+            allButton.classList.add('active');
+        }
+
+
+        // Search Input Listener
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', filterArticles);
+        }
+         // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+
+        // Initial data load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTickerBanner(); // Fetch and display stock ticker
+            updateCommoditiesTable(); // Fetch and display commodity prices
+            displayArticles(articlesData); // Display initial set of news articles
+            addFavoriteButtonListeners(); // Add listeners to initially rendered favorite buttons
+
+            // Firebase Auth State Change Listener for Nav Links
+            const firebaseConfig = {
+                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", //
+                authDomain: "linq-b27a8.firebaseapp.com", //
+                projectId: "linq-b27a8", //
+                storageBucket: "linq-b27a8.appspot.com", //
+                messagingSenderId: "1067901051826", //
+                appId: "1:1067901051826:web:44452d1339cdbe2af07aab" //
+            };
+            firebase.initializeApp(firebaseConfig); //
+            const auth = firebase.auth(); //
+            const authLink = document.getElementById('authLink');
+            const authLinkMobile = document.getElementById('authLinkMobile');
+
+            auth.onAuthStateChanged(user => { //
+                if (user) {
+                    if(authLink) {
+                        authLink.textContent = "Profile";
+                        authLink.href = "profile.html"; // Assuming you have a profile page
+                    }
+                    if(authLinkMobile) {
+                        authLinkMobile.textContent = "Profile";
+                        authLinkMobile.href = "profile.html";
+                    }
+                } else {
+                     if(authLink) {
+                        authLink.textContent = "Login";
+                        authLink.href = "login.html";
+                    }
+                    if(authLinkMobile) {
+                        authLinkMobile.textContent = "Login";
+                        authLinkMobile.href = "login.html";
+                    }
                 }
             });
         });
 
-        // Filter button active state
-        const filterButtons = document.querySelectorAll('.filter-button');
-        filterButtons.forEach(button => {
-            button.addEventListener('click', function(event) {
-                event.preventDefault();
-
-                const parentGroup = this.closest('.filter-sidebar');
-                parentGroup.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                console.log('Filtering by:', this.textContent.trim());
-            });
-        });
-
     </script>
-
 </body>
 </html>
