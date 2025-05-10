@@ -616,22 +616,22 @@
         }
 
         function favoritePost(button) {
-            const url = button.getAttribute('data-url');
-            if (!url) return;
-
-            let favoritePosts = JSON.parse(localStorage.getItem('favoritePosts') || '[]');
-            const isFavorited = favoritePosts.includes(url);
-
-            if (isFavorited) {
-                favoritePosts = favoritePosts.filter(fav => fav !== url);
-                button.classList.remove('favorited');
-            } else {
-                favoritePosts.push(url);
-                button.classList.add('favorited');
-            }
-
-            localStorage.setItem('favoritePosts', JSON.stringify(favoritePosts));
+          const rawUrl = button.getAttribute('data-url');
+          const url = rawUrl.split('?')[0]; // Remove query string
+        
+          let favoritePosts = JSON.parse(localStorage.getItem('favoritePosts')) || [];
+        
+          if (favoritePosts.includes(url)) {
+            favoritePosts = favoritePosts.filter(postUrl => postUrl !== url);
+            button.classList.remove('favorited');
+          } else {
+            favoritePosts.push(url);
+            button.classList.add('favorited');
+          }
+        
+          localStorage.setItem('favoritePosts', JSON.stringify(favoritePosts));
         }
+
 
         function initializeFavorites() {
             const favoritePosts = JSON.parse(localStorage.getItem('favoritePosts') || '[]');
