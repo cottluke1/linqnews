@@ -701,16 +701,16 @@
       firebase.initializeApp(firebaseConfig);
       const auth = firebase.auth();
     
-      auth.onChanged(user => {
-        const authLink = document.getElementById("authLink");
-        if (user) {
-          authLink.textContent = "Profile";
-          authLink.href = "profile.html";
-        } else {
-          authLink.textContent = "Login";
-          authLink.href = "login.html";
-        }
-      });
+        auth.onAuthStateChanged(user => {
+            const authLink = document.getElementById('authLink');
+            if (user) {
+                authLink.textContent = 'Profile';
+                authLink.href = 'profile.html';
+            } else {
+                authLink.textContent = 'Login';
+                authLink.href = 'login.html';
+            }
+        });
     </script>
     <script>
     firebase.initializeApp({
