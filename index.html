@@ -7,6 +7,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+            authDomain: "linq-b27a8.firebaseapp.com",
+            projectId: "linq-b27a8",
+            storageBucket: "linq-b27a8.appspot.com",
+            messagingSenderId: "1067901051826",
+            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -732,6 +744,20 @@
         .then(() => alert("Added to favorites!"))
         .catch(err => console.error("Favorite error:", err));
     }
+    </script>
+    <script>
+        auth.onAuthStateChanged(user => {
+            const authLink = document.getElementById('authLink');
+            if (authLink) {
+                if (user) {
+                    authLink.textContent = 'Profile';
+                    authLink.href = 'profile.html';
+                } else {
+                    authLink.textContent = 'Login';
+                    authLink.href = 'login.html';
+                }
+            }
+        });
     </script>
 </body>
 </html>
