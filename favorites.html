@@ -497,17 +497,23 @@
         }
     </script>
     <script>
-    auth.onAuthStateChanged(user => {
+    document.addEventListener('DOMContentLoaded', () => {
         const authLink = document.getElementById('authLink');
-        if (authLink) {
-            if (user) {
-                authLink.textContent = 'Profile';
-                authLink.href = 'profile.html';
-            } else {
-                authLink.textContent = 'Login';
-                authLink.href = 'login.html';
-            }
-        }
+    
+        // Delay check to ensure Firebase is ready
+        setTimeout(() => {
+            auth.onAuthStateChanged(user => {
+                if (authLink) {
+                    if (user) {
+                        authLink.textContent = 'Profile';
+                        authLink.href = 'profile.html';
+                    } else {
+                        authLink.textContent = 'Login';
+                        authLink.href = 'login.html';
+                    }
+                }
+            });
+        }, 500); // delay by 500ms to wait for auth state
     });
     </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93d5e1e429dfdd1c',t:'MTc0Njg0MjgzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
