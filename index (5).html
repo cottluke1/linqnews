@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linq - News & Market</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Lexend', sans-serif;
+            font-weight: 400;
+            background-color: #ffffff;
+            color: #333333;
+        }
+        strong {
+            font-weight: inherit;
+        }
+        .terms-privacy-content {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 12px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            z-index: 60;
+            color: #333333;
+        }
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666666;
+            transition: color 0.2s ease;
+        }
+        .close-btn:hover {
+            color: #000000;
+        }
+        article {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: #f9f9f9;
+        }
+        article:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .nav-link {
+            transition: color 0.2s ease;
+            color: #333333;
+        }
+        .nav-link:hover {
+            color: #60a5fa;
+        }
+        .favorite-btn {
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        .favorite-btn:hover {
+            color: #3b82f6;
+            transform: scale(1.2);
+        }
+        .favorited {
+            color: #3b82f6;
+        }
+        .filter-panel {
+            height: fit-content;
+            background: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            order: 2;
+            position: sticky;
+            top: 120px;
+            z-index: 30;
+        }
+        .category-tag {
+            display: inline-block;
+            background: #e5e5e5;
+            color: #333333;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            margin-left: 0.5rem;
+        }
+        .news-image {
+            width: 150px;
+            height: 100px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        .news-image:hover {
+            transform: scale(1.05);
+        }
+        .tagline {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #2563eb;
+        }
+        .tagline .highlight {
+            color: #000000;
+        }
+        .market-section {
+            background: #ffffff;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .market-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .market-tab {
+            cursor: pointer;
+            color: #666666;
+            padding: 0.5rem 1rem;
+            transition: color 0.2s ease;
+        }
+        .market-tab:hover, .market-tab.active {
+            color: #000000;
+        }
+        .market-content {
+            display: none;
+        }
+        .market-content.active {
+            display: block;
+        }
+        .market-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .market-table th, .market-table td {
+            padding: 0.75rem;
+            text-align: right;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .market-table th:first-child, .market-table td:first-child {
+            text-align: left;
+            color: #333333;
+        }
+        .positive {
+            color: #10b981;
+        }
+        .negative {
+            color: #ef4444;
+        }
+        .ticker-banner {
+            background: #333333;
+            color: #ffffff;
+            padding: 0.5rem 0;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            top: 0;
+            width: 100%;
+            z-index: 40;
+            margin-top: 80px;
+            font-size: 0.9rem;
+            line-height: 1.2;
+        }
+        .ticker-content {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker-scroll 60s linear infinite;
+        }
+        @keyframes ticker-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        .ticker-item {
+            display: inline-block;
+            margin-right: 1.5rem;
+        }
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+        }
+        .search-container svg {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: #666666;
+        }
+        .search-container input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.2s ease;
+        }
+        .search-container input:focus {
+            border-color: #2563eb;
+            outline: none;
+        }
+        @media (max-width: 768px) {
+            .tagline {
+                font-size: 1.75rem;
+            }
+            .market-tabs {
+                flex-direction: column;
+            }
+            .market-tab {
+                padding: 0.25rem;
+            }
+            main {
+                flex-direction: column;
+            }
+            .filter-panel {
+                order: 0;
+                width: 100%;
+                max-width: none;
+                position: static;
+            }
+            #news {
+                order: 1;
+            }
+            .ticker-banner {
+                margin-top: 72px;
+                padding: 0.4rem 0;
+                font-size: 0.85rem;
+            }
+            .search-container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="bg-white py-4 shadow fixed top-0 left-0 w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <a href="#" class="text-4xl text-black">Linq</a>
+            <div class="flex items-center space-x-6">
+                <a href="#news" class="nav-link">News</a>
+                <a href="favorites.html" class="nav-link">Favorites</a>
+                <a href="community.html" class="nav-link">Community</a>
+                <a href="login.html" id="authLink" class="nav-link">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="ticker-banner">
+        <div class="ticker-content" id="tickerContent"></div>
+    </div>
+
+    <div class="tagline text-4xl py-10">
+        The <span class="highlight">Linq</span> to your Energy News
+    </div>
+    <div class="text-center mb-10">
+        <button onclick="document.getElementById('news').scrollIntoView({ behavior: 'smooth' })" class="bg-white text-black border border-black px-6 py-3 rounded-lg text-lg font-medium transition-colors hover:bg-gray-100 mx-auto">Explore News</button>
+    </div>
+
+    <section class="market-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="market-tabs">
+            <div id="tabCommodities" class="market-tab active">Commodities</div>
+            <div id="tabUS" class="market-tab">Equities</div>
+            <div id="tabTreasuries" class="market-tab">Treasuries</div>
+        </div>
+        <div id="marketCommoditiesContent" class="market-content active">
+            <table class="market-table" id="commoditiesTable">
+                <tr>
+                    <th>WTI Crude</th>
+                    <td id="wti-crude-price">Loading...</td>
+                    <td id="wti-crude-change">Loading...</td>
+                    <td id="wti-crude-percent">Loading...</td>
+                </tr>
+                <tr>
+                    <th>Brent Crude</th>
+                    <td id="brent-crude-price">Loading...</td>
+                    <td id="brent-crude-change">Loading...</td>
+                    <td id="brent-crude-percent">Loading...</td>
+                </tr>
+                <tr>
+                    <th>RBOB Gasoline</th>
+                    <td id="rbob-gasoline-price">Loading...</td>
+                    <td id="rbob-gasoline-change">Loading...</td>
+                    <td id="rbob-gasoline-percent">Loading...</td>
+                </tr>
+                <tr>
+                    <th>Natural Gas</th>
+                    <td id="natural-gas-price">Loading...</td>
+                    <td id="natural-gas-change">Loading...</td>
+                    <td id="natural-gas-percent">Loading...</td>
+                </tr>
+                <tr>
+                    <th>Heating Oil</th>
+                    <td id="heating-oil-price">Loading...</td>
+                    <td id="heating-oil-change">Loading...</td>
+                    <td id="heating-oil-percent">Loading...</td>
+                </tr>
+            </table>
+        </div>
+        <div id="marketUSContent" class="market-content">
+            <table class="market-table">
+                <tr>
+                    <th>Dow Jones</th>
+                    <td>41,317.43</td>
+                    <td>564.47</td>
+                    <td class="positive">+1.39%</td>
+                </tr>
+                <tr>
+                    <th>S&P 500</th>
+                    <td>5,686.68</td>
+                    <td>82.54</td>
+                    <td class="positive">+1.47%</td>
+                </tr>
+                <tr>
+                    <th>Nasdaq</th>
+                    <td>17,977.73</td>
+                    <td>266.99</td>
+                    <td class="positive">+1.51%</td>
+                </tr>
+            </table>
+        </div>
+        <div id="marketTreasuriesContent" class="market-content">
+            <table class="market-table">
+                <tr>
+                    <th>10-Year Treasury Yield</th>
+                    <td>4.40%</td>
+                    <td>0.02</td>
+                    <td class="positive">+0.00%</td>
+                </tr>
+                <tr>
+                    <th>2-Year Treasury Yield</th>
+                    <td>4.15%</td>
+                    <td>0.01</td>
+                    <td class="positive">+0.00%</td>
+                </tr>
+                <tr>
+                    <th>30-Year Treasury Yield</th>
+                    <td>4.65%</td>
+                    <td>0.03</td>
+                    <td class="positive">+0.00%</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+    <div id="termsContent" class="terms-privacy-content">
+        <span class="close-btn" onclick="closeTerms()">×</span>
+        <h2 class="text-2xl text-gray-800 mb-4">Terms of Service</h2>
+        <p>Welcome to Linq. By accessing or using our website, you agree to comply with and be bound by the following terms and conditions. These terms govern your use of the site and any services provided.</p>
+        <p class="mt-4">1. <strong>Acceptance of Terms</strong>: By using this site, you accept these terms in full. If you disagree, please do not use the site.</p>
+        <p class="mt-2">2. <strong>User Conduct</strong>: You agree not to use the site for illegal or unauthorized purposes.</p>
+        <p class="mt-2">3. <strong>Content Ownership</strong>: All content on this site is owned by Linq or its licensors unless otherwise stated.</p>
+        <p class="mt-2">4. <strong>Limitation of Liability</strong>: We are not liable for any indirect or consequential damages arising from your use of the site.</p>
+        <p class="mt-2">For the most current version, please contact us at <a href="mailto:support@linq.com">support@linq.com</a>.</p>
+    </div>
+    <div id="privacyContent" class="terms-privacy-content">
+        <span class="close-btn" onclick="closePrivacy()">×</span>
+        <h2 class="text-2xl text-gray-800 mb-4">Privacy Policy</h2>
+        <p>At Linq, we are committed to protecting your privacy. This policy outlines how we collect, use, and safeguard your information.</p>
+        <p class="mt-4">1. <strong>Information Collection</strong>: We collect personal information such as your name and email when you sign up or submit articles.</p>
+        <p class="mt-2">2. <strong>Use of Information</strong>: Your data is used to personalize your experience and improve our services.</p>
+        <p class="mt-2">3. <strong>Data Security</strong>: We implement reasonable measures to protect your information from unauthorized access.</p>
+        <p class="mt-2">4. <strong>Third-Party Sharing</strong>: We do not sell or share your personal data with third parties except as required by law.</p>
+        <p class="mt-2">For questions, contact us at <a href="mailto:support@linq.com">support@linq.com</a>.</p>
+    </div>
+
+    <main class="max-w-7xl mx-auto pt-8 sm:px-6 lg:px-8 flex flex-wrap gap-6">
+        <section id="news" class="flex-1 order-1">
+            <h2 class="text-3xl text-gray-800 mb-4">Latest News</h2>
+            <div class="search-container mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="text" id="searchInput" placeholder="Search news..." class="text-gray-800">
+            </div>
+            <div id="newsGrid" class="space-y-6"></div>
+        </section>
+        <aside class="filter-panel bg-white rounded-2xl shadow-xl p-6 w-80 order-2">
+            <h2 class="text-2xl text-center text-gray-800 mb-6">Filter by Category</h2>
+            <div id="categoryList" class="space-y-3">
+                <button class="category w-full py-2 rounded-lg border border-gray-300 text-gray-800 font-medium transition-all shadow-sm hover:shadow-md" data-category="Company News">Company News</button>
+                <button class="category w-full py-2 rounded-lg border border-gray-300 text-gray-800 font-medium transition-all shadow-sm hover:shadow-md" data-category="Power">Power</button>
+                <button class="category w-full py-2 rounded-lg border border-gray-300 text-gray-800 font-medium transition-all shadow-sm hover:shadow-md" data-category="Crude Oil">Crude Oil</button>
+                <button class="category w-full py-2 rounded-lg border border-gray-300 text-gray-800 font-medium transition-all shadow-sm hover:shadow-md" data-category="Natural Gas">Natural Gas</button>
+                <button class="category w-full py-2 rounded-lg border border-gray-300 text-gray-800 font-medium transition-all shadow-sm hover:shadow-md" data-category="Petrochemicals">Petrochemicals</button>
+                <button class="category w-full py-2 rounded-lg border border-gray-300 text-gray-800 font-medium transition-all shadow-sm hover:shadow-md" data-category="Renewables">Renewables</button>
+                <button class="category w-full py-2 rounded-lg border border-gray-300 text-gray-800 font-medium transition-all shadow-sm hover:shadow-md" data-category="Earnings">Earnings</button>
+            </div>
+        </aside>
+        <section id="favorites" class="hidden py-10 w-full order-3">
+            <h2 class="text-3xl text-gray-800 mb-6">Your Favorited Articles</h2>
+            <div id="favoritesGrid" class="space-y-6"></div>
+        </section>
+    </main>
+
+    <footer class="bg-white text-gray-600 py-6 shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+            <p>© 2025 Linq. All rights reserved.</p>
+            <div class="mt-4 md:mt-0 space-x-4">
+                <a href="#terms" class="hover:text-gray-800 transition-colors" onclick="showTerms(event)">Terms of Service</a>
+                <a href="#privacy" class="hover:text-gray-800 transition-colors" onclick="showPrivacy(event)">Privacy Policy</a>
+                <a href="#" class="hover:text-gray-800 transition-colors">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const FINNHUB_API_KEY = 'd0d0dlpr01qm2sk76g3gd0d0dlpr01qm2sk76g40';
+        const ENERGY_STOCKS = [
+            'XOM', 'CVX', 'COP', 'OXY', 'SLB', 'HAL', 'PSX', 'VLO', 'MPC', 'BKR',
+            'KMI', 'WMB', 'PXD', 'EOG', 'HES', 'DVN', 'APA', 'FANG', 'CHRD', 'CTRA',
+            'MTDR', 'CLR', 'SM', 'CIVI', 'HP'
+        ];
+
+        async function fetchFinnhubQuote(symbol) {
+            const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                const price = data.c;
+                const change = data.d;
+                const percent = data.dp;
+                return { price, change, percent };
+            } catch (err) {
+                console.error(`Error fetching ${symbol} from Finnhub:`, err);
+                return { price: 'N/A', change: 'N/A', percent: 'N/A' };
+            }
+        }
+
+        async function updateTickerBanner() {
+            const tickerContent = document.getElementById('tickerContent');
+            tickerContent.innerHTML = '';
+            for (const symbol of ENERGY_STOCKS) {
+                const data = await fetchFinnhubQuote(symbol);
+                const changeClass = data.percent !== 'N/A' ? (data.percent >= 0 ? 'positive' : 'negative') : '';
+                const tickerItem = document.createElement('span');
+                tickerItem.className = 'ticker-item';
+                tickerItem.innerHTML = `${symbol}: $${data.price} <span class="${changeClass}">${data.percent !== 'N/A' ? `${data.percent >= 0 ? '+' : ''}${data.percent.toFixed(2)}%` : 'N/A'}</span>`;
+                tickerContent.appendChild(tickerItem);
+            }
+            const originalContent = tickerContent.innerHTML;
+            tickerContent.innerHTML = originalContent.repeat(8);
+        }
+
+        async function fetchCommodityData(symbol) {
+            const url = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=5min&apikey=S9IXH1J5H7M9SCIL`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                const latest = data['Time Series (5min)'][Object.keys(data['Time Series (5min)'])[0]];
+                const price = parseFloat(latest['4. close']);
+                const prevTime = Object.keys(data['Time Series (5min)'])[1];
+                const prevPrice = prevTime ? parseFloat(data['Time Series (5min)'][prevTime]['4. close']) : price;
+                const change = (price - prevPrice).toFixed(2);
+                const percent = ((change / prevPrice) * 100).toFixed(2);
+                return { price, change, percent };
+            } catch (error) {
+                console.error(`Error fetching ${symbol} data:`, error);
+                return { price: 'N/A', change: 'N/A', percent: 'N/A' };
+            }
+        }
+
+        async function updateCommodities() {
+            const commodities = [
+                { symbol: 'CL', name: 'WTI Crude', ids: ['wti-crude-price', 'wti-crude-change', 'wti-crude-percent'] },
+                { symbol: 'BZ', name: 'Brent Crude', ids: ['brent-crude-price', 'brent-crude-change', 'brent-crude-percent'] },
+                { symbol: 'RB', name: 'RBOB Gasoline', ids: ['rbob-gasoline-price', 'rbob-gasoline-change', 'rbob-gasoline-percent'] },
+                { symbol: 'NG', name: 'Natural Gas', ids: ['natural-gas-price', 'natural-gas-change', 'natural-gas-percent'] },
+                { symbol: 'HO', name: 'Heating Oil', ids: ['heating-oil-price', 'heating-oil-change', 'heating-oil-percent'] }
+            ];
+
+            for (const commodity of commodities) {
+                const data = await fetchCommodityData(commodity.symbol);
+                document.getElementById(commodity.ids[0]).textContent = data.price !== 'N/A' ? `$${data.price.toFixed(2)}` : 'N/A';
+                document.getElementById(commodity.ids[1]).textContent = data.change !== 'N/A' ? data.change : 'N/A';
+                document.getElementById(commodity.ids[2]).textContent = data.percent !== 'N/A' ? `${data.percent >= 0 ? '+' : ''}${data.percent}%` : 'N/A';
+            }
+        }
+
+        const articlesData = [
+            { id: 1, category: 'Crude Oil', title: 'Oil Prices Surge Amid Supply Concerns', date: 'May 3, 2025', source: 'Reuters', link: 'https://www.reuters.com/markets/commodities/oil-prices-set-weekly-loss-potential-more-global-supply-2025-04-25/', image: 'data:image/png;base64,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' },
+            { id: 2, category: 'Crude Oil', title: 'OPEC+ Extends Production Cuts', date: 'May 3, 2025', source: 'Bloomberg', link: 'https://www.bloomberg.com/news/articles/2024-12-05/opec-delays-revival-of-its-oil-production-by-three-months', image: 'data:image/png;base64,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' },
+            { id: 3, category: 'Crude Oil', title: 'Global Demand for Crude Hits Record', date: 'May 3, 2025', source: 'CNBC', link: 'https://www.cnbc.com/2025/04/29/oil-falls-as-economic-jitters-dampen-demand-outlook.html', image: 'data:image/png;base64,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' },
+            { id: 4, category: 'Natural Gas', title: 'Natural Gas Prices Soar in Europe', date: 'May 3, 2025', source: 'Seeking Alpha', link: 'https://seekingalpha.com/news/4423489-european-natgas-surges-on-low-inventory-levels-fading-hopes-for-russian-gas-flow', image: 'data:image/jpeg;base64,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' },
+            { id: 5, category: 'Natural Gas', title: 'US Natural Gas Exports Rise', date: 'May 3, 2025', source: 'Yahoo Finance', link: 'https://finance.yahoo.com/news/us-natural-gas-prices-climb-131613491.html', image: 'data:image/jpeg;base64,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' },
+            { id: 6, category: 'Natural Gas', title: 'Natural Gas Futures Hit 5-Year High', date: 'May 3, 2025', source: 'CNBC', link: 'https://www.cnbc.com/2025/03/10/eqt-ceo-toby-rice-says-the-market-is-screaming-that-we-need-more-energy.html', image: 'data:image/png;base64,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' },
+            { id: 7, category: 'Petrochemicals', title: 'Petrochemical Industry Faces Challenges', date: 'May 3, 2025', source: 'Forbes', link: 'https://example.com/article-7', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWpyAdajaUF-RGcmTT8cYnLr4JUsgSZ90RVQ&s' },
+            { id: 8, category: 'Petrochemicals', title: 'New Petrochemical Plant Opens in Asia', date: 'May 3, 2025', source: 'Wall Street Journal', link: 'https://www.wsj.com/articles/british-chemical-giant-ineos-to-invest-800-million-in-a-new-chinese-plant-11578480660', image: 'data:image/png;base64,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' },
+            { id: 9, category: 'Petrochemicals', title: 'Petrochemical Demand Grows in 2025', date: 'May 3, 2025', source: 'Financial Times', link: 'https://www.ft.com/content/17a0149a-542a-4e6d-8e40-e1b2b798e301', image: 'data:image/png;base64,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' },
+            { id: 10, category: 'Power', title: 'Power Grid Faces Strain in Summer', date: 'May 3, 2025', source: 'BBC', link: 'https://www.bbc.com/news/world-us-canada-66343133', image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOAAAADhCAMAAADmr0l2AAAAh1BMVEX///8PDg8AAAAKCQr19fUREBGPj4+cnJyGhYVHRkdUU1P8/Pzj4+MDAAMIBwjx8fGxsbF7enulpaXDw8Nsa2vq6uq7u7vX19dubm45OTkyMTLb29vR0dGenp5+fn5mZWYdHB0qKiokIyS1tbVPT09BP0BeXl4fHh8vLi8ZFhfBwMCTk5NSUVE1dIiQAAAIgElEQVR4nO2daXfiLBSAlfjaaBa3UevW2G06rfP/f9+bEDUCWdi5mcPzqedM6eQR5MKFwGDg8Xg8Ho/H4/F4PB6Px+PxeOAyWseY9cj1k2glilfLMJu8IoLXSRYuV3Hk+unUiI6n57erURoMHwjSm+jz6dhPy9Eq3GGxYStYdBeuetZq46dJ8eDtbhXF706eYtdPzcthfBaQe5D8Gh9cP3s3o+W+s1k2kTfX/RJ2Wz1mCCVydiUJQtnRtUUj8714y2TJq3Hu2qSO6KRYeRV5NZ7AhY4nhILuR+clQOjJtRHBUqveVXHp2urO6k23Xqn4tnJthllPdX33aBI0Xbu2GwwuOnrOJhC6ONY7vBrUw4qvTkc3Y1OtsyJBY2d6653h6itBO0ffxHeT3z7CEL278FtY0sOKC+t6IzvN8264szzLONhqnndDZLU3/ZGd8smToh97fifL1VeCTrb8xk78ckNLEdFm90kZWulMn5355YbP/7afDUN37fNqaLiVho79csPQpJ+b+EAZGowWGwB+ueHGlN8WhF9uuDXjN7M/PqsnRTMjgnsgFZhX4d6En9sASGIiHM4B+eWG2pcvYlB+uaHu5VLT6UFR0KteP/cjGBq9I5ojOL/cUOdC6RlIBHwkPevzg9dAC/Q1Umg96A1tPekEquBEjx+MOUQdmuYVAcAepiQNdPg9ga3AvAo1bFWITKy/6yJA6ttNYIaIG+qhYgTaLzdUXXVylabnRTWdD/obWKD6LYSQJ2xHMYsIvQKLKlTxgzuIqVAazkAdhT6iMiKFOo0gUZhUwA7yNxSCPfwupkC+m1n1ogIVsjOQctltSOe5+9FC5dtoX1poXoVye59f+iP4IiWY9KSF5m00kfHrR5QvkYr1yz4Jyrxj8btPgr8lBKkggbixXKRAJlAcyD+BLtGIi+je+aKQt8h9zIteeItcqMcT3y5LLVnzT5yrp+VOl4yrz4S3CJVqkFjSpjal8adY7QhS6WiJLWy7fgnueAveofpQ4IJD4V6GDvPgBUVDPZ1uAi8omnqiE6LgBUXTo/TOXpeC8SFmViAYQdFu9KNNcDK9koVLJsLWC360FWkRPIR7PHD5L3sncvSM4IegIL1xhBAkxkx7KiNSL0gU+UMVaRScTW/vrgeIfLmHFhTdVMIsupCC+L/Mwf9CvfzWIBgQRcjRf5PgkRhyErklWlB0EWZGTyUYweuBMMXni4gXGJsFg4ciRK/eIHjEn0pV8W2CQ8FNsusuwWuWYPsnKQbiXILX5Ne22FhLdkD1ghHeYYwm7+toMIqXnx2CYq+JMtuzGcFrr1UMCFDGJ/ir/LH48NC0WxBPSx4a86rtOyi6kZvJqDUJDsQF8c/dgiPKj4QVFMuscQvOmPbWKVg8OfllqxUs5mvNY2hVQWZhsOE7iLPfnJ3MLQFdND2OTgb/5cZpHisoNlZjdmgzgr9/Npv3y559imbBD1ykmIdRA6tawX3SNoRmBcWmvJ2Cw3uXTy99NIeJezaFLlIriP+Txk0i5gXvpGeycbQE+qoIOTYAKVhlt1JyIN5Zg/mPAUccdCyIFqNZToynVUQMav4OZrciAdVKawXf0rborSrY3Yve4mCxX/0e4doFb7+1xZ1Ul2BW/FbjGQ+qvSh/oB+8psP0TUiwKEKkamsFT8yAp13QUKAfDD4R+bQcgruEQxBnhRofW1WQeyyKhzLJ49tg3YLFUCb97hIcTLFh9V2NHxuh6liUWTtrGskcmblB50imnE48rlnWC5aLB+gZP/ns5xcxaWEFxdJqnfPB4OszZ4dDfUD05o2CZJHH6VvDfLCUwIEFh5d2QbH5YNQZB/H/mZQzUmJg0jHhvRYhvjFNM/rxdXhQJgI6BAW3VX63piwI/pLBiiMngyZke2rMyfxU62T5T4+RjklZfA/EoLfhEYK7yZ3Fkm779YKfVZHnE12kJas2n14/k48l0QaZrJroljxAedF4e9wyPYhyXpT5A9Az26JvUPzzaxOHvgkKr2H3TZC34J09eagfcMFE/OiAf36NftkvQfGtTvQ+Ge6/UD0t99mgF/HPhP78JY6Vo9eX/uPEepGh5JbYKT3a48R6kWHbzL8F+K8tVUi9wESHesjInezYlz3p0rvSXR+hxo/kYWs//RGUO5mTSVtARfot0KwnhuQKswB9aaPyZ8f2RVDWryfvvki+91LQj1ivcn6z3cO05ZDYzVwB67S4etTOkIM/XFN7j35wAV+FilduQD+MpG2fAh/QI4VCjChh9lUCQ3AXZQ2wJ00aTqVm1npBoeMwXMjnPWg53h/woUA6DuUaQH6ZV9f1aHCOZybRdlgzlAPEafQdKA4zVGi8uABkP6OphymBeG6H5AkdDcA7Wkb3YelDYIeMpkO9fuB6Uv1XMsA6R9XEJa/0gqhLpBY8u4jOxm+L5AWdjdxDvIYSDQP1WW49UKKh3gj4CIx5hckrliFMfs3eLOV+RGP69jPXi6LSi53c/HVqiP6a9nMb8I0EeAZ355FJnS4mgauexsb9kSVuooXZ+ECytD9qC0zGd5aV/ZuUjY3P6ll/WzVE3/avbLfZmdrqPkmebF24mJqYv/NwsNNM0bfVi8wJns33poG96FfHKjFciSix3HvSRAuTAQOhhZHsixDbval2GqC9oQtpBZmbqUSk/6JPWaKxfkWExu5bZ8XoRa8iQi+qFyrpZhYiXd/FAKHQzF3Jaowu9OnQUhRHHkCrvTubT8VqzCvv09hl5VqIQyTtWBwFEeq+QNgAqzz2i4/Di8MgF45HLfwcw7NIRRZVdw513qtrgXieJajbsjyhJJv3oGXWEG/CyfWsDabJpreDScJNP+XurI/zcTb5QhRfk2w8P9pPRJgjWsfbI2YbryGNwjwej8fj8Xg8Ho/H4/F4PB4Pyf8jHp3ifKoVagAAAABJRU5ErkJggg==' },
+            { id: 11, category: 'Power', title: 'Nuclear Power Makes a Comeback', date: 'May 3, 2025', source: 'Reuters', link: 'https://example.com/article-11', image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARMAAAC3CAMAAAAGjUrGAAAA81BMVEX///+GiIuAgoWDhYh8foH0dx+IiY34+Pm2t7n2hR7Gx8mXmJvg4eKlpqfKy82cnaD3hgDS0tPzaQD1ex/3iQD1eAD2gQD0bgD++PP0cgDzZQDb29z0cAD+8ur4jgD++/j3jx395tTp6en97eH70K395ND82r/4khD6w5/82sf6yan94875qV36tHX6v4r83cX5pVL4rHb70Lf4n0Cur7H6u4P2kFD4rID2lVv3oGz0gTH7x5z5qFn4mC35t4f3oF73kTP3lEj3p3n6vpb5waT5uJT3nGX1hDr3m1P6y7L2iiX2kUD1hCn4qXD4sov4mTD4oUiGLL6nAAAL+0lEQVR4nO2bCXfaOhOGhW12Qoyxjc0SY0wg0JA0ZE9u0yUkbdKE9P//mjuSvMgLvf2a+6X3wDzntBjJEtLr0WgkOYQgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCPJaen+6Af8hPP6xrw75BWoDWszYp77DP8eBNhuMvjNmn+6BRT881ddmIxleO/TjcN+NJV/P2ODxDnb/QJv+MAf6zvvVuZa+o7qrs9eUv8ZjfXXurj7e2Ty/sqvr14kk9zC6fq9/cN60PX8Y5kyJY4UJTp8OI0/VqWk4fDLm/2+KLjNVjwzCor3uqXQYuUwTVzWnYe6pqo7evoFvz0jt90NP4qhsJvaYzRxSM5np/X6Quwu3qptgKkPoqBl+e5+MRg5N84aQyQ21DyqfaZH1x+mrtNeBW0nhQWAyMUzjAa4/qeaGRHAjFo6NzIMwxaWxyFA/Cr4fmWXzI7vp3Vs37u0ZRd5V0MRVVVgJmmUDxJruQcLUKBu3Qa41X+foraea5mM4ZPgFXRZ7qglT7yfT6JFz27iHlL3Pt8SZTql/hXHEbWY9eTbLZe5LQg6Zw+jRaMSZgj7fm03Dz2oadpNQ8ymXjfWdkT9B98qf4WJ/JxhDvbEfwrt8H2WuaXvE/bKAK7vZ7M6JZUAZ8zazvnXgyOTd89SdfTF95JHDluZaV9qEmozXtrVzMmk1m60JIY/UTiarKy0Oao16pVICKo1BKnvQYFkst1MrBqk1IF4NTWHZtUyCksVOPaiv3qhFvyc2ox7eLTakU2F5nUEs0/luGNRMyGxM3abnm8jQMMi0q00WrfwV/Q6feRg1Z5p2Ru8yDTs+3mIUFMlHhn+KtNWJNaRKs2WA36MUeDpNVerinVuQpGzTImGFIiwLKLHcqD6lFhQPirEcpdqIK16Sw2oVpRBrpOcJX65V/nlolMGrLshuWzu3mmUL7KT1BdJ3d8lkDm7W/cl2ZFHJxZGVavQcBoqczOYZElxKcU3gTplrkstA3mJ3bUuJdMnvXep+KSfYYSnRDlkOciZZ20THO2y959F5yJuQRdeeksnlHc+80FpdqqIzWTUdpzShzQktejspySs16aTyAk0K6SJKaAxbSSVzvrm6hmE/0fl3/4OwJ0D2X0Assmifu90bkMV6YvcQ66w5IRMtn+/C1DyxDfvzzzQBe2RIstjxRCaj8AuaBIOAd1ocO/QmsESRmqCJHG+G4j+bhuLXxPLY0MvxnCZgXEA8pvbVeL/u2l8n7VurPPcM5mG+fbLIF7tpg5PJ5/NnxOnSouerNZEqgyJl0NjiKpR4Zod1vVIUIP+oSehjS7RnUszH0p7L1UFGhSznZMCyBp0T1gzZ90H8OeUqNZo36DRKJ9t8JHotKkqLxq/qI3wfw5ghQ5h+LHfR/so3SpyZ58C0Y5sjrkkP7ERbgJnQok8/0SRyaNy6Jf6lLkXXcX6mSUAlXTrxYwJMk1L4dcANhSnGBmO8ah9Lg37laTw2vKE+8/gDvfyLkHLbFZzFqU7ILUwz1sVXWOq4Z1cQqbhUzvxZVlNSmvCe+FbLruWsYr+nCf+x2MQWkNCE1KSwXdxa01EC8KXFHnqKZ0OcVpzkHEND3DMo2s4OUVKaDIR2s17lsor93zXhJlWhV7XVmpC7r1/p+n8S67V3lNwzGoFPmR3DhUtVONPaS0KWV2croraUJsX/iCa5UBM+dqrZ7ac4j6Yx96977wm56U4TdxzC2uZFp7E9LI0fYNhoXrKSVDP/g5pIoSaEzUJyIcNSHu4v4VlPIbx/pOEa9Nyhs8w8fSfnxlQ/kjtwrzYUW9x/yY5QUpp0kv7kX9ckvibwSWoitos3I5eMbQm5b9k2uJO5UTa/E/JB5wdezkF6t+2Ar4V6n/ou6bUM44k5FLudqV5Kk4Iw7/DGVEVqr9YkXl8gQ1ITFskEAUrVD5skqSQaCw2/wMc65Nkuw1hwZ3xAvDPSJ1vUoQyDkNdb3jpk3qKFu/+syaBekIX4hGsiC/jW/CpNYhUGVhjTpNioSjEfUg0CWVk0lgUNv/Kt2ADYH658syJ+kL5khTP9ShCq+tEm/22pKGoiEujwKk1ECoImOTlsBjMMJTKKiuzHtsxY/ET+qDWQIFq6vAdNMvZbT1/4Z49uJLkfP3q+oFrWqUbWeidsS9pOlH/BTmJ2F0Q/6fWOrMTcB8S2gSyS7DewaYOZXBKrabcgSnefuXewMnbQrv29FV29Jo5hmiZxbFo4M7hPa6Jsh+tirklJZPBqTeQtsb6g3ylNpPQ809gOlsf+U7PutS5EGncGTK49YpoGHwkrDjRocl8dwsKxXIaYrnem2XeZN/qPLlq0idPCG887sWbUs+4q+psGckFMXdos4GCaeC+wQE5NsTSudekq0aGqlU06Ta2GP7pSp9GoV05E/xr26g3jkxPWjBLzr1sr2sv3DYJ9BHd5B0+81dUuaPgKY2dkHMAISYqy9yjajnUL8w6ZLBcrDCo277CHpURbSv+gSUVMofNlvCO/HbPxeTjzNoA9Of/Wh3a323aJtYjijIyJxLvPSFxq3VYre4aKadJJrEBXa1JIPUopFw8wXqGJ7+My2xs6JXbNFrd0v3WypKq4SzrlzC3SM0UVvmhHEMiBaVj7dOfJOoTLHl1S2/erfyGMTxJPaLUmfJgJCR1JrCcq/VuxfSVthgKRJnz/RCPkXOtq5/DVALdyY9A43/H88eM8Nb0leBN6Hjgy9+lrB2ofRKR7Ss3mL2jCn1DowDJ2QHwaSbNgoaYS21F/xXonl0vVFjKQQq/HNsuaT8RpQ6jRdiZ2szUne8Y3mndskumULC/cNt8RYIHICDzIodoHK+pROY1fsRNSij0h1vPspnFPFwaebOM24RczFF39/OOadJRYdWILikx9X9gpLF1au8Rimljkq0bHEXQYIhWwE6NLum1vsSDWTHS6LypdFy27hmH/gj8hCTfrr9Ir9YjgIfNhJRVKjVqncZKKO1doUuX+UagvmLsS6x2mcbBXW1ekwvZJqQLtqPg/FYR67s0d7delZmuXhEX1c7CKjwYI5BB3l7jM+Y7MU7EVXInJze2vzDsk+YSkKGoI9prDVvO4X452o5WEAWRoUkpVqAj79oIm3JEWooqCEyH/p5Ir5MWlv9t2pmn35E4zyGUbpueJQ6xHGErMqx7/6hvmqXXxtrggLaUWPNFOZOKoRlZKiaozNEmfc0jZmviDuB5VJBL7qVvTpK9SkIt23iUeLJXb4FGdXjvf9qg2c8OPbns/qCbuKTvbeTaeVh+NZu8phSvSarDGCHou9LEiRZmyUkiFp3xnN55WTx5eKcKZlxTbZ2Nuo8gL0dOLqAmyaCV7NFJ/AP/Qom8POKBJi6VfaXlyaUMEcrMnNkDfoVuQH81y2V691VaAn4ttdpZoT0PXUK/GTne2Y8bQ2PLPfgonGZNJBypKbRkOtsTjIqm65bsuap6xwJhO7rKfUqufVMMjqK34uPlO3yuA4XFBTzUsMrm6csmdDeMG5l5r6a8Gh+GOyrE+I/57BTGt/keKA04xawJimb9X3yB7rv15uVSZb7R7z3QKahr+uZ6nNe292MuyphnuCbAZiGmS3LRdH94Z/np48fncIQ9Ti8Wo9gM9NwUreUftgu1Ri9xCofIavxDq3tyEnuHZoK8TkPnnG0KOVHWfnndFh6az6A8URkerJuI1gj90Q3jVxjVNsA7rNDpcV/kqaI3tI8azadK+P5rl6ATQSVqCxzYlT01z5VnHOjEy++zFAu/bJ7CNmflX8oaDcI92F241N8FUhrrwbrln9lVqNEL84ZrHweUGvVuuq9Eb1Lqu9uifavyA6x4/wRhGAn3Q1Y16t5xjMQVedtgfq5gvqVs34N3yCOv9S7Qp4M1Y373Id1yPT9Nl1p3Zzni8OtfTx/r6vju9CtCkvzp3MzWx9n8wX2oN4xOL/yLx8PggXWZTGO/wqdfh3tRS9Q0WwyfQ5AOfoHuoSTR2xjqfaNzN+1PrlVib51IRBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBEEQBPkZfwMsOAWW/qijagAAAABJRU5ErkJggg==' },
+            { id: 12, category: 'Power', title: 'Power Outages Hit Major Cities', date: 'May 3, 2025', source: 'Bloomberg', link: 'https://example.com/article-12', image: 'data:image/png;base64,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' },
+            { id: 13, category: 'Renewables', title: 'Solar Energy Booms in 2025', date: 'May 3, 2025', source: 'CNBC', link: 'https://example.com/article-13', image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARMAAAC3CAMAAAAGjUrGAAABWVBMVEX///8pJSbMAEwAidDzcCFkYKr8txENsUsAAAAAsEj8vTc2uF8jHyD8tgcSCgy2trZRTk8zMDD8sQAAfsxiYGEAg87LAEYVDhDJADxeWqdYU6XyZADKAELyZgBTTqPIADgdFxm9vLzzbBYMAAQArT7q6uqCgYHy0NgAqjP88vXprry+vdnSO2bJyN/S0eT1ilb71MSlyun0hUyDzpj+68s9Ojvb29vKysp2dHWop6fij6OZlsTg4O3UTHFsaK756u59erblnK7bcIt1crLd6/ZrrN0nkdP5vaSkosrt9fv0eDFcpdr95t32nnXM4fL2lmn+4bDq9u5nxYL/+Oy04MD9ymr+8t2Uk5PvxtDXWXqJh7zefpafncj5xa+RwOTSPmj3qYf92ZuJ0J1qxoX8w03904ik2rPoqLdLvW7P69d/tuFCu2j9x2CgyOjK6dL8vDHFACJHQp7+3qc74TlJAAAM1ElEQVR4nO2c618TyRKGJxBhkDEEkjBJICQQErmJLBqSeEFdRRHxgqBR9+jqejm6rss5/v8fzlTPrbqnuyfht2SGnH6+kbn2O9X1VtckaJpCoVAoFAqFQqFQKBQKhUKhUCgUCoVCoVAoFAqFQqE48yy/Wrlz7c7KRcku66u716/vrt7o2z1Fy8paOT8L5MuvX3H3uHR7rlggFAu7D/t8exGwMp2fHnKZzg8FVbl0rlg451GY243gLvvKzfIQTfk1s8eb4jma4vZAh8qt6ekhlumhZbzLduEcS6E4wGnlVj6gCCvKuaAkFnODKwpPERBlzdvjNlcSK1QivOtT5XVw4tjk7zh7rLK5xNPkdpQ3fnq8YtMrSrTO7BFJYiXa9Whv/pRYE0oyNHuN7LEqmDnAdsR3fypcFIeJlVLILmJFBjRQfhNlEzJ5oM6/MSfRpHA96gGcAhJFrMkDWVY2dQbSepZlU2do+ldrl39JNSkOXjV7S67JTWuXN3JNBq9uu8itYT2gbLsr12TwkmyIJkPWLttFC6EuA6iJfO6QOFkHVu/+/8wdLTyf2FwSRMoA5lhZGev4DrB+V7jkifTu/wn2Hzzd3NvbfPzW6wNcm5VoMuusAq/PifIJqtmevNt59Gjn3ZOzFTgPkjOlhYVkcmGhNHN5w/5MWtvnV8g+u+GLwHs7mVxu2CKXy9z/JaLx9c7bUinpszBz2Y4V2dzJkx7+Q0lx70ydncwwIjf8JLJR9sTmTJJmYYaEyr8lk8duFkiK+wLpVN8bzg3TZB5FOdQuOYQ5w2KLIpk8s+RYSXE/B8njXmY4QO5+lKPtDp4kjii/iQPld3KsuLgvvNH4kljEXpRNriTJZGlZVrY5VnxdXMRCwcZVxIqUmE+fByW+JMmFy9bWm6IWimPFu0JNoMu2w+YSL6fE237Y9ErPnleiNY9jxcIcW1wVzhwSKRGPWoowTCz2NLEd21as3RCVJ0Vr432hJMO5OAeKWBE7UO4IsqzTt38o0ASM+Ik4TGKdZvfFU8fKKE/Fzba8cwKBJmDEjySSDGfuRTpuGbKpYwXKvqb9ys+y7otAfp8AXng9lIXJcO5HlMOW8lhgxE6gvBcterxVMd+MYanzTmQ6NjtRDluKqDhxA8XaZY0XKM4rL6EZW1vkksQ4oexJJUmWHgjs2LFiTbvESygFy4h/GVRNkklrH16c5N1vtnHNeE6TGnHMNQmZO8mSwI7LXuOJowk0k6RGHG9N5DnWyrKbfDvOe2fg5BNY6kiNGIhvjpV7cVJox7Lv5BTuhhnxcKwLWWnNRgLlMc+OPSvmdVCKlzTtz5AMG+eaLTzJzixzGvieFfNWgdBzDJMkxukEOrEhmoAdr7B27Fmxpq2zSRaWOmFGHOepo8kXgbYo1k6s8+T9L5kHzBiWOmFGHOsw0bSNsIxSeht801NG3wVlOvfQcww14kzMm/fvw2bPXrAHWUbHn8CIc+8iG22XPA0RBeyY+VLoGjqcaVNvhxtxLr61icdT+fSBNgptx8iK2VUg9BxDjDhzBiSxKje5KAE7RlbMmjH0HEMkif3EsdlPymp8aKNQdoysmDHjUCPODce4WGN4LAsVaKNQmuDfe1Et2bma3IjPxrxx2eC/DiRA3YbtuEz9VgWZMfQcJUacy8XcgwPIUi1tx2XquG2UTdZlRnw23p4/+/zp+Pj8iw9XyZ8bJVGoQBsF2fEadRZsxjIjdur5g6M/Pj5/fuXooO/D7YKrn6YuOExd+HwIH10WhAq0UfwfaVBWjM24IDHi3CPyJaWj8aXFxbGxscXFpdEvEQxayqGlyIjPhanP8OnbGX6oQN3Gt2LckoWeo0AS+w3x0dji2KiLpctR/8ct4SqliK3KM+vz5U1uVQttFO8bOpQVo1Ug9Bz5Rpy7D0Fy8BUpQlj6Gsng+TybGgky9QI2PeCGCtRt7uTJ0z+99swYljr8ICFl2hGrCMTKaASD53OVJ4kVKhcg2e7vcUIF7Nj97Ur5Fn02RxPoOfKMOHeflGnPlwKKxEmUQ74kXlZ5z0m1Jd+Oy8zpnJYs9Bw5Rpz5E/b5NhYMEluUmEyfT2wuQaocv9S4oQJtFOcbOmvM6Zz3owWeETvfc7yyJJBkdHQxFvYjmDluqHyAfYKhsue+EmSs2F0FwlInYMR2LX8wvihSBBJtHCqV8+IwIan2E9QqgWWhZ8eMFbtmDD1HNkzsWv6LOEhIoFzpvwQsL2VhYocKuDK7LIQ2CnklOLvCnJCYMfQcGSO2a/mD77IgIYHSdwkCfJCHCQmVv2BHptZ37Tgf+C8oc1wjdso0eZCQQIm+dPsrXBPHlellIbRRwI5ZK7bfj25bRozDxC7TBA4cu8kTrggJFeLKG7iAm7HtmLViy4ztniM24gz5HtLfnDItyNj3PisQJCyduKEyAq68jJaFULf9Ph2wYvJ+tEh99dMJkitdBAkJlH5LEKBLTVxXxstCsONp9l/CgBnTRmzX8t9Gw5KrS/RJtltNrPlzHlzZXxbCl0ODVgwtWfh3J26YOC3XP8KT61nUxHVld1kIbZQ7ZdaK4Vc8tzXtRw7X8vIyLXZz57gL3/FDhbiyW+tbddvyfzj/kOy/664RO7V8Fw7sMzbeXwE4vOhFE9eV7Vof2iivA1asaZ4RO335rz0EiaXJx76Onwe3dyILFdJWsUPFsmPe/61zW9N2Ld+dA6OpE33N1ktCsUOFuDIJFbBjLmDEGbvl+rFLB/aIwyKwt8kz4rVV4BXQguCclhHbtXz3Duwy9rxvIxcjbClJVDkmff3HM9BG4ZFxyrQeHNgLk2/9G7qYz70GCoTKTzhyo7THPeMPu5bvyYHdMIlJo60nO3aw2yra5gbvhHbLNaRRIgiTGGQT4PDCCURxCrh9zvns39z35sCuJH/3c+AyTiSK48oCeK8qupAkFt1Ym8PzvSdar4Dj0bMDA2NLMShNED+nThArjisHEL6qkCqyOB6TXOLzYcR7id49U+RlB8OVpbGeWVwaj1eQOLz8+eLT+R45HnnGnOXg+3jPfP34JXYxolAoFAqFIgY02/VsujHZSKdb9XazRm2boKhxN80H9nM+b24Jrlib77TsS2ZbnXbzlMZ1UmrttF41K4ZDxazqlRa6ST2FqCbwoe4mPW39YVRTQaq6brRoIS22Ogk95V2yApdsdETq9Z9aSzeNBEulanbcPXR6SxYd7G4yQJPJwFncQ1J6C6vSTOuVwE5GRW/M923UUjqc27MxTSdWaE0S1bZ/dHeagCy6P96sHnwG9ln0NBtQUZCuSgai26Gisx/7QS7QxJoNNpyjtlKih0BUiX4CTaL7M0wdwLesk5BgNUmY3vF8TYxs3aZl+Ccju1jzBp/NSJFL4rmrRx0pDXQz5mQbnlFtvqUzdxjQxBmeJtKk6iforH8FHf7ewifTs/Nw/q0JFK3GZJ81YKib6P68lKpt+eOotDSOJomUu3OoJs2UfxD8nUBPAe024V9DjzTR4mdW7VAbPCuFhxvUJKEz6VeoSd2bPAb4VQc/BZw6Ot4l9dbpj1wMimt/NhD8mgsSiqeJgSaCPe35mlQ68w4tf1IQGZG8Zpu6ZJsq/6KihsNEVkd6A8+mPVGMBr2J9p2K+9D9FFuFx99GYWJKrhgZXd+grwl6zmaL2hRSn1T0OuyeRpmq3och9kwL+WRWtiPSZB7lwgmta00m61vUmSxSE30YYs9ku31oSBNsVZBSutTESLepMyVCZmtknEgTVNJAJSGqY128D0ydytZx1aQeqDEFUJqgzFzJCutYlwTyHUt3VCIzthMT5v1yyq4xRVCa0CnFDQRaE1R5NCkzxiks0jJECM54sqKA1kRr+SnFL8hEmiB3gxSNVpzSxxAZePI0qC1+QsB1rOtOjeBSX6wJikaDmjwVXDlbpbN7RVPqgacNLtpMnGUnvMdJxspqUgsW+2JNkIAGta7x1geErKdWKtpE08Z36IuCMwYuyL0qZiIgCq2J2XZK+4kOWg6Qw9O4E+FP2LofTdV+KsAhi0vZhNMryPojTtHFqhfVKKXwNEmYwdreDYAK7pWk7V5BO4Gqnsg9OovbbE5Pyb/pqi1CUBNtkkkpob1HLwBquPnm9pSQTDGw6I6oNwp9QCcLcjRhU0q4JoYXAJJ2ZyX6KAG2GnxVDL3hZkqOJmxKCdPEqCb8vNuuslPPVSQ2Nct8WjfptrFRSelZ/4m5Nkm9xWiZBqJCNDG4wMubNL3iayfY9ydGRU/Vo27FYmrtrJVLqinTNMlLqkadKuEaaQfqMaYpWoFPHLLwXjF4ya1OGq5ILmldUU93YjFraGpbzYl2uz0x3+zb06o158klm1txChCFQqFQKBQKhUKhUCgUCoVCoVAoFAqFQqFQKBQDy/8AqT/bAulJd9IAAAAASUVORK5CYII=' },
+            { id: 14, category: 'Renewables', title: 'Wind Power Projects Expand Globally', date: 'May 3, 2025', source: 'Seeking Alpha', link: 'https://example.com/article-14', image: 'data:image/jpeg;base64,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' },
+            { id: 15, category: 'Renewables', title: 'Renewable Energy Subsidies Increase', date: 'May 3, 2025', source: 'Yahoo Finance', link: 'https://example.com/article-15', image: 'data:image/jpeg;base64,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' },
+            { id: 16, category: 'Company News', title: 'Tesla Announces New Factory', date: 'May 3, 2025', source: 'CNBC', link: 'https://example.com/article-16', image: 'data:image/png;base64,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' },
+            { id: 17, category: 'Company News', title: 'Apple Unveils New Product Line', date: 'May 3, 2025', source: 'Forbes', link: 'https://example.com/article-17', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWpyAdajaUF-RGcmTT8cYnLr4JUsgSZ90RVQ&s' },
+            { id: 18, category: 'Company News', title: 'Amazon Expands Logistics Network', date: 'May 3, 2025', source: 'Wall Street Journal', link: 'https://example.com/article-18', image: 'data:image/png;base64,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' },
+            { id: 19, category: 'Earnings', title: 'Google Reports Record Earnings', date: 'May 3, 2025', source: 'Financial Times', link: 'https://example.com/article-19', image: 'data:image/png;base64,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' },
+            { id: 20, category: 'Earnings', title: 'Microsoft Beats Earnings Expectations', date: 'May 3, 2025', source: 'BBC', link: 'https://example.com/article-20', image: 'data:image/png;base64,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' },
+            { id: 21, category: 'Earnings', title: 'ExxonMobil Posts Strong Q1 Results', date: 'May 3, 2025', source: 'Reuters', link: 'https://example.com/article-21', image: 'data:image/png;base64,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' }
+        ];
+
+        const newsGrid = document.getElementById('newsGrid');
+        let displayedArticles = articlesData;
+
+        function displayArticles(articles) {
+            newsGrid.innerHTML = '';
+            articles.forEach(article => {
+                const articleElement = document.createElement('article');
+                articleElement.className = 'rounded-lg shadow-lg flex flex-col sm:flex-row items-start sm:items-center overflow-hidden';
+                articleElement.setAttribute('data-category', article.category);
+                articleElement.innerHTML = `
+                    <img src="${article.image}" alt="${article.title}" class="news-image m-4 sm:m-0 sm:mr-4">
+                    <div class="p-4 flex-1">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h2 class="text-lg text-gray-800 hover:text-blue-400">
+                                    <a href="${article.link}" target="_blank">${article.title}</a>
+                                </h2>
+                                <p class="text-gray-600 text-sm mt-1">${article.date} • ${article.source} <span class="category-tag">${article.category}</span></p>
+                            </div>
+                            <button class="favorite-btn mt-1" onclick="toggleFavorite(${article.id})">☆</button>
+                        </div>
+                    </div>
+                `;
+                newsGrid.appendChild(articleElement);
+            });
+
+            const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            storedFavorites.forEach(id => {
+                const button = document.querySelector(`button[onclick="toggleFavorite(${id})"]`);
+                if (button) button.classList.add('favorited');
+            });
+        }
+
+        function filterArticles() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const selectedCategories = Array.from(document.querySelectorAll('.category'))
+                .filter(btn => btn.classList.contains('bg-gray-800'))
+                .map(btn => btn.getAttribute('data-category'));
+
+            let filteredArticles = articlesData;
+
+            if (searchQuery) {
+                filteredArticles = filteredArticles.filter(article =>
+                    article.title.toLowerCase().includes(searchQuery)
+                );
+            }
+
+            if (selectedCategories.length > 0) {
+                filteredArticles = filteredArticles.filter(article =>
+                    selectedCategories.includes(article.category)
+                );
+            }
+
+            displayArticles(filteredArticles);
+        }
+
+        window.addEventListener('load', () => {
+            displayArticles(displayedArticles);
+            updateTickerBanner();
+            updateCommodities();
+
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', filterArticles);
+        });
+
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        const newsSection = document.getElementById('news');
+        const favoritesSection = document.getElementById('favorites');
+        const favoritesGrid = document.getElementById('favoritesGrid');
+
+        function toggleFavorite(articleId) {
+          // 1) load the saved array (or start empty)
+          let favoriteArticles = JSON.parse(localStorage.getItem('favoriteArticles')) || [];
+        
+          // 2) see if this article is already in there
+          const idx = favoriteArticles.findIndex(a => a.id === articleId);
+        
+          if (idx === -1) {
+            // not a favorite yet → find it in articlesData and add it
+            const article = articlesData.find(a => a.id === articleId);
+            if (article) favoriteArticles.push(article);
+          } else {
+            // already favorited → remove it
+            favoriteArticles.splice(idx, 1);
+          }
+        
+          // 3) save back to localStorage
+          localStorage.setItem('favoriteArticles', JSON.stringify(favoriteArticles));
+        
+          // 4) update the UI (icon state, etc.)
+          updateFavoriteIcon(articleId, idx === -1);
+        }
+        function updateFavoritesSection() {
+            favoritesGrid.innerHTML = '';
+            const favoritedArticles = displayedArticles.filter(article => favorites.includes(article.id));
+            favoritedArticles.forEach(article => {
+                const articleElement = document.createElement('article');
+                articleElement.className = 'rounded-lg shadow-lg flex flex-col sm:flex-row items-start sm:items-center overflow-hidden';
+                articleElement.setAttribute('data-category', article.category);
+                articleElement.innerHTML = `
+                    <img src="${article.image}" alt="${article.title}" class="news-image m-4 sm:m-0 sm:mr-4">
+                    <div class="p-4 flex-1">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h2 class="text-lg text-gray-800 hover:text-blue-400">
+                                    <a href="${article.link}" target="_blank">${article.title}</a>
+                                </h2>
+                                <p class="text-gray-600 text-sm mt-1">${article.date} • ${article.source} <span class="category-tag">${article.category}</span></p>
+                            </div>
+                            <button class="favorite-btn mt-1 favorited" onclick="toggleFavorite(${article.id})">☆</button>
+                        </div>
+                    </div>
+                `;
+                favoritesGrid.appendChild(articleElement);
+            });
+        }
+
+        document.querySelector('a[href="#news"]').addEventListener('click', () => {
+            showNewsSection();
+        });
+
+        function showNewsSection() {
+            newsSection.classList.remove('hidden');
+            favoritesSection.classList.add('hidden');
+            document.getElementById('news').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        const marketTabs = document.querySelectorAll('.market-tab');
+        const marketContents = document.querySelectorAll('.market-content');
+
+        marketTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                marketTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                marketContents.forEach(content => content.classList.remove('active'));
+                const contentId = `market${tab.id.replace('tab', '')}Content`;
+                document.getElementById(contentId).classList.add('active');
+            });
+        });
+
+        function showTerms(event) {
+            event.preventDefault();
+            document.getElementById('termsContent').style.display = 'block';
+        }
+
+        function closeTerms() {
+            document.getElementById('termsContent').style.display = 'none';
+        }
+
+        function showPrivacy(event) {
+            event.preventDefault();
+            document.getElementById('privacyContent').style.display = 'block';
+        }
+
+        function closePrivacy() {
+            document.getElementById('privacyContent').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('termsContent')) {
+                closeTerms();
+            }
+            if (event.target === document.getElementById('privacyContent')) {
+                closePrivacy();
+            }
+        };
+
+        const categoryButtons = document.querySelectorAll('.category');
+        categoryButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('bg-gray-800');
+                btn.classList.toggle('text-white');
+                btn.classList.toggle('border-gray-300');
+                btn.classList.toggle('border-black');
+                btn.classList.toggle('hover:bg-gray-900');
+                filterArticles();
+            });
+        });
+    </script>
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+        authDomain: "linq-b27a8.firebaseapp.com",
+        projectId: "linq-b27a8",
+        storageBucket: "linq-b27a8.appspot.com",
+        messagingSenderId: "1067901051826",
+        appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+      };
+    
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+    
+      auth.onChanged(user => {
+        const authLink = document.getElementById("authLink");
+        if (user) {
+          authLink.textContent = "Profile";
+          authLink.href = "profile.html";
+        } else {
+          authLink.textContent = "Login";
+          authLink.href = "login.html";
+        }
+      });
+    </script>
+    <script>
+    firebase.initializeApp({
+      apiKey: "AIzaSyC76M6U4ZxO2AUr_IZlJ2C2SHzg0yS6zqM",
+      authDomain: "linq-news.firebaseapp.com",
+      projectId: "linq-news",
+    });
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    
+    function addFavorite(article) {
+      const user = auth.currentUser;
+      if (!user) {
+        alert("You must be logged in to save favorites.");
+        return;
+      }
+    
+      db.collection("users").doc(user.uid).collection("favorites").doc(article.id.toString()).set(article)
+        .then(() => alert("Added to favorites!"))
+        .catch(err => console.error("Favorite error:", err));
+    }
+    </script>
+</body>
+</html>
