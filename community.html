@@ -3,747 +3,442 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linq - Community</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <title>Linq - Community Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-            authDomain: "linq-b27a8.firebaseapp.com",
-            projectId: "linq-b27a8",
-            storageBucket: "linq-b27a8.appspot.com",
-            messagingSenderId: "1067901051826",
-            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-    </script>
     <style>
         body {
-            font-family: 'Lexend', sans-serif;
-            font-weight: 400;
-            background-color: #ffffff;
-            color: #2d3748;
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0A;
+            color: #E0E0E0;
         }
-        .community-section {
-            background-color: #ffffff;
-            padding: 2rem;
-            border-radius: 12px;
-            margin-top: 2rem;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-            color: #2d3748;
-            font-family: 'Lexend', sans-serif;
-            font-weight: 400;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-        }
-        .community-section h2 {
-            font-size: 2rem;
-            font-weight: 400;
-            color: #2563eb;
-        }
-        .community-section .highlight {
-            color: #000000;
-        }
-        .community-subtitle {
-            font-size: 1.125rem;
-            color: #4a5568;
-            margin: 0 0 1.5rem 0;
-            font-family: 'Lexend', sans-serif;
-            font-weight: 400;
-        }
-        .filter-section {
-            background: #ffffff;
-            padding: 1.5rem;
-            border-radius: 2rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            order: 2;
-            max-width: 33.333%;
-            position: sticky;
-            top: 80px;
-            z-index: 30;
-            height: fit-content;
-        }
-        .filter-section h3 {
-            font-size: 1.5rem;
-            font-weight: 400;
-            color: #1a202c;
-            margin-bottom: 1rem;
-            font-family: 'Lexend', sans-serif;
-            text-align: center;
-        }
-        .category-checkbox {
-            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-            border-radius: 0.5rem;
-            padding: 0.5rem 1rem;
-            font-family: 'Lexend', sans-serif;
-            font-weight: 400;
-            font-size: 1rem;
-            cursor: pointer;
-            width: 100%;
-            text-align: center;
-            border: 1px solid #d1d5db;
-        }
-        .category-checkbox:hover {
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .category-checkbox.bg-gray-800 {
-            background-color: #1f2937;
-            color: #ffffff;
-            border-color: #000000;
-        }
-        .category-checkbox.bg-gray-800:hover {
-            background-color: #111827;
-        }
-        .posts-section {
-            flex: 2;
-            max-width: 66.666%;
-            order: 1;
-        }
-        .post-card {
-            background-color: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
-            display: flex;
-            flex-direction: column;
-        }
-        .post-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 6px 12px rgba(0, 0, 0, 0.1);
-        }
-        .post-title {
-            font-size: 1.25rem;
-            font-weight: 400;
-            color: #2d3748;
-            margin: 0 0 0.5rem;
-            line-height: 1.4;
-            font-family: 'Lexend', sans-serif;
-        }
-        .post-meta {
-            font-size: 0.875rem;
-            color: #4a5568;
-            margin: 0.5rem 0;
-            font-family: 'Lexend', sans-serif;
-            font-weight: 400;
-        }
-        .category-label {
-            background-color: #e2e8f0;
-            color: #2d3748;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.875rem;
-            font-weight: 400;
-            margin-left: 0.5rem;
-            font-family: 'Lexend', sans-serif;
-        }
-        .twitter-tweet {
-            margin-top: 0.75rem;
-            padding: 1rem;
-            background-color: #ffffff;
-            border-radius: 8px;
-            color: #2d3748;
-            font-family: 'Lexend', sans-serif;
-            font-weight: 400;
-        }
-        .twitter-tweet a {
-            color: #8bbcff;
-            text-decoration: none;
-            font-family: 'Lexend', sans-serif;
-        }
-        .twitter-tweet a:hover {
-            text-decoration: underline;
-        }
-        .share-btn {
-            background: none;
-            border: 1px solid #000000;
-            border-radius: 4px;
-            font-family: 'Lexend', sans-serif;
-            font-weight: 400;
-            font-size: 0.875rem;
-            color: #000000;
-            cursor: pointer;
-            transition: background-color 0.2s ease, color 0.2s ease;
-            padding: 0.5rem 1rem;
-        }
-        .share-btn:hover {
-            background-color: #f5f5f5;
-            color: #000000;
-        }
-        .favorite-btn {
-            font-size: 1.5rem;
-            background: none;
-            border: none;
-            color: #000000;
-            padding: 0.375rem;
-            cursor: pointer;
-            transition: color 0.2s ease, transform 0.2s ease;
-        }
-        .favorite-btn:hover {
-            color: #3b82f6;
-            transform: scale(1.2);
-        }
-        .favorited {
-            color: #3b82f6;
-        }
-        .share-confirmation {
-            margin-top: 0.5rem;
-            font-size: 0.75rem;
-            color: #4a5568;
-            display: none;
-            font-family: 'Lexend', sans-serif;
-            align-self: flex-start;
-        }
-        .share-confirmation:not(.hidden) {
-            display: block;
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1A1A1A; }
+        ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
+        ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
+
+        nav.fixed {
+            background-color: rgba(10, 10, 10, 0.85); /* Dark, slightly transparent */
+            backdrop-filter: blur(10px) saturate(150%);
+            -webkit-backdrop-filter: blur(10px) saturate(150%);
+            border-bottom: 1px solid #222222;
         }
         .nav-link {
-            transition: color 0.2s ease;
-            color: #333333;
-            font-family: 'Lexend', sans-serif;
-            font-weight: 400;
+            transition: color 0.2s ease, opacity 0.2s ease; font-weight: 500; color: #B0B0B0; opacity: 0.8;
         }
-        .nav-link:hover {
-            color: #60a5fa;
+        .nav-link:hover { color: #FFFFFF; opacity: 1; }
+
+        .page-header { text-align: center; padding-top: 6rem; margin-bottom: 2.5rem; }
+        .page-title {
+            font-size: 2.8rem; font-weight: 800; color: #FFFFFF; margin-bottom: 0.5rem;
+            text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3);
         }
-        .search-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-bottom: 1.5rem;
+        .page-title .accent-text { color: #00BFFF; }
+        .page-subtitle { font-size: 1.1rem; color: #A0A0A0; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+        .section-title { /* From index.html for consistency */
+            font-size: 2rem; font-weight: 700; color: #F0F0F0; margin-bottom: 2rem;
+            padding-bottom: 0.75rem; border-bottom: 1px solid #333333;
         }
+        .search-input { /* From index.html */
+            width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; /* Adjusted padding for icon */
+            background-color: #1A1A1A; border: 1px solid #333333; border-radius: 0.375rem;
+            margin-bottom: 1.5rem; font-size: 0.9rem; color: #E0E0E0;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .search-input::placeholder { color: #666666; }
+        .search-input:focus {
+            outline: none; border-color: #00BFFF;
+            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3); background-color: #1F1F1F;
+        }
+        .search-container { position: relative; }
         .search-container svg {
-            position: absolute;
-            left: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            color: #666666;
+            position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);
+             width: 1.1rem; height: 1.1rem; color: #666666; pointer-events: none; /* Prevent icon from stealing focus */
         }
-        .search-container input {
-            width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
-            border: 1px solid #e5e5e5;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.2s ease;
-            font-family: 'Lexend', sans-serif;
-            font-size: 1rem;
-            color: #2d3748;
+
+
+        .post-card { /* Similar to news-card but can be distinct if needed */
+            background-color: rgba(28, 28, 28, 0.8); backdrop-filter: blur(10px) saturate(150%);
+            border-radius: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+            overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; margin-bottom: 2rem;
+            padding: 1.5rem;
         }
-        .search-container input:focus {
-            border-color: #2563eb;
-            outline: none;
+        .post-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7); border-color: rgba(0, 191, 255, 0.5); }
+        .post-title { font-size: 1.1rem; font-weight: 600; color: #FFFFFF; margin-bottom: 0.3rem; line-height: 1.4; }
+        .post-meta { font-size: 0.75rem; color: #888888; margin-bottom: 0.75rem; }
+        .post-category-tag { /* Using news-tag style */
+            background-color: rgba(0, 191, 255, 0.15); color: #00BFFF; padding: 0.25rem 0.6rem;
+            border-radius: 9999px; font-size: 0.65rem; font-weight: 500; margin-left: 0.5rem;
+            display: inline-block; border: 1px solid rgba(0, 191, 255, 0.3);
         }
-        .post-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 0.5rem;
+        .twitter-tweet-container { margin-top: 1rem; background-color: #101010; border-radius: 0.5rem; padding: 0.75rem; border: 1px solid #282828;}
+        /* Twitter's own styling will largely take over the blockquote */
+
+        .post-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #282828;}
+        .action-btn {
+            background-color: rgba(0, 191, 255, 0.1); color: #00BFFF; border: 1px solid rgba(0, 191, 255, 0.3);
+            padding: 0.5rem 1rem; border-radius: 0.375rem; font-size: 0.8rem; font-weight: 500;
+            transition: background-color 0.2s ease, color 0.2s ease; display: inline-flex; align-items: center;
         }
-        @media (max-width: 768px) {
-            .community-section {
-                padding: 1.5rem;
-                flex-direction: column;
-            }
-            .filter-section, .posts-section {
-                max-width: 100%;
-                order: 0;
-                position: static;
-            }
-            .community-section h2 {
-                font-size: 1.75rem;
-            }
-            .community-subtitle {
-                font-size: 1rem;
-            }
-            .filter-section h3 {
-                font-size: 1.25rem;
-            }
-            .category-checkbox {
-                font-size: 0.875rem;
-                padding: 0.4rem 0.8rem;
-            }
-            .post-title {
-                font-size: 1.125rem;
-            }
-            .post-meta {
-                font-size: 0.75rem;
-            }
-            .post-card {
-                padding: 1rem;
-            }
-            .category-label {
-                font-size: 0.75rem;
-            }
-            .share-btn {
-                font-size: 0.75rem;
-                padding: 0.4rem 0.8rem;
-            }
-            .favorite-btn {
-                font-size: 1.125rem;
-                padding: 0.3rem;
-                color: #000000;
-            }
-            .favorite-btn:hover {
-                color: #000000;
-            }
-            .search-container {
-                max-width: 100%;
-            }
-            .share-confirmation {
-                font-size: 0.675rem;
-            }
-            .nav-link.text-sm {
-                font-size: 0.75rem;
-            }
+        .action-btn:hover { background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; }
+        .action-btn svg { width: 1rem; height: 1rem; margin-right: 0.5rem; }
+
+        .favorite-btn { /* Consistent with index.html */
+            width: 1.25rem; height: 1.25rem; color: #777777; cursor: pointer; transition: color 0.2s ease, transform 0.2s ease;
+            background: none; border: none; padding: 0; display: inline-flex; align-items: center; justify-content: center;
         }
+        .favorite-btn:hover { color: #FFD700; transform: scale(1.15); }
+        .favorite-btn.favorited { color: #FFD700; fill: #FFD700; }
+        .favorite-btn svg { width: 100%; height: 100%; }
+        .share-confirmation { display:none; font-size: 0.75rem; color: #00BFFF; margin-left:0.5rem; }
+
+
+        .filter-sidebar { /* Consistent with index.html */
+            background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%);
+            padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
+            border: 1px solid #2a2a2a;
+        }
+        .filter-title { font-size: 1.25rem; font-weight: 600; color: #E0E0E0; margin-bottom: 1.25rem; }
+        .filter-button { /* Consistent with index.html */
+            display: block; width: 100%; text-align: left; padding: 0.75rem 1rem; margin-bottom: 0.5rem;
+            border-radius: 0.375rem; color: #B0B0B0; font-weight: 500;
+            transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease;
+            border-left: 3px solid transparent; background-color: transparent; border: 1px solid #333333;
+        }
+        .filter-button:hover { background-color: rgba(0, 191, 255, 0.1); color: #FFFFFF; border-left-color: #00BFFF; border-color: #00BFFF; }
+        .filter-button.active { background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; font-weight: 600; border-left-color: #00BFFF; border-color: #00BFFF; }
+
+        .footer { /* Consistent */ }
+        /* ... (footer styles from index.html) ... */
+         .footer {
+            background-color: #080808; color: #888888; padding: 3rem 1rem; margin-top: 4rem; border-top: 1px solid #222222;
+        }
+        .footer a { color: #A0A0A0; transition: color 0.2s ease; }
+        .footer a:hover { color: #00BFFF; }
+
+        /* Terms and Privacy Modals - Themed */
+        /* ... (modal styles from index.html) ... */
+        .terms-privacy-content {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background-color: rgba(22, 22, 22, 0.9); backdrop-filter: blur(10px) saturate(150%); -webkit-backdrop-filter: blur(10px) saturate(150%);
+            padding: 2.5rem; border-radius: 0.75rem; max-height: 85vh; overflow-y: auto;
+            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7); z-index: 100; color: #E0E0E0;
+            border: 1px solid rgba(0, 191, 255, 0.3); max-width: 700px; width: 90%;
+        }
+        .terms-privacy-content h2 { font-size: 1.75rem; font-weight: 700; color: #FFFFFF; margin-bottom: 1.5rem; border-bottom: 1px solid #00BFFF; padding-bottom: 0.75rem; }
+        .terms-privacy-content p { margin-bottom: 1rem; line-height: 1.7; color: #C0C0C0; }
+        .terms-privacy-content strong { color: #00BFFF; font-weight: 600; }
+        .terms-privacy-content a { color: #00BFFF; text-decoration: underline; transition: color 0.2s ease; }
+        .terms-privacy-content a:hover { color: #00A9E0; }
+        .close-btn {
+            position: absolute; top: 1.5rem; right: 1.5rem; font-size: 1.75rem; cursor: pointer;
+            color: #A0A0A0; transition: color 0.2s ease, transform 0.2s ease; line-height: 1;
+        }
+        .close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
     </style>
 </head>
-<body>
-    <nav class="bg-white py-4 shadow fixed top-0 left-0 w-full z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <a href="index.html" class="text-4xl text-black">Linq</a>
-            <div class="flex items-center space-x-6">
-                <a href="index.html#news" class="nav-link">News</a>
-                <a href="favorites.html" class="nav-link">Favorites</a>
-                <a href="community.html" class="nav-link">Community</a>
-                <a href="login.html" id="authLink" class="nav-link">Login</a>
+<body class="antialiased">
+    <nav class="fixed top-0 left-0 w-full z-50 shadow-md py-3">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <a href="index.html" class="text-3xl font-bold text-white">Linq<span class="text-cyan-400">.</span></a>
+            <div class="hidden md:flex space-x-5 items-center">
+                <a href="index.html" class="nav-link text-sm">News</a>
+                <a href="favorites.html" class="nav-link text-sm">Favorites</a>
+                <a href="community.html" class="nav-link text-sm text-cyan-400 opacity-100">Community</a>
+                <a href="login.html" id="authLink" class="nav-link text-sm bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-md transition-colors">Login</a>
             </div>
+             <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+         <div id="mobile-menu" class="md:hidden hidden bg-gray-900 bg-opacity-90 backdrop-blur-md">
+            <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a>
+            <a href="favorites.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Favorites</a>
+            <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 text-cyan-400 opacity-100">Community</a>
+            <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Login</a>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-        <div class="community-section">
-            <div class="posts-section">
-                <h2>The <span class="highlight">Linq</span> to Your Community</h2>
-                <p class="community-subtitle">Real-Time Posts from Energy Experts</p>
-                      <div class="search-container mb-6 relative max-w-xl">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                        <input type="text" id="searchInput" placeholder="Search posts..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500">
-                      </div>
-                <div class="post-card" data-category="Crude Oil">
-                    <p class="post-title">If Saudis and OPEC+ maintain production levels without increasing output</p>
-                    <p class="post-meta">May 4, 2025 • JH (@CRUDEOIL231) <span class="category-label">Crude oil</span></p>
-                    <blockquote class="twitter-tweet" data-theme="dark">
-                        <p lang="en" dir="ltr">If Saudis and OPEC+ maintain production levels without increasing output, and as a result, Brent crude prices barely hold steady around $70/bbl, would that be favorable for your positions?<br><br>Of course the best-case scenario is for prices to remain high, but that seems unlikely.…</p>
-                        — JH (@CRUDEOIL231) <a href="https://twitter.com/CRUDEOIL231/status/1919070053825495266?ref_src=twsrc%5Etfw">May 4, 2025</a>
-                    </blockquote>
-                    <button
-                      class="share-btn"
-                      data-title="If Saudis and OPEC+ maintain production levels..."
-                      data-url="https://twitter.com/CRUDEOIL231/status/1919070053825495266"
-                    >
-                      Share
-                    </button>
-                    <div class="post-footer">
-                        <button class="share-btn">Share</button>
-                        <button class="favorite-btn" data-url="https://twitter.com/CRUDEOIL231/status/1919070053825495266?ref_src=twsrc%5Etfw">☆</button>
-                    </div>
-                    <span class="share-confirmation hidden">Link copied!</span>
+    <header class="page-header">
+        <h1 class="page-title">Community <span class="accent-text">Pulse</span></h1>
+        <p class="page-subtitle">Real-time insights and discussions from energy experts and enthusiasts across the web.</p>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-10">
+            <div class="lg:col-span-8">
+                <div class="search-container mb-8">
+                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Search community posts..." class="search-input">
                 </div>
-                <div class="post-card" data-category="Crude Oil">
-                    <p class="post-title">India's oil consumption rose 4.5% YoY in March</p>
-                    <p class="post-meta">May 4, 2025 • Linq (@LinqNews) <span class="category-label">Crude oil</span></p>
-                    <blockquote class="twitter-tweet" data-theme="dark">
-                        <p lang="en" dir="ltr">India's oil consumption rose 4.5% YoY in March. Infrastructure buildout and strong GDP expectations place it as key global demand anchor in 2025.<a href="https://twitter.com/hashtag/India?src=hash&ref_src=twsrc%5Etfw">#India</a> <a href="https://twitter.com/hashtag/EnergyDemand?src=hash&ref_src=twsrc%5Etfw">#EnergyDemand</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a></p>
-                        — Linq (@LinqNews) <a href="https://twitter.com/LinqNews/status/1919171857409855978?ref_src=twsrc%5Etfw">May 4, 2025</a>
-                    </blockquote>
-                    <div class="post-footer">
-                        <button class="share-btn">Share</button>
-                        <button class="favorite-btn" data-url="https://twitter.com/LinqNews/status/1919171857409855978?ref_src=twsrc%5Etfw">☆</button>
-                    </div>
-                    <span class="share-confirmation hidden">Link copied!</span>
-                </div>
-                <div class="post-card" data-category="Crude Oil">
-                    <p class="post-title">Crude gaps down >$2/bbl—Brent back in the $50s</p>
-                    <p class="post-meta">May 4, 2025 • Rory Johnston (@Rory_Johnston) <span class="category-label">Crude oil</span></p>
-                    <blockquote class="twitter-tweet" data-theme="dark">
-                        <p lang="en" dir="ltr">Crude gaps down >$2/bbl—Brent back in the $50s—on Asia open following OPEC headline-filled weekend.<br><br>Hard to know what, exactly, was priced in going into weekend—even if the ~400 kbpd June production hike was priced in, the entire unwind by November threat/rumour certainly wasn’t <a href="https://t.co/oMqvcPx0U8">pic.twitter.com/oMqvcPx0U8</a></p>
-                        — Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1919158874172530712?ref_src=twsrc%5Etfw">May 4, 2025</a>
-                    </blockquote>
-                    <div class="post-footer">
-                        <button class="share-btn">Share</button>
-                        <button class="favorite-btn" data-url="https://twitter.com/Rory_Johnston/status/1919158874172530712?ref_src=twsrc%5Etfw">☆</button>
-                    </div>
-                    <span class="share-confirmation hidden">Link copied!</span>
-                </div>
-                <div class="post-card" data-category="Crude Oil">
-                    <p class="post-title">OPEC has now returned 0.96 of the 2.2mmbpd of the voluntary cuts</p>
-                    <p class="post-meta">May 4, 2025 • Unintended Consequence (@UnintendedCons5) <span class="category-label">Crude oil</span></p>
-                    <blockquote class="twitter-tweet" data-theme="dark">
-                        <p lang="en" dir="ltr">OPEC has now returned 0.96 of the 2.2mmbpd of the voluntary cuts.<br><br>However OPEC has been over producing 1.1mmpbd since Feb. As many have mentioned the only volumes returning are Saudis (436kbpd).</p>
-                        — Unintended Consequence (@UnintendedCons5) <a href="https://twitter.com/UnintendedCons5/status/1918857944579408366?ref_src=twsrc%5Etfw">May 4, 2025</a>
-                    </blockquote>
-                    <div class="post-footer">
-                        <button class="share-btn">Share</button>
-                        <button class="favorite-btn" data-url="https://twitter.com/UnintendedCons5/status/1918857944579408366?ref_src=twsrc%5Etfw">☆</button>
-                    </div>
-                    <span class="share-confirmation hidden">Link copied!</span>
-                </div>
-                <div class="post-card" data-category="Crude Oil">
-                    <p class="post-title">OPEC plus 8 states: agree to add 411000 bpd in June</p>
-                    <p class="post-meta">May 3, 2025 • Amena Bakr (@Amena__Bakr) <span class="category-label">Crude oil</span></p>
-                    <blockquote class="twitter-tweet" data-theme="dark">
-                        <p lang="en" dir="ltr">OPEC plus 8 states: agree to add 411000 bpd in June <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://twitter.com/hashtag/Opec?src=hash&ref_src=twsrc%5Etfw">#Opec</a></p>
-                        — Amena Bakr (@Amena__Bakr) <a href="https://twitter.com/Amena__Bakr/status/1918614082099286340?ref_src=twsrc%5Etfw">May 3, 2025</a>
-                    </blockquote>
-                    <div class="post-footer">
-                        <button class="share-btn">Share</button>
-                        <button class="favorite-btn" data-url="https://twitter.com/Amena__Bakr/status/1918614082099286340?ref_src=twsrc%5Etfw">☆</button>
-                    </div>
-                    <span class="share-confirmation hidden">Link copied!</span>
-                </div>
-                <div class="post-card" data-category="Energy">
-                    <p class="post-title">Riyadh’s strategic oil play</p>
-                    <p class="post-meta">May 5, 2025 • Art Berman (@aeberman12) <span class="category-label">Energy</span></p>
-                    <blockquote class="twitter-tweet" data-theme="dark" data-media-max-width="560">
-                        <p lang="en" dir="ltr">My take:<br><br>Riyadh is betting that looming sanctions and tighter supply will push oil prices higher.<br><br>It’s a preemptive move to shape sentiment, not just follow it.<a href="https://t.co/g98C6IMwWl">https://t.co/g98C6IMwWl</a><a href="https://twitter.com/hashtag/energy?src=hash&ref_src=twsrc%5Etfw">#energy</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://twitter.com/hashtag/oilandgas?src=hash&ref_src=twsrc%5Etfw">#oilandgas</a> <a href="https://twitter.com/hashtag/WTI?src=hash&ref_src=twsrc%5Etfw">#WTI</a> <a href="https://twitter.com/hashtag/CrudeOil?src=hash&ref_src=twsrc%5Etfw">#CrudeOil</a> <a href="https://twitter.com/hashtag/fintwit?src=hash&ref_src=twsrc%5Etfw">#fintwit</a> <a href="https://twitter.com/hashtag/OPEC?src=hash&ref_src=twsrc%5Etfw">#OPEC</a> <a href="https://twitter.com/hashtag/Commodities?src=hash&ref_src=twsrc%5Etfw">#Commodities</a> <a href="https://twitter.com/hashtag/commoditiesmarket?src=hash&ref_src=twsrc%5Etfw">#commoditiesmarket</a> <a href="https://t.co/qhfZgyHTnM">pic.twitter.com/qhfZgyHTnM</a></p>
-                        — Art Berman (@aeberman12) <a href="https://twitter.com/aeberman12/status/1919396685362373026?ref_src=twsrc%5Etfw">May 5, 2025</a>
-                    </blockquote>
-                    <div class="post-footer">
-                        <button class="share-btn">Share</button>
-                        <button class="favorite-btn" data-url="https://twitter.com/aeberman12/status/1919396685362373026?ref_src=twsrc%5Etfw">☆</button>
-                    </div>
-                    <span class="share-confirmation hidden">Link copied!</span>
-                </div>
-                <div class="post-card" data-category="Crude Oil">
-                    <p class="post-title">OPEC’s production challenges</p>
-                    <p class="post-meta">May 5, 2025 • Amena Bakr (@Amena__Bakr) <span class="category-label">Crude oil</span></p>
-                    <blockquote class="twitter-tweet" data-theme="dark">
-                        <p lang="en" dir="ltr">The deputy minister also said that cutting production is a “hard task” for them and wasn’t able to lay out the future plan to cut output. <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://twitter.com/hashtag/Opec?src=hash&ref_src=twsrc%5Etfw">#Opec</a> <a href="https://t.co/krzSjDrRrN">https://t.co/krzSjDrRrN</a></p>
-                        — Amena Bakr (@Amena__Bakr) <a href="https://twitter.com/Amena__Bakr/status/1919381986092667322?ref_src=twsrc%5Etfw">May 5, 2025</a>
-                    </blockquote>
-                    <div class="post-footer">
-                        <button class="share-btn">Share</button>
-                        <button class="favorite-btn" data-url="https://twitter.com/Amena__Bakr/status/1919381986092667322?ref_src=twsrc%5Etfw">☆</button>
-                    </div>
-                    <span class="share-confirmation hidden">Link copied!</span>
-                </div>
-                <div class="post-card" data-category="Crude Oil">
-                    <p class="post-title">Oil market drop</p>
-                    <p class="post-meta">May 4, 2025 • Javier Blas (@JavierBlas) <span class="category-label">Crude oil</span></p>
-                    <blockquote class="twitter-tweet" data-theme="dark">
-                        <p lang="en" dir="ltr">OIL MARKET: Brent and WTI crude down ~4% in early trading after OPEC+ production increase (Brent is below $59 a barrel and WTI below $56 a barrel) <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a></p>
-                        — Javier Blas (@JavierBlas) <a href="https://twitter.com/JavierBlas/status/1919157364831248518?ref_src=twsrc%5Etfw">May 4, 2025</a>
-                    </blockquote>
-                    <div class="post-footer">
-                        <button class="share-btn">Share</button>
-                        <button class="favorite-btn" data-url="https://twitter.com/JavierBlas/status/1919157364831248518?ref_src=twsrc%5Etfw">☆</button>
-                    </div>
-                    <span class="share-confirmation hidden">Link copied!</span>
-                </div>
-                <div class="post-card" data-category="Crude Oil">
-                    <p class="post-title">Saudi Arabia’s oil strategy</p>
-                    <p class="post-meta">May 3, 2025 • Javier Blas (@JavierBlas) <span class="category-label">Crude oil</span></p>
-                    <blockquote class="twitter-tweet" data-theme="dark">
-                        <p lang="en" dir="ltr">As Saudi Arabia today led the OPEC+ cartel to boost oil production significantly, I’m re-upping my <a href="https://twitter.com/opinion?ref_src=twsrc%5Etfw">@Opinion</a> column from earlier this week on Riyadh’s motivations.<br><br>“Saudi oil policy is multidimensional: it may have several objectives at once”<a href="https://t.co/5y2Ktc9jyU">https://t.co/5y2Ktc9jyU</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a></p>
-                        — Javier Blas (@JavierBlas) <a href="https://twitter.com/JavierBlas/status/1918726353475563979?ref_src=twsrc%5Etfw">May 3, 2025</a>
-                    </blockquote>
-                    <div class="post-footer">
-                        <button class="share-btn">Share</button>
-                        <button class="favorite-btn" data-url="https://twitter.com/JavierBlas/status/1918726353475563979?ref_src=twsrc%5Etfw">☆</button>
-                    </div>
-                    <span class="share-confirmation hidden">Link copied!</span>
-                </div>
-                <div class="post-card" data-category="Energy">
-                    <p class="post-title">U.S. shale peak concerns</p>
-                    <p class="post-meta">May 5, 2025 • Art Berman (@aeberman12) <span class="category-label">Energy</span></p>
-                    <blockquote class="twitter-tweet" data-theme="dark">
-                        <p lang="en" dir="ltr">“We’re at a tipping point for U.S. oil—geology now outweighs tech gains,” says Travis Stice, CEO, Diamondback Energy<br><br>U.S. shale has likely peaked, with decline driven by low prices, tight margins, and geology.<a href="https://t.co/FKVAY4WazT">https://t.co/FKVAY4WazT</a><a href="https://twitter.com/hashtag/energy?src=hash&ref_src=twsrc%5Etfw">#energy</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://twitter.com/hashtag/oilandgas?src=hash&ref_src=twsrc%5Etfw">#oilandgas</a> <a href="https://twitter.com/hashtag/WTI?src=hash&ref_src=twsrc%5Etfw">#WTI</a> <a href="https://twitter.com/hashtag/CrudeOil?src=hash&ref_src=twsrc%5Etfw">#CrudeOil</a>… <a href="https://t.co/FTrFNYXaML">pic.twitter.com/FTrFNYXaML</a></p>
-                        — Art Berman (@aeberman12) <a href="https://twitter.com/aeberman12/status/1919537549501968799?ref_src=twsrc%5Etfw">May 5, 2025</a>
-                    </blockquote>
-                    <div class="post-footer">
-                        <button class="share-btn">Share</button>
-                        <button class="favorite-btn" data-url="https://twitter.com/aeberman12/status/1919537549501968799?ref_src=twsrc%5Etfw">☆</button>
-                    </div>
-                    <span class="share-confirmation hidden">Link copied!</span>
-                </div>
-                <div class="post-card" data-category="Energy">
-                    <p class="post-title">IPAA supports budget reconciliation provisions</p>
-                    <p class="post-meta">May 5, 2025 • IPAA American Energy (@IPAAaccess) <span class="category-label">Energy</span></p>
-                    <blockquote class="twitter-tweet" data-theme="dark">
-                        <p lang="en" dir="ltr">IPAA and a coalition of energy trade groups wrote to <a href="https://twitter.com/SpeakerJohnson?ref_src=twsrc%5Etfw">@SpeakerJohnson</a> expressing strong support for the <a href="https://twitter.com/hashtag/budgetreconciliation?src=hash&ref_src=twsrc%5Etfw">#budgetreconciliation</a> provisions currently under consideration by the <a href="https://twitter.com/NatResources?ref_src=twsrc%5Etfw">@NatResources</a>. "These provisions, included in the House Natural Resources bill text will increase domestic… <a href="https://t.co/QQIcQvG64S">pic.twitter.com/QQIcQvG64S</a></p>
-                        — IPAA American Energy (@IPAAaccess) <a href="https://twitter.com/IPAAaccess/status/1919510569553432731?ref_src=twsrc%5Etfw">May 5, 2025</a>
-                    </blockquote>
-                    <div class="post-footer">
-                        <button class="share-btn">Share</button>
-                        <button class="favorite-btn" data-url="https://twitter.com/IPAAaccess/status/1919510569553432731?ref_src=twsrc%5Etfw">☆</button>
-                    </div>
-                    <span class="share-confirmation hidden">Link copied!</span>
-                </div>
-                <div class="post-card" data-category="Energy">
-                    <p class="post-title">Peabody may scrap $3.78B Anglo deal</p>
-                    <p class="post-meta">May 5, 2025 • Art Berman (@aeberman12) <span class="category-label">Energy</span></p>
-                    <blockquote class="twitter-tweet" data-theme="dark">
-                        <p lang="en" dir="ltr">Peabody may scrap its $3.78B Anglo deal after a mine fire shut Moranbah North, raising doubts amid weak steel coal demand and rising risks.<a href="https://t.co/eaXOaF0Vvl">https://t.co/eaXOaF0Vvl</a><a href="https://twitter.com/hashtag/CoalTwitter?src=hash&ref_src=twsrc%5Etfw">#CoalTwitter</a> <a href="https://twitter.com/hashtag/Fossilfuels?src=hash&ref_src=twsrc%5Etfw">#Fossilfuels</a> <a href="https://twitter.com/hashtag/netzero?src=hash&ref_src=twsrc%5Etfw">#netzero</a> <a href="https://twitter.com/hashtag/renewables?src=hash&ref_src=twsrc%5Etfw">#renewables</a> <a href="https://twitter.com/hashtag/oilandgas?src=hash&ref_src=twsrc%5Etfw">#oilandgas</a> <a href="https://twitter.com/hashtag/Commodities?src=hash&ref_src=twsrc%5Etfw">#Commodities</a> <a href="https://twitter.com/hashtag/energytransition?src=hash&ref_src=twsrc%5Etfw">#energytransition</a> <a href="https://twitter.com/hashtag/EnergyCrisis?src=hash&ref_src=twsrc%5Etfw">#EnergyCrisis</a>… <a href="https://t.co/hQSj2x54iZ">pic.twitter.com/hQSj2x54iZ</a></p>
-                        — Art Berman (@aeberman12) <a href="https://twitter.com/aeberman12/status/1919540144354275464?ref_src=twsrc%5Etfw">May 5, 2025</a>
-                    </blockquote>
-                    <div class="post-footer">
-                        <button class="share-btn">Share</button>
-                        <button class="favorite-btn" data-url="https://twitter.com/aeberman12/status/1919540144354275464?ref_src=twsrc%5Etfw">☆</button>
-                    </div>
-                    <span class="share-confirmation hidden">Link copied!</span>
-                </div>
-                <div class="post-card" data-category="Crude Oil">
-                    <p class="post-title">OPEC+ plans to accelerate oil output hikes</p>
-                    <p class="post-meta">May 4, 2025 • Rory Johnston (@Rory_Johnston) <span class="category-label">Crude oil</span></p>
-                    <blockquote class="twitter-tweet" data-theme="dark">
-                        <p lang="en" dir="ltr">👀 “OPEC+ plans to further accelerate oil output hikes and could unwind its 2.2 million barrels per day of voluntary cuts by the end of October if members do not improve compliance with their production quota”<br><br>💀 That’d be… bad for prices. <a href="https://t.co/nZwF83qaGZ">pic.twitter.com/nZwF83qaGZ</a></p>
-                        — Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1918995918264623502?ref_src=twsrc%5Etfw">May 4, 2025</a>
-                    </blockquote>
-                    <div class="post-footer">
-                        <button class="share-btn">Share</button>
-                        <button class="favorite-btn" data-url="https://twitter.com/Rory_Johnston/status/1918995918264623502?ref_src=twsrc%5Etfw">☆</button>
-                    </div>
-                    <span class="share-confirmation hidden">Link copied!</span>
+                <div id="postsContainer" class="space-y-8">
+                    {/* Community posts will be dynamically inserted here */}
                 </div>
             </div>
-            <aside class="filter-section lg:w-80">
-                <h3>Filter by Category</h3>
-                <div class="space-y-3">
-                    <button class="category-checkbox" data-category="Crude Oil">Crude Oil</button>
-                    <button class="category-checkbox" data-category="Natural Gas">Natural Gas</button>
-                    <button class="category-checkbox" data-category="Petrochemicals">Petrochemicals</button>
-                    <button class="category-checkbox" data-category="Power">Power</button>
-                    <button class="category-checkbox" data-category="Renewables">Renewables</button>
-                    <button class="category-checkbox" data-category="Company News">Company News</button>
-                    <button class="category-checkbox" data-category="Earnings">Earnings</button>
-                    <button class="category-checkbox" data-category="Energy">Energy</button>
+
+            <aside class="lg:col-span-4 space-y-8">
+                <div class="filter-sidebar">
+                    <h3 class="filter-title">Filter by Category</h3>
+                    <div id="categoryFilters" class="space-y-3">
+                        <button class="filter-button active" data-category="All">All Posts</button>
+                        <button class="filter-button" data-category="Crude oil">Crude Oil</button>
+                        <button class="filter-button" data-category="Natural Gas">Natural Gas</button>
+                        <button class="filter-button" data-category="Energy">General Energy</button>
+                        <button class="filter-button" data-category="Policy">Policy & Markets</button>
+                        {/* Add more categories as needed */}
+                    </div>
                 </div>
             </aside>
         </div>
     </main>
 
-    <footer class="bg-white text-gray-600 py-6 shadow">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
-            <p>© 2025 Linq. All rights reserved.</p>
-            <div class="mt-4 md:mt-0 space-x-4">
-                <a href="index.html#terms" class="hover:text-gray-800 transition-colors" onclick="showTerms(event)">Terms of Service</a>
-                <a href="index.html#privacy" class="hover:text-gray-800 transition-colors" onclick="showPrivacy(event)">Privacy Policy</a>
-                <a href="#" class="hover:text-gray-800 transition-colors">Contact Us</a>
-            </div>
+    <footer class="footer text-center">
+        <div class="container mx-auto">
+            <p class="mb-2 text-sm">&copy; 2025 Linq Energy Intelligence. All Rights Reserved.</p>
+            <nav class="text-xs space-x-3 sm:space-x-4">
+                <a href="#terms" onclick="showTerms(event)">Terms of Service</a> |
+                <a href="#privacy" onclick="showPrivacy(event)">Privacy Policy</a> |
+                <a href="#">Contact Support</a> |
+                <a href="#">Careers</a>
+            </nav>
         </div>
     </footer>
 
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+     <div id="termsContent" class="terms-privacy-content">
+        <span class="close-btn" onclick="closeTerms()">×</span>
+        <h2>Terms of Service</h2>
+        <p>Welcome to Linq...</p>
+    </div>
+
+    <div id="privacyContent" class="terms-privacy-content">
+        <span class="close-btn" onclick="closePrivacy()">×</span>
+        <h2>Privacy Policy</h2>
+        <p>At Linq, we are committed...</p>
+    </div>
+
+
     <script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-        authDomain: "linq-b27a8.firebaseapp.com",
-        projectId: "linq-b27a8",
-        storageBucket: "linq-b27a8.firebasestorage.app",
-        messagingSenderId: "1067901051826",
-        appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-    };
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", //
+            authDomain: "linq-b27a8.firebaseapp.com", //
+            projectId: "linq-b27a8", //
+            storageBucket: "linq-b27a8.firebasestorage.app", //
+            messagingSenderId: "1067901051826", //
+            appId: "1:1067901051826:web:44452d1339cdbe2af07aab" //
+        };
+        firebase.initializeApp(firebaseConfig); //
+        const auth = firebase.auth(); //
 
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
 
-        function filterPosts() {
-            const categoryButtons = document.querySelectorAll('.category-checkbox');
-            const selectedCategories = Array.from(categoryButtons)
-                .filter(btn => btn.classList.contains('bg-gray-800'))
-                .map(btn => btn.getAttribute('data-category'));
+        const communityPostsData = [
+            // Data from your original community.html, ensure IDs are strings if used with localStorage logic like news
+            { id: 'tweet1', url: 'https://twitter.com/CRUDEOIL231/status/1919070053825495266', title: 'If Saudis and OPEC+ maintain production levels...', meta: 'May 4, 2025 • JH (@CRUDEOIL231)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">If Saudis and OPEC+ maintain production levels without increasing output, and as a result, Brent crude prices barely hold steady around $70/bbl, would that be favorable for your positions?<br><br>Of course the best-case scenario is for prices to remain high, but that seems unlikely.…</p>&mdash; JH (@CRUDEOIL231) <a href="https://twitter.com/CRUDEOIL231/status/1919070053825495266?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
+            { id: 'tweet2', url: 'https://twitter.com/LinqNews/status/1919171857409855978', title: "India's oil consumption rose 4.5% YoY in March", meta: 'May 4, 2025 • Linq (@LinqNews)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">India\'s oil consumption rose 4.5% YoY in March. Infrastructure buildout and strong GDP expectations place it as key global demand anchor in 2025.<a href="https://twitter.com/hashtag/India?src=hash&ref_src=twsrc%5Etfw">#India</a> <a href="https://twitter.com/hashtag/EnergyDemand?src=hash&ref_src=twsrc%5Etfw">#EnergyDemand</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; Linq (@LinqNews) <a href="https://twitter.com/LinqNews/status/1919171857409855978?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
+            { id: 'tweet3', url: 'https://twitter.com/Rory_Johnston/status/1919158874172530712', title: 'Crude gaps down >$2/bbl—Brent back in the $50s', meta: 'May 4, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">Crude gaps down >$2/bbl—Brent back in the $50s—on Asia open following OPEC headline-filled weekend.<br><br>Hard to know what, exactly, was priced in going into weekend—even if the ~400 kbpd June production hike was priced in, the entire unwind by November threat/rumour certainly wasn’t <a href="https://t.co/oMqvcPx0U8">pic.twitter.com/oMqvcPx0U8</a></p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1919158874172530712?ref_src=twsrc%5Etfw">May 4, 2025</a>'},
+            { id: 'tweet4', url: 'https://twitter.com/aeberman12/status/1919396685362373026', title: 'Riyadh’s strategic oil play', meta: 'May 5, 2025 • Art Berman (@aeberman12)', category: 'Energy', tweetContent: '<p lang="en" dir="ltr">My take:<br><br>Riyadh is betting that looming sanctions and tighter supply will push oil prices higher.<br><br>It’s a preemptive move to shape sentiment, not just follow it.<a href="https://t.co/g98C6IMwWl">https://t.co/g98C6IMwWl</a><a href="https://twitter.com/hashtag/energy?src=hash&ref_src=twsrc%5Etfw">#energy</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://twitter.com/hashtag/oilandgas?src=hash&ref_src=twsrc%5Etfw">#oilandgas</a> <a href="https://twitter.com/hashtag/WTI?src=hash&ref_src=twsrc%5Etfw">#WTI</a> <a href="https://twitter.com/hashtag/CrudeOil?src=hash&ref_src=twsrc%5Etfw">#CrudeOil</a> <a href="https://twitter.com/hashtag/fintwit?src=hash&ref_src=twsrc%5Etfw">#fintwit</a> <a href="https://twitter.com/hashtag/OPEC?src=hash&ref_src=twsrc%5Etfw">#OPEC</a> <a href="https://twitter.com/hashtag/Commodities?src=hash&ref_src=twsrc%5Etfw">#Commodities</a> <a href="https://twitter.com/hashtag/commoditiesmarket?src=hash&ref_src=twsrc%5Etfw">#commoditiesmarket</a> <a href="https://t.co/qhfZgyHTnM">pic.twitter.com/qhfZgyHTnM</a></p>&mdash; Art Berman (@aeberman12) <a href="https://twitter.com/aeberman12/status/1919396685362373026?ref_src=twsrc%5Etfw">May 5, 2025</a>'},
+            { id: 'tweet5', url: 'https://twitter.com/IPAAaccess/status/1919510569553432731', title: 'IPAA supports budget reconciliation provisions', meta: 'May 5, 2025 • IPAA American Energy (@IPAAaccess)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">IPAA and a coalition of energy trade groups wrote to <a href="https://twitter.com/SpeakerJohnson?ref_src=twsrc%5Etfw">@SpeakerJohnson</a> expressing strong support for the <a href="https://twitter.com/hashtag/budgetreconciliation?src=hash&ref_src=twsrc%5Etfw">#budgetreconciliation</a> provisions currently under consideration by the <a href="https://twitter.com/NatResources?ref_src=twsrc%5Etfw">@NatResources</a>. "These provisions, included in the House Natural Resources bill text will increase domestic… <a href="https://t.co/QQIcQvG64S">pic.twitter.com/QQIcQvG64S</a></p>&mdash; IPAA American Energy (@IPAAaccess) <a href="https://twitter.com/IPAAaccess/status/1919510569553432731?ref_src=twsrc%5Etfw">May 5, 2025</a>'}
+        ];
 
-            const searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+        const postsContainer = document.getElementById('postsContainer');
+        let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || []; // Use same localStorage key as index
 
-            const posts = document.querySelectorAll('.post-card');
-            posts.forEach(post => {
-                const postCategory = post.getAttribute('data-category');
-                const postContent = post.querySelector('.twitter-tweet p').textContent.toLowerCase();
-                const postAuthor = post.querySelector('.post-meta').textContent.toLowerCase();
-                const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(postCategory);
-                const matchesSearch = searchQuery === '' ||
-                    postContent.includes(searchQuery) ||
-                    postAuthor.includes(searchQuery);
+        function displayCommunityPosts(postsToDisplay) {
+            if (!postsContainer) return;
+            postsContainer.innerHTML = ''; // Clear existing
 
-                post.style.display = matchesCategory && matchesSearch ? 'block' : 'none';
+            if (postsToDisplay.length === 0) {
+                postsContainer.innerHTML = '<p class="text-center text-gray-500 py-8">No posts match your current filters.</p>';
+                return;
+            }
+
+            postsToDisplay.forEach(post => {
+                const postElement = document.createElement('article');
+                postElement.className = 'post-card';
+                postElement.setAttribute('data-category', post.category);
+                postElement.setAttribute('data-id', post.id); // Unique ID for favoriting
+
+                postElement.innerHTML = `
+                    <p class="post-title">${post.title}</p>
+                    <p class="post-meta">${post.meta} <span class="post-category-tag">${post.category}</span></p>
+                    <div class="twitter-tweet-container">
+                        <blockquote class="twitter-tweet" data-theme="dark" data-cards="hidden" data-conversation="none">
+                           ${post.tweetContent}
+                        </blockquote>
+                    </div>
+                    <div class="post-actions">
+                        <button class="action-btn share-btn" data-url="${post.url}" data-title="${post.title}">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12s-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.368a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path></svg>
+                            Share
+                        </button>
+                        <span class="share-confirmation">Link copied!</span>
+                        <button class="favorite-btn" data-id="${post.id}" aria-label="Favorite post">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                postsContainer.appendChild(postElement);
+            });
+
+            if (window.twttr && window.twttr.widgets) {
+                window.twttr.widgets.load(postsContainer); // Reload Twitter widgets
+            }
+            updateFavoriteIcons();
+            addPostActionListeners();
+        }
+
+        function filterCommunityPosts() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const activeCategoryButton = document.querySelector('#categoryFilters .filter-button.active');
+            const selectedCategory = activeCategoryButton ? activeCategoryButton.getAttribute('data-category') : 'All';
+
+            let filteredPosts = communityPostsData;
+
+            if (selectedCategory !== 'All') {
+                filteredPosts = filteredPosts.filter(post => post.category === selectedCategory);
+            }
+
+            if (searchQuery) {
+                filteredPosts = filteredPosts.filter(post =>
+                    post.title.toLowerCase().includes(searchQuery) ||
+                    post.meta.toLowerCase().includes(searchQuery) ||
+                    (post.tweetContent && post.tweetContent.toLowerCase().includes(searchQuery))
+                );
+            }
+            displayCommunityPosts(filteredPosts);
+        }
+
+        function toggleFavorite(postId) {
+            const index = favorites.indexOf(postId); // postId is already a string from data-id
+            if (index > -1) {
+                favorites.splice(index, 1);
+            } else {
+                favorites.push(postId);
+            }
+            localStorage.setItem('linqFavoritesV2', JSON.stringify(favorites));
+            updateFavoriteIcons();
+        }
+
+        function updateFavoriteIcons() {
+            document.querySelectorAll('.favorite-btn').forEach(button => {
+                const postId = button.getAttribute('data-id');
+                if (favorites.includes(postId)) {
+                    button.classList.add('favorited');
+                    button.querySelector('svg').setAttribute('fill', 'currentColor');
+                } else {
+                    button.classList.remove('favorited');
+                    button.querySelector('svg').setAttribute('fill', 'none');
+                }
             });
         }
 
-        function sharePost(event) {
-            const post = event.target.closest('.post-card');
-            const urlElement = post.querySelector('.twitter-tweet a:last-child');
-            const url = urlElement ? urlElement.href : window.location.href;
-            const title = post.querySelector('.post-title').textContent;
-            const confirmation = post.querySelector('.share-confirmation');
+        function addPostActionListeners() {
+            // Favorite buttons
+            document.querySelectorAll('.favorite-btn').forEach(button => {
+                button.removeEventListener('click', handleFavoriteClick); // Prevent duplicates
+                button.addEventListener('click', handleFavoriteClick);
+            });
+
+            // Share buttons
+            document.querySelectorAll('.share-btn').forEach(button => {
+                button.removeEventListener('click', handleShareClick); // Prevent duplicates
+                button.addEventListener('click', handleShareClick);
+            });
+        }
+        function handleFavoriteClick(event) {
+            const button = event.currentTarget;
+            const postId = button.getAttribute('data-id');
+            toggleFavorite(postId);
+        }
+
+        function handleShareClick(event) {
+            const button = event.currentTarget;
+            const url = button.getAttribute('data-url');
+            const title = button.getAttribute('data-title');
+            const confirmation = button.nextElementSibling; // Assumes .share-confirmation is next sibling
 
             if (navigator.share) {
-                navigator.share({
-                    title: title,
-                    url: url
-                }).catch(err => {
-                    console.error('Error sharing:', err);
-                });
+                navigator.share({ title: title, url: url })
+                    .catch(err => console.error('Error sharing:', err));
+            } else if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(() => {
+                    if(confirmation) confirmation.style.display = 'inline';
+                    setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2000);
+                }).catch(err => console.error('Error copying:', err));
             } else {
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(url).then(() => {
-                        confirmation.classList.remove('hidden');
-                        setTimeout(() => confirmation.classList.add('hidden'), 2000);
-                    }).catch(err => {
-                        console.error('Error copying to clipboard:', err);
-                        alert('Failed to copy link. Please copy manually: ' + url);
-                    });
-                } else {
-                    const textarea = document.createElement('textarea');
-                    textarea.value = url;
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    try {
-                        document.execCommand('copy');
-                        confirmation.classList.remove('hidden');
-                        setTimeout(() => confirmation.classList.add('hidden'), 2000);
-                    } catch (err) {
-                        console.error('Error copying to clipboard:', err);
-                        alert('Failed to copy link. Please copy manually: ' + url);
-                    }
-                    document.body.removeChild(textarea);
-                }
+                alert('Sharing not supported. Link: ' + url); // Fallback
             }
         }
 
-        function favoritePost(button) {
-          const rawUrl = button.getAttribute('data-url');
-          const url = rawUrl.split('?')[0]; // Remove query string
-        
-          let favoritePosts = JSON.parse(localStorage.getItem('favoritePosts')) || [];
-        
-          if (favoritePosts.includes(url)) {
-            favoritePosts = favoritePosts.filter(postUrl => postUrl !== url);
-            button.classList.remove('favorited');
-          } else {
-            favoritePosts.push(url);
-            button.classList.add('favorited');
-          }
-        
-          localStorage.setItem('favoritePosts', JSON.stringify(favoritePosts));
+
+        // Category Filter Buttons
+        const categoryFilterButtons = document.querySelectorAll('#categoryFilters .filter-button');
+        categoryFilterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                categoryFilterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                filterCommunityPosts();
+            });
+        });
+
+        // Search Input Listener
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', filterCommunityPosts);
         }
 
-
-        function initializeFavorites() {
-            const favoritePosts = JSON.parse(localStorage.getItem('favoritePosts') || '[]');
-            document.querySelectorAll('.post-card').forEach(post => {
-                const urlElement = post.querySelector('.twitter-tweet a:last-child');
-                const url = urlElement ? urlElement.href : '';
-                const button = post.querySelector('.favorite-btn');
-                if (url && favoritePosts.includes(url)) {
-                    button.classList.add('favorited');
-                }
+        // Modal Functionality & Mobile Menu (same as index.html)
+        function showTerms(event) { event.preventDefault(); document.getElementById('termsContent').style.display = 'block'; }
+        function closeTerms() { document.getElementById('termsContent').style.display = 'none'; }
+        function showPrivacy(event) { event.preventDefault(); document.getElementById('privacyContent').style.display = 'block'; }
+        function closePrivacy() { document.getElementById('privacyContent').style.display = 'none'; }
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('termsContent')) closeTerms();
+            if (event.target == document.getElementById('privacyContent')) closePrivacy();
+        };
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
             });
         }
 
-        function updateAuthLink() {
-            const authLink = document.getElementById('authLink');
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    authLink.textContent = 'Profile';
-                    authLink.href = 'profile.html';
-                } else {
-                    authLink.textContent = 'Login';
-                    authLink.href = 'login.html';
-                }
-            });
-        }
 
+        // Initial Load
         document.addEventListener('DOMContentLoaded', () => {
-            initializeFavorites();
-            updateAuthLink();
+            displayCommunityPosts(communityPostsData); // Display all posts initially
+            addPostActionListeners();
 
-            document.querySelectorAll('.share-btn').forEach(btn => {
-                btn.addEventListener('click', sharePost);
-            });
-
-            document.querySelectorAll('.favorite-btn').forEach(btn => {
-                btn.addEventListener('click', () => favoritePost(btn));
-            });
-
-            const categoryButtons = document.querySelectorAll('.category-checkbox');
-            categoryButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    btn.classList.toggle('bg-gray-800');
-                    btn.classList.toggle('text-white');
-                    btn.classList.toggle('border-black');
-                    filterPosts();
-                });
-            });
-
-            const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('input', filterPosts);
-
-            const twitterScript = document.createElement('script');
-            twitterScript.src = 'https://platform.twitter.com/widgets.js';
-            twitterScript.async = true;
-            document.body.appendChild(twitterScript);
-        });
-
-        function showTerms(event) {
-            event.preventDefault();
-            alert('Please view Terms of Service on the main page.');
-        }
-
-        function showPrivacy(event) {
-            event.preventDefault();
-            alert('Please view Privacy Policy on the main page.');
-        }
-    </script>
-    <script>
-      document.getElementById('searchInput').addEventListener('input', function () {
-        const query = this.value.toLowerCase();
-        const posts = document.querySelectorAll('.post-card');
-    
-        posts.forEach(post => {
-          const title = post.querySelector('.post-title')?.textContent.toLowerCase() || '';
-          const category = post.dataset.category?.toLowerCase() || '';
-          const matches = title.includes(query) || category.includes(query);
-          post.style.display = matches ? 'block' : 'none';
-        });
-      });
-    </script>
-    <script>
-      document.querySelectorAll('.share-btn').forEach(button => {
-        button.addEventListener('click', () => {
-          const title = button.getAttribute('data-title');
-          const url = button.getAttribute('data-url');
-    
-          if (navigator.share) {
-            navigator.share({
-              title: title,
-              text: title,
-              url: url
-            }).catch(err => {
-              if (err.name !== 'AbortError') console.error('Sharing failed:', err);
-            });
-          } else {
-            alert('Sharing is not supported on this device/browser.');
-          }
-        });
-      });
-    </script>
-    <script>
-        auth.onAuthStateChanged(user => {
+            // Firebase Auth State Change Listener for Nav Links
             const authLink = document.getElementById('authLink');
-            if (authLink) {
+            const authLinkMobile = document.getElementById('authLinkMobile');
+            auth.onAuthStateChanged(user => { //
                 if (user) {
-                    authLink.textContent = 'Profile';
-                    authLink.href = 'profile.html';
+                    if(authLink) { authLink.textContent = "Profile"; authLink.href = "profile.html"; }
+                    if(authLinkMobile) { authLinkMobile.textContent = "Profile"; authLinkMobile.href = "profile.html"; }
                 } else {
-                    authLink.textContent = 'Login';
-                    authLink.href = 'login.html';
+                    if(authLink) { authLink.textContent = "Login"; authLink.href = "login.html"; }
+                    if(authLinkMobile) { authLinkMobile.textContent = "Login"; authLinkMobile.href = "login.html"; }
                 }
-            }
+            });
+
+            // Load Twitter widgets script
+            const twitterScript = document.createElement('script');
+            twitterScript.src = "https://platform.twitter.com/widgets.js";
+            twitterScript.async = true;
+            twitterScript.charset = "utf-8";
+            document.body.appendChild(twitterScript);
         });
     </script>
 </body>
