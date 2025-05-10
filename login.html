@@ -3,216 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linq - Login / Sign Up</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <title>Linq - Access Your Account</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Lexend', sans-serif;
-            font-weight: 400;
-            background-color: #ffffff;
-            color: #333333;
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0A;
+            color: #E0E0E0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        strong {
-            font-weight: inherit;
-        }
-        .terms-privacy-content {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #ffffff;
-            padding: 2rem;
-            border-radius: 12px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            z-index: 60;
-            color: #333333;
-        }
-        .close-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #666666;
-            transition: color 0.2s ease;
-        }
-        .close-btn:hover {
-            color: #000000;
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1A1A1A; }
+        ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
+        ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
+
+        nav { /* Simplified nav for login page */
+            background-color: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(10px) saturate(150%);
+            border-bottom: 1px solid #222222;
         }
         .nav-link {
-            transition: color 0.2s ease;
-            color: #333333;
+            transition: color 0.2s ease, opacity 0.2s ease; font-weight: 500; color: #B0B0B0; opacity: 0.8;
         }
-        .nav-link:hover {
-            color: #60a5fa;
+        .nav-link:hover { color: #FFFFFF; opacity: 1; }
+
+        .auth-container {
+            flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 2rem;
         }
-        .auth-form {
-            background: #f9f9f9;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            max-width: 400px;
+        .auth-form-wrapper {
+            background-color: rgba(22, 22, 22, 0.8); /* Darker, slightly transparent card */
+            backdrop-filter: blur(12px) saturate(160%);
+            -webkit-backdrop-filter: blur(12px) saturate(160%);
+            padding: 2.5rem; /* Increased padding */
+            border-radius: 0.75rem; /* 12px */
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255,255,255,0.05);
+            border: 1px solid rgba(0, 191, 255, 0.2); /* Subtle accent border */
             width: 100%;
+            max-width: 420px;
         }
-        .auth-form input {
-            border: 1px solid #e5e5e5;
-            border-radius: 8px;
-            padding: 0.75rem;
-            width: 100%;
-            margin-bottom: 1rem;
-            transition: border-color 0.2s ease;
+        .form-title {
+            font-size: 1.8rem; font-weight: 700; color: #FFFFFF; margin-bottom: 2rem; text-align: center;
+            text-shadow: 0px 1px 5px rgba(0, 191, 255, 0.2);
         }
-        .auth-form input:focus {
-            border-color: #2563eb;
-            outline: none;
+        .auth-input { /* Themed input */
+            width: 100%; padding: 0.875rem 1.125rem; /* 14px 18px */
+            background-color: #1A1A1A; border: 1px solid #333333; border-radius: 0.375rem; /* 6px */
+            margin-bottom: 1.25rem; /* More space */ font-size: 0.9rem; color: #E0E0E0;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
-        .auth-form button {
-            background: #2563eb;
-            color: #ffffff;
-            padding: 0.75rem;
-            border-radius: 8px;
-            width: 100%;
-            transition: background 0.2s ease;
+        .auth-input::placeholder { color: #666666; }
+        .auth-input:focus {
+            outline: none; border-color: #00BFFF;
+            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3); background-color: #1F1F1F;
         }
-        .auth-form button:hover {
-            background: #1e40af;
+        .auth-button { /* Themed button */
+            background-color: #00BFFF; color: #FFFFFF; padding: 0.875rem 1.5rem; border-radius: 0.375rem;
+            width: 100%; font-weight: 600; font-size: 1rem;
+            transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 15px -5px rgba(0, 191, 255, 0.4);
+        }
+        .auth-button:hover {
+            background-color: #00A9E0; transform: translateY(-1px);
+            box-shadow: 0 6px 20px -5px rgba(0, 191, 255, 0.5);
         }
         .toggle-link {
-            color: #2563eb;
-            cursor: pointer;
-            transition: color 0.2s ease;
+            color: #00BFFF; cursor: pointer; transition: color 0.2s ease; font-weight: 500;
         }
-        .toggle-link:hover {
-            color: #1e40af;
-        }
+        .toggle-link:hover { color: #00A9E0; text-decoration: underline;}
         .error-message {
-            color: #ef4444;
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
-            display: none;
+            color: #EF4444; /* Brighter Red for errors */
+            font-size: 0.8rem; text-align: center;
+            margin-bottom: 1rem; padding: 0.5rem;
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 0.375rem;
+            display: none; /* Hidden by default */
         }
-        @media (max-width: 768px) {
-            .auth-form {
-                padding: 1.5rem;
-            }
+        .footer { /* Consistent */ }
+        /* ... (footer styles from index.html) ... */
+         .footer {
+            background-color: #080808; color: #888888; padding: 2rem 1rem; /* Reduced padding for login page */
+            border-top: 1px solid #222222; text-align: center;
         }
+        .footer a { color: #A0A0A0; transition: color 0.2s ease; }
+        .footer a:hover { color: #00BFFF; }
+
+        /* Terms and Privacy Modals - Themed */
+        /* ... (modal styles from index.html) ... */
+         .terms-privacy-content {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background-color: rgba(22, 22, 22, 0.9); backdrop-filter: blur(10px) saturate(150%); -webkit-backdrop-filter: blur(10px) saturate(150%);
+            padding: 2.5rem; border-radius: 0.75rem; max-height: 85vh; overflow-y: auto;
+            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7); z-index: 100; color: #E0E0E0;
+            border: 1px solid rgba(0, 191, 255, 0.3); max-width: 700px; width: 90%;
+        }
+        .terms-privacy-content h2 { font-size: 1.75rem; font-weight: 700; color: #FFFFFF; margin-bottom: 1.5rem; border-bottom: 1px solid #00BFFF; padding-bottom: 0.75rem; }
+        .terms-privacy-content p { margin-bottom: 1rem; line-height: 1.7; color: #C0C0C0; }
+        .terms-privacy-content strong { color: #00BFFF; font-weight: 600; }
+        .terms-privacy-content a { color: #00BFFF; text-decoration: underline; transition: color 0.2s ease; }
+        .terms-privacy-content a:hover { color: #00A9E0; }
+        .close-btn {
+            position: absolute; top: 1.5rem; right: 1.5rem; font-size: 1.75rem; cursor: pointer;
+            color: #A0A0A0; transition: color 0.2s ease, transform 0.2s ease; line-height: 1;
+        }
+        .close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
     </style>
 </head>
-<body>
-    <nav class="bg-white py-4 shadow fixed top-0 left-0 w-full z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <a href="index.html" class="text-4xl text-black">Linq</a>
-            <div class="flex items-center space-x-6">
-                <a href="index.html" class="nav-link">News</a>
-                <a href="favorites.html" class="nav-link">Favorites</a>
-                <a href="community.html" class="nav-link">Community</a>
+<body class="antialiased">
+    <nav class="py-3 shadow-md">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <a href="index.html" class="text-3xl font-bold text-white">Linq<span class="text-cyan-400">.</span></a>
+            <div class="flex items-center space-x-5">
+                <a href="index.html" class="nav-link text-sm">News</a>
+                <a href="favorites.html" class="nav-link text-sm">Favorites</a>
+                <a href="community.html" class="nav-link text-sm">Community</a>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto pt-24 sm:px-6 lg:px-8 flex justify-center items-center min-h-screen">
-        <div class="auth-form">
-            <h2 id="form-title" class="text-2xl text-gray-800 mb-4 text-center">Login</h2>
+    <main class="auth-container">
+        <div class="auth-form-wrapper">
+            <h2 id="form-title" class="form-title">Login</h2>
             <p id="error-message" class="error-message"></p>
+
             <div id="login-form">
-                <input type="email" id="login-email" placeholder="Email" required>
-                <input type="password" id="login-password" placeholder="Password" required>
-                <button onclick="handleLogin()">Login</button>
-                <p class="text-center mt-4">Don't have an account? <span class="toggle-link" onclick="showSignUp()">Sign Up</span></p>
+                <input type="email" id="login-email" placeholder="Email Address" required class="auth-input">
+                <input type="password" id="login-password" placeholder="Password" required class="auth-input">
+                <button onclick="handleLogin()" class="auth-button">Login</button>
+                <p class="text-center mt-6 text-sm">
+                    Don't have an account? <span class="toggle-link" onclick="showSignUp()">Sign Up</span>
+                </p>
             </div>
+
             <div id="signup-form" class="hidden">
-                <input type="email" id="signup-email" placeholder="Email" required>
-                <input type="password" id="signup-password" placeholder="Password" required>
-                <button onclick="handleSignUp()">Sign Up</button>
-                <p class="text-center mt-4">Already have an account? <span class="toggle-link" onclick="showLogin()">Login</span></p>
+                <input type="email" id="signup-email" placeholder="Email Address" required class="auth-input">
+                <input type="password" id="signup-password" placeholder="Password (min. 6 characters)" required class="auth-input">
+                <button onclick="handleSignUp()" class="auth-button">Sign Up</button>
+                <p class="text-center mt-6 text-sm">
+                    Already have an account? <span class="toggle-link" onclick="showLogin()">Login</span>
+                </p>
             </div>
         </div>
     </main>
 
-    <div id="termsContent" class="terms-privacy-content">
-        <span class="close-btn" onclick="closeTerms()">×</span>
-        <h2 class="text-2xl text-gray-800 mb-4">Terms of Service</h2>
-        <p>Welcome to Linq. By accessing or using our website, you agree to comply with and be bound by the following terms and conditions. These terms govern your use of the site and any services provided.</p>
-        <p class="mt-4">1. <strong>Acceptance of Terms</strong>: By using this site, you accept these terms in full. If you disagree, please do not use the site.</p>
-        <p class="mt-2">2. <strong>User Conduct</strong>: You agree not to use the site for illegal or unauthorized purposes.</p>
-        <p class="mt-2">3. <strong>Content Ownership</strong>: All content on this site is owned by Linq or its licensors unless otherwise stated.</p>
-        <p class="mt-2">4. <strong>Limitation of Liability</strong>: We are not liable for any indirect or consequential damages arising from your use of the site.</p>
-        <p class="mt-2">For the most current version, please contact us at <a href="mailto:support@linq.com">support@linq.com</a>.</p>
-    </div>
-    <div id="privacyContent" class="terms-privacy-content">
-        <span class="close-btn" onclick="closePrivacy()">×</span>
-        <h2 class="text-2xl text-gray-800 mb-4">Privacy Policy</h2>
-        <p>At Linq, we are committed to protecting your privacy. This policy outlines how we collect, use, and safeguard your information.</p>
-        <p class="mt-4">1. <strong>Information Collection</strong>: We collect personal information such as your name and email when you sign up or submit articles.</p>
-        <p class="mt-2">2. <strong>Use of Information</strong>: Your data is used to personalize your experience and improve our services.</p>
-        <p class="mt-2">3. <strong>Data Security</strong>: We implement reasonable measures to protect your information from unauthorized access.</p>
-        <p class="mt-2">4. <strong>Third-Party Sharing</strong>: We do not sell or share your personal data with third parties except as required by law.</p>
-        <p class="mt-2">For questions, contact us at <a href="mailto:support@linq.com">support@linq.com</a>.</p>
-    </div>
-
-    <footer class="bg-white text-gray-600 py-6 shadow">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
-            <p>© 2025 Linq. All rights reserved.</p>
-            <div class="mt-4 md:mt-0 space-x-4">
-                <a href="#terms" class="hover:text-gray-800 transition-colors" onclick="showTerms(event)">Terms of Service</a>
-                <a href="#privacy" class="hover:text-gray-800 transition-colors" onclick="showPrivacy(event)">Privacy Policy</a>
-                <a href="#" class="hover:text-gray-800 transition-colors">Contact Us</a>
-            </div>
-        </div>
+    <footer class="footer">
+        <p class="mb-1 text-xs">&copy; 2025 Linq Energy Intelligence. All Rights Reserved.</p>
+        <nav class="text-xs space-x-3">
+            <a href="#terms" onclick="showTerms(event)">Terms of Service</a> |
+            <a href="#privacy" onclick="showPrivacy(event)">Privacy Policy</a>
+        </nav>
     </footer>
 
+    <div id="termsContent" class="terms-privacy-content">
+        <span class="close-btn" onclick="closeTerms()">×</span>
+        <h2>Terms of Service</h2>
+        <p>Welcome to Linq. By accessing or using our website, you agree to comply with and be bound by the following terms and conditions...</p>
+        {/* ... full terms from index.html ... */}
+        <p>For the most current version, please contact us at <a href="mailto:support@linq.com">support@linq.com</a>.</p>
+    </div>
+
+    <div id="privacyContent" class="terms-privacy-content">
+        <span class="close-btn" onclick="closePrivacy()">×</span>
+        <h2>Privacy Policy</h2>
+        <p>At Linq, we are committed to protecting your privacy. This policy outlines how we collect, use, and safeguard your information.</p>
+        {/* ... full policy from index.html ... */}
+        <p>For questions, contact us at <a href="mailto:support@linq.com">support@linq.com</a>.</p>
+    </div>
+
+
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js"; //
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js"; //
 
         const firebaseConfig = {
-            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-            authDomain: "linq-b27a8.firebaseapp.com",
-            projectId: "linq-b27a8",
-            storageBucket: "linq-b27a8.firebasestorage.app",
-            messagingSenderId: "1067901051826",
-            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", //
+            authDomain: "linq-b27a8.firebaseapp.com", //
+            projectId: "linq-b27a8", //
+            storageBucket: "linq-b27a8.firebasestorage.app", //
+            messagingSenderId: "1067901051826", //
+            appId: "1:1067901051826:web:44452d1339cdbe2af07aab" //
         };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        
-        onAuthStateChanged(auth, (user) => {
+        const app = initializeApp(firebaseConfig); //
+        const auth = getAuth(app); //
+
+        onAuthStateChanged(auth, (user) => { //
           const fromLogin = window.location.pathname.includes("login");
           if (user && fromLogin) {
-            window.location.href = "profile.html";
+            window.location.href = "index.html"; // Redirect to index or a profile page
           }
         });
-
-
 
         window.handleLogin = async () => {
             const email = document.getElementById("login-email").value;
             const password = document.getElementById("login-password").value;
             const errorMessage = document.getElementById("error-message");
+            errorMessage.style.display = "none"; // Hide error message initially
 
             try {
-                await signInWithEmailAndPassword(auth, email, password);
-                window.location.href = "index.html";
+                await signInWithEmailAndPassword(auth, email, password); //
+                window.location.href = "index.html"; // Or profile.html
             } catch (error) {
                 errorMessage.style.display = "block";
                 switch (error.code) {
                     case "auth/invalid-email":
-                        errorMessage.textContent = "Invalid email format.";
-                        break;
+                        errorMessage.textContent = "Invalid email format."; break;
+                    case "auth/user-disabled":
+                        errorMessage.textContent = "This account has been disabled."; break;
                     case "auth/user-not-found":
-                        errorMessage.textContent = "No user found with this email.";
-                        break;
+                        errorMessage.textContent = "No user found with this email."; break;
                     case "auth/wrong-password":
-                        errorMessage.textContent = "Incorrect password.";
-                        break;
+                        errorMessage.textContent = "Incorrect password."; break;
+                    case "auth/invalid-credential":
+                         errorMessage.textContent = "Incorrect email or password."; break;
                     default:
-                        errorMessage.textContent = "Error: " + error.message;
+                        errorMessage.textContent = "Login failed. Please try again."; // Generic error
                 }
+                console.error("Login Error:", error);
             }
         };
 
@@ -220,32 +230,37 @@
             const email = document.getElementById("signup-email").value;
             const password = document.getElementById("signup-password").value;
             const errorMessage = document.getElementById("error-message");
+            errorMessage.style.display = "none";
+
+            if (password.length < 6) {
+                 errorMessage.style.display = "block";
+                 errorMessage.textContent = "Password must be at least 6 characters.";
+                 return;
+            }
 
             try {
-                await createUserWithEmailAndPassword(auth, email, password);
-                window.location.href = ".html";
+                await createUserWithEmailAndPassword(auth, email, password); //
+                window.location.href = "index.html"; // Redirect after successful signup
             } catch (error) {
                 errorMessage.style.display = "block";
                 switch (error.code) {
                     case "auth/invalid-email":
-                        errorMessage.textContent = "Invalid email format.";
-                        break;
+                        errorMessage.textContent = "Invalid email format."; break;
                     case "auth/email-already-in-use":
-                        errorMessage.textContent = "Email already in use.";
-                        break;
+                        errorMessage.textContent = "This email address is already in use."; break;
                     case "auth/weak-password":
-                        errorMessage.textContent = "Password must be at least 6 characters.";
-                        break;
+                        errorMessage.textContent = "Password is too weak. Please choose a stronger one."; break;
                     default:
-                        errorMessage.textContent = "Error: " + error.message;
+                        errorMessage.textContent = "Sign up failed. Please try again.";
                 }
+                 console.error("Sign Up Error:", error);
             }
         };
 
         window.showSignUp = () => {
             document.getElementById("login-form").classList.add("hidden");
             document.getElementById("signup-form").classList.remove("hidden");
-            document.getElementById("form-title").textContent = "Sign Up";
+            document.getElementById("form-title").textContent = "Create Account";
             document.getElementById("error-message").style.display = "none";
         };
 
@@ -256,31 +271,14 @@
             document.getElementById("error-message").style.display = "none";
         };
 
-        window.showTerms = (event) => {
-            event.preventDefault();
-            document.getElementById("termsContent").style.display = "block";
-        };
-
-        window.closeTerms = () => {
-            document.getElementById("termsContent").style.display = "none";
-        };
-
-        window.showPrivacy = (event) => {
-            event.preventDefault();
-            document.getElementById("privacyContent").style.display = "block";
-        };
-
-        window.closePrivacy = () => {
-            document.getElementById("privacyContent").style.display = "none";
-        };
-
+        // Modal functions (copied from index.html for consistency)
+        window.showTerms = (event) => { event.preventDefault(); document.getElementById('termsContent').style.display = 'block'; };
+        window.closeTerms = () => { document.getElementById('termsContent').style.display = 'none'; };
+        window.showPrivacy = (event) => { event.preventDefault(); document.getElementById('privacyContent').style.display = 'block'; };
+        window.closePrivacy = () => { document.getElementById('privacyContent').style.display = 'none'; };
         window.onclick = function(event) {
-            if (event.target === document.getElementById("termsContent")) {
-                closeTerms();
-            }
-            if (event.target === document.getElementById("privacyContent")) {
-                closePrivacy();
-            }
+            if (event.target == document.getElementById('termsContent')) closeTerms();
+            if (event.target == document.getElementById('privacyContent')) closePrivacy();
         };
     </script>
 </body>
