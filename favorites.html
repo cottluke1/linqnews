@@ -415,18 +415,19 @@
             } else {
                 favoriteArticles.forEach(article => {
                     newsFavoritesContainer.innerHTML += `
-                        <div class="news-card" data-id="${article.id}">
-                            <img src="${article.image}" alt="${article.title}" class="news-image" />
-                            <div class="news-content">
-                                <p class="news-title">${article.title}</p>
-                                <p class="news-meta">${article.category} • ${article.date} • ${article.source}</p>
-                                <a href="${article.link}" class="news-link" target="_blank">Read more</a>
-                                <div class="button-container">
-                                    <button class="favorite-btn favorited" onclick="toggleFavorite(${article.id}, 'news')">☆</button>
-                                </div>
-                                <span class="favorite-confirmation hidden">Removed from favorites!</span>
+                    <div class="flex items-center justify-between bg-white rounded-xl shadow px-6 py-4 mb-4 border">
+                        <div class="flex items-center space-x-4">
+                            <img src="${article.image}" alt="${article.title}" class="w-16 h-16 object-cover rounded-md">
+                            <div>
+                                <h3 class="text-lg font-medium text-gray-900">${article.title}</h3>
+                                <p class="text-sm text-gray-600">${article.date} • ${article.source} <span class="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full ml-2">${article.category}</span></p>
                             </div>
                         </div>
+                        <div class="flex items-center space-x-2">
+                            <a href="${article.link}" target="_blank" class="text-blue-600 hover:underline text-sm font-medium">Read more</a>
+                            <button class="favorite-btn favorited" onclick="toggleFavorite(${article.id}, 'news')">★</button>
+                        </div>
+                    </div>
                     `;
                 });
             }
