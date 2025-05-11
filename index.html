@@ -112,22 +112,12 @@
         .hero-section { background: #0D0D0D; padding: 6rem 1rem; text-align: center; }
         .hero-title {
             font-size: 3.25rem; 
-            font-weight: 700; 
+            font-weight: 600; 
             color: #FFFFFF;
-            margin-bottom: 1rem; 
+            margin-bottom: 2.5rem; 
             text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3);
         }
         .hero-title .accent-text { color: #00BFFF; }
-        .explore-button {
-            background-color: #00BFFF; color: #FFFFFF; padding: 0.875rem 2.5rem;
-            border-radius: 0.375rem; font-weight: 600;
-            transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 15px -3px rgba(0, 191, 255, 0.4);
-        }
-        .explore-button:hover {
-            background-color: #00A9E0; transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 6px 20px -3px rgba(0, 191, 255, 0.5);
-        }
 
         /* Section Title */
         .section-title {
@@ -174,7 +164,7 @@
             background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%);
             padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
             border: 1px solid #2a2a2a; position: sticky; 
-            top: 80px; /* Adjusted sticky top position */
+            top: 94px; /* Adjusted sticky top position for nav + ticker */
         }
         .filter-title { font-size: 1.25rem; font-weight: 600; color: #E0E0E0; margin-bottom: 1.25rem; }
         .filter-button {
@@ -192,7 +182,7 @@
         }
 
         /* Search input */
-        .search-container { position: relative; } /* Ensure relative positioning for icon */
+        .search-container { position: relative; } 
         .search-input {
             width: 100%; 
             padding: 0.875rem 1.125rem 0.875rem 2.75rem; 
@@ -202,17 +192,17 @@
             margin-bottom: 1rem;
             font-size: 0.9rem; color: #E0E0E0;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
-            line-height: 1.5; /* Helps with vertical alignment of placeholder */
+            line-height: 1.5; 
         }
         .search-input::placeholder { color: #666666; }
         .search-input:focus {
             outline: none; border-color: #00BFFF;
             box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3); background-color: #1F1F1F;
         }
-        .search-container svg {
+        .search-container svg { /* For the search icon */
             position: absolute; left: 0.875rem; 
             top: 50%; 
-            transform: translateY(-50%); /* Better vertical centering */
+            transform: translateY(-50%); /* Standard vertical centering */
             width: 1.1rem; height: 1.1rem; color: #A0A0A0; pointer-events: none;
         }
 
@@ -319,19 +309,16 @@
     <header class="hero-section">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <h1 class="hero-title">Your <span class="accent-text">Linq</span> to Energy News</h1>
-            <button onclick="document.getElementById('news').scrollIntoView({ behavior: 'smooth' })" class="explore-button">
-                Explore News
-            </button>
         </div>
     </header>
 
     <main class="container mx-auto p-4 sm:p-6 lg:p-8 mt-10">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-10">
-            <div class="lg:col-span-8" id="news">
+            <div class="lg:col-span-9" id="news">
                 <section>
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-start mb-8">
                         <h2 class="section-title !mb-3 sm:!mb-0 !border-none">Latest News</h2>
-                        <div class="relative w-full sm:w-auto sm:max-w-2xl search-container"> 
+                        <div class="relative w-full sm:w-auto sm:max-w-3xl search-container"> 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
@@ -341,7 +328,7 @@
                     <div class="space-y-6" id="newsGrid"></div>
                 </section>
             </div>
-            <aside class="lg:col-span-4 space-y-8">
+            <aside class="lg:col-span-3 space-y-8">
                 <div class="filter-panel p-6">
                     <h3 class="filter-title">Filter by Category</h3>
                     <div id="categoryList" class="space-y-3">
@@ -653,4 +640,3 @@
     </script>
 </body>
 </html>
-
