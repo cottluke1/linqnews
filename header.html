@@ -1,12 +1,13 @@
 <nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3 bg-gray-900 bg-opacity-80 backdrop-blur-md border-b border-gray-700">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
+        
         <div class="hidden md:flex items-center space-x-5">
-            <a href="index.html" class="nav-link text-sm active">News</a>
-            <a href="community.html" class="nav-link text-sm">Community</a>
-            <a href="Markets.html" id="marketsLinkDesktop" class="nav-link text-sm">Markets</a>
+            <a href="index.html" class="nav-link text-sm" data-page="index">News</a>
+            <a href="community.html" class="nav-link text-sm" data-page="community">Community</a>
+            <a href="Markets.html" id="marketsLinkDesktop" class="nav-link text-sm" data-page="markets">Markets</a>
             
-            <div id="desktopAuthArea" class="flex items-center space-x-3">
+            <div id="desktopAuthContainer">
                 <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button">Login</a>
                 
                 <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
@@ -38,14 +39,16 @@
     </div>
 
     <div id="mobile-menu" class="md:hidden hidden bg-gray-900 bg-opacity-95 backdrop-blur-md">
-        <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 active" data-page="index-mobile">News</a>
-        <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Community</a>
-        <a href="Markets.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Markets</a>
+        <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700" data-page="index-mobile">News</a>
+        <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700" data-page="community-mobile">Community</a>
+        <a href="Markets.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700" data-page="markets-mobile">Markets</a>
+        
         <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 nav-link-button">Login</a>
-        <a href="linqai.html" id="linqAiLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden">Linq Ai</a>
-        <a href="earnings.html" id="earningsLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden">Earnings Calendar</a>
-        <a href="favorites.html" id="favoritesLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden">Favorites</a>
-        <a href="profile.html" id="profileLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden">Profile</a>
+        
+        <a href="profile.html" id="profileLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden" data-page="profile-mobile">Profile</a>
+        <a href="linqai.html" id="linqAiLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden" data-page="linqai-mobile">Linq Ai</a>
+        <a href="earnings.html" id="earningsLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden" data-page="earnings-mobile">Earnings Calendar</a>
+        <a href="favorites.html" id="favoritesLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden" data-page="favorites-mobile">Favorites</a>
         <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Logout</a>
     </div>
 </nav>
@@ -55,101 +58,76 @@
         <button id="slideout-close-button" class="slide-out-panel-close-btn" aria-label="Close menu">&times;</button>
     </div>
     <nav class="slide-out-panel-nav">
-        <a href="linqai.html" id="linqAiLinkSlideout">Linq AI</a>
-        <a href="earnings.html" id="earningsLinkSlideout">Earnings Calendar</a>
-        <a href="favorites.html" id="favoritesLinkSlideout">Favorites</a>
-        <a href="profile.html" id="profileLinkSlideout">My Profile</a>
-        <a href="#" id="logoutButtonSlideout">Logout</a>
+        <a href="linqai.html">Linq AI</a>
+        <a href="earnings.html">Earnings Calendar</a>
+        <a href="favorites.html">Favorites</a> 
+        <a href="profile.html">My Profile</a> 
+        <a href="#" id="logoutButtonSlideout">Logout</a> 
     </nav>
 </div>
 
-<div id="menu-overlay"></div>
-
-<style>
-    /* Ensure these styles are loaded in your main page for the header to look correct */
-    /* Minimal styles to make the example work if these are missing from global scope */
+<div id="menu-overlay" class="hidden"></div> <style>
     body { font-family: 'Lexend', sans-serif; background-color: #0A0A0A; color: #E0E0E0; }
     body.overflow-hidden { overflow: hidden; }
 
-    /* Styles from your index (4).html for nav.fixed, nav-link etc. are crucial */
-    /* nav.fixed is already applied via Tailwind classes in the nav element */
-    /* .nav-link, .nav-link.active, .nav-link-button styles should be defined globally */
     .nav-link {
         transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
         font-weight: 500;
-        color: #B0B0B0; /* Default link color */
+        color: #B0B0B0; 
         opacity: 0.8;   
         padding: 0.5rem 0.75rem;
-        border-radius: 0.375rem; /* Tailwind's rounded-md */
-        font-size: 0.875rem; /* Tailwind's text-sm */
+        border-radius: 0.375rem;
+        font-size: 0.875rem; 
     }
     .nav-link:hover { 
         color: #FFFFFF;
         opacity: 1;
         background-color: rgba(255,255,255,0.05);
     }
-    .nav-link.active { /* For active page link */
+    .nav-link.active { 
         color: #FFFFFF; 
         opacity: 1;
-        background-color: transparent; /* Or a different active style */
+        /* background-color: rgba(0, 191, 255, 0.1); */ /* Example active style, adjust as needed */
     }
     
     #authLinkDesktopLogin.nav-link-button,
-    #authLinkMobile.nav-link-button { /* Style for the Login button */
-        background-color: #00BFFF; /* Blue background */
+    #authLinkMobile.nav-link-button { 
+        background-color: #00BFFF; 
         color: #FFFFFF !important; 
         opacity: 1 !important; 
-        padding: 0.5rem 1rem; /* Tailwind's px-4 py-2 */
+        padding: 0.5rem 1rem; 
     }
     #authLinkDesktopLogin.nav-link-button:hover,
     #authLinkMobile.nav-link-button:hover {
-        background-color: #00A9E0; /* Darker blue on hover */
+        background-color: #00A9E0; 
     }
     
     .profile-icon-placeholder { 
-        width: 2.25rem; /* Tailwind's w-9 */
-        height: 2.25rem; /* Tailwind's h-9 */
-        background-color: #333; 
-        border-radius: 50%; 
+        width: 2.25rem; height: 2.25rem; 
+        background-color: #333; border-radius: 50%; 
         display: inline-flex; align-items: center; justify-content: center; 
-        cursor: pointer; 
-        border: 2px solid #4A4A4A; 
+        cursor: pointer; border: 2px solid #4A4A4A; 
     }
-    .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; } /* Tailwind's w-5 h-5 */
+    .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; }
     .profile-icon-placeholder:hover { border-color: #00BFFF; } 
 
     .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;} 
     .desktop-hamburger-icon:hover { color: #FFFFFF; background-color: rgba(255,255,255,0.1); }
-    .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; } /* Tailwind's w-6 h-6 */
+    .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; }
 
-    /* Slide-out Panel Styles (from your index.html) */
     .slide-out-panel { 
-        display: flex; 
-        flex-direction: column;
-        position: fixed; 
-        top: 0; 
-        right: 0; 
-        width: 320px; /* Adjust as needed */
-        height: 100vh; 
-        background-color: #18181B; /* Dark background */
-        box-shadow: -10px 0 30px rgba(0,0,0,0.4); 
-        z-index: 1001; /* Above nav, below overlay if needed, or ensure it's highest */
+        display: flex; flex-direction: column;
+        position: fixed; top: 0; right: 0; width: 320px; height: 100vh; 
+        background-color: #18181B; box-shadow: -10px 0 30px rgba(0,0,0,0.4); 
+        z-index: 1002; /* Higher than overlay */
         transform: translateX(100%); 
         transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
-        padding: 1.5rem; 
-        overflow-y: auto; 
-        border-left: 1px solid #3F3F46; 
+        padding: 1.5rem; overflow-y: auto; border-left: 1px solid #3F3F46; 
     }
-    .slide-out-panel.open {
-        transform: translateX(0);
-    }
+    .slide-out-panel.open { transform: translateX(0); }
     .slide-out-panel-header {
-        display: flex;
-        justify-content: flex-end; 
-        align-items: center;
-        padding-bottom: 1.25rem; 
-        margin-bottom: 1.25rem; 
-        border-bottom: 1px solid #3F3F46; 
+        display: flex; justify-content: flex-end; align-items: center;
+        padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #3F3F46; 
     }
     .slide-out-panel-close-btn {
         background: none; border: none; color: #A0A0A0; font-size: 1.875rem; 
@@ -157,155 +135,118 @@
         transition: color 0.2s ease, transform 0.2s ease;
     }
     .slide-out-panel-close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
-
-    .slide-out-panel-nav { 
-        flex-grow: 1; 
-        display: flex;
-        flex-direction: column;
-    }
+    .slide-out-panel-nav { flex-grow: 1; display: flex; flex-direction: column; }
     .slide-out-panel a {
-        color: #D4D4D8; 
-        padding: 1rem 1.25rem; 
-        text-decoration: none; 
-        display: block; 
-        font-size: 0.95rem; 
-        font-weight: 500; 
+        color: #D4D4D8; padding: 1rem 1.25rem; text-decoration: none; display: block; 
+        font-size: 0.95rem; font-weight: 500; 
         transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease; 
-        border-left: 4px solid transparent; 
-        margin: 0.375rem 0; 
-        border-radius: 0.375rem; 
+        border-left: 4px solid transparent; margin: 0.375rem 0; border-radius: 0.375rem; 
     }
-    .slide-out-panel a:hover { 
-        background-color: #27272A; 
-        color: #FFFFFF; 
-        border-left-color: #00BFFF; 
-    }
-    .slide-out-panel #logoutButtonSlideout { /* Special styling for logout if needed */
-        color: #F87171 !important; /* Reddish color for logout */
-        margin-top: auto; /* Pushes to bottom */
-        padding-top: 1rem; 
-        border-top: 1px solid #3F3F46; 
+    .slide-out-panel a:hover { background-color: #27272A; color: #FFFFFF; border-left-color: #00BFFF; }
+    .slide-out-panel #logoutButtonSlideout { 
+        color: #F87171 !important; margin-top: auto; padding-top: 1rem; border-top: 1px solid #3F3F46; 
     }
     .slide-out-panel #logoutButtonSlideout:hover { 
-        background-color: rgba(248, 113, 113, 0.1); 
-        color: #FECACA !important; 
-        border-left-color: #F87171;
+        background-color: rgba(248, 113, 113, 0.1); color: #FECACA !important; border-left-color: #F87171;
     } 
 
-    /* Menu Overlay Styles (from your index.html) */
     #menu-overlay {
-        display: none; 
-        position: fixed;
-        inset: 0;
+        display: none; position: fixed; inset: 0;
         background-color: rgba(0, 0, 0, 0.65); 
-        z-index: 1000; /* Below slide-out panel, above main content */
+        z-index: 1001; /* Below slide-out, above content */
         opacity: 0;
         transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
-    #menu-overlay.active {
-        display: block;
-        opacity: 1;
-    }
-    /* Mobile menu specific active state if different */
-    #mobile-menu .nav-link.active { 
-        color: #FFFFFF; 
-        background-color: rgba(0, 191, 255, 0.1); 
-        opacity: 1;
-    }
+    #menu-overlay.active { display: block; opacity: 1; }
+    #mobile-menu .nav-link.active { color: #FFFFFF; background-color: rgba(0, 191, 255, 0.1); opacity: 1; }
 </style>
 
 <script type="module">
-    // Firebase Modular SDK imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
-    // Firebase Configuration (use your actual config)
     const firebaseConfig = {
-        apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // IMPORTANT: Replace with your actual API key
+        apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // Replace with your actual API key
         authDomain: "linq-b27a8.firebaseapp.com",
         projectId: "linq-b27a8",
-        storageBucket: "linq-b27a8.appspot.com", // Usually projectID.appspot.com. Verify in your Firebase console. The user provided .firebasestorage.app earlier, which is for storage file URLs, not the auth config.
+        storageBucket: "linq-b27a8.appspot.com", 
         messagingSenderId: "1067901051826",
         appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // DOM Element References
+    // Desktop elements
     const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
     const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
     
+    // Mobile elements
     const authLinkMobile = document.getElementById('authLinkMobile');
+    const profileLinkMobile = document.getElementById('profileLinkMobile');
     const logoutButtonMobile = document.getElementById('logoutButtonMobile');
     const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
     const linqAiLinkMobile = document.getElementById('linqAiLinkMobile');
     const earningsLinkMobile = document.getElementById('earningsLinkMobile');
-    const profileLinkMobile = document.getElementById('profileLinkMobile');
-
-
+    
+    // Desktop Slide-out Menu elements
     const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
     const menuOverlay = document.getElementById('menu-overlay');
     const slideoutCloseButton = document.getElementById('slideout-close-button');
     const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
-    
     const logoutButtonSlideout = document.getElementById('logoutButtonSlideout');
-    const linqAiLinkSlideout = document.getElementById('linqAiLinkSlideout');
-    const earningsLinkSlideout = document.getElementById('earningsLinkSlideout');
-    const favoritesLinkSlideout = document.getElementById('favoritesLinkSlideout');
-    const profileLinkSlideout = document.getElementById('profileLinkSlideout');
 
-    // --- Authentication State Change Logic ---
+    // Links within the slide-out panel (these are always present in HTML, JS toggles visibility of panel)
+    // No need to individually hide/show these if the panel itself is hidden when logged out.
+    // The hamburger button that shows this panel will only be visible when logged in.
+
     onAuthStateChanged(auth, (user) => {
         const isLoggedIn = !!user;
 
-        // Desktop view
-        if (authLinkDesktopLogin) authLinkDesktopLogin.classList.toggle('hidden', isLoggedIn);
-        if (authLinkDesktopLogin) authLinkDesktopLogin.classList.toggle('nav-link-button', !isLoggedIn);
-        if (profileAndMenuDesktop) profileAndMenuDesktop.classList.toggle('hidden', !isLoggedIn);
-
-        // Mobile menu view
-        if (authLinkMobile) {
-            authLinkMobile.textContent = isLoggedIn ? 'Profile' : 'Login';
-            authLinkMobile.href = isLoggedIn ? 'profile.html' : 'login.html';
-            // Show login as button only when logged out
-            authLinkMobile.classList.toggle('nav-link-button', !isLoggedIn); 
-            // Hide login link if logged in and profile link is now active
-            authLinkMobile.classList.toggle('hidden', isLoggedIn && profileLinkMobile != null); 
+        // --- Desktop View Logic ---
+        if (authLinkDesktopLogin) {
+            authLinkDesktopLogin.classList.toggle('hidden', isLoggedIn);
+            // Ensure it has button style only when visible (logged out)
+            authLinkDesktopLogin.classList.toggle('nav-link-button', !isLoggedIn); 
         }
-        if (profileLinkMobile) profileLinkMobile.classList.toggle('hidden', !isLoggedIn);
-        if (logoutButtonMobile) logoutButtonMobile.classList.toggle('hidden', !isLoggedIn);
-        if (favoritesLinkMobile) favoritesLinkMobile.classList.toggle('hidden', !isLoggedIn);
-        if (linqAiLinkMobile) linqAiLinkMobile.classList.toggle('hidden', !isLoggedIn);
-        if (earningsLinkMobile) earningsLinkMobile.classList.toggle('hidden', !isLoggedIn);
-        
+        if (profileAndMenuDesktop) {
+            profileAndMenuDesktop.classList.toggle('hidden', !isLoggedIn);
+        }
 
-        // Desktop slide-out menu links
-        const slideoutLinks = [
-            linqAiLinkSlideout, earningsLinkSlideout, favoritesLinkSlideout, 
-            profileLinkSlideout, logoutButtonSlideout
+        // --- Mobile Menu View Logic ---
+        const mobileLoggedInLinks = [
+            profileLinkMobile, linqAiLinkMobile, earningsLinkMobile, 
+            favoritesLinkMobile, logoutButtonMobile
         ];
-        slideoutLinks.forEach(link => {
-            if (link) link.classList.toggle('hidden', !isLoggedIn);
-        });
 
-        if (!isLoggedIn) {
-            // If logged out, ensure slide-out menu is closed
-            if (desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open');
-            if (menuOverlay) menuOverlay.classList.remove('active');
-            document.body.classList.remove('overflow-hidden');
+        if (isLoggedIn) {
+            if (authLinkMobile) authLinkMobile.classList.add('hidden'); // Hide "Login" button
+            mobileLoggedInLinks.forEach(link => link && link.classList.remove('hidden'));
+        } else {
+            if (authLinkMobile) authLinkMobile.classList.remove('hidden'); // Show "Login" button
+            mobileLoggedInLinks.forEach(link => link && link.classList.add('hidden'));
+            // Ensure mobile menu is closed if user logs out
+            if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+            }
         }
+        
+        // --- Desktop Slide-out Menu Logic ---
+        // The slide-out menu is only triggered by the hamburger, which is part of profileAndMenuDesktop (shown when logged in).
+        // So, if not logged in, the trigger isn't there. If the menu was somehow open and user logs out, close it.
+        if (!isLoggedIn) {
+            if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
+                closeDesktopMenu();
+            }
+        }
+        setActiveNavLink(); // Update active link after auth state changes
     });
 
-    // --- Logout Functionality ---
     function handleLogout(event) {
         event.preventDefault();
         signOut(auth).then(() => {
             console.log('User signed out');
-            // Optional: Redirect to home page or refresh
-            // window.location.href = 'index.html'; 
-            // location.reload(); // Can cause issues if not handled carefully
+            // window.location.href = 'index.html'; // Optionally redirect or reload
         }).catch((error) => {
             console.error('Sign out error', error);
         });
@@ -314,7 +255,6 @@
     if (logoutButtonSlideout) logoutButtonSlideout.addEventListener('click', handleLogout);
     if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
 
-    // --- Mobile Menu Toggle ---
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
     if (mobileMenuButton && mobileMenu) {
@@ -323,7 +263,6 @@
         });
     }
 
-    // --- Desktop Slide-out Menu Toggle ---
     function openDesktopMenu() {
         if (desktopSlideOutMenu) desktopSlideOutMenu.classList.add('open');
         if (menuOverlay) menuOverlay.classList.add('active');
@@ -356,41 +295,34 @@
         }
     });
 
-    // --- Active Nav Link Styling (simplified example) ---
-    // This should ideally be more robust and handle different base paths if your site is complex.
-    // It's also better if this logic is part of the main page script that loads the header.
     function setActiveNavLink() {
         const currentPath = window.location.pathname.split('/').pop() || "index.html";
-        const desktopLinks = document.querySelectorAll('nav > div > div.hidden.md\\:flex a.nav-link');
-        const mobileLinks = document.querySelectorAll('#mobile-menu a.nav-link');
+        const allLinks = document.querySelectorAll('.nav-link'); // Select all potential nav links
 
-        desktopLinks.forEach(link => {
+        allLinks.forEach(link => {
             link.classList.remove('active');
-            if (link.getAttribute('href') === currentPath) {
+            const linkPage = link.dataset.page; // Assumes you add data-page attributes
+            const linkHref = link.getAttribute('href');
+
+            if (linkHref === currentPath || (currentPath === "index.html" && linkHref === "index.html")) {
                 link.classList.add('active');
             }
-        });
-        // Special case for "News" on index.html for desktop
-        if (currentPath === "index.html" || currentPath === "") {
-             const newsLinkDesktop = document.querySelector('nav > div > div.hidden.md\\:flex a.nav-link[href="index.html"]');
-             if(newsLinkDesktop) newsLinkDesktop.classList.add('active');
-        }
-
-
-        mobileLinks.forEach(link => {
-            link.classList.remove('active');
-             const linkHref = link.getAttribute('href');
-            if (linkHref === currentPath || (currentPath === "index.html" && linkHref === "index.html")) {
-                 if(link.dataset.page === "index-mobile" && (currentPath === "index.html" || currentPath === "")){
-                    link.classList.add('active');
-                 } else if (linkHref === currentPath && currentPath !== "index.html") {
-                    link.classList.add('active');
-                 }
+            // Handle cases where data-page might be more specific for active states
+            if (linkPage === "index" && (currentPath === "index.html" || currentPath === "")) {
+                 link.classList.add('active');
+            } else if (linkPage === "index-mobile" && (currentPath === "index.html" || currentPath === "")) {
+                 link.classList.add('active');
+            } else if (linkPage && linkPage.replace('-mobile', '') === currentPath.replace('.html', '')) {
+                 link.classList.add('active');
             }
         });
+         // Ensure "News" is active on the homepage by default if no other specific match
+        if (currentPath === "index.html" || currentPath === "") {
+            const newsDesktop = document.querySelector('.nav-link[data-page="index"]');
+            const newsMobile = document.querySelector('.nav-link[data-page="index-mobile"]');
+            if(newsDesktop) newsDesktop.classList.add('active');
+            if(newsMobile) newsMobile.classList.add('active');
+        }
     }
-    // Call it once the DOM is ready. If header.html is loaded into another page,
-    // this should be called after the header is injected and parsed.
     document.addEventListener('DOMContentLoaded', setActiveNavLink);
-
 </script>
