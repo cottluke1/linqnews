@@ -14,219 +14,326 @@
             font-family: 'Inter', sans-serif;
             background-color: #0A0A0A;
             color: #E0E0E0;
+            font-weight: 400; /* Default font weight from community.html */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #1A1A1A; }
         ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
         ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
 
+        /* Header Styles from community.html (user prompt) */
         nav.fixed {
-            background-color: rgba(10, 10, 10, 0.85); /* Dark, slightly transparent */
+            background-color: rgba(10, 10, 10, 0.85); 
             backdrop-filter: blur(10px) saturate(150%);
             -webkit-backdrop-filter: blur(10px) saturate(150%);
-            border-bottom: 1px solid #222222;
+            border-bottom: 1px solid #222222; 
         }
         .nav-link {
-            transition: color 0.2s ease, opacity 0.2s ease; font-weight: 500; color: #B0B0B0; opacity: 0.8;
+            transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease; 
+            font-weight: 500;
+            color: #B0B0B0; 
+            opacity: 0.8;   
+            padding: 0.5rem 0.75rem; 
+            border-radius: 0.375rem; 
+            font-size: 0.875rem; 
         }
-        .nav-link:hover { color: #FFFFFF; opacity: 1; }
+        .nav-link:hover { 
+            color: #FFFFFF; 
+            opacity: 1; 
+            background-color: rgba(255,255,255,0.05); 
+        }
+        /* Active link style for "Favorites" on this page */
+        .nav-link.active {
+            color: #FFFFFF; 
+            opacity: 1;
+            background-color: rgba(0, 191, 255, 0.1); /* Subtle blue highlight for active */
+        }
+        
+        .profile-icon-placeholder { 
+            width: 2.25rem; 
+            height: 2.25rem; 
+            background-color: #333; 
+            border-radius: 50%; 
+            display: inline-flex; align-items: center; justify-content: center; 
+            cursor: pointer; 
+            border: 2px solid #4A4A4A; 
+        }
+        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; } 
+        .profile-icon-placeholder:hover { border-color: #00BFFF; } 
+
+        .desktop-hamburger-menu { position: relative; display: inline-block; }
+        .desktop-hamburger-icon { cursor: pointer; padding: 0.25rem; color: #B0B0B0; } 
+        .desktop-hamburger-icon:hover { color: #FFFFFF; }
+        .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; } 
+
+        .desktop-dropdown-menu { 
+            display: none; position: absolute; right: 0; top: calc(100% + 0.5rem); 
+            background-color: rgba(28, 28, 28, 0.95); 
+            backdrop-filter: blur(12px) saturate(160%); 
+            min-width: 200px; 
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5), 0 4px 6px -2px rgba(0,0,0,0.25); 
+            z-index: 55; 
+            border-radius: 0.5rem; 
+            border: 1px solid #333333; 
+            padding-top: 0.5rem; padding-bottom: 0.5rem; 
+        }
+        .desktop-dropdown-menu a {
+            color: #C0C0C0; padding: 0.625rem 1.25rem; 
+            text-decoration: none; display: block; 
+            font-size: 0.875rem; font-weight: 500; 
+            transition: background-color 0.2s ease, color 0.2s ease; 
+            border-radius: 0.25rem; margin: 0.25rem 0.5rem; 
+        }
+        .desktop-dropdown-menu a:hover { background-color: rgba(0, 191, 255, 0.15); color: #FFFFFF; } 
+        .desktop-dropdown-menu #logoutButtonDesktop { color: #EF4444; } 
+        .desktop-dropdown-menu #logoutButtonDesktop:hover { background-color: rgba(239, 68, 68, 0.15); color: #FFAAAA; } 
+
+        #mobile-menu .nav-link.active {
+            color: #FFFFFF; 
+            background-color: rgba(0, 191, 255, 0.1); 
+            opacity: 1;
+        }
 
         .page-title {
-            font-size: 2.5rem; font-weight: 700; color: #FFFFFF; margin-bottom: 1rem; text-align: center; padding-top: 6rem; /* Space for fixed nav */
+            font-size: 2.5rem; font-weight: 700; color: #FFFFFF; margin-bottom: 2rem; text-align: center; 
+            padding-top: 80px; /* Space for fixed nav */
             text-shadow: 0px 2px 8px rgba(0, 191, 255, 0.25);
         }
         .page-title .accent-text { color: #00BFFF; }
 
+        /* News Card Styling from index.html */
         .news-card {
-            background-color: rgba(28, 28, 28, 0.8); backdrop-filter: blur(10px) saturate(150%); -webkit-backdrop-filter: blur(10px) saturate(150%);
-            border-radius: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255,255,255,0.05);
-            overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; margin-bottom: 2rem;
+            background-color: #0A0A0A; border-radius: 0.75rem; border: 1px solid #2D2D2D;
+            box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.6); overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            margin-bottom: 1.5rem; display: flex; align-items: center; padding: 1rem;
         }
         .news-card:hover {
-            transform: translateY(-5px) scale(1.01);
-            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255,255,255,0.08);
-            border-color: rgba(0, 191, 255, 0.5);
+            transform: translateY(-4px); box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.2);
+            border-color: #00BFFF;
         }
-        .news-card-content { padding: 1.5rem; }
-        .news-source-logo { height: 2rem; width: auto; max-width:80px; margin-right: 1rem; border-radius: 0.25rem; object-fit: contain; filter: grayscale(30%) brightness(1.2); }
-        .news-title { font-size: 1.2rem; font-weight: 600; color: #FFFFFF; margin-bottom: 0.5rem; line-height: 1.4; }
+        .news-source-logo-container {
+            flex-shrink: 0; margin-right: 1rem; width: 50px; height: 50px;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; border-radius: 0.375rem;
+        }
+        .news-source-logo { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .news-content-wrapper { flex-grow: 1; display: flex; justify-content: space-between; align-items: flex-start; }
+        .news-text-content { /* For title, meta, tags */ }
+        .news-title {
+            font-size: 1.1rem; font-weight: 500; color: #FFFFFF;
+            margin-bottom: 0.25rem; line-height: 1.3;
+        }
         .news-title a { color: #FFFFFF; transition: color 0.2s ease; }
         .news-title a:hover { color: #00BFFF; }
-        .news-meta { font-size: 0.8rem; color: #888888; margin-bottom: 0.75rem; }
+        .news-meta-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+        .news-meta { font-size: 0.75rem; color: #888888; }
         .news-tag {
-            background-color: rgba(0, 191, 255, 0.15); color: #00BFFF; padding: 0.3rem 0.75rem;
-            border-radius: 9999px; font-size: 0.7rem; font-weight: 500; margin-right: 0.5rem;
-            display: inline-block; margin-top: 0.375rem; border: 1px solid rgba(0, 191, 255, 0.3);
+            background-color: rgba(0, 191, 255, 0.15); color: #00BFFF; padding: 0.25rem 0.6rem;
+            border-radius: 9999px; font-size: 0.65rem; font-weight: 500;
+            display: inline-block; border: 1px solid rgba(0, 191, 255, 0.3);
         }
-        .favorite-btn { /* Combined with .star-icon from index */
-            width: 1.25rem; height: 1.25rem; color: #777777; cursor: pointer;
-            transition: color 0.2s ease, transform 0.2s ease; background: none; border: none; padding: 0;
-            display: inline-flex; align-items: center; justify-content: center;
+        .favorite-btn-area { flex-shrink: 0; margin-left: 1rem; }
+        .favorite-btn {
+            width: 1.5rem; height: 1.5rem; color: #777777; cursor: pointer;
+            transition: color 0.2s ease, transform 0.2s ease; background: none;
+            border: none; padding: 0; display: inline-flex;
+            align-items: center; justify-content: center;
         }
-        .favorite-btn:hover { color: #FFD700; transform: scale(1.15); }
-        .favorite-btn.favorited { color: #FFD700; fill: #FFD700; }
+        .favorite-btn:hover { color: #00BFFF; transform: scale(1.15); }
+        .favorite-btn.favorited { color: #00BFFF; fill: #00BFFF; }
         .favorite-btn svg { width: 100%; height: 100%; }
 
-        .no-favorites { text-align: center; color: #A0A0A0; font-size: 1.1rem; padding: 3rem 0; }
 
-        .footer { background-color: #080808; color: #888888; padding: 3rem 1rem; margin-top: 4rem; border-top: 1px solid #222222; }
-        .footer a { color: #A0A0A0; transition: color 0.2s ease; }
+        .no-favorites-message, .auth-message { 
+            text-align: center; color: #A0A0A0; font-size: 1.1rem; padding: 3rem 1rem;
+            background-color: #121212; border-radius: 0.5rem; border: 1px solid #2a2a2a;
+            margin-top: 2rem;
+        }
+        .auth-message a { color: #00BFFF; text-decoration: underline;}
+        .auth-message a:hover { color: #00A9E0;}
+
+
+        .footer {
+            background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem;
+            border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem; margin-top: auto;
+        }
+        .footer a { color: #B0B0B0; transition: color 0.2s ease; }
         .footer a:hover { color: #00BFFF; }
-
-        /* Terms and Privacy Modals - Themed */
-        .terms-privacy-content {
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background-color: rgba(22, 22, 22, 0.9); backdrop-filter: blur(10px) saturate(150%); -webkit-backdrop-filter: blur(10px) saturate(150%);
-            padding: 2.5rem; border-radius: 0.75rem; max-height: 85vh; overflow-y: auto;
-            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7); z-index: 100; color: #E0E0E0;
-            border: 1px solid rgba(0, 191, 255, 0.3); max-width: 700px; width: 90%;
+        
+        .page-content-wrapper {
+            flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px; 
+            margin: 0 auto; padding-left: 1rem; padding-right: 1rem;
+            padding-top: 10px; /* Reduced top padding for main content */
         }
-        .terms-privacy-content h2 { font-size: 1.75rem; font-weight: 700; color: #FFFFFF; margin-bottom: 1.5rem; border-bottom: 1px solid #00BFFF; padding-bottom: 0.75rem; }
-        .terms-privacy-content p { margin-bottom: 1rem; line-height: 1.7; color: #C0C0C0; }
-        .terms-privacy-content strong { color: #00BFFF; font-weight: 600; }
-        .terms-privacy-content a { color: #00BFFF; text-decoration: underline; transition: color 0.2s ease; }
-        .terms-privacy-content a:hover { color: #00A9E0; }
-        .close-btn {
-            position: absolute; top: 1.5rem; right: 1.5rem; font-size: 1.75rem; cursor: pointer;
-            color: #A0A0A0; transition: color 0.2s ease, transform 0.2s ease; line-height: 1;
-        }
-        .close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
     </style>
 </head>
 <body class="antialiased">
     <nav class="fixed top-0 left-0 w-full z-50 shadow-md py-3">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <a href="index.html" class="text-3xl font-bold text-white">Linq<span class="text-cyan-400">.</span></a>
-            <div class="hidden md:flex space-x-5 items-center">
+            <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
+            <div class="hidden md:flex items-center space-x-5">
                 <a href="index.html" class="nav-link text-sm">News</a>
-                <a href="favorites.html" class="nav-link text-sm text-cyan-400 opacity-100">Favorites</a>
                 <a href="community.html" class="nav-link text-sm">Community</a>
-                <a href="login.html" id="authLink" class="nav-link text-sm bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-md transition-colors">Login</a>
+                <a href="favorites.html" id="favoritesLinkDesktop" class="nav-link text-sm active hidden">Favorites</a>
+                
+                <div id="desktopAuthArea" class="flex items-center space-x-3">
+                    <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm">Login</a> 
+                    <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
+                        <a href="profile.html" id="profileLinkDesktop" title="My Profile">
+                            <div class="profile-icon-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </a>
+                        <div class="desktop-hamburger-menu">
+                            <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                            </button>
+                            <div id="desktop-dropdown" class="desktop-dropdown-menu">
+                                <a href="linqai.html">Linq AI</a>
+                                <a href="earnings.html">Earnings Calendar</a>
+                                <a href="profile.html">My Profile</a>
+                                <a href="#" id="logoutButtonDesktop">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="md:hidden">
                 <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
                 </button>
             </div>
         </div>
         <div id="mobile-menu" class="md:hidden hidden bg-gray-900 bg-opacity-90 backdrop-blur-md">
-            <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a>
-            <a href="favorites.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 text-cyan-400 opacity-100">Favorites</a>
-            <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Community</a>
             <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Login</a>
+            <a href="linqai.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Linq Ai</a>
+            <a href="earnings.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Earnings Calendar</a>
+            <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a>
+            <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Community</a> 
+            <a href="favorites.html" id="favoritesLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 active hidden">Favorites</a> {/* Active class added */}
+            <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Logout</a>
         </div>
     </nav>
 
-    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+    <main class="page-content-wrapper container mx-auto p-4 sm:p-6 lg:p-8">
         <h1 class="page-title">Your <span class="accent-text">Favorite</span> Intelligence</h1>
+        
+        <div id="authMessage" class="auth-message hidden">
+            You must be logged in to view your favorites. <a href="login.html">Login here</a>.
+        </div>
+
         <div id="newsFavoritesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
             {/* Favorited news articles will be loaded here */}
-        </div>
-         <div id="communityFavoritesGrid" class="mt-12">
-            {/* Favorited community posts (if any) could go here, or integrate into a single favorites feed */}
         </div>
     </main>
 
     <footer class="footer text-center">
         <div class="container mx-auto">
-            <p class="mb-2 text-sm">&copy; 2025 Linq Energy Intelligence. All Rights Reserved.</p>
+            <p class="mb-2 text-sm">&copy; <span id="current-year"></span> Linq Energy Intelligence. All Rights Reserved.</p>
             <nav class="text-xs space-x-3 sm:space-x-4">
-                <a href="#terms" onclick="showTerms(event)">Terms of Service</a> |
-                <a href="#privacy" onclick="showPrivacy(event)">Privacy Policy</a> |
-                <a href="#">Contact Support</a> |
-                <a href="#">Careers</a>
+                <a href="#">Terms of Service</a> |
+                <a href="#">Privacy Policy</a> |
+                <a href="#">Contact Support</a>
             </nav>
         </div>
     </footer>
 
-    <div id="termsContent" class="terms-privacy-content">
-        <span class="close-btn" onclick="closeTerms()">×</span>
-        <h2>Terms of Service</h2>
-        <p>Welcome to Linq. By accessing or using our website, you agree to comply with and be bound by the following terms and conditions...</p>
-        {/* ... full terms ... */}
-        <p>For the most current version, please contact us at <a href="mailto:support@linq.com">support@linq.com</a>.</p>
-    </div>
-
-    <div id="privacyContent" class="terms-privacy-content">
-        <span class="close-btn" onclick="closePrivacy()">×</span>
-        <h2>Privacy Policy</h2>
-        <p>At Linq, we are committed to protecting your privacy. This policy outlines how we collect, use, and safeguard your information.</p>
-        {/* ... full policy ... */}
-        <p>For questions, contact us at <a href="mailto:support@linq.com">support@linq.com</a>.</p>
-    </div>
-
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", //
-            authDomain: "linq-b27a8.firebaseapp.com", //
-            projectId: "linq-b27a8", //
-            storageBucket: "linq-b27a8.firebasestorage.app", //
-            messagingSenderId: "1067901051826", //
-            appId: "1:1067901051826:web:44452d1339cdbe2af07aab" //
-        };
-        firebase.initializeApp(firebaseConfig); //
-        const auth = firebase.auth(); //
-        const db = firebase.firestore(); //
+        document.getElementById('current-year').textContent = new Date().getFullYear();
 
-        // Data for all articles (ideally from a shared JS file or API)
-         const articlesData = [
-            // Using placeholder images that match the new theme
-            { id: "1", category: 'Crude Oil', title: 'Oil Prices Surge Amid Escalating Geopolitical Tensions and Supply Concerns', date: 'May 10, 2025', source: 'Reuters', link: '#', image: 'https://placehold.co/150x100/0A0A0A/00BFFF?text=Oil&font=Inter' },
-            { id: "2", category: 'Crude Oil', title: 'OPEC+ Considers Deeper Production Cuts as Demand Outlook Weakens', date: 'May 9, 2025', source: 'Bloomberg', link: '#', image: 'https://placehold.co/150x100/0A0A0A/00BFFF?text=OPEC&font=Inter' },
-            { id: "3", category: 'Natural Gas', title: 'Natural Gas Prices Rally on Forecasts of Hotter Summer Weather & Increased LNG Exports', date: 'May 10, 2025', source: 'CNBC', link: '#', image: 'https://placehold.co/150x100/0A0A0A/00BFFF?text=NatGas&font=Inter' },
-            { id: "4", category: 'Petrochemicals', title: 'Petrochemical Demand Shifts with New Green Policies', date: 'May 8, 2025', source: 'Forbes', link: '#', image: 'https://placehold.co/150x100/0A0A0A/00BFFF?text=Petro&font=Inter' },
-            { id: "5", category: 'Power', title: 'Global Power Grids Under Strain from Extreme Weather Events', date: 'May 10, 2025', source: 'BBC News', link: '#', image: 'https://placehold.co/150x100/0A0A0A/00BFFF?text=Power&font=Inter' },
-            { id: "6", category: 'Renewables', title: 'Solar Panel Efficiency Reaches New Heights, Driving Adoption', date: 'May 9, 2025', source: 'Seeking Alpha', link: '#', image: 'https://placehold.co/150x100/0A0A0A/00BFFF?text=Solar&font=Inter' },
-            { id: "7", category: 'Company News', title: 'ExxonMobil Announces Major Investment in Carbon Capture Technology', date: 'May 10, 2025', source: 'Wall Street Journal', link: '#', image: 'https://placehold.co/150x100/0A0A0A/00BFFF?text=XOM&font=Inter' },
-            { id: "8", category: 'Earnings', title: 'Chevron Reports Strong Q1 Earnings Driven by Upstream Performance', date: 'May 8, 2025', source: 'Financial Times', link: '#', image: 'https://placehold.co/150x100/0A0A0A/00BFFF?text=CVX&font=Inter' },
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+            authDomain: "linq-b27a8.firebaseapp.com",
+            projectId: "linq-b27a8",
+            storageBucket: "linq-b27a8.appspot.com", // Corrected from .firebasestorage.app if it was a typo
+            messagingSenderId: "1067901051826",
+            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        // const db = firebase.firestore(); // Firestore not explicitly used in this version for favorites display logic
+
+        // Placeholder colors for news article images if actual image is not provided
+        const sourcePlaceholders = {
+            'Reuters': { bgColor: 'eeeeee', textColor: '333333', text: 'RTRS' },
+            'Bloomberg': { bgColor: '007bff', textColor: 'ffffff', text: 'BBG' },
+            'CNBC': { bgColor: 'c40029', textColor: 'ffffff', text: 'CNBC' },
+            'Forbes': { bgColor: '222222', textColor: 'ffffff', text: 'FRBS' },
+            'BBC News': { bgColor: 'cc0000', textColor: 'ffffff', text: 'BBC' },
+            'Seeking Alpha': { bgColor: 'f9a61a', textColor: '000000', text: 'SA' },
+        };
+        const genericPlaceholderColors = ['00BFFF', '4B0082', '800080', 'FF1493', 'FF8C00', '20B2AA', 'DA70D6'];
+
+        const articlesData = [ // This should ideally be from a shared source or API
+            { id: "1", category: 'Crude Oil', title: 'Oil Prices Surge Amid Supply Concerns', date: 'May 10, 2025', source: 'Reuters', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
+            { id: "2", category: 'Crude Oil', title: 'OPEC+ Extends Production Cuts', date: 'May 9, 2025', source: 'Bloomberg', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
+            { id: "3", category: 'Natural Gas', title: 'Global Demand for Crude Hits Record', date: 'May 10, 2025', source: 'CNBC', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
+            { id: "4", category: 'Petrochemicals', title: 'Petrochemical Demand Shifts with New Green Policies', date: 'May 8, 2025', source: 'Forbes', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
+            { id: "5", category: 'Power', title: 'Global Power Grids Under Strain from Extreme Weather Events', date: 'May 10, 2025', source: 'BBC News', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
+            { id: "6", category: 'Renewables', title: 'Solar Panel Efficiency Reaches New Heights, Driving Adoption', date: 'May 9, 2025', source: 'Seeking Alpha', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
         ];
 
-
-        let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || []; // Ensure V2 to avoid conflicts
+        let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || [];
 
         function displayFavoriteArticles() {
             const newsFavoritesGrid = document.getElementById('newsFavoritesGrid');
             if (!newsFavoritesGrid) return;
-            newsFavoritesGrid.innerHTML = ''; // Clear previous
+            newsFavoritesGrid.innerHTML = ''; 
 
-            const favoritedArticles = articlesData.filter(article => favorites.includes(String(article.id)));
+            const favoritedArticlesDetails = articlesData.filter(article => favorites.includes(String(article.id)));
 
-            if (favoritedArticles.length === 0) {
-                newsFavoritesGrid.innerHTML = '<p class="no-favorites col-span-full">You haven\'t favorited any intelligence yet. <a href="index.html" class="text-cyan-400 hover:underline">Explore News</a></p>';
+            if (favoritedArticlesDetails.length === 0) {
+                newsFavoritesGrid.innerHTML = '<p class="no-favorites-message col-span-full">You haven\'t favorited any intelligence yet. <a href="index.html" class="text-cyan-400 hover:underline">Explore News</a></p>';
                 return;
             }
 
-            favoritedArticles.forEach(article => {
-                const articleElement = document.createElement('div'); // Each card in its own div for grid
-                articleElement.className = 'news-card flex flex-col'; // Use news-card for styling
+            favoritedArticlesDetails.forEach((article, index) => {
+                const articleElement = document.createElement('div');
+                articleElement.className = 'news-card'; // Main card class
 
-                 let logoSrc = `https://placehold.co/80x80/121212/00BFFF?text=${article.source.substring(0,4).toUpperCase()}&font=Inter`;
-                // ... (same logo logic as index.html)
-
+                let imageUrl = article.image;
+                if (imageUrl === 'YOUR_IMAGE_ADDRESS_HERE') {
+                    const specificPlaceholder = sourcePlaceholders[article.source];
+                    if (specificPlaceholder) {
+                        imageUrl = `https://placehold.co/50x50/${specificPlaceholder.bgColor}/${specificPlaceholder.textColor}?text=${specificPlaceholder.text}&font=Inter`;
+                    } else {
+                        const colorIndex = index % genericPlaceholderColors.length;
+                        const bgColor = genericPlaceholderColors[colorIndex];
+                        const textColor = 'FFFFFF';
+                        imageUrl = `https://placehold.co/50x50/${bgColor}/${textColor}?text=${article.source.charAt(0).toUpperCase()}&font=Inter`;
+                    }
+                }
+                
                 articleElement.innerHTML = `
-                    <div class="flex items-start p-4"> {/* Add padding to this inner div */}
-                        <img src="${logoSrc}" alt="${article.source} Logo" class="news-source-logo mt-1 flex-shrink-0">
-                        <div class="news-card-content flex-grow !pt-0">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h3 class="news-title">
-                                        <a href="${article.link}" target="_blank">${article.title}</a>
-                                    </h3>
-                                    <p class="news-meta">${article.date} &bull; ${article.source}</p>
-                                </div>
-                                <button class="favorite-btn star-icon flex-shrink-0 ml-4 mt-1 favorited" data-id="${article.id}" aria-label="Unfavorite article">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div>
+                    <div class="news-source-logo-container">
+                        <img src="${imageUrl}" alt="${article.source} Logo" class="news-source-logo">
+                    </div>
+                    <div class="news-content-wrapper">
+                        <div class="news-text-content">
+                            <h3 class="news-title">
+                                <a href="${article.link}" target="_blank">${article.title}</a>
+                            </h3>
+                            <div class="news-meta-tags">
+                                <p class="news-meta">${article.date} &bull; ${article.source}</p>
                                 <span class="news-tag">${article.category}</span>
-                                 ${article.category === 'Crude Oil' ? '<span class="news-tag">Market Alert</span>' : ''}
-                                 ${article.category === 'Natural Gas' ? '<span class="news-tag">Weather Impact</span>' : ''}
                             </div>
+                        </div>
+                        <div class="favorite-btn-area">
+                            <button class="favorite-btn favorited" data-id="${article.id}" aria-label="Unfavorite article">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#00BFFF" stroke="#00BFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -235,43 +342,29 @@
             addFavoriteButtonListeners();
         }
 
-        function toggleFavorite(articleId) {
+        function toggleFavoriteOnFavoritesPage(articleId) {
             const idStr = String(articleId);
             const index = favorites.indexOf(idStr);
-            if (index > -1) {
+            if (index > -1) { // Should always be true if button is for an existing favorite
                 favorites.splice(index, 1);
-            } else {
-                favorites.push(idStr);
             }
             localStorage.setItem('linqFavoritesV2', JSON.stringify(favorites));
             displayFavoriteArticles(); // Re-render the favorites page
         }
 
         function addFavoriteButtonListeners() {
-            document.querySelectorAll('.favorite-btn.star-icon').forEach(button => {
-                button.removeEventListener('click', handleFavoriteClick);
-                button.addEventListener('click', handleFavoriteClick);
+            document.querySelectorAll('#newsFavoritesGrid .favorite-btn').forEach(button => {
+                button.removeEventListener('click', handleUnfavoriteClick); // Ensure no duplicate listeners
+                button.addEventListener('click', handleUnfavoriteClick);
             });
         }
 
-        function handleFavoriteClick(event) {
+        function handleUnfavoriteClick(event) {
             const button = event.currentTarget;
             const articleId = button.getAttribute('data-id');
-            toggleFavorite(articleId);
+            toggleFavoriteOnFavoritesPage(articleId);
         }
 
-
-        // Modal Functionality
-        function showTerms(event) { event.preventDefault(); document.getElementById('termsContent').style.display = 'block'; }
-        function closeTerms() { document.getElementById('termsContent').style.display = 'none'; }
-        function showPrivacy(event) { event.preventDefault(); document.getElementById('privacyContent').style.display = 'block'; }
-        function closePrivacy() { document.getElementById('privacyContent').style.display = 'none'; }
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('termsContent')) closeTerms();
-            if (event.target == document.getElementById('privacyContent')) closePrivacy();
-        };
-
-        // Mobile Menu
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
         if (mobileMenuButton && mobileMenu) {
@@ -280,21 +373,72 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            displayFavoriteArticles();
+        const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
+        const desktopDropdown = document.getElementById('desktop-dropdown');
+        if (desktopHamburgerButton && desktopDropdown) {
+            desktopHamburgerButton.addEventListener('click', (event) => {
+                event.stopPropagation(); 
+                desktopDropdown.style.display = desktopDropdown.style.display === 'block' ? 'none' : 'block';
+            });
+        }
+        document.addEventListener('click', function(event) {
+            if (desktopDropdown && desktopHamburgerButton) {
+                if (!desktopHamburgerButton.contains(event.target) && !desktopDropdown.contains(event.target)) {
+                    desktopDropdown.style.display = 'none';
+                }
+            }
+        });
 
-            // Firebase Auth State Change Listener for Nav Links
-            const authLink = document.getElementById('authLink');
+        document.addEventListener('DOMContentLoaded', () => {
+            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
+            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
+            const favoritesLinkDesktop = document.getElementById('favoritesLinkDesktop');
             const authLinkMobile = document.getElementById('authLinkMobile');
-             auth.onAuthStateChanged(user => { //
+            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
+            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
+            const logoutButtonDesktop = document.getElementById('logoutButtonDesktop');
+            const newsFavoritesGrid = document.getElementById('newsFavoritesGrid');
+            const authMessage = document.getElementById('authMessage');
+
+
+            auth.onAuthStateChanged(user => {
                 if (user) {
-                    if(authLink) { authLink.textContent = "Profile"; authLink.href = "profile.html"; }
+                    // User is logged in
+                    if(authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
+                    if(profileAndMenuDesktop) { profileAndMenuDesktop.classList.remove('hidden'); profileAndMenuDesktop.classList.add('flex'); }
+                    if(favoritesLinkDesktop) favoritesLinkDesktop.classList.remove('hidden');
+
                     if(authLinkMobile) { authLinkMobile.textContent = "Profile"; authLinkMobile.href = "profile.html"; }
+                    if(logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
+                    if(favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
+
+                    if(authMessage) authMessage.classList.add('hidden');
+                    if(newsFavoritesGrid) newsFavoritesGrid.classList.remove('hidden');
+                    displayFavoriteArticles();
+
                 } else {
-                    if(authLink) { authLink.textContent = "Login"; authLink.href = "login.html"; }
+                    // User is not logged in
+                    if(authLinkDesktopLogin) authLinkDesktopLogin.classList.remove('hidden');
+                    if(profileAndMenuDesktop) { profileAndMenuDesktop.classList.add('hidden'); profileAndMenuDesktop.classList.remove('flex'); }
+                    if(favoritesLinkDesktop) favoritesLinkDesktop.classList.add('hidden');
+
                     if(authLinkMobile) { authLinkMobile.textContent = "Login"; authLinkMobile.href = "login.html"; }
+                    if(logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+                    if(favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
+                    if(desktopDropdown) desktopDropdown.style.display = 'none';
+
+                    if(authMessage) authMessage.classList.remove('hidden');
+                    if(newsFavoritesGrid) newsFavoritesGrid.classList.add('hidden');
                 }
             });
+
+            function handleLogout(e) {
+                e.preventDefault();
+                auth.signOut().then(() => { console.log("User signed out"); })
+                .catch(error => console.error("Sign out error", error));
+            }
+            if(logoutButtonDesktop) logoutButtonDesktop.addEventListener('click', handleLogout);
+            if(logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
         });
     </script>
 </body>
