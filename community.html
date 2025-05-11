@@ -22,6 +22,7 @@
         body.overflow-hidden { 
             overflow: hidden;
         }
+        /* Scrollbar styling from user */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #1A1A1A; }
         ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
@@ -29,32 +30,32 @@
 
         /* Header Styles from user prompt */
         nav.fixed {
-            background-color: rgba(10, 10, 10, 0.85); 
+            background-color: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(10px) saturate(150%);
             -webkit-backdrop-filter: blur(10px) saturate(150%);
-            border-bottom: 1px solid #222222; 
+            border-bottom: 1px solid #222222;
         }
         .nav-link {
-            transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease; 
+            transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
             font-weight: 500;
-            color: #B0B0B0; 
+            color: #B0B0B0;
             opacity: 0.8;   
-            padding: 0.5rem 0.75rem; 
-            border-radius: 0.375rem; 
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
             font-size: 0.875rem; 
         }
         .nav-link:hover { 
-            color: #FFFFFF; 
-            opacity: 1; 
-            background-color: rgba(255,255,255,0.05); 
+            color: #FFFFFF;
+            opacity: 1;
+            background-color: rgba(255,255,255,0.05);
         }
-        .nav-link.active { 
+        .nav-link.active { /* For current page indication */
             color: #FFFFFF; 
             opacity: 1;
             background-color: transparent; 
         }
         
-        #authLinkDesktopLogin.nav-link-button {
+        #authLinkDesktopLogin.nav-link-button { /* For Login button when not logged in */
             background-color: #00BFFF; 
             color: #FFFFFF !important; 
             opacity: 1 !important; 
@@ -66,9 +67,13 @@
         }
         
         .profile-icon-placeholder { 
-            width: 2.25rem; height: 2.25rem; background-color: #333; 
-            border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; 
-            cursor: pointer; border: 2px solid #4A4A4A; 
+            width: 2.25rem; 
+            height: 2.25rem; 
+            background-color: #333; 
+            border-radius: 50%; 
+            display: inline-flex; align-items: center; justify-content: center; 
+            cursor: pointer; 
+            border: 2px solid #4A4A4A; 
         }
         .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; } 
         .profile-icon-placeholder:hover { border-color: #00BFFF; } 
@@ -78,6 +83,7 @@
         .desktop-hamburger-icon:hover { color: #FFFFFF; background-color: rgba(255,255,255,0.1); }
         .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; } 
 
+        /* Luxury Slide-Out Panel Styling from user */
         .slide-out-panel { 
             display: flex; 
             flex-direction: column;
@@ -181,11 +187,11 @@
 
         .search-container { position: relative; } 
         .search-input {
-            width: 100%; padding: 0.875rem 1rem 0.875rem 3rem;
+            width: 100%; padding: 0.875rem 1rem 0.875rem 3rem; /* Left padding for icon */
             background-color: #1A1A1A; border: 1px solid #333333; border-radius: 0.5rem;
             margin-bottom: 2rem; font-size: 1rem; color: #E0E0E0;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
-            line-height: normal; /* Changed for better icon centering */
+            line-height: normal; /* For better vertical alignment of placeholder */
             height: 3rem; /* Explicit height to help center icon */
         }
         .search-input::placeholder { color: #777777; }
@@ -204,7 +210,7 @@
             background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%);
             padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
             border: 1px solid #2a2a2a; position: sticky; 
-            top: 210px; /* Adjusted top value to lower the panel */
+            top: 80px; /* Align with the top of the page content area */
         }
         .filter-title { font-size: 1.25rem; font-weight: 600; color: #E0E0E0; margin-bottom: 1.25rem; }
         .filter-button {
@@ -288,7 +294,6 @@
     </style>
 </head>
 <body class="antialiased">
-    <div id="menu-overlay" class="hidden"></div> 
     <nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
@@ -349,6 +354,8 @@
         </nav>
     </div>
 
+    <div id="menu-overlay" class="hidden"></div> 
+
     <main class="page-content-wrapper">
         <div class="community-main-grid">
             <section class="posts-section">
@@ -358,10 +365,7 @@
                 </header>
                 
                 <div class="search-container">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    <input type="text" id="searchInputCommunity" placeholder="Search community posts..." class="search-input">
+                    <input type="text" id="searchInputCommunity" placeholder="Search community posts..." class="search-input !pl-4">
                 </div>
 
                 <div id="postsContainerCommunity" class="space-y-8">
@@ -411,7 +415,7 @@
             messagingSenderId: "1067901051826",
             appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
         };
-        if (!firebase.apps.length) { // Ensure Firebase is initialized only once per page load
+        if (!firebase.apps.length) { 
             firebase.initializeApp(firebaseConfig);
         }
         const auth = firebase.auth();
@@ -560,7 +564,7 @@
         const categoryFilterButtonsPage = document.querySelectorAll('#categoryFiltersCommunity .filter-button'); 
         categoryFilterButtonsPage.forEach(button => {
             button.addEventListener('click', function() {
-                this.classList.toggle('active'); // Toggle for multi-select
+                this.classList.toggle('active'); 
                 filterCommunityPostsPage();
             });
         });
@@ -568,48 +572,133 @@
         const searchInputElementPage = document.getElementById('searchInputCommunity'); 
         if (searchInputElementPage) { searchInputElementPage.addEventListener('input', filterCommunityPostsPage); }
         
-        // Header-related DOM elements (will be populated by header_logic.js)
-        let mobileMenuButton, mobileMenu, desktopSlideOutMenu, menuOverlay, slideoutCloseButton, desktopHamburgerButton;
-        let authLinkDesktopLogin, profileAndMenuDesktop, marketsLinkDesktop, authLinkMobile, logoutButtonMobile, favoritesLinkMobile, logoutButtonSlideout;
+        // Header Interactivity Logic (Copied from user-provided header script)
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu'); 
+        const menuOverlay = document.getElementById('menu-overlay');
+        const slideoutCloseButton = document.getElementById('slideout-close-button'); 
+        const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
 
-
-        function initializeHeaderDOMReferences() {
-            mobileMenuButton = document.getElementById('mobile-menu-button');
-            mobileMenu = document.getElementById('mobile-menu');
-            desktopSlideOutMenu = document.getElementById('desktop-slideout-menu'); 
-            menuOverlay = document.getElementById('menu-overlay');
-            slideoutCloseButton = document.getElementById('slideout-close-button'); 
-            desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
-            authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
-            profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
-            marketsLinkDesktop = document.getElementById('marketsLinkDesktop'); 
-            authLinkMobile = document.getElementById('authLinkMobile');
-            logoutButtonMobile = document.getElementById('logoutButtonMobile');
-            favoritesLinkMobile = document.getElementById('favoritesLinkMobile'); 
-            logoutButtonSlideout = document.getElementById('logoutButtonSlideout');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
         }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            // The header_logic.js script will load the header component and then initialize its functionality.
-            // We need to ensure that page-specific logic runs *after* the header is loaded and its elements are available.
-            // One way is to wait for header_logic.js to signal completion, or use a small timeout if header_logic.js
-            // doesn't provide a callback/event.
 
-            const checkHeaderLoaded = setInterval(() => {
-                if (document.getElementById('desktop-hamburger-button')) { // Check if a key header element exists
-                    clearInterval(checkHeaderLoaded);
-                    initializeHeaderDOMReferences(); // Now that header is loaded, get references
-                    
-                    // Initialize page-specific community content
-                    displayCommunityPostsPage(communityPostsDataPage);
-                    filterCommunityPostsPage(); 
+        function openDesktopMenu() {
+            if (desktopSlideOutMenu) desktopSlideOutMenu.classList.add('open');
+            if (menuOverlay) menuOverlay.classList.add('active');
+            document.body.classList.add('overflow-hidden');
+        }
 
-                    // Auth state listener (moved from header_logic.js to be page-specific if needed, or ensure header_logic handles it globally)
-                    // If header_logic.js handles auth for nav, this might be redundant or cause conflicts if not coordinated.
-                    // For now, assuming header_logic.js handles the nav auth UI.
-                    // This page specific auth listener can be for content specific to auth state on community page if any.
+        function closeDesktopMenu() {
+            if (desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open');
+            if (menuOverlay) menuOverlay.classList.remove('active');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        if (desktopHamburgerButton) {
+            desktopHamburgerButton.addEventListener('click', (event) => {
+                event.stopPropagation(); 
+                if (desktopSlideOutMenu.classList.contains('open')) {
+                    closeDesktopMenu();
+                } else {
+                    openDesktopMenu();
                 }
-            }, 100);
+            });
+        }
+        if (menuOverlay) {
+            menuOverlay.addEventListener('click', closeDesktopMenu);
+        }
+        if(slideoutCloseButton) { 
+            slideoutCloseButton.addEventListener('click', closeDesktopMenu);
+        }
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
+                closeDesktopMenu();
+            }
+        });
+        
+        function setActiveNavLink() {
+            const currentFile = window.location.pathname.split("/").pop() || "index.html";
+            const pageMap = {
+                "index.html": "index",
+                "community.html": "community",
+                "Markets.html": "markets",
+                "favorites.html": "favorites" 
+            };
+            const currentPageKey = pageMap[currentFile] || "";
+
+            const desktopNavLinks = document.querySelectorAll('nav.fixed .hidden.md\\:flex a.nav-link[data-page]');
+            const mobileNavLinks = document.querySelectorAll('#mobile-menu a.nav-link[data-page]');
+
+            desktopNavLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.page === currentPageKey) {
+                    link.classList.add('active');
+                }
+            });
+            mobileNavLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.page === `${currentPageKey}-mobile`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setActiveNavLink(); // Set active link on initial load
+            displayCommunityPostsPage(communityPostsDataPage);
+            filterCommunityPostsPage(); 
+
+            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
+            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
+            const marketsLinkDesktop = document.getElementById('marketsLinkDesktop'); 
+            const favoritesLinkDesktop = document.getElementById('favoritesLinkDesktop'); // Main nav link
+            const authLinkMobile = document.getElementById('authLinkMobile');
+            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
+            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile'); // In mobile menu
+            const logoutButtonSlideout = document.getElementById('logoutButtonSlideout'); 
+
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    if(authLinkDesktopLogin) {
+                        authLinkDesktopLogin.classList.add('hidden');
+                        authLinkDesktopLogin.classList.remove('nav-link-button'); 
+                    }
+                    if(profileAndMenuDesktop) { profileAndMenuDesktop.classList.remove('hidden'); profileAndMenuDesktop.classList.add('flex'); }
+                    // The main favorites link is now in the slideout, so no need to manage its visibility here directly for desktop main nav
+                    // if(favoritesLinkDesktop) favoritesLinkDesktop.classList.remove('hidden'); 
+                    if(authLinkMobile) { authLinkMobile.textContent = "Profile"; authLinkMobile.href = "profile.html"; }
+                    if(logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
+                    if(favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden'); 
+                } else {
+                     if(authLinkDesktopLogin) {
+                        authLinkDesktopLogin.classList.remove('hidden');
+                        authLinkDesktopLogin.classList.add('nav-link-button'); 
+                     }
+                     if(profileAndMenuDesktop) { profileAndMenuDesktop.classList.add('hidden'); profileAndMenuDesktop.classList.remove('flex'); }
+                    // if(favoritesLinkDesktop) favoritesLinkDesktop.classList.add('hidden');
+                     if(authLinkMobile) { authLinkMobile.textContent = "Login"; authLinkMobile.href = "login.html"; }
+                     if(logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+                     if(favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden'); 
+                     if(desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) { 
+                        closeDesktopMenu();
+                     }
+                }
+                 setActiveNavLink(); // Re-check active link after auth state might change nav items
+            });
+            
+            function handleLogout(e) {
+                e.preventDefault();
+                closeDesktopMenu(); 
+                auth.signOut().then(() => { console.log("User signed out"); })
+                .catch(error => console.error("Sign out error", error));
+            }
+            if(logoutButtonSlideout) logoutButtonSlideout.addEventListener('click', handleLogout);
+            if(logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
         });
     </script>
 </body>
