@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linq - Header + Dropdown</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Lexend', sans-serif;
+      background-color: #0A0A0A;
+      color: #E0E0E0;
+    }
+    nav.fixed {
+      background-color: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(10px) saturate(150%);
+      -webkit-backdrop-filter: blur(10px) saturate(150%);
+      border-bottom: 1px solid #222222;
+    }
+    .nav-link {
+      transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+      font-weight: 500;
+      color: #B0B0B0;
+      opacity: 0.8;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+    }
+    .nav-link:hover {
+      color: #FFFFFF;
+      opacity: 1;
+      background-color: rgba(255,255,255,0.05);
+    }
+    .nav-link-button {
+      background-color: #00BFFF;
+      color: #FFFFFF;
+    }
+    .nav-link-button:hover {
+      background-color: #00A9E0;
+    }
+    .profile-icon-placeholder {
+      width: 2.25rem;
+      height: 2.25rem;
+      background-color: #333;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #4A4A4A;
+    }
+    .profile-icon-placeholder svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: #B0B0B0;
+    }
+    .profile-icon-placeholder:hover {
+      border-color: #00BFFF;
+    }
+    .desktop-hamburger-menu {
+      position: relative;
+      display: inline-block;
+    }
+    .desktop-hamburger-icon {
+      cursor: pointer;
+      padding: 0.375rem;
+      color: #B0B0B0;
+      border-radius: 0.25rem;
+    }
+    .desktop-hamburger-icon:hover {
+      color: #FFFFFF;
+      background-color: rgba(255,255,255,0.1);
+    }
+    .desktop-hamburger-icon svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="fixed top-0 left-0 w-full z-50 shadow-md py-3">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+      <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
+      <div class="hidden md:flex items-center space-x-5">
+        <a href="#news" class="nav-link text-sm">News</a>
+        <a href="community.html" class="nav-link text-sm">Community</a>
+        <a href="favorites.html" class="nav-link text-sm hidden" id="favoritesLinkDesktop">Favorites</a>
+        <div class="flex items-center space-x-3">
+          <a href="login.html" class="nav-link text-sm nav-link-button" id="authLinkDesktopLogin">Login</a>
+          <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
+            <a href="profile.html" title="My Profile">
+              <div class="profile-icon-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                  <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            </a>
+            <div class="desktop-hamburger-menu">
+              <button class="desktop-hamburger-icon" id="desktop-hamburger-button">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</body>
+</html>
