@@ -36,58 +36,86 @@
         .ticker-item .positive { color: #22C55E; }
         .ticker-item .negative { color: #EF4444; }
 
-        /* Main Navigation */
+        /* Main Navigation from user prompt */
         nav.fixed {
-            background-color: rgba(10, 10, 10, 0.85); backdrop-filter: blur(10px) saturate(150%);
-            -webkit-backdrop-filter: blur(10px) saturate(150%); border-bottom: 1px solid #222222;
+            background-color: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(10px) saturate(150%);
+            -webkit-backdrop-filter: blur(10px) saturate(150%);
+            border-bottom: 1px solid #222222;
         }
-        .nav-link { /* Base style for all nav links, including Login when not a button */
-            transition: color 0.2s ease, opacity 0.2s ease; font-weight: 500;
-            color: #B0B0B0; opacity: 0.8;
-            padding: 0.5rem 0.75rem; /* Consistent padding */
-            border-radius: 0.375rem; /* Rounded corners */
+        .nav-link {
+            transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+            font-weight: 500;
+            color: #B0B0B0;
+            opacity: 0.8;   
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem; 
         }
-        .nav-link:hover { color: #FFFFFF; opacity: 1; background-color: rgba(255,255,255,0.05); }
-
-        #authLinkDesktopLogin.nav-link-button { /* Specific style for Login button when it needs to look like a button */
-             background-color: #00BFFF; color: #FFFFFF; opacity:1;
+        .nav-link:hover { 
+            color: #FFFFFF;
+            opacity: 1;
+            background-color: rgba(255,255,255,0.05);
         }
-        #authLinkDesktopLogin.nav-link-button:hover {
-            background-color: #00A9E0; opacity:1;
+        .nav-link.active { 
+            color: #FFFFFF; 
+            opacity: 1;
+            background-color: transparent; 
         }
-
-
-        .profile-icon-placeholder {
-            width: 2.25rem; height: 2.25rem; background-color: #333;
-            border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
-            cursor: pointer; border: 2px solid #4A4A4A;
+        
+        .profile-icon-placeholder { 
+            width: 2.25rem; 
+            height: 2.25rem; 
+            background-color: #333; 
+            border-radius: 50%; 
+            display: inline-flex; align-items: center; justify-content: center; 
+            cursor: pointer; 
+            border: 2px solid #4A4A4A; 
         }
-        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; }
-        .profile-icon-placeholder:hover { border-color: #00BFFF; }
+        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; } 
+        .profile-icon-placeholder:hover { border-color: #00BFFF; } 
 
         .desktop-hamburger-menu { position: relative; display: inline-block; }
-        .desktop-hamburger-icon { cursor: pointer; padding: 0.25rem; }
-        .desktop-dropdown-menu {
-            display: none; position: absolute; right: 0; top: calc(100% + 0.5rem);
-            background-color: rgba(28, 28, 28, 0.95); backdrop-filter: blur(12px) saturate(160%);
-            min-width: 200px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5), 0 4px 6px -2px rgba(0,0,0,0.25);
-            z-index: 55; border-radius: 0.5rem; border: 1px solid #333333;
-            padding-top: 0.5rem; padding-bottom: 0.5rem;
+        .desktop-hamburger-icon { cursor: pointer; padding: 0.25rem; color: #B0B0B0; } 
+        .desktop-hamburger-icon:hover { color: #FFFFFF; }
+        .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; } 
+
+        .desktop-dropdown-menu { 
+            display: none; position: absolute; right: 0; top: calc(100% + 0.5rem); 
+            background-color: rgba(28, 28, 28, 0.95); 
+            backdrop-filter: blur(12px) saturate(160%); 
+            min-width: 200px; 
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5), 0 4px 6px -2px rgba(0,0,0,0.25); 
+            z-index: 55; 
+            border-radius: 0.5rem; 
+            border: 1px solid #333333; 
+            padding-top: 0.5rem; padding-bottom: 0.5rem; 
         }
         .desktop-dropdown-menu a {
-            color: #C0C0C0; padding: 0.625rem 1.25rem; text-decoration: none; display: block;
-            font-size: 0.875rem; font-weight: 500; transition: background-color 0.2s ease, color 0.2s ease;
-            border-radius: 0.25rem; margin: 0.25rem 0.5rem;
+            color: #C0C0C0; padding: 0.625rem 1.25rem; 
+            text-decoration: none; display: block; 
+            font-size: 0.875rem; font-weight: 500; 
+            transition: background-color 0.2s ease, color 0.2s ease; 
+            border-radius: 0.25rem; margin: 0.25rem 0.5rem; 
         }
-        .desktop-dropdown-menu a:hover { background-color: rgba(0, 191, 255, 0.15); color: #FFFFFF; }
-        .desktop-dropdown-menu #logoutButtonDesktop { color: #EF4444; }
-        .desktop-dropdown-menu #logoutButtonDesktop:hover { background-color: rgba(239, 68, 68, 0.15); color: #FFAAAA; }
+        .desktop-dropdown-menu a:hover { background-color: rgba(0, 191, 255, 0.15); color: #FFFFFF; } 
+        .desktop-dropdown-menu #logoutButtonDesktop { color: #EF4444; } 
+        .desktop-dropdown-menu #logoutButtonDesktop:hover { background-color: rgba(239, 68, 68, 0.15); color: #FFAAAA; } 
+
+        #mobile-menu .nav-link.active { 
+            color: #FFFFFF; 
+            background-color: rgba(0, 191, 255, 0.1); 
+            opacity: 1;
+        }
 
         /* Hero Section */
         .hero-section { background: #0D0D0D; padding: 6rem 1rem; text-align: center; }
         .hero-title {
-            font-size: 3.25rem; font-weight: 400; color: #FFFFFF;
-            margin-bottom: 1rem; text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3);
+            font-size: 3.25rem; 
+            font-weight: 700; 
+            color: #FFFFFF;
+            margin-bottom: 1rem; 
+            text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3);
         }
         .hero-title .accent-text { color: #00BFFF; }
         .explore-button {
@@ -106,31 +134,6 @@
             font-size: 2rem; font-weight: 600; color: #F0F0F0; margin-bottom: 2rem;
             padding-bottom: 0.75rem; border-bottom: 1px solid #333333;
         }
-
-        /* Market Data Table */
-        .market-data-table-container {
-            background-color: #121212; border-radius: 0.5rem; padding: 0.5rem;
-            box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.5); border: 1px solid #2a2a2a;
-        }
-        .market-data-table th, .market-data-table td {
-            padding: 1rem 1.25rem; text-align: left; border-bottom: 1px solid #282828; font-size: 0.875rem;
-        }
-        .market-data-table th {
-            color: #B0B0B0; font-weight: 600; background-color: transparent;
-            text-transform: uppercase; letter-spacing: 0.05em;
-        }
-        .market-data-table td { color: #D0D0D0; }
-        .market-data-table tr:last-child td { border-bottom: none; }
-        .market-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid #282828; }
-        .market-tab {
-            cursor: pointer; color: #888888; padding: 0.75rem 1.25rem;
-            transition: color 0.2s ease, border-bottom-color 0.2s ease;
-            border-bottom: 2px solid transparent; font-weight: 500;
-        }
-        .market-tab:hover { color: #E0E0E0; }
-        .market-tab.active { color: #00BFFF; border-bottom-color: #00BFFF; font-weight: 600; }
-        .market-content { display: none; }
-        .market-content.active { display: block; }
 
         /* News Card Styling */
         .news-card {
@@ -169,9 +172,9 @@
         /* Sidebar and Filter */
         .filter-panel {
             background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%);
-            -webkit-backdrop-filter: blur(8px) saturate(130%); padding: 1.5rem;
-            border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
-            border: 1px solid #2a2a2a;
+            padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
+            border: 1px solid #2a2a2a; position: sticky; 
+            top: 80px; /* Adjusted sticky top position */
         }
         .filter-title { font-size: 1.25rem; font-weight: 600; color: #E0E0E0; margin-bottom: 1.25rem; }
         .filter-button {
@@ -183,23 +186,36 @@
         .filter-button:hover {
             background-color: rgba(0, 191, 255, 0.1); color: #FFFFFF; border-color: #00BFFF;
         }
-        .filter-button.active {
+        .filter-button.active { 
             background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; font-weight: 600;
             border-color: #00BFFF;
         }
 
         /* Search input */
+        .search-container { position: relative; } /* Ensure relative positioning for icon */
         .search-input {
-            width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; background-color: #1A1A1A;
-            border: 1px solid #333333; border-radius: 0.375rem; margin-bottom: 1rem;
+            width: 100%; 
+            padding: 0.875rem 1.125rem 0.875rem 2.75rem; 
+            background-color: #1A1A1A;
+            border: 1px solid #333333; 
+            border-radius: 0.5rem; 
+            margin-bottom: 1rem;
             font-size: 0.9rem; color: #E0E0E0;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            line-height: 1.5; /* Helps with vertical alignment of placeholder */
         }
         .search-input::placeholder { color: #666666; }
         .search-input:focus {
             outline: none; border-color: #00BFFF;
             box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3); background-color: #1F1F1F;
         }
+        .search-container svg {
+            position: absolute; left: 0.875rem; 
+            top: 50%; 
+            transform: translateY(-50%); /* Better vertical centering */
+            width: 1.1rem; height: 1.1rem; color: #A0A0A0; pointer-events: none;
+        }
+
 
         /* Star icon / Favorite Button */
         .favorite-btn {
@@ -217,7 +233,7 @@
             background-color: #080808; color: #888888; padding: 3rem 1rem;
             margin-top: 4rem; border-top: 1px solid #222222;
         }
-
+        
         .terms-privacy-content {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background-color: rgba(22, 22, 22, 0.9); backdrop-filter: blur(10px) saturate(150%);
@@ -248,22 +264,24 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
             <div class="hidden md:flex items-center space-x-5">
-                <a href="#news" class="nav-link text-sm">News</a>
+                <a href="index.html" class="nav-link text-sm active">News</a>
                 <a href="community.html" class="nav-link text-sm">Community</a>
                 <a href="favorites.html" id="favoritesLinkDesktop" class="nav-link text-sm hidden">Favorites</a>
-                
                 <div id="desktopAuthArea" class="flex items-center space-x-3">
-                    <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm">Login</a>
-                    
+                    <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm">Login</a> 
                     <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
                         <a href="profile.html" id="profileLinkDesktop" title="My Profile">
                             <div class="profile-icon-placeholder">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
+                                </svg>
                             </div>
                         </a>
                         <div class="desktop-hamburger-menu">
                             <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
                             </button>
                             <div id="desktop-dropdown" class="desktop-dropdown-menu">
                                 <a href="linqai.html">Linq AI</a>
@@ -277,7 +295,9 @@
             </div>
             <div class="md:hidden">
                 <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
                 </button>
             </div>
         </div>
@@ -285,8 +305,8 @@
             <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Login</a>
             <a href="linqai.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Linq Ai</a>
             <a href="earnings.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Earnings Calendar</a>
-            <a href="#news" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a>
-            <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Community</a>
+            <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 active">News</a> 
+            <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Community</a> 
             <a href="favorites.html" id="favoritesLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden">Favorites</a>
             <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Logout</a>
         </div>
@@ -305,49 +325,17 @@
         </div>
     </header>
 
-    <section class="market-data-table-container container mx-auto p-4 sm:p-6 lg:p-8 my-10">
-        <div class="market-tabs mb-6">
-            <div id="tabCommodities" class="market-tab active">Commodities</div>
-            <div id="tabUS" class="market-tab">Equities</div>
-            <div id="tabTreasuries" class="market-tab">Treasuries</div>
-        </div>
-        <div id="marketCommoditiesContent" class="market-content active">
-            <table class="w-full market-data-table">
-                <thead> <tr> <th class="w-1/3">Commodity</th> <th>Price</th> <th>Change</th> <th>% Change</th> </tr> </thead>
-                <tbody id="commoditiesTableBody"></tbody>
-            </table>
-        </div>
-        <div id="marketUSContent" class="market-content">
-             <table class="w-full market-data-table">
-                 <thead><tr><th class="w-1/3">Index</th><th>Level</th><th>Change</th><th>% Change</th></tr></thead>
-                <tbody>
-                    <tr><td>Dow Jones</td><td>41,317.43</td><td class="positive">+564.47</td><td class="positive">+1.39%</td></tr>
-                    <tr><td>S&P 500</td><td>5,686.68</td><td class="positive">+82.54</td><td class="positive">+1.47%</td></tr>
-                    <tr><td>Nasdaq</td><td>17,977.73</td><td class="positive">+266.99</td><td class="positive">+1.51%</td></tr>
-                </tbody>
-            </table>
-        </div>
-        <div id="marketTreasuriesContent" class="market-content">
-            <table class="w-full market-data-table">
-                <thead><tr><th class="w-1/3">Treasury</th><th>Yield</th><th>Change (bps)</th><th>% Change (Basis)</th></tr></thead>
-                <tbody>
-                    <tr><td>10-Year Treasury</td><td>4.40%</td><td class="positive">+2.0</td><td class="positive">+0.46%</td></tr>
-                    <tr><td>2-Year Treasury</td><td>4.15%</td><td class="positive">+1.0</td><td class="positive">+0.24%</td></tr>
-                    <tr><td>30-Year Treasury</td><td>4.65%</td><td class="positive">+3.0</td><td class="positive">+0.65%</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8 mt-10">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-10">
             <div class="lg:col-span-8" id="news">
                 <section>
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
                         <h2 class="section-title !mb-3 sm:!mb-0 !border-none">Latest News</h2>
-                        <div class="relative w-full sm:w-auto sm:max-w-xl">
-                            <input type="search" id="searchInput" placeholder="Search news..." class="search-input !mb-0 pl-10">
-                            <svg class="w-5 h-5 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <div class="relative w-full sm:w-auto sm:max-w-2xl search-container"> 
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            <input type="search" id="searchInput" placeholder="Search news..." class="search-input !mb-0">
                         </div>
                     </div>
                     <div class="space-y-6" id="newsGrid"></div>
@@ -418,76 +406,16 @@
             const repeatCount = Math.max(2, Math.ceil(window.innerWidth / (ENERGY_STOCKS.length * 100)) + 5);
             tickerContent.innerHTML = allItemsHTML.repeat(repeatCount);
         }
-        async function fetchCommodityData(symbol, name, priceId, changeId, percentId) { 
-            const mockData = { 
-                'CL': { price: 78.50, change: 0.39, percent: 0.50 },
-                'BZ': { price: 82.30, change: -0.16, percent: -0.20 },
-                'RB': { price: 2.45, change: 0.027, percent: 1.10 },
-                'NG': { price: 2.75, change: 0.063, percent: 2.30 },
-                'HO': { price: 2.80, change: -0.014, percent: -0.50 }
-            };
-            const data = mockData[symbol] || { price: 'N/A', change: 'N/A', percent: 'N/A' };
-            const priceEl = document.getElementById(priceId);
-            const changeEl = document.getElementById(changeId);
-            const percentEl = document.getElementById(percentId);
-
-            if (priceEl) priceEl.textContent = data.price !== 'N/A' ? `$${data.price.toFixed(2)}` : 'N/A';
-            
-            if (changeEl) {
-                if (data.change !== 'N/A') {
-                    changeEl.textContent = `${parseFloat(data.change) >= 0 ? '+' : ''}${data.change.toFixed(2)}`;
-                    changeEl.className = parseFloat(data.change) >= 0 ? 'positive' : 'negative';
-                } else {
-                    changeEl.textContent = 'N/A';
-                    changeEl.className = '';
-                }
-            }
-            if (percentEl) {
-                if (data.percent !== 'N/A') {
-                    percentEl.textContent = `${parseFloat(data.percent) >= 0 ? '+' : ''}${data.percent.toFixed(2)}%`;
-                    percentEl.className = parseFloat(data.percent) >= 0 ? 'positive' : 'negative';
-                } else {
-                    percentEl.textContent = 'N/A';
-                    percentEl.className = '';
-                }
-            }
-        }
-        function populateCommoditiesTable() { 
-            const commodities = [
-                { symbol: 'CL', name: 'WTI Crude', ids: ['wti-crude-price', 'wti-crude-change', 'wti-crude-percent'] },
-                { symbol: 'BZ', name: 'Brent Crude', ids: ['brent-crude-price', 'brent-crude-change', 'brent-crude-percent'] },
-                { symbol: 'RB', name: 'RBOB Gasoline', ids: ['rbob-gasoline-price', 'rbob-gasoline-change', 'rbob-gasoline-percent'] },
-                { symbol: 'NG', name: 'Natural Gas (HH)', ids: ['natural-gas-price', 'natural-gas-change', 'natural-gas-percent'] },
-                { symbol: 'HO', name: 'Heating Oil', ids: ['heating-oil-price', 'heating-oil-change', 'heating-oil-percent'] }
-            ];
-            const tableBody = document.getElementById('commoditiesTableBody');
-            if (!tableBody) return;
-            tableBody.innerHTML = ''; 
-
-            commodities.forEach(c => {
-                const row = tableBody.insertRow();
-                row.innerHTML = `
-                    <td>${c.name}</td>
-                    <td id="${c.ids[0]}">Loading...</td>
-                    <td id="${c.ids[1]}" class="">Loading...</td>
-                    <td id="${c.ids[2]}" class="">Loading...</td>
-                `;
-                fetchCommodityData(c.symbol, c.name, c.ids[0], c.ids[1], c.ids[2]);
-            });
-        }
-
-        // Specific placeholder colors for known sources
+        
         const sourcePlaceholders = {
             'Reuters': { bgColor: 'eeeeee', textColor: '333333', text: 'RTRS' },
             'Bloomberg': { bgColor: '007bff', textColor: 'ffffff', text: 'BBG' },
-            'CNBC': { bgColor: 'c40029', textColor: 'ffffff', text: 'CNBC' }, // Using a dominant CNBC color
+            'CNBC': { bgColor: 'c40029', textColor: 'ffffff', text: 'CNBC' },
             'Forbes': { bgColor: '222222', textColor: 'ffffff', text: 'FRBS' },
             'BBC News': { bgColor: 'cc0000', textColor: 'ffffff', text: 'BBC' },
             'Seeking Alpha': { bgColor: 'f9a61a', textColor: '000000', text: 'SA' },
-            // Add more specific source placeholders here
         };
         const genericPlaceholderColors = ['00BFFF', '4B0082', '800080', 'FF1493', 'FF8C00', '20B2AA', 'DA70D6'];
-
 
         const articlesData = [
             { id: 1, category: 'Crude Oil', title: 'Oil Prices Surge Amid Supply Concerns', date: 'May 3, 2025', source: 'Reuters', link: 'https://www.reuters.com/markets/commodities/oil-prices-set-weekly-loss-potential-more-global-supply-2025-04-25/', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTb6lvykJKGImtGYCRe-6TY7ElBaV452dtP7GXx-zo9ltbKKRXWE-u7lATyYO-b4Dv7iz8&usqp=CAU' },
@@ -511,8 +439,7 @@
             { id: 19, category: 'Earnings', title: 'Google Reports Record Earnings', date: 'May 3, 2025', source: 'Financial Times', link: 'https://example.com/article-19', image: 'data:image/png;base64,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' },
             { id: 20, category: 'Earnings', title: 'Microsoft Beats Earnings Expectations', date: 'May 3, 2025', source: 'BBC', link: 'https://example.com/article-20', image: 'https://www.chrisevansmp.com/wp-content/uploads/2023/08/BBC_News_2019.svg.png' },
             { id: 21, category: 'Earnings', title: 'ExxonMobil Posts Strong Q1 Results', date: 'May 3, 2025', source: 'Reuters', link: 'https://example.com/article-21', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTb6lvykJKGImtGYCRe-6TY7ElBaV452dtP7GXx-zo9ltbKKRXWE-u7lATyYO-b4Dv7iz8&usqp=CAU' }
-        ];           
-
+        ];    
 
         const newsGrid = document.getElementById('newsGrid');
 
@@ -571,13 +498,9 @@
             const activeCategoryButtons = document.querySelectorAll('.filter-button.active');
             const selectedCategories = Array.from(activeCategoryButtons).map(btn => btn.getAttribute('data-category'));
 
-            let filteredArticles;
+            let filteredArticles = articlesData;
 
-            if (selectedCategories.length === 0) {
-                // If no categories are selected, show all articles (or those matching search)
-                filteredArticles = articlesData;
-            } else {
-                // Filter articles that match ANY of the selected categories
+            if (selectedCategories.length > 0) {
                 filteredArticles = articlesData.filter(article => selectedCategories.includes(article.category));
             }
             
@@ -590,7 +513,6 @@
             }
             displayArticles(filteredArticles);
         }
-
 
         let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || [];
         function toggleFavorite(articleId) { 
@@ -632,21 +554,6 @@
             const articleId = button.getAttribute('data-id');
             toggleFavorite(articleId);
         }
-
-        const marketTabs = document.querySelectorAll('.market-tab');
-        const marketContents = document.querySelectorAll('.market-content');
-        marketTabs.forEach(tab => { 
-            tab.addEventListener('click', () => {
-                marketTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                const targetContentId = `market${tab.id.substring(3)}Content`;
-                marketContents.forEach(content => {
-                    content.style.display = content.id === targetContentId ? 'block' : 'none';
-                    if (content.id === targetContentId) content.classList.add('active');
-                    else content.classList.remove('active');
-                });
-            });
-        });
 
         function showTerms(event) { event.preventDefault(); document.getElementById('termsContent').style.display = 'block'; }
         function closeTerms() { document.getElementById('termsContent').style.display = 'none'; }
@@ -692,10 +599,8 @@
             }
         });
 
-
         document.addEventListener('DOMContentLoaded', () => {
             updateTickerBanner();
-            populateCommoditiesTable();
             displayArticles(articlesData);
 
             const firebaseConfig = {
@@ -708,75 +613,44 @@
             };
             firebase.initializeApp(firebaseConfig);
             const auth = firebase.auth();
-
             const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
             const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
             const favoritesLinkDesktop = document.getElementById('favoritesLinkDesktop');
-            
             const authLinkMobile = document.getElementById('authLinkMobile');
             const logoutButtonMobile = document.getElementById('logoutButtonMobile');
             const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
-            
             const logoutButtonDesktop = document.getElementById('logoutButtonDesktop');
-
 
             auth.onAuthStateChanged(user => {
                 if (user) {
-                    // User is logged in
-                    if(authLinkDesktopLogin) {
-                        authLinkDesktopLogin.classList.add('hidden'); // Hide Login button
-                        authLinkDesktopLogin.classList.remove('nav-link-button'); // Remove button style if applied
-                    }
-                    if(profileAndMenuDesktop) {
-                        profileAndMenuDesktop.classList.remove('hidden');
-                        profileAndMenuDesktop.classList.add('flex'); 
-                    }
+                    if(authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
+                    if(profileAndMenuDesktop) { profileAndMenuDesktop.classList.remove('hidden'); profileAndMenuDesktop.classList.add('flex'); }
                     if(favoritesLinkDesktop) favoritesLinkDesktop.classList.remove('hidden');
-
-
-                    if(authLinkMobile) {
-                        authLinkMobile.textContent = "Profile";
-                        authLinkMobile.href = "profile.html";
-                    }
+                    if(authLinkMobile) { authLinkMobile.textContent = "Profile"; authLinkMobile.href = "profile.html"; }
                     if(logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
                     if(favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
-
                 } else {
-                    // User is not logged in
-                    if(authLinkDesktopLogin) {
-                        authLinkDesktopLogin.classList.remove('hidden'); // Show Login button
-                        authLinkDesktopLogin.classList.remove('nav-link-button'); // Ensure it's styled as a link
-                    }
-                    if(profileAndMenuDesktop) {
-                        profileAndMenuDesktop.classList.add('hidden');
-                        profileAndMenuDesktop.classList.remove('flex');
-                    }
-                    if(favoritesLinkDesktop) favoritesLinkDesktop.classList.add('hidden');
-
-
-                    if(authLinkMobile) {
-                        authLinkMobile.textContent = "Login";
-                        authLinkMobile.href = "login.html";
-                    }
-                    if(logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
-                    if(favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
-                    if(desktopDropdown) desktopDropdown.style.display = 'none';
+                     if(authLinkDesktopLogin) authLinkDesktopLogin.classList.remove('hidden');
+                     if(profileAndMenuDesktop) { profileAndMenuDesktop.classList.add('hidden'); profileAndMenuDesktop.classList.remove('flex'); }
+                     if(favoritesLinkDesktop) favoritesLinkDesktop.classList.add('hidden');
+                     if(authLinkMobile) { authLinkMobile.textContent = "Login"; authLinkMobile.href = "login.html"; }
+                     if(logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+                     if(favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
+                     if(desktopDropdown) desktopDropdown.style.display = 'none';
                 }
             });
-
+            
             function handleLogout(e) {
                 e.preventDefault();
-                auth.signOut().then(() => {
-                    console.log("User signed out");
-                    // Optionally redirect or reload: window.location.href = 'login.html';
-                }).catch(error => console.error("Sign out error", error));
+                auth.signOut().then(() => { console.log("User signed out"); })
+                .catch(error => console.error("Sign out error", error));
             }
-
             if(logoutButtonDesktop) logoutButtonDesktop.addEventListener('click', handleLogout);
             if(logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
-
-            filterArticles();
+            
+            filterArticles(); 
         });
     </script>
 </body>
 </html>
+
