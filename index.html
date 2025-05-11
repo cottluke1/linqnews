@@ -343,6 +343,16 @@
             .then(res => res.text())
             .then(data => {
               document.getElementById('navbar').innerHTML = data;
+        
+              // After header loads, apply .active to current nav link
+              const path = window.location.pathname.split('/').pop(); // e.g., 'index.html'
+              document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === path) {
+                  link.classList.add('active');
+                } else {
+                  link.classList.remove('active');
+                }
+              });
             });
         </script>
         
