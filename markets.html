@@ -3,27 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Energy Market Dashboard</title>
+    <title>Linq - Energy Markets</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="header_styles.css">
     <style>
-        /* Base body styles */
+        /* Page-specific styles for Markets.html */
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0A0A0A; /* Very dark background */
-            color: #E0E0E0; /* Light gray for general text */
+            font-family: 'Lexend', sans-serif;
+            background-color: #0A0A0A;
+            color: #E0E0E0;
+            font-weight: 400;
+        }
+        /* body.overflow-hidden is in header_styles.css */
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1A1A1A; }
+        ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
+        ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
+
+        .page-content-wrapper {
+            flex-grow: 1;
+            padding-bottom: 4rem;
+            width: 100%;
+            max-width: 1200px; 
+            margin: 0 auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-top: 10px; /* Content starts below ticker */
         }
 
-        /* Hero section for title */
-        .hero-section {
-            padding-top: 2.5rem;
-            padding-bottom: 2.5rem;
+        .page-main-title {
+            font-size: 2.8rem; 
+            font-weight: 700; 
+            color: #FFFFFF; 
+            margin-bottom: 0.5rem;
+            text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3);
+            text-align: center; 
+            margin-top: 2rem; 
         }
-        .hero-title .accent-text {
-            color: #00BFFF; /* Deep sky blue */
+        .page-main-title .accent-text { 
+            color: #00BFFF; 
+        }
+         .page-subtitle { 
+            font-size: 1.1rem;
+            color: #A0A0A0; 
+            margin-top: 0.5rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-weight: 400;
         }
 
-        /* Content Panel Styles */
+        /* Ticker Banner */
+        .ticker-banner {
+            background: #121212; color: #A0A0A0; padding: 0.625rem 0;
+            overflow: hidden; white-space: nowrap; position: relative;
+            width: 100%; z-index: 35; font-size: 0.8rem; line-height: 1.3;
+            border-bottom: 1px solid #282828;
+            /* margin-top will be set by JS to be below the fixed nav */
+        }
+        .ticker-content { display: inline-block; white-space: nowrap; animation: ticker-scroll 240s linear infinite; }
+        @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        .ticker-item { display: inline-block; margin-right: 1.75rem; }
+        .ticker-item .positive { color: #22C55E; }
+        .ticker-item .negative { color: #EF4444; }
+        
+        /* Styles from the original markets.html for content */
         .glassmorphic-panel {
             background: rgba(28, 28, 28, 0.75);
             backdrop-filter: blur(8px) saturate(120%);
@@ -32,8 +77,6 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
             color: #E0E0E0;
         }
-
-        /* Tab Styles */
         .tab-active {
             border-color: #00BFFF;
             color: #00BFFF;
@@ -47,8 +90,6 @@
         .tab-inactive:hover {
             color: #E0E0E0;
         }
-
-        /* Table Styles */
         .table-header th {
             position: sticky;
             top: 0px; 
@@ -62,7 +103,6 @@
         #treasuries-content tbody tr:hover {
             background-color: rgba(255, 255, 255, 0.03);
         }
-
         #energyCompaniesBody td, 
         #commodities-content tbody td,
         #equities-content tbody td,
@@ -72,37 +112,24 @@
             padding-top: 0.85rem; 
             padding-bottom: 0.85rem;
         }
-
         #commodities-content tbody tr:last-child td,
         #equities-content tbody tr:last-child td,
         #treasuries-content tbody tr:last-child td,
         #energyCompaniesBody tr:last-child td {
             border-bottom: none;
         }
-
         #energyCompaniesBody .font-medium, 
         #commodities-content .font-medium,
         #equities-content .font-medium,
         #treasuries-content .font-medium {
             color: #E5E7EB;
         }
-
-        /* Sortable header icons */
         .sortable:hover { cursor: pointer; color: #00BFFF; }
         .sort-asc::after { content: ' ▲'; font-size: 0.7em; color: #00BFFF; }
         .sort-desc::after { content: ' ▼'; font-size: 0.7em; color: #00BFFF; }
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 10px; height: 10px; }
-        ::-webkit-scrollbar-track { background: #1C1C1C; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #4A4A4A; border-radius: 10px; border: 2px solid #1C1C1C; }
-        ::-webkit-scrollbar-thumb:hover { background: #5A5A5A; }
-
         .text-green-positive { color: #22C55E !important; } 
         .text-red-negative { color: #EF4444 !important; } 
         .section-heading { color: #FFFFFF; }
-
-        /* Filter and Search Input Styles */
         .filter-search-input, .filter-select {
             background-color: rgba(40, 40, 40, 0.8);
             border: 1px solid #3A3A3A;
@@ -127,214 +154,241 @@
             margin-bottom: 0.25rem;
             display: block;
         }
+
+        .footer {
+            background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem;
+            border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem; margin-top: auto;
+        }
+        .footer a { color: #B0B0B0; transition: color 0.2s ease; }
+        .footer a:hover { color: #00BFFF; }
+
     </style>
 </head>
-<body class="min-h-screen selection:bg-[#00BFFF] selection:text-white">
+<body class="antialiased">
+    <div id="header-placeholder"></div>
 
-    <header class="hero-section">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="hero-title text-4xl md:text-5xl font-light text-white mb-2">
-                Energy Market <span class="accent-text">Dashboard</span>
-            </h1>
-            <p class="text-lg text-gray-400 mb-6">Real-time commodity prices and top company performance.</p>
+    <div class="ticker-banner"> 
+        <div class="ticker-content" id="tickerContentMarkets">
+            {/* Ticker items can be loaded here by page-specific JS if needed */}
         </div>
-    </header>
-
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <section id="prices" class="mb-12">
-            <div class="glassmorphic-panel rounded-xl p-6">
-                <div class="flex border-b border-gray-700 mb-6">
-                    <button data-tab="commodities" class="tab-button py-3 px-6 border-b-2 font-medium text-sm md:text-base tab-active">Commodities</button>
-                    <button data-tab="equities" class="tab-button py-3 px-6 border-b-2 font-medium text-sm md:text-base tab-inactive">Equities</button>
-                    <button data-tab="treasuries" class="tab-button py-3 px-6 border-b-2 font-medium text-sm md:text-base tab-inactive">Treasuries</button>
-                </div>
-
-                <div id="commodities-content" class="tab-content">
-                    <table class="w-full text-left">
-                        <thead class="text-xs uppercase table-header">
-                            <tr>
-                                <th scope="col" class="py-3 px-4">Commodity</th>
-                                <th scope="col" class="py-3 px-4 text-right">Price</th>
-                                <th scope="col" class="py-3 px-4 text-right">Change</th>
-                                <th scope="col" class="py-3 px-4 text-right">% Change</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="py-4 px-4 font-medium">WTI Crude</td>
-                                <td class="py-4 px-4 text-right">$78.50</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+0.39</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+0.50%</td>
-                            </tr>
-                            <tr>
-                                <td class="py-4 px-4 font-medium">Brent Crude</td>
-                                <td class="py-4 px-4 text-right">$82.30</td>
-                                <td class="py-4 px-4 text-right text-red-negative">-0.16</td>
-                                <td class="py-4 px-4 text-right text-red-negative">-0.20%</td>
-                            </tr>
-                            <tr>
-                                <td class="py-4 px-4 font-medium">RBOB Gasoline</td>
-                                <td class="py-4 px-4 text-right">$2.45</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+0.03</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+1.10%</td>
-                            </tr>
-                            <tr>
-                                <td class="py-4 px-4 font-medium">Natural Gas (HH)</td>
-                                <td class="py-4 px-4 text-right">$2.75</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+0.06</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+2.30%</td>
-                            </tr>
-                            <tr> 
-                                <td class="py-4 px-4 font-medium">Heating Oil</td>
-                                <td class="py-4 px-4 text-right">$2.80</td>
-                                <td class="py-4 px-4 text-right text-red-negative">-0.01</td>
-                                <td class="py-4 px-4 text-right text-red-negative">-0.50%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div id="equities-content" class="tab-content hidden">
-                    <table class="w-full text-left">
-                        <thead class="text-xs uppercase table-header">
-                            <tr>
-                                <th scope="col" class="py-3 px-4">Equity/Index</th>
-                                <th scope="col" class="py-3 px-4 text-right">Price</th>
-                                <th scope="col" class="py-3 px-4 text-right">Change</th>
-                                <th scope="col" class="py-3 px-4 text-right">% Change</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="py-4 px-4 font-medium">S&P 500 Index</td>
-                                <td class="py-4 px-4 text-right">4,120.75</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+15.20</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+0.37%</td>
-                            </tr>
-                            <tr>
-                                <td class="py-4 px-4 font-medium">Dow Jones Industrial Average</td>
-                                <td class="py-4 px-4 text-right">33,850.10</td>
-                                <td class="py-4 px-4 text-right text-red-negative">-55.60</td>
-                                <td class="py-4 px-4 text-right text-red-negative">-0.16%</td>
-                            </tr>
-                            <tr>
-                                <td class="py-4 px-4 font-medium">NASDAQ Composite</td>
-                                <td class="py-4 px-4 text-right">12,050.40</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+80.15</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+0.67%</td>
-                            </tr>
-                            <tr>
-                                <td class="py-4 px-4 font-medium">ExxonMobil (XOM)</td>
-                                <td class="py-4 px-4 text-right">$115.30</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+0.85</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+0.74%</td>
-                            </tr>
-                             <tr>
-                                <td class="py-4 px-4 font-medium">Chevron (CVX)</td>
-                                <td class="py-4 px-4 text-right">$160.45</td>
-                                <td class="py-4 px-4 text-right text-red-negative">-0.20</td>
-                                <td class="py-4 px-4 text-right text-red-negative">-0.12%</td>
-                            </tr>
-                            <tr>
-                                <td class="py-4 px-4 font-medium">NextEra Energy (NEE)</td>
-                                <td class="py-4 px-4 text-right">$72.80</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+1.10</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+1.53%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div id="treasuries-content" class="tab-content hidden">
-                    <table class="w-full text-left">
-                        <thead class="text-xs uppercase table-header">
-                            <tr>
-                                <th scope="col" class="py-3 px-4">Treasury Yield</th>
-                                <th scope="col" class="py-3 px-4 text-right">Rate</th>
-                                <th scope="col" class="py-3 px-4 text-right">Change (bps)</th>
-                                <th scope="col" class="py-3 px-4 text-right">% Change</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="py-4 px-4 font-medium">U.S. 2-Year Note</td>
-                                <td class="py-4 px-4 text-right">4.05%</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+2.1</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+0.52%</td>
-                            </tr>
-                            <tr>
-                                <td class="py-4 px-4 font-medium">U.S. 5-Year Note</td>
-                                <td class="py-4 px-4 text-right">3.60%</td>
-                                <td class="py-4 px-4 text-right text-red-negative">-1.5</td>
-                                <td class="py-4 px-4 text-right text-red-negative">-0.41%</td>
-                            </tr>
-                            <tr>
-                                <td class="py-4 px-4 font-medium">U.S. 10-Year Bond</td>
-                                <td class="py-4 px-4 text-right">3.45%</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+0.8</td>
-                                <td class="py-4 px-4 text-right text-green-positive">+0.23%</td>
-                            </tr>
-                            <tr>
-                                <td class="py-4 px-4 font-medium">U.S. 30-Year Bond</td>
-                                <td class="py-4 px-4 text-right">3.70%</td>
-                                <td class="py-4 px-4 text-right text-red-negative">-0.5</td>
-                                <td class="py-4 px-4 text-right text-red-negative">-0.13%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <section id="energy-companies" class="mb-12">
-            <div class="glassmorphic-panel rounded-xl p-6 md:p-8">
-                <h2 class="text-2xl font-semibold mb-6 section-heading">Top Energy Companies</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 filter-container">
-                    <div>
-                        <label for="searchCompanyInput">Search Company</label>
-                        <input type="text" id="searchCompanyInput" placeholder="Name, Ticker, Sector, Country..." class="w-full filter-search-input">
-                    </div>
-                    <div>
-                        <label for="sectorFilter">Filter by Sector</label>
-                        <select id="sectorFilter" class="w-full filter-select">
-                            <option value="">All Sectors</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="countryFilter">Filter by Country</label>
-                        <select id="countryFilter" class="w-full filter-select">
-                            <option value="">All Countries</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="overflow-x-auto max-h-[70vh]">
-                    <table id="energyCompaniesTable" class="w-full text-left min-w-[1000px]">
-                        <thead class="text-xs uppercase table-header">
-                            <tr>
-                                <th scope="col" class="py-3 px-4 sortable" data-sort="rank">Rank</th>
-                                <th scope="col" class="py-3 px-4 sortable" data-sort="name">Company Name</th>
-                                <th scope="col" class="py-3 px-4 sortable" data-sort="ticker">Ticker</th>
-                                <th scope="col" class="py-3 px-4 sortable text-right" data-sort="marketCap">Market Cap (USD)</th>
-                                <th scope="col" class="py-3 px-4 sortable text-right" data-sort="price">Price (USD)</th>
-                                <th scope="col" class="py-3 px-4 sortable text-right" data-sort="change">Change</th>
-                                <th scope="col" class="py-3 px-4 sortable text-right" data-sort="percentChange">% Change</th>
-                                <th scope="col" class="py-3 px-4 sortable" data-sort="sector">Sector</th>
-                                <th scope="col" class="py-3 px-4 sortable" data-sort="country">Country</th>
-                            </tr>
-                        </thead>
-                        <tbody id="energyCompaniesBody">
-                        </tbody>
-                    </table>
-                </div>
-                 <div class="mt-4 text-sm text-gray-500">
-                </div>
-            </div>
-        </section>
     </div>
 
+    <main class="page-content-wrapper">
+        <header class="page-header text-center">
+            <h1 class="page-main-title">Energy <span class="accent-text">Markets</span> Overview</h1>
+            <p class="page-subtitle">Real-time data and analysis of key energy commodities and equities.</p>
+        </header>
+
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <section id="prices" class="mb-12">
+                <div class="glassmorphic-panel rounded-xl p-6">
+                    <div class="flex border-b border-gray-700 mb-6">
+                        <button data-tab="commodities" class="tab-button py-3 px-6 border-b-2 font-medium text-sm md:text-base tab-active">Commodities</button>
+                        <button data-tab="equities" class="tab-button py-3 px-6 border-b-2 font-medium text-sm md:text-base tab-inactive">Equities</button>
+                        <button data-tab="treasuries" class="tab-button py-3 px-6 border-b-2 font-medium text-sm md:text-base tab-inactive">Treasuries</button>
+                    </div>
+
+                    <div id="commodities-content" class="tab-content">
+                        <table class="w-full text-left">
+                            <thead class="text-xs uppercase table-header">
+                                <tr>
+                                    <th scope="col" class="py-3 px-4">Commodity</th>
+                                    <th scope="col" class="py-3 px-4 text-right">Price</th>
+                                    <th scope="col" class="py-3 px-4 text-right">Change</th>
+                                    <th scope="col" class="py-3 px-4 text-right">% Change</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="py-4 px-4 font-medium">WTI Crude</td>
+                                    <td class="py-4 px-4 text-right">$78.50</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+0.39</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+0.50%</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 px-4 font-medium">Brent Crude</td>
+                                    <td class="py-4 px-4 text-right">$82.30</td>
+                                    <td class="py-4 px-4 text-right text-red-negative">-0.16</td>
+                                    <td class="py-4 px-4 text-right text-red-negative">-0.20%</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 px-4 font-medium">RBOB Gasoline</td>
+                                    <td class="py-4 px-4 text-right">$2.45</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+0.03</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+1.10%</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 px-4 font-medium">Natural Gas (HH)</td>
+                                    <td class="py-4 px-4 text-right">$2.75</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+0.06</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+2.30%</td>
+                                </tr>
+                                <tr> 
+                                    <td class="py-4 px-4 font-medium">Heating Oil</td>
+                                    <td class="py-4 px-4 text-right">$2.80</td>
+                                    <td class="py-4 px-4 text-right text-red-negative">-0.01</td>
+                                    <td class="py-4 px-4 text-right text-red-negative">-0.50%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="equities-content" class="tab-content hidden">
+                        <table class="w-full text-left">
+                            <thead class="text-xs uppercase table-header">
+                                <tr>
+                                    <th scope="col" class="py-3 px-4">Equity/Index</th>
+                                    <th scope="col" class="py-3 px-4 text-right">Price</th>
+                                    <th scope="col" class="py-3 px-4 text-right">Change</th>
+                                    <th scope="col" class="py-3 px-4 text-right">% Change</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="py-4 px-4 font-medium">S&P 500 Index</td>
+                                    <td class="py-4 px-4 text-right">4,120.75</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+15.20</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+0.37%</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 px-4 font-medium">Dow Jones Industrial Average</td>
+                                    <td class="py-4 px-4 text-right">33,850.10</td>
+                                    <td class="py-4 px-4 text-right text-red-negative">-55.60</td>
+                                    <td class="py-4 px-4 text-right text-red-negative">-0.16%</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 px-4 font-medium">NASDAQ Composite</td>
+                                    <td class="py-4 px-4 text-right">12,050.40</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+80.15</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+0.67%</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 px-4 font-medium">ExxonMobil (XOM)</td>
+                                    <td class="py-4 px-4 text-right">$115.30</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+0.85</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+0.74%</td>
+                                </tr>
+                                 <tr>
+                                    <td class="py-4 px-4 font-medium">Chevron (CVX)</td>
+                                    <td class="py-4 px-4 text-right">$160.45</td>
+                                    <td class="py-4 px-4 text-right text-red-negative">-0.20</td>
+                                    <td class="py-4 px-4 text-right text-red-negative">-0.12%</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 px-4 font-medium">NextEra Energy (NEE)</td>
+                                    <td class="py-4 px-4 text-right">$72.80</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+1.10</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+1.53%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="treasuries-content" class="tab-content hidden">
+                        <table class="w-full text-left">
+                            <thead class="text-xs uppercase table-header">
+                                <tr>
+                                    <th scope="col" class="py-3 px-4">Treasury Yield</th>
+                                    <th scope="col" class="py-3 px-4 text-right">Rate</th>
+                                    <th scope="col" class="py-3 px-4 text-right">Change (bps)</th>
+                                    <th scope="col" class="py-3 px-4 text-right">% Change</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="py-4 px-4 font-medium">U.S. 2-Year Note</td>
+                                    <td class="py-4 px-4 text-right">4.05%</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+2.1</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+0.52%</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 px-4 font-medium">U.S. 5-Year Note</td>
+                                    <td class="py-4 px-4 text-right">3.60%</td>
+                                    <td class="py-4 px-4 text-right text-red-negative">-1.5</td>
+                                    <td class="py-4 px-4 text-right text-red-negative">-0.41%</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 px-4 font-medium">U.S. 10-Year Bond</td>
+                                    <td class="py-4 px-4 text-right">3.45%</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+0.8</td>
+                                    <td class="py-4 px-4 text-right text-green-positive">+0.23%</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 px-4 font-medium">U.S. 30-Year Bond</td>
+                                    <td class="py-4 px-4 text-right">3.70%</td>
+                                    <td class="py-4 px-4 text-right text-red-negative">-0.5</td>
+                                    <td class="py-4 px-4 text-right text-red-negative">-0.13%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="energy-companies" class="mb-12">
+                <div class="glassmorphic-panel rounded-xl p-6 md:p-8">
+                    <h2 class="text-2xl font-semibold mb-6 section-heading">Top Energy Companies</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 filter-container">
+                        <div>
+                            <label for="searchCompanyInput">Search Company</label>
+                            <input type="text" id="searchCompanyInput" placeholder="Name, Ticker, Sector, Country..." class="w-full filter-search-input">
+                        </div>
+                        <div>
+                            <label for="sectorFilter">Filter by Sector</label>
+                            <select id="sectorFilter" class="w-full filter-select">
+                                <option value="">All Sectors</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="countryFilter">Filter by Country</label>
+                            <select id="countryFilter" class="w-full filter-select">
+                                <option value="">All Countries</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto max-h-[70vh]">
+                        <table id="energyCompaniesTable" class="w-full text-left min-w-[1000px]">
+                            <thead class="text-xs uppercase table-header">
+                                <tr>
+                                    <th scope="col" class="py-3 px-4 sortable" data-sort="rank">Rank</th>
+                                    <th scope="col" class="py-3 px-4 sortable" data-sort="name">Company Name</th>
+                                    <th scope="col" class="py-3 px-4 sortable" data-sort="ticker">Ticker</th>
+                                    <th scope="col" class="py-3 px-4 sortable text-right" data-sort="marketCap">Market Cap (USD)</th>
+                                    <th scope="col" class="py-3 px-4 sortable text-right" data-sort="price">Price (USD)</th>
+                                    <th scope="col" class="py-3 px-4 sortable text-right" data-sort="change">Change</th>
+                                    <th scope="col" class="py-3 px-4 sortable text-right" data-sort="percentChange">% Change</th>
+                                    <th scope="col" class="py-3 px-4 sortable" data-sort="sector">Sector</th>
+                                    <th scope="col" class="py-3 px-4 sortable" data-sort="country">Country</th>
+                                </tr>
+                            </thead>
+                            <tbody id="energyCompaniesBody">
+                            </tbody>
+                        </table>
+                    </div>
+                     <div class="mt-4 text-sm text-gray-500">
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; <span id="current-year-markets"></span> Linq Energy Intelligence. All Rights Reserved.</p>
+        <nav class="text-xs space-x-3 mt-2">
+            <a href="#">Privacy Policy</a> |
+            <a href="#">Terms of Service</a> |
+            <a href="#">Contact Us</a>
+        </nav>
+    </footer>
+
+    <script src="header_logic.js" defer></script>
     <script>
-        // Tab switching logic
+        // Page-specific JavaScript for Markets.html
+        if(document.getElementById('current-year-markets')) {
+            document.getElementById('current-year-markets').textContent = new Date().getFullYear();
+        }
+
         const tabButtons = document.querySelectorAll('.tab-button');
         const tabContents = document.querySelectorAll('.tab-content');
 
@@ -355,9 +409,7 @@
             });
         });
 
-        // Energy companies data
         let energyCompaniesData = [
-            // Top 15 (8 US, 7 Non-US) - Manually curated for prominence
             { rank: 1, name: 'Saudi Aramco', ticker: '2222.SR', marketCap: 2080000000000, price: 30.50, change: 0.10, percentChange: 0.33, sector: 'Integrated Oil & Gas', country: 'Saudi Arabia' },
             { rank: 2, name: 'ExxonMobil Corp.', ticker: 'XOM', marketCap: 475000000000, price: 118.75, change: -0.50, percentChange: -0.42, sector: 'Integrated Oil & Gas', country: 'USA' },
             { rank: 3, name: 'PetroChina Co. Ltd.', ticker: 'PTR', marketCap: 190000000000, price: 60.20, change: 0.80, percentChange: 1.35, sector: 'Integrated Oil & Gas', country: 'China' },
@@ -369,7 +421,7 @@
             { rank: 9, name: 'Equinor ASA', ticker: 'EQNR', marketCap: 95000000000, price: 30.20, change: 0.25, percentChange: 0.83, sector: 'Integrated Oil & Gas', country: 'Norway' },
             { rank: 10, name: 'Enbridge Inc.', ticker: 'ENB', marketCap: 85000000000, price: 40.50, change: -0.10, percentChange: -0.25, sector: 'Midstream', country: 'Canada' },
             { rank: 11, name: 'EOG Resources Inc.', ticker: 'EOG', marketCap: 75000000000, price: 130.80, change: 1.50, percentChange: 1.16, sector: 'Exploration & Production', country: 'USA' },
-            { rank: 12, name: 'Schlumberger Ltd.', ticker: 'SLB', marketCap: 80000000000, price: 55.20, change: 0.70, percentChange: 1.28, sector: 'Oil & Gas Services', country: 'USA' }, // HQ in Houston
+            { rank: 12, name: 'Schlumberger Ltd.', ticker: 'SLB', marketCap: 80000000000, price: 55.20, change: 0.70, percentChange: 1.28, sector: 'Oil & Gas Services', country: 'USA' }, 
             { rank: 13, name: 'NextEra Energy Inc.', ticker: 'NEE', marketCap: 150000000000, price: 75.60, change: -0.40, percentChange: -0.53, sector: 'Utilities - Renewable', country: 'USA' },
             { rank: 14, name: 'Duke Energy Corp.', ticker: 'DUK', marketCap: 80000000000, price: 102.10, change: 0.20, percentChange: 0.20, sector: 'Utilities - Diversified', country: 'USA' },
             { rank: 15, name: 'Southern Company', ticker: 'SO', marketCap: 82000000000, price: 78.30, change: 0.10, percentChange: 0.13, sector: 'Utilities - Diversified', country: 'USA' },
@@ -379,19 +431,18 @@
         const baseCompanyNames = ['Apex', 'Global', 'Terra', 'Sunbeam', 'HydroVolt', 'GeoSource', 'Quantum', 'Nova', 'Strata', 'Peak', 'Rigstar', 'Pipeline', 'Horizon', 'Catalyst', 'Momentum'];
         const nameSuffixes = ['Energy', 'Oil Corp', 'Power', 'Renewables', 'Solutions', 'International', 'Fuels Ltd.', 'Gas Co.', 'Drillers Inc.', 'Petroleum Group', 'Operations', 'Dynamics Corp.', 'Resources', 'Exploration'];
         const usSectors = ['Exploration & Production', 'Midstream', 'Oil & Gas Services', 'Utilities - Renewable', 'Utilities - Diversified', 'Refining & Marketing', 'Integrated Oil & Gas'];
-        const globalSectors = [...usSectors, 'Coal Operations', 'Energy Trading']; // Slightly broader for global
+        const globalSectors = [...usSectors, 'Coal Operations', 'Energy Trading']; 
         
         const nonUSCountries = ['Canada', 'UK', 'France', 'Germany', 'Norway', 'China', 'Brazil', 'Australia', 'India', 'Russia', 'Mexico', 'UAE', 'Qatar', 'Netherlands'];
 
-        // Generate 62 more US companies (total 8 + 62 = 70)
         for (let i = 0; i < 62; i++) {
             const baseName = baseCompanyNames[Math.floor(Math.random() * baseCompanyNames.length)];
             const suffix = nameSuffixes[Math.floor(Math.random() * nameSuffixes.length)];
             generatedCompanies.push({
-                rank: 0, // Will be re-assigned after sorting by marketCap
+                rank: 0, 
                 name: `${baseName} ${suffix} USA`.replace(/\s+/g, ' '),
                 ticker: String.fromCharCode(65 + Math.floor(Math.random() * 26)) + String.fromCharCode(65 + Math.floor(Math.random() * 26)) + String.fromCharCode(65 + Math.floor(Math.random() * 26)) + (Math.random() > 0.2 ? String.fromCharCode(65 + Math.floor(Math.random() * 26)) : ''),
-                marketCap: Math.floor(Math.random() * 350000000000) + 50000000000, // $50B to $400B for US
+                marketCap: Math.floor(Math.random() * 350000000000) + 50000000000, 
                 price: parseFloat((Math.random() * 250 + 10).toFixed(2)),
                 change: parseFloat((Math.random() * 8 - 4).toFixed(2)),
                 percentChange: parseFloat((Math.random() * 6 - 3).toFixed(2)),
@@ -400,16 +451,15 @@
             });
         }
 
-        // Generate 23 more Non-US companies (total 7 + 23 = 30)
         for (let i = 0; i < 23; i++) {
             const baseName = baseCompanyNames[Math.floor(Math.random() * baseCompanyNames.length)];
             const suffix = nameSuffixes[Math.floor(Math.random() * nameSuffixes.length)];
             const country = nonUSCountries[Math.floor(Math.random() * nonUSCountries.length)];
             generatedCompanies.push({
-                rank: 0, // Will be re-assigned
+                rank: 0, 
                 name: `${baseName} ${suffix} ${country}`.replace(/\s+/g, ' '),
                 ticker: String.fromCharCode(65 + Math.floor(Math.random() * 26)) + String.fromCharCode(65 + Math.floor(Math.random() * 26)) + String.fromCharCode(65 + Math.floor(Math.random() * 26)),
-                marketCap: Math.floor(Math.random() * 250000000000) + 40000000000, // $40B to $290B for Non-US
+                marketCap: Math.floor(Math.random() * 250000000000) + 40000000000, 
                 price: parseFloat((Math.random() * 200 + 5).toFixed(2)),
                 change: parseFloat((Math.random() * 7 - 3.5).toFixed(2)),
                 percentChange: parseFloat((Math.random() * 5 - 2.5).toFixed(2)),
@@ -418,15 +468,12 @@
             });
         }
 
-        // Combine hardcoded with generated, sort by Market Cap to establish initial "largest" order, then assign ranks
         energyCompaniesData = [...energyCompaniesData, ...generatedCompanies];
-        energyCompaniesData.sort((a, b) => b.marketCap - a.marketCap); // Sort descending by market cap
+        energyCompaniesData.sort((a, b) => b.marketCap - a.marketCap); 
         energyCompaniesData.forEach((company, index) => {
-            company.rank = index + 1; // Assign rank based on market cap
+            company.rank = index + 1; 
         });
 
-
-        // Populate filter dropdowns
         const sectorFilter = document.getElementById('sectorFilter');
         const countryFilter = document.getElementById('countryFilter');
         const allSectors = [...new Set(energyCompaniesData.map(company => company.sector))].sort();
@@ -445,13 +492,12 @@
             countryFilter.appendChild(option);
         });
 
-        // Table rendering, sorting, and filtering logic
-        let currentSortColumn = 'rank'; // Initial sort by new rank
+        let currentSortColumn = 'rank'; 
         let currentSortOrder = 'asc';
-        const searchInput = document.getElementById('searchCompanyInput');
+        const searchCompanyInput = document.getElementById('searchCompanyInput');
 
         function applyFiltersAndSearch() {
-            const searchTerm = searchInput.value.toLowerCase();
+            const searchTerm = searchCompanyInput.value.toLowerCase();
             const selectedSector = sectorFilter.value;
             const selectedCountry = countryFilter.value;
 
@@ -489,7 +535,6 @@
             renderEnergyCompaniesTable(dataToRender);
             updateSortIcons();
         }
-
 
         function renderEnergyCompaniesTable(data) {
             const tableBody = document.getElementById('energyCompaniesBody');
@@ -549,15 +594,27 @@
             });
         });
 
-        searchInput.addEventListener('input', applyFiltersAndSearch);
+        searchCompanyInput.addEventListener('input', applyFiltersAndSearch);
         sectorFilter.addEventListener('change', applyFiltersAndSearch);
         countryFilter.addEventListener('change', applyFiltersAndSearch);
         
-        // Initial render: sort by the new rank (which is based on market cap)
+        // Initial render
         currentSortColumn = 'rank';
         currentSortOrder = 'asc';
         applyFiltersAndSearch();
 
+        // Ticker Banner Logic (Simplified for this page)
+        const tickerContentMarkets = document.getElementById('tickerContentMarkets');
+        if (tickerContentMarkets) {
+            const navElement = document.querySelector('nav.fixed'); // Assuming header is loaded by now
+            let navHeight = navElement ? navElement.offsetHeight : 60; 
+            if(tickerContentMarkets.parentElement) {
+                 tickerContentMarkets.parentElement.style.marginTop = `${navHeight}px`;
+            }
+            // Example: You can fetch a few key market indices or commodities here
+            // For simplicity, using static text. Replace with actual data fetching.
+            tickerContentMarkets.innerHTML = '<span class="ticker-item">WTI Crude: $78.50 (+0.50%)</span> <span class="ticker-item">S&P 500: 4,120.75 (+0.37%)</span> <span class="ticker-item">10-Yr Treasury: 3.45% (+0.8bps)</span>';
+        }
     </script>
 </body>
 </html>
