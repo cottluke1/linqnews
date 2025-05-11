@@ -5,255 +5,356 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linq - Community Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Lexend', sans-serif;
             background-color: #0A0A0A;
             color: #E0E0E0;
+            font-weight: 400;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #1A1A1A; }
         ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
         ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
 
+        /* Header Styles from user prompt */
         nav.fixed {
-            background-color: rgba(10, 10, 10, 0.85); /* Dark, slightly transparent */
+            background-color: rgba(10, 10, 10, 0.85); 
             backdrop-filter: blur(10px) saturate(150%);
             -webkit-backdrop-filter: blur(10px) saturate(150%);
-            border-bottom: 1px solid #222222;
+            border-bottom: 1px solid #222222; 
         }
         .nav-link {
-            transition: color 0.2s ease, opacity 0.2s ease; font-weight: 500; color: #B0B0B0; opacity: 0.8;
+            transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease; 
+            font-weight: 500;
+            color: #B0B0B0; 
+            opacity: 0.8;   
+            padding: 0.5rem 0.75rem; 
+            border-radius: 0.375rem; 
+            font-size: 0.875rem; 
         }
-        .nav-link:hover { color: #FFFFFF; opacity: 1; }
+        .nav-link:hover { /* This style will apply on hover for all nav links, including active */
+            color: #FFFFFF; 
+            opacity: 1; 
+            background-color: rgba(255,255,255,0.05); 
+        }
+        /* Active link style: White text, no special background unless hovered */
+        .nav-link.active {
+            color: #FFFFFF; /* White text for active */
+            opacity: 1;
+            background-color: transparent; /* No persistent background for active */
+            border-bottom-color: transparent !important; /* Ensure no underline from previous styles */
+        }
+        
+        /* Login button when it's a distinct button (not used if styled as nav-link) */
+        /* #authLinkDesktopLogin.nav-link-button { 
+            background-color: #00BFFF; 
+            color: #FFFFFF; 
+            opacity: 1; 
+        }
+        #authLinkDesktopLogin.nav-link-button:hover {
+            background-color: #00A9E0; 
+            opacity: 1; 
+        } */
 
-        .page-header { text-align: center; padding-top: 6rem; margin-bottom: 2.5rem; }
+        .profile-icon-placeholder { 
+            width: 2.25rem; 
+            height: 2.25rem; 
+            background-color: #333; 
+            border-radius: 50%; 
+            display: inline-flex; align-items: center; justify-content: center; 
+            cursor: pointer; 
+            border: 2px solid #4A4A4A; 
+        }
+        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; } 
+        .profile-icon-placeholder:hover { border-color: #00BFFF; } 
+
+        .desktop-hamburger-menu { position: relative; display: inline-block; }
+        .desktop-hamburger-icon { cursor: pointer; padding: 0.25rem; color: #B0B0B0; } 
+        .desktop-hamburger-icon:hover { color: #FFFFFF; }
+        .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; } 
+
+        .desktop-dropdown-menu { 
+            display: none; position: absolute; right: 0; top: calc(100% + 0.5rem); 
+            background-color: rgba(28, 28, 28, 0.95); 
+            backdrop-filter: blur(12px) saturate(160%); 
+            min-width: 200px; 
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5), 0 4px 6px -2px rgba(0,0,0,0.25); 
+            z-index: 55; 
+            border-radius: 0.5rem; 
+            border: 1px solid #333333; 
+            padding-top: 0.5rem; padding-bottom: 0.5rem; 
+        }
+        .desktop-dropdown-menu a {
+            color: #C0C0C0; padding: 0.625rem 1.25rem; 
+            text-decoration: none; display: block; 
+            font-size: 0.875rem; font-weight: 500; 
+            transition: background-color 0.2s ease, color 0.2s ease; 
+            border-radius: 0.25rem; margin: 0.25rem 0.5rem; 
+        }
+        .desktop-dropdown-menu a:hover { background-color: rgba(0, 191, 255, 0.15); color: #FFFFFF; } 
+        .desktop-dropdown-menu #logoutButtonDesktop { color: #EF4444; } 
+        .desktop-dropdown-menu #logoutButtonDesktop:hover { background-color: rgba(239, 68, 68, 0.15); color: #FFAAAA; } 
+
+        #mobile-menu .nav-link.active { /* Mobile active link */
+            color: #FFFFFF; /* White text for active mobile */
+            background-color: rgba(0, 191, 255, 0.1); /* Subtle blue highlight for active mobile */
+            opacity: 1;
+        }
+
+        /* Page Specific Styles - Remainder of the page styles from previous version */
+        .page-header { text-align: left; padding-top: 80px; margin-bottom: 2.5rem; }
         .page-title {
-            font-size: 2.8rem; font-weight: 800; color: #FFFFFF; margin-bottom: 0.5rem;
+            font-size: 2.8rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.5rem;
             text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3);
         }
         .page-title .accent-text { color: #00BFFF; }
-        .page-subtitle { font-size: 1.1rem; color: #A0A0A0; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+        .page-subtitle { font-size: 1.1rem; color: #A0A0A0; max-width: none; margin: 0; line-height: 1.6; }
 
-        .section-title { /* From index.html for consistency */
-            font-size: 2rem; font-weight: 700; color: #F0F0F0; margin-bottom: 2rem;
-            padding-bottom: 0.75rem; border-bottom: 1px solid #333333;
-        }
-        .search-input { /* From index.html */
-            width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; /* Adjusted padding for icon */
-            background-color: #1A1A1A; border: 1px solid #333333; border-radius: 0.375rem;
-            margin-bottom: 1.5rem; font-size: 0.9rem; color: #E0E0E0;
+        .search-input {
+            width: 100%; padding: 0.875rem 1rem 0.875rem 3rem;
+            background-color: #1A1A1A; border: 1px solid #333333; border-radius: 0.5rem;
+            margin-bottom: 2rem; font-size: 1rem; color: #E0E0E0;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
-        .search-input::placeholder { color: #666666; }
+        .search-input::placeholder { color: #777777; }
         .search-input:focus {
-            outline: none; border-color: #00BFFF;
-            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3); background-color: #1F1F1F;
+            border-color: #00BFFF; outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.25);
         }
         .search-container { position: relative; }
         .search-container svg {
-            position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);
-             width: 1.1rem; height: 1.1rem; color: #666666; pointer-events: none; /* Prevent icon from stealing focus */
+            position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+            width: 1.1rem; height: 1.1rem; color: #A0A0A0; pointer-events: none;
         }
 
-
-        .post-card { /* Similar to news-card but can be distinct if needed */
-            background-color: rgba(28, 28, 28, 0.8); backdrop-filter: blur(10px) saturate(150%);
-            border-radius: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
-            overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; margin-bottom: 2rem;
-            padding: 1.5rem;
-        }
-        .post-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7); border-color: rgba(0, 191, 255, 0.5); }
-        .post-title { font-size: 1.1rem; font-weight: 600; color: #FFFFFF; margin-bottom: 0.3rem; line-height: 1.4; }
-        .post-meta { font-size: 0.75rem; color: #888888; margin-bottom: 0.75rem; }
-        .post-category-tag { /* Using news-tag style */
-            background-color: rgba(0, 191, 255, 0.15); color: #00BFFF; padding: 0.25rem 0.6rem;
-            border-radius: 9999px; font-size: 0.65rem; font-weight: 500; margin-left: 0.5rem;
-            display: inline-block; border: 1px solid rgba(0, 191, 255, 0.3);
-        }
-        .twitter-tweet-container { margin-top: 1rem; background-color: #101010; border-radius: 0.5rem; padding: 0.75rem; border: 1px solid #282828;}
-        /* Twitter's own styling will largely take over the blockquote */
-
-        .post-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #282828;}
-        .action-btn {
-            background-color: rgba(0, 191, 255, 0.1); color: #00BFFF; border: 1px solid rgba(0, 191, 255, 0.3);
-            padding: 0.5rem 1rem; border-radius: 0.375rem; font-size: 0.8rem; font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease; display: inline-flex; align-items: center;
-        }
-        .action-btn:hover { background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; }
-        .action-btn svg { width: 1rem; height: 1rem; margin-right: 0.5rem; }
-
-        .favorite-btn { /* Consistent with index.html */
-            width: 1.25rem; height: 1.25rem; color: #777777; cursor: pointer; transition: color 0.2s ease, transform 0.2s ease;
-            background: none; border: none; padding: 0; display: inline-flex; align-items: center; justify-content: center;
-        }
-        .favorite-btn:hover { color: #FFD700; transform: scale(1.15); }
-        .favorite-btn.favorited { color: #FFD700; fill: #FFD700; }
-        .favorite-btn svg { width: 100%; height: 100%; }
-        .share-confirmation { display:none; font-size: 0.75rem; color: #00BFFF; margin-left:0.5rem; }
-
-
-        .filter-sidebar { /* Consistent with index.html */
+        .filter-panel {
             background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%);
             padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
-            border: 1px solid #2a2a2a;
+            border: 1px solid #2a2a2a; position: sticky; top: 90px;
         }
         .filter-title { font-size: 1.25rem; font-weight: 600; color: #E0E0E0; margin-bottom: 1.25rem; }
-        .filter-button { /* Consistent with index.html */
-            display: block; width: 100%; text-align: left; padding: 0.75rem 1rem; margin-bottom: 0.5rem;
-            border-radius: 0.375rem; color: #B0B0B0; font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease;
-            border-left: 3px solid transparent; background-color: transparent; border: 1px solid #333333;
+        .filter-button {
+            display: block; width: 100%; text-align: left; padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem; border-radius: 0.375rem; color: #B0B0B0; font-weight: 500;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            background-color: #1A1A1A; border: 1px solid #333333;
         }
-        .filter-button:hover { background-color: rgba(0, 191, 255, 0.1); color: #FFFFFF; border-left-color: #00BFFF; border-color: #00BFFF; }
-        .filter-button.active { background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; font-weight: 600; border-left-color: #00BFFF; border-color: #00BFFF; }
+        .filter-button:hover {
+            background-color: rgba(0, 191, 255, 0.1); color: #FFFFFF; border-color: #00BFFF;
+        }
+        .filter-button.active { /* Multi-select active style */
+            background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; font-weight: 600;
+            border-color: #00BFFF;
+        }
+        
+        .post-card {
+            background-color: #121212; border: 1px solid #282828; border-radius: 0.75rem;
+            padding: 1.75rem; margin-bottom: 2rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            box-shadow: 0 4px 15px -5px rgba(0,0,0,0.4); display: flex; flex-direction: column;
+        }
+        .post-card:hover {
+            transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(0, 191, 255, 0.2);
+            border-color: #00BFFF;
+        }
+        .post-title {
+            font-size: 1.375rem; font-weight: 600; color: #FFFFFF;
+            margin: 0 0 0.75rem; line-height: 1.4;
+        }
+        .post-meta {
+            font-size: 0.875rem; color: #A0A0A0; margin: 0 0 1rem; font-weight: 400;
+            display: flex; align-items: center; flex-wrap: wrap;
+        }
+        .post-category-tag {
+            background-color: rgba(0, 191, 255, 0.15); color: #00BFFF; padding: 0.3rem 0.875rem;
+            border-radius: 1rem; font-size: 0.75rem; font-weight: 500;
+            margin-left: 0.75rem; border: 1px solid rgba(0, 191, 255, 0.3);
+        }
+        .twitter-tweet-container { margin-top: 1rem; background-color: #101010; border-radius: 0.5rem; padding: 0.75rem; border: 1px solid #282828;}
+        
+        .post-actions {
+            display: flex; justify-content: flex-end; align-items: center;
+            margin-top: 1.5rem; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid #282828;
+        }
+        .action-btn {
+            background-color: transparent; border: 1px solid #333333; color: #A0A0A0;
+            border-radius: 0.375rem; padding: 0.5rem 0.75rem; font-size: 0.875rem;
+            font-weight: 500; cursor: pointer; transition: all 0.2s ease;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+        }
+        .action-btn:hover { background-color: #1A1A1A; color: #00BFFF; border-color: #00BFFF; }
+        .action-btn i { font-size: 1rem; }
+        .favorite-btn.favorited {
+            color: #00BFFF; fill: #00BFFF; border-color: #00BFFF;
+            background-color: rgba(0, 191, 255, 0.1);
+        }
+        .favorite-btn.favorited i::before { content: '\f005'; font-weight: 900; }
+        .share-confirmation { display:none; font-size: 0.75rem; color: #00BFFF; margin-left:0.5rem; }
 
-        .footer { /* Consistent */ }
-        /* ... (footer styles from index.html) ... */
-         .footer {
-            background-color: #080808; color: #888888; padding: 3rem 1rem; margin-top: 4rem; border-top: 1px solid #222222;
+        .footer {
+            background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem;
+            border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem; margin-top: auto;
         }
-        .footer a { color: #A0A0A0; transition: color 0.2s ease; }
+        .footer a { color: #B0B0B0; transition: color 0.2s ease; }
         .footer a:hover { color: #00BFFF; }
-
-        /* Terms and Privacy Modals - Themed */
-        /* ... (modal styles from index.html) ... */
-        .terms-privacy-content {
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background-color: rgba(22, 22, 22, 0.9); backdrop-filter: blur(10px) saturate(150%); -webkit-backdrop-filter: blur(10px) saturate(150%);
-            padding: 2.5rem; border-radius: 0.75rem; max-height: 85vh; overflow-y: auto;
-            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7); z-index: 100; color: #E0E0E0;
-            border: 1px solid rgba(0, 191, 255, 0.3); max-width: 700px; width: 90%;
+        
+        .page-content-wrapper {
+            flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px; 
+            margin: 0 auto; padding-left: 1rem; padding-right: 1rem;
+            padding-top: 80px;
         }
-        .terms-privacy-content h2 { font-size: 1.75rem; font-weight: 700; color: #FFFFFF; margin-bottom: 1.5rem; border-bottom: 1px solid #00BFFF; padding-bottom: 0.75rem; }
-        .terms-privacy-content p { margin-bottom: 1rem; line-height: 1.7; color: #C0C0C0; }
-        .terms-privacy-content strong { color: #00BFFF; font-weight: 600; }
-        .terms-privacy-content a { color: #00BFFF; text-decoration: underline; transition: color 0.2s ease; }
-        .terms-privacy-content a:hover { color: #00A9E0; }
-        .close-btn {
-            position: absolute; top: 1.5rem; right: 1.5rem; font-size: 1.75rem; cursor: pointer;
-            color: #A0A0A0; transition: color 0.2s ease, transform 0.2s ease; line-height: 1;
+        .community-main-grid { display: flex; flex-wrap: wrap; gap: 2rem; }
+        .posts-section { flex: 3; min-width: 0; order: 1; }
+        .filter-section-wrapper { flex: 1; min-width: 280px; order: 2; }
+        @media (max-width: 1023px) { 
+            .community-main-grid { flex-direction: column; }
+            .posts-section, .filter-section-wrapper { flex: none; width: 100%; }
+            .filter-panel { position: static; order: 0; margin-bottom: 2rem; }
         }
-        .close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
     </style>
 </head>
 <body class="antialiased">
     <nav class="fixed top-0 left-0 w-full z-50 shadow-md py-3">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <a href="index.html" class="text-3xl font-bold text-white">Linq<span class="text-cyan-400">.</span></a>
-            <div class="hidden md:flex space-x-5 items-center">
+            <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
+            <div class="hidden md:flex items-center space-x-5">
                 <a href="index.html" class="nav-link text-sm">News</a>
-                <a href="favorites.html" class="nav-link text-sm">Favorites</a>
-                <a href="community.html" class="nav-link text-sm text-cyan-400 opacity-100">Community</a>
-                <a href="login.html" id="authLink" class="nav-link text-sm bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-md transition-colors">Login</a>
+                <a href="community.html" class="nav-link text-sm active">Community</a> 
+                <a href="favorites.html" id="favoritesLinkDesktop" class="nav-link text-sm hidden">Favorites</a>
+                <div id="desktopAuthArea" class="flex items-center space-x-3">
+                    {/* Login link will be styled as nav-link by default */}
+                    <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm">Login</a> 
+                    <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
+                        <a href="profile.html" id="profileLinkDesktop" title="My Profile">
+                            <div class="profile-icon-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </a>
+                        <div class="desktop-hamburger-menu">
+                            <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                            </button>
+                            <div id="desktop-dropdown" class="desktop-dropdown-menu">
+                                <a href="linqai.html">Linq AI</a>
+                                <a href="earnings.html">Earnings Calendar</a>
+                                <a href="profile.html">My Profile</a>
+                                <a href="#" id="logoutButtonDesktop">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-             <div class="md:hidden">
+            <div class="md:hidden">
                 <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
                 </button>
             </div>
         </div>
-         <div id="mobile-menu" class="md:hidden hidden bg-gray-900 bg-opacity-90 backdrop-blur-md">
-            <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a>
-            <a href="favorites.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Favorites</a>
-            <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 text-cyan-400 opacity-100">Community</a>
+        <div id="mobile-menu" class="md:hidden hidden bg-gray-900 bg-opacity-90 backdrop-blur-md">
             <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Login</a>
+            <a href="linqai.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Linq Ai</a>
+            <a href="earnings.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Earnings Calendar</a>
+            <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a>
+            <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 active">Community</a> 
+            <a href="favorites.html" id="favoritesLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden">Favorites</a>
+            <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Logout</a>
         </div>
     </nav>
 
-    <header class="page-header">
-        <h1 class="page-title">Community <span class="accent-text">Pulse</span></h1>
-        <p class="page-subtitle">Real-time insights and discussions from energy experts and enthusiasts across the web.</p>
-    </header>
-
-    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-10">
-            <div class="lg:col-span-8">
-                <div class="search-container mb-8">
-                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <main class="page-content-wrapper">
+        <div class="community-main-grid">
+            <section class="posts-section">
+                <header class="page-header text-left">
+                    <h1 class="page-title">The <span class="accent-text">Linq</span> to Your Community</h1>
+                    <p class="page-subtitle">Real-Time Insights from Energy Experts</p>
+                </header>
+                
+                <div class="search-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                     <input type="text" id="searchInput" placeholder="Search community posts..." class="search-input">
                 </div>
+
                 <div id="postsContainer" class="space-y-8">
                     {/* Community posts will be dynamically inserted here */}
                 </div>
-            </div>
+            </section>
 
-            <aside class="lg:col-span-4 space-y-8">
-                <div class="filter-sidebar">
+            <aside class="filter-section-wrapper">
+                <div class="filter-panel">
                     <h3 class="filter-title">Filter by Category</h3>
                     <div id="categoryFilters" class="space-y-3">
-                        <button class="filter-button active" data-category="All">All Posts</button>
+                        {/* "All Categories" button removed for multi-select logic */}
                         <button class="filter-button" data-category="Crude oil">Crude Oil</button>
                         <button class="filter-button" data-category="Natural Gas">Natural Gas</button>
                         <button class="filter-button" data-category="Energy">General Energy</button>
                         <button class="filter-button" data-category="Policy">Policy & Markets</button>
-                        {/* Add more categories as needed */}
+                        <button class="filter-button" data-category="Market Analysis">Market Analysis</button>
+                        <button class="filter-button" data-category="Energy Demand">Energy Demand</button>
                     </div>
                 </div>
             </aside>
         </div>
     </main>
 
-    <footer class="footer text-center">
-        <div class="container mx-auto">
-            <p class="mb-2 text-sm">&copy; 2025 Linq Energy Intelligence. All Rights Reserved.</p>
-            <nav class="text-xs space-x-3 sm:space-x-4">
-                <a href="#terms" onclick="showTerms(event)">Terms of Service</a> |
-                <a href="#privacy" onclick="showPrivacy(event)">Privacy Policy</a> |
-                <a href="#">Contact Support</a> |
-                <a href="#">Careers</a>
-            </nav>
-        </div>
+    <footer class="footer">
+        <p>&copy; <span id="current-year"></span> Linq Energy Intelligence. All Rights Reserved.</p>
+        <nav class="text-xs space-x-3 mt-2">
+            <a href="#">Privacy Policy</a> |
+            <a href="#">Terms of Service</a> |
+            <a href="#">Contact Us</a>
+        </nav>
     </footer>
 
-     <div id="termsContent" class="terms-privacy-content">
-        <span class="close-btn" onclick="closeTerms()">×</span>
-        <h2>Terms of Service</h2>
-        <p>Welcome to Linq...</p>
-    </div>
-
-    <div id="privacyContent" class="terms-privacy-content">
-        <span class="close-btn" onclick="closePrivacy()">×</span>
-        <h2>Privacy Policy</h2>
-        <p>At Linq, we are committed...</p>
-    </div>
-
-
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", //
-            authDomain: "linq-b27a8.firebaseapp.com", //
-            projectId: "linq-b27a8", //
-            storageBucket: "linq-b27a8.firebasestorage.app", //
-            messagingSenderId: "1067901051826", //
-            appId: "1:1067901051826:web:44452d1339cdbe2af07aab" //
-        };
-        firebase.initializeApp(firebaseConfig); //
-        const auth = firebase.auth(); //
+        document.getElementById('current-year').textContent = new Date().getFullYear();
 
+        const twitterScript = document.createElement('script');
+        twitterScript.src = 'https://platform.twitter.com/widgets.js';
+        twitterScript.async = true;
+        twitterScript.charset = 'utf-8';
+        document.body.appendChild(twitterScript);
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+            authDomain: "linq-b27a8.firebaseapp.com",
+            projectId: "linq-b27a8",
+            storageBucket: "linq-b27a8.firebasestorage.app",
+            messagingSenderId: "1067901051826",
+            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
 
         const communityPostsData = [
-            // Data from your original community.html, ensure IDs are strings if used with localStorage logic like news
-            { id: 'tweet1', url: 'https://twitter.com/CRUDEOIL231/status/1919070053825495266', title: 'If Saudis and OPEC+ maintain production levels...', meta: 'May 4, 2025 • JH (@CRUDEOIL231)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">If Saudis and OPEC+ maintain production levels without increasing output, and as a result, Brent crude prices barely hold steady around $70/bbl, would that be favorable for your positions?<br><br>Of course the best-case scenario is for prices to remain high, but that seems unlikely.…</p>&mdash; JH (@CRUDEOIL231) <a href="https://twitter.com/CRUDEOIL231/status/1919070053825495266?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
-            { id: 'tweet2', url: 'https://twitter.com/LinqNews/status/1919171857409855978', title: "India's oil consumption rose 4.5% YoY in March", meta: 'May 4, 2025 • Linq (@LinqNews)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">India\'s oil consumption rose 4.5% YoY in March. Infrastructure buildout and strong GDP expectations place it as key global demand anchor in 2025.<a href="https://twitter.com/hashtag/India?src=hash&ref_src=twsrc%5Etfw">#India</a> <a href="https://twitter.com/hashtag/EnergyDemand?src=hash&ref_src=twsrc%5Etfw">#EnergyDemand</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; Linq (@LinqNews) <a href="https://twitter.com/LinqNews/status/1919171857409855978?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
-            { id: 'tweet3', url: 'https://twitter.com/Rory_Johnston/status/1919158874172530712', title: 'Crude gaps down >$2/bbl—Brent back in the $50s', meta: 'May 4, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">Crude gaps down >$2/bbl—Brent back in the $50s—on Asia open following OPEC headline-filled weekend.<br><br>Hard to know what, exactly, was priced in going into weekend—even if the ~400 kbpd June production hike was priced in, the entire unwind by November threat/rumour certainly wasn’t <a href="https://t.co/oMqvcPx0U8">pic.twitter.com/oMqvcPx0U8</a></p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1919158874172530712?ref_src=twsrc%5Etfw">May 4, 2025</a>'},
-            { id: 'tweet4', url: 'https://twitter.com/aeberman12/status/1919396685362373026', title: 'Riyadh’s strategic oil play', meta: 'May 5, 2025 • Art Berman (@aeberman12)', category: 'Energy', tweetContent: '<p lang="en" dir="ltr">My take:<br><br>Riyadh is betting that looming sanctions and tighter supply will push oil prices higher.<br><br>It’s a preemptive move to shape sentiment, not just follow it.<a href="https://t.co/g98C6IMwWl">https://t.co/g98C6IMwWl</a><a href="https://twitter.com/hashtag/energy?src=hash&ref_src=twsrc%5Etfw">#energy</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://twitter.com/hashtag/oilandgas?src=hash&ref_src=twsrc%5Etfw">#oilandgas</a> <a href="https://twitter.com/hashtag/WTI?src=hash&ref_src=twsrc%5Etfw">#WTI</a> <a href="https://twitter.com/hashtag/CrudeOil?src=hash&ref_src=twsrc%5Etfw">#CrudeOil</a> <a href="https://twitter.com/hashtag/fintwit?src=hash&ref_src=twsrc%5Etfw">#fintwit</a> <a href="https://twitter.com/hashtag/OPEC?src=hash&ref_src=twsrc%5Etfw">#OPEC</a> <a href="https://twitter.com/hashtag/Commodities?src=hash&ref_src=twsrc%5Etfw">#Commodities</a> <a href="https://twitter.com/hashtag/commoditiesmarket?src=hash&ref_src=twsrc%5Etfw">#commoditiesmarket</a> <a href="https://t.co/qhfZgyHTnM">pic.twitter.com/qhfZgyHTnM</a></p>&mdash; Art Berman (@aeberman12) <a href="https://twitter.com/aeberman12/status/1919396685362373026?ref_src=twsrc%5Etfw">May 5, 2025</a>'},
-            { id: 'tweet5', url: 'https://twitter.com/IPAAaccess/status/1919510569553432731', title: 'IPAA supports budget reconciliation provisions', meta: 'May 5, 2025 • IPAA American Energy (@IPAAaccess)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">IPAA and a coalition of energy trade groups wrote to <a href="https://twitter.com/SpeakerJohnson?ref_src=twsrc%5Etfw">@SpeakerJohnson</a> expressing strong support for the <a href="https://twitter.com/hashtag/budgetreconciliation?src=hash&ref_src=twsrc%5Etfw">#budgetreconciliation</a> provisions currently under consideration by the <a href="https://twitter.com/NatResources?ref_src=twsrc%5Etfw">@NatResources</a>. "These provisions, included in the House Natural Resources bill text will increase domestic… <a href="https://t.co/QQIcQvG64S">pic.twitter.com/QQIcQvG64S</a></p>&mdash; IPAA American Energy (@IPAAaccess) <a href="https://twitter.com/IPAAaccess/status/1919510569553432731?ref_src=twsrc%5Etfw">May 5, 2025</a>'}
+            { id: 'tweet1', url: 'https://twitter.com/CRUDEOIL231/status/1919070053825495266', title: 'Saudi Production Levels & Brent Impact', meta: 'May 10, 2025 • JH (@CRUDEOIL231)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">If Saudis and OPEC+ maintain production levels without increasing output, and as a result, Brent crude prices barely hold steady around $70/bbl, would that be favorable for your positions?<br><br>Of course the best-case scenario is for prices to remain high, but that seems unlikely.…</p>&mdash; JH (@CRUDEOIL231) <a href="https://twitter.com/CRUDEOIL231/status/1919070053825495266?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
+            { id: 'tweet2', url: 'https://twitter.com/LinqNews/status/1919171857409855978', title: "India's Rising Oil Consumption: A Key Global Demand Anchor", meta: 'May 10, 2025 • Linq AI Insights (@LinqAI)', category: 'Energy Demand', tweetContent: '<p lang="en" dir="ltr">India\'s oil consumption rose 4.5% YoY in March. Infrastructure buildout and strong GDP expectations place it as key global demand anchor in 2025.<a href="https://twitter.com/hashtag/India?src=hash&ref_src=twsrc%5Etfw">#India</a> <a href="https://twitter.com/hashtag/EnergyDemand?src=hash&ref_src=twsrc%5Etfw">#EnergyDemand</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; Linq AI Insights (@LinqAI) <a href="https://twitter.com/LinqNews/status/1919171857409855978?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
+            { id: 'tweet3', url: 'https://twitter.com/Rory_Johnston/status/1919158874172530712', title: 'Crude Gaps Down on OPEC+ News - Brent Back in $50s?', meta: 'May 09, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Market Analysis', tweetContent: '<p lang="en" dir="ltr">Crude gaps down >$2/bbl—Brent back in the $50s—on Asia open following OPEC headline-filled weekend.<br><br>Hard to know what, exactly, was priced in going into weekend—even if the ~400 kbpd June production hike was priced in, the entire unwind by November threat/rumour certainly wasn’t <a href="https://t.co/oMqvcPx0U8">pic.twitter.com/oMqvcPx0U8</a></p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1919158874172530712?ref_src=twsrc%5Etfw">May 4, 2025</a>'},
+            { id: 'tweet4', url: 'https://twitter.com/aeberman12/status/1919396685362373026', title: 'Riyadh’s Strategic Oil Play', meta: 'May 05, 2025 • Art Berman (@aeberman12)', category: 'Energy', tweetContent: '<p lang="en" dir="ltr">My take:<br><br>Riyadh is betting that looming sanctions and tighter supply will push oil prices higher.<br><br>It’s a preemptive move to shape sentiment, not just follow it.<a href="https://t.co/g98C6IMwWl">https://t.co/g98C6IMwWl</a><a href="https://twitter.com/hashtag/energy?src=hash&ref_src=twsrc%5Etfw">#energy</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://twitter.com/hashtag/oilandgas?src=hash&ref_src=twsrc%5Etfw">#oilandgas</a> <a href="https://twitter.com/hashtag/WTI?src=hash&ref_src=twsrc%5Etfw">#WTI</a> <a href="https://twitter.com/hashtag/CrudeOil?src=hash&ref_src=twsrc%5Etfw">#CrudeOil</a> <a href="https://twitter.com/hashtag/fintwit?src=hash&ref_src=twsrc%5Etfw">#fintwit</a> <a href="https://twitter.com/hashtag/OPEC?src=hash&ref_src=twsrc%5Etfw">#OPEC</a> <a href="https://twitter.com/hashtag/Commodities?src=hash&ref_src=twsrc%5Etfw">#Commodities</a> <a href="https://twitter.com/hashtag/commoditiesmarket?src=hash&ref_src=twsrc%5Etfw">#commoditiesmarket</a> <a href="https://t.co/qhfZgyHTnM">pic.twitter.com/qhfZgyHTnM</a></p>&mdash; Art Berman (@aeberman12) <a href="https://twitter.com/aeberman12/status/1919396685362373026?ref_src=twsrc%5Etfw">May 5, 2025</a>'},
+            { id: 'tweet5', url: 'https://twitter.com/IPAAaccess/status/1919510569553432731', title: 'IPAA Supports Budget Reconciliation Provisions', meta: 'May 05, 2025 • IPAA American Energy (@IPAAaccess)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">IPAA and a coalition of energy trade groups wrote to <a href="https://twitter.com/SpeakerJohnson?ref_src=twsrc%5Etfw">@SpeakerJohnson</a> expressing strong support for the <a href="https://twitter.com/hashtag/budgetreconciliation?src=hash&ref_src=twsrc%5Etfw">#budgetreconciliation</a> provisions currently under consideration by the <a href="https://twitter.com/NatResources?ref_src=twsrc%5Etfw">@NatResources</a>. "These provisions, included in the House Natural Resources bill text will increase domestic… <a href="https://t.co/QQIcQvG64S">pic.twitter.com/QQIcQvG64S</a></p>&mdash; IPAA American Energy (@IPAAaccess) <a href="https://twitter.com/IPAAaccess/status/1919510569553432731?ref_src=twsrc%5Etfw">May 5, 2025</a>'}
         ];
-
+        
         const postsContainer = document.getElementById('postsContainer');
-        let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || []; // Use same localStorage key as index
+        let communityFavorites = JSON.parse(localStorage.getItem('linqCommunityFavoritesV1')) || [];
 
         function displayCommunityPosts(postsToDisplay) {
             if (!postsContainer) return;
-            postsContainer.innerHTML = ''; // Clear existing
+            postsContainer.innerHTML = ''; 
 
             if (postsToDisplay.length === 0) {
                 postsContainer.innerHTML = '<p class="text-center text-gray-500 py-8">No posts match your current filters.</p>';
@@ -264,7 +365,7 @@
                 const postElement = document.createElement('article');
                 postElement.className = 'post-card';
                 postElement.setAttribute('data-category', post.category);
-                postElement.setAttribute('data-id', post.id); // Unique ID for favoriting
+                postElement.setAttribute('data-id', post.id); 
 
                 postElement.innerHTML = `
                     <p class="post-title">${post.title}</p>
@@ -276,14 +377,11 @@
                     </div>
                     <div class="post-actions">
                         <button class="action-btn share-btn" data-url="${post.url}" data-title="${post.title}">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12s-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.368a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path></svg>
-                            Share
+                            <i class="fas fa-share-alt"></i> Share
                         </button>
-                        <span class="share-confirmation">Link copied!</span>
-                        <button class="favorite-btn" data-id="${post.id}" aria-label="Favorite post">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                            </svg>
+                        <span class="share-confirmation hidden">Link copied!</span>
+                        <button class="action-btn favorite-btn" data-id="${post.id}" aria-label="Favorite post">
+                            <i class="far fa-star"></i> Favorite
                         </button>
                     </div>
                 `;
@@ -291,23 +389,24 @@
             });
 
             if (window.twttr && window.twttr.widgets) {
-                window.twttr.widgets.load(postsContainer); // Reload Twitter widgets
+                window.twttr.widgets.load(postsContainer);
             }
-            updateFavoriteIcons();
+            updateCommunityFavoriteIcons();
             addPostActionListeners();
         }
-
+        
         function filterCommunityPosts() {
             const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-            const activeCategoryButton = document.querySelector('#categoryFilters .filter-button.active');
-            const selectedCategory = activeCategoryButton ? activeCategoryButton.getAttribute('data-category') : 'All';
+            const activeCategoryButtons = document.querySelectorAll('#categoryFilters .filter-button.active');
+            const selectedCategories = Array.from(activeCategoryButtons).map(btn => btn.getAttribute('data-category'));
 
             let filteredPosts = communityPostsData;
 
-            if (selectedCategory !== 'All') {
-                filteredPosts = filteredPosts.filter(post => post.category === selectedCategory);
+            if (selectedCategories.length > 0) { // Only filter by category if some are selected
+                filteredPosts = communityPostsData.filter(post => selectedCategories.includes(post.category));
             }
-
+            // If selectedCategories is empty, all posts are considered (before search)
+            
             if (searchQuery) {
                 filteredPosts = filteredPosts.filter(post =>
                     post.title.toLowerCase().includes(searchQuery) ||
@@ -318,94 +417,86 @@
             displayCommunityPosts(filteredPosts);
         }
 
-        function toggleFavorite(postId) {
-            const index = favorites.indexOf(postId); // postId is already a string from data-id
+        function toggleCommunityFavorite(postId) {
+            const index = communityFavorites.indexOf(postId);
             if (index > -1) {
-                favorites.splice(index, 1);
+                communityFavorites.splice(index, 1);
             } else {
-                favorites.push(postId);
+                communityFavorites.push(postId);
             }
-            localStorage.setItem('linqFavoritesV2', JSON.stringify(favorites));
-            updateFavoriteIcons();
+            localStorage.setItem('linqCommunityFavoritesV1', JSON.stringify(communityFavorites));
+            updateCommunityFavoriteIcons();
         }
 
-        function updateFavoriteIcons() {
-            document.querySelectorAll('.favorite-btn').forEach(button => {
+        function updateCommunityFavoriteIcons() {
+            document.querySelectorAll('.post-card .favorite-btn').forEach(button => {
                 const postId = button.getAttribute('data-id');
-                if (favorites.includes(postId)) {
+                const icon = button.querySelector('i');
+                if (communityFavorites.includes(postId)) {
                     button.classList.add('favorited');
-                    button.querySelector('svg').setAttribute('fill', 'currentColor');
+                    if (icon) { icon.classList.remove('far'); icon.classList.add('fas'); }
                 } else {
                     button.classList.remove('favorited');
-                    button.querySelector('svg').setAttribute('fill', 'none');
+                    if (icon) { icon.classList.remove('fas'); icon.classList.add('far'); }
                 }
             });
         }
 
         function addPostActionListeners() {
-            // Favorite buttons
-            document.querySelectorAll('.favorite-btn').forEach(button => {
-                button.removeEventListener('click', handleFavoriteClick); // Prevent duplicates
-                button.addEventListener('click', handleFavoriteClick);
+            document.querySelectorAll('.post-card .favorite-btn').forEach(button => {
+                button.removeEventListener('click', handleCommunityFavoriteClick);
+                button.addEventListener('click', handleCommunityFavoriteClick);
             });
 
-            // Share buttons
-            document.querySelectorAll('.share-btn').forEach(button => {
-                button.removeEventListener('click', handleShareClick); // Prevent duplicates
+            document.querySelectorAll('.post-card .share-btn').forEach(button => {
+                button.removeEventListener('click', handleShareClick);
                 button.addEventListener('click', handleShareClick);
             });
         }
-        function handleFavoriteClick(event) {
+        function handleCommunityFavoriteClick(event) {
             const button = event.currentTarget;
             const postId = button.getAttribute('data-id');
-            toggleFavorite(postId);
+            toggleCommunityFavorite(postId);
         }
 
         function handleShareClick(event) {
             const button = event.currentTarget;
             const url = button.getAttribute('data-url');
             const title = button.getAttribute('data-title');
-            const confirmation = button.nextElementSibling; // Assumes .share-confirmation is next sibling
+            const confirmation = button.nextElementSibling; 
 
             if (navigator.share) {
                 navigator.share({ title: title, url: url })
                     .catch(err => console.error('Error sharing:', err));
             } else if (navigator.clipboard) {
                 navigator.clipboard.writeText(url).then(() => {
-                    if(confirmation) confirmation.style.display = 'inline';
+                    if(confirmation) {confirmation.style.display = 'inline'; confirmation.textContent = 'Link copied!';}
                     setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2000);
-                }).catch(err => console.error('Error copying:', err));
+                }).catch(err => {
+                     console.error('Error copying:', err);
+                     if(confirmation) {confirmation.style.display = 'inline'; confirmation.textContent = 'Copy failed!';}
+                     setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2000);
+                });
             } else {
-                alert('Sharing not supported. Link: ' + url); // Fallback
+                 if(confirmation) {confirmation.style.display = 'inline'; confirmation.textContent = 'Sharing not supported.';}
+                 setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2000);
             }
         }
 
-
-        // Category Filter Buttons
         const categoryFilterButtons = document.querySelectorAll('#categoryFilters .filter-button');
         categoryFilterButtons.forEach(button => {
             button.addEventListener('click', function() {
-                categoryFilterButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
+                // Multi-select logic: toggle 'active' class
+                this.classList.toggle('active');
                 filterCommunityPosts();
             });
         });
+        // No default active category for multi-select, or clear all initially if preferred.
+        // For now, if no filters are active, all posts show.
 
-        // Search Input Listener
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.addEventListener('input', filterCommunityPosts);
-        }
+        const searchInputElement = document.getElementById('searchInput');
+        if (searchInputElement) { searchInputElement.addEventListener('input', filterCommunityPosts); }
 
-        // Modal Functionality & Mobile Menu (same as index.html)
-        function showTerms(event) { event.preventDefault(); document.getElementById('termsContent').style.display = 'block'; }
-        function closeTerms() { document.getElementById('termsContent').style.display = 'none'; }
-        function showPrivacy(event) { event.preventDefault(); document.getElementById('privacyContent').style.display = 'block'; }
-        function closePrivacy() { document.getElementById('privacyContent').style.display = 'none'; }
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('termsContent')) closeTerms();
-            if (event.target == document.getElementById('privacyContent')) closePrivacy();
-        };
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
         if (mobileMenuButton && mobileMenu) {
@@ -414,31 +505,65 @@
             });
         }
 
+        const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
+        const desktopDropdown = document.getElementById('desktop-dropdown');
+        if (desktopHamburgerButton && desktopDropdown) {
+            desktopHamburgerButton.addEventListener('click', (event) => {
+                event.stopPropagation(); 
+                desktopDropdown.style.display = desktopDropdown.style.display === 'block' ? 'none' : 'block';
+            });
+        }
+        document.addEventListener('click', function(event) {
+            if (desktopDropdown && desktopHamburgerButton) {
+                if (!desktopHamburgerButton.contains(event.target) && !desktopDropdown.contains(event.target)) {
+                    desktopDropdown.style.display = 'none';
+                }
+            }
+        });
 
-        // Initial Load
         document.addEventListener('DOMContentLoaded', () => {
-            displayCommunityPosts(communityPostsData); // Display all posts initially
-            addPostActionListeners();
+            displayCommunityPosts(communityPostsData);
 
-            // Firebase Auth State Change Listener for Nav Links
-            const authLink = document.getElementById('authLink');
+            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
+            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
+            const favoritesLinkDesktop = document.getElementById('favoritesLinkDesktop');
             const authLinkMobile = document.getElementById('authLinkMobile');
-            auth.onAuthStateChanged(user => { //
+            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
+            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
+            const logoutButtonDesktop = document.getElementById('logoutButtonDesktop');
+
+            auth.onAuthStateChanged(user => {
                 if (user) {
-                    if(authLink) { authLink.textContent = "Profile"; authLink.href = "profile.html"; }
+                    // User is logged in
+                    if(authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
+                    if(profileAndMenuDesktop) { profileAndMenuDesktop.classList.remove('hidden'); profileAndMenuDesktop.classList.add('flex'); }
+                    if(favoritesLinkDesktop) favoritesLinkDesktop.classList.remove('hidden');
+
                     if(authLinkMobile) { authLinkMobile.textContent = "Profile"; authLinkMobile.href = "profile.html"; }
+                    if(logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
+                    if(favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
                 } else {
-                    if(authLink) { authLink.textContent = "Login"; authLink.href = "login.html"; }
+                    // User is not logged in
+                    if(authLinkDesktopLogin) authLinkDesktopLogin.classList.remove('hidden');
+                    if(profileAndMenuDesktop) { profileAndMenuDesktop.classList.add('hidden'); profileAndMenuDesktop.classList.remove('flex'); }
+                    if(favoritesLinkDesktop) favoritesLinkDesktop.classList.add('hidden');
+
                     if(authLinkMobile) { authLinkMobile.textContent = "Login"; authLinkMobile.href = "login.html"; }
+                    if(logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+                    if(favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
+                    if(desktopDropdown) desktopDropdown.style.display = 'none';
                 }
             });
 
-            // Load Twitter widgets script
-            const twitterScript = document.createElement('script');
-            twitterScript.src = "https://platform.twitter.com/widgets.js";
-            twitterScript.async = true;
-            twitterScript.charset = "utf-8";
-            document.body.appendChild(twitterScript);
+            function handleLogout(e) {
+                e.preventDefault();
+                auth.signOut().then(() => { console.log("User signed out"); })
+                .catch(error => console.error("Sign out error", error));
+            }
+            if(logoutButtonDesktop) logoutButtonDesktop.addEventListener('click', handleLogout);
+            if(logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
+            
+            filterCommunityPosts(); 
         });
     </script>
 </body>
