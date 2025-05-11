@@ -20,7 +20,7 @@
             overflow: hidden;
         }
 
-        /* User-provided Header Styles */
+        /* Header Styles (from your original CSS) */
         nav.fixed {
             background-color: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(10px) saturate(150%);
@@ -46,7 +46,6 @@
             opacity: 1;
             background-color: transparent; 
         }
-        
         #authLinkDesktopLogin.nav-link-button { /* Style for the Login button itself */
             background-color: #00BFFF; 
             color: #FFFFFF !important; 
@@ -57,7 +56,6 @@
             background-color: #00A9E0; 
             opacity: 1;
         }
-        
         .profile-icon-placeholder { 
             width: 2.25rem; 
             height: 2.25rem; 
@@ -69,12 +67,10 @@
         }
         .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; } 
         .profile-icon-placeholder:hover { border-color: #00BFFF; } 
-
         .desktop-hamburger-menu { position: relative; display: inline-block; }
         .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;} 
         .desktop-hamburger-icon:hover { color: #FFFFFF; background-color: rgba(255,255,255,0.1); }
         .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; } 
-
         .slide-out-panel { 
             display: flex; 
             flex-direction: column;
@@ -109,7 +105,6 @@
             transition: color 0.2s ease, transform 0.2s ease;
         }
         .slide-out-panel-close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
-
         .slide-out-panel-nav { 
             flex-grow: 1; 
             display: flex;
@@ -143,7 +138,6 @@
             color: #FECACA !important; 
             border-left-color: #F87171;
         } 
-
         #menu-overlay {
             display: none; 
             position: fixed;
@@ -157,7 +151,6 @@
             display: block;
             opacity: 1;
         }
-
         #mobile-menu .nav-link.active { 
             color: #FFFFFF; 
             background-color: rgba(0, 191, 255, 0.1); 
@@ -212,7 +205,8 @@
             padding-bottom: 0.75rem; border-bottom: 1px solid #333333;
         }
 
-        /* News Card Styling */
+        /* News Card Styling and other page-specific styles from your original index (7).html */
+        /* ... (Keep all your other styles for news cards, filters, footer, etc.) ... */
         .news-card {
             background-color: #0A0A0A; border-radius: 0.75rem; border: 1px solid #2D2D2D;
             box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.6); overflow: hidden;
@@ -245,8 +239,6 @@
             display: inline-block; border: 1px solid rgba(0, 191, 255, 0.3);
         }
         .favorite-btn-area { flex-shrink: 0; margin-left: 1rem; }
-
-        /* Sidebar and Filter */
         .filter-panel {
             background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%);
             padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
@@ -267,20 +259,17 @@
             background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; font-weight: 600;
             border-color: #00BFFF;
         }
-
-        /* Search input */
-        .search-container { position: relative; display: flex; align-items: center;} /* Added flex and align-items */
+        .search-container { position: relative; display: flex; align-items: center;}
         .search-input {
             width: 100%; 
             padding: 0.875rem 1.125rem 0.875rem 2.75rem; 
             background-color: #1A1A1A;
             border: 1px solid #333333; 
             border-radius: 0.5rem; 
-            /* margin-bottom: 1rem; Removed, handled by flex container */
             font-size: 0.9rem; color: #E0E0E0;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
-            line-height: normal; /* Changed from 1.5 to normal for better icon centering with flex */
-            height: auto; /* Allow natural height based on padding and font */
+            line-height: normal; 
+            height: auto; 
         }
         .search-input::placeholder { color: #666666; }
         .search-input:focus {
@@ -289,12 +278,8 @@
         }
         .search-container svg { 
             position: absolute; left: 0.875rem; 
-            /* top: 50%; transform: translateY(-50%); Removed for flex centering */
             width: 1.1rem; height: 1.1rem; color: #A0A0A0; pointer-events: none;
         }
-
-
-        /* Star icon / Favorite Button */
         .favorite-btn {
             width: 1.5rem; height: 1.5rem; color: #777777; cursor: pointer;
             transition: color 0.2s ease, transform 0.2s ease; background: none;
@@ -304,13 +289,10 @@
         .favorite-btn:hover { color: #00BFFF; transform: scale(1.15); }
         .favorite-btn.favorited { color: #00BFFF; fill: #00BFFF; }
         .favorite-btn svg { width: 100%; height: 100%; }
-
-        /* Footer */
         .footer {
             background-color: #080808; color: #888888; padding: 3rem 1rem;
             margin-top: 4rem; border-top: 1px solid #222222;
         }
-        
         .terms-privacy-content {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background-color: rgba(22, 22, 22, 0.9); backdrop-filter: blur(10px) saturate(150%);
@@ -337,28 +319,11 @@
     </style>
 </head>
 <body class="antialiased">
-        <div id="navbar"></div>
-        <script>
-          fetch('header.html')
-            .then(res => res.text())
-            .then(data => {
-              document.getElementById('navbar').innerHTML = data;
-        
-              // After header loads, apply .active to current nav link
-              const path = window.location.pathname.split('/').pop(); // e.g., 'index.html'
-              document.querySelectorAll('.nav-link').forEach(link => {
-                if (link.getAttribute('href') === path) {
-                  link.classList.add('active');
-                } else {
-                  link.classList.remove('active');
-                }
-              });
-            });
-        </script>
-        
-        <div class="ticker-banner">
-          <div class="ticker-content" id="tickerContent"></div>
-        </div>
+    <div id="navbar"></div>
+
+    <div class="ticker-banner">
+      <div class="ticker-content" id="tickerContent"></div>
+    </div>
 
     <header class="hero-section">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -375,14 +340,15 @@
                 <section>
                     <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-8">
                         <h2 class="section-title !mb-3 sm:!mb-0 !border-none">Latest News</h2>
-                        <div class="relative w-full sm:w-auto sm:max-w-4xl search-container"> 
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div class="relative w-full sm:w-auto sm:max-w-xs search-container"> 
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
-                            <input type="search" id="searchInput" placeholder="Search news..." class="search-input !mb-0">
+                            <input type="search" id="searchInput" placeholder="Search news..." class="search-input !mb-0 pl-10">
                         </div>
                     </div>
-                    <div class="space-y-6" id="newsGrid"></div>
+                    <div class="space-y-6" id="newsGrid">
+                        </div>
                 </section>
             </div>
             <aside class="lg:col-span-3 space-y-8">
@@ -404,75 +370,33 @@
 
     <footer class="footer text-center">
         <div class="container mx-auto">
-        </div>
+            </div>
     </footer>
 
     <div id="termsContent" class="terms-privacy-content">
-        <span class="close-btn" onclick="closeTerms()">×</span>
-        <h2>Terms of Service</h2>
+        <span class="close-btn" onclick="closeTermsModal()">×</span> <h2>Terms of Service</h2>
         <p>Welcome to Linq...</p>
     </div>
     <div id="privacyContent" class="terms-privacy-content">
-        <span class="close-btn" onclick="closePrivacy()">×</span>
-        <h2>Privacy Policy</h2>
+        <span class="close-btn" onclick="closePrivacyModal()">×</span> <h2>Privacy Policy</h2>
         <p>At Linq, we are committed...</p>
     </div>
 
     <script>
-        // All JavaScript from the previous version of index_html_updated_v2
-        // including Firebase initialization, ticker, articles, filters, modals,
-        // and the header interactivity logic (mobile menu, slide-out, auth updates).
-        // Ensure only ONE Firebase app initialization.
-        
-        const FINNHUB_API_KEY = 'd0d0dlpr01qm2sk76g3gd0d0dlpr01qm2sk76g40';
+        // Constants for API and stock symbols (should be secure in a real app)
+        const FINNHUB_API_KEY = 'd0d0dlpr01qm2sk76g3gd0d0dlpr01qm2sk76g40'; // Replace with your actual key
         const ENERGY_STOCKS = ['XOM', 'CVX', 'COP', 'OXY', 'SLB', 'HAL', 'PSX', 'VLO', 'MPC', 'BKR', 'KMI', 'WMB', 'PXD', 'EOG', 'HES', 'DVN', 'APA', 'FANG', 'CHRD', 'CTRA', 'MTDR', 'CLR', 'SM', 'CIVI', 'HP'];
 
-        async function fetchFinnhubQuote(symbol) {
-            const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                const price = data.c !== undefined ? data.c.toFixed(2) : 'N/A';
-                const change = data.d !== undefined ? data.d.toFixed(2) : 'N/A';
-                const percent = data.dp !== undefined ? data.dp.toFixed(2) : 'N/A';
-                return { price, change, percent };
-            } catch (err) {
-                console.error(`Error fetching ${symbol} from Finnhub:`, err);
-                return { price: 'N/A', change: 'N/A', percent: 'N/A' };
-            }
-        }
-        async function updateTickerBanner() {
-            const tickerContent = document.getElementById('tickerContent');
-            const navElement = document.querySelector('nav.fixed');
-            let navHeight = 0;
-            if (navElement) {
-                navHeight = navElement.offsetHeight;
-            }
-            if (tickerContent) {
-                tickerContent.parentElement.style.marginTop = `${navHeight}px`; // Adjust margin based on actual nav height
-                tickerContent.innerHTML = '';
-                let allItemsHTML = '';
-                for (const symbol of ENERGY_STOCKS) {
-                    const data = await fetchFinnhubQuote(symbol);
-                    const changeClass = data.percent !== 'N/A' ? (parseFloat(data.percent) >= 0 ? 'positive' : 'negative') : '';
-                    const percentDisplay = data.percent !== 'N/A' ? `${parseFloat(data.percent) >= 0 ? '+' : ''}${data.percent}%` : 'N/A';
-                    allItemsHTML += `<span class="ticker-item">${symbol}: <span class="text-white">$${data.price}</span> <span class="${changeClass}">${percentDisplay}</span></span>`;
-                }
-                const repeatCount = Math.max(2, Math.ceil(window.innerWidth / (ENERGY_STOCKS.length * 100)) + 5);
-                tickerContent.innerHTML = allItemsHTML.repeat(repeatCount);
-            }
-        }
-        
+        // Placeholder data for news articles
         const sourcePlaceholders = {
             'Reuters': { bgColor: 'eeeeee', textColor: '333333', text: 'RTRS' },
             'Bloomberg': { bgColor: '007bff', textColor: 'ffffff', text: 'BBG' },
             'CNBC': { bgColor: 'c40029', textColor: 'ffffff', text: 'CNBC' },
             'Forbes': { bgColor: '222222', textColor: 'ffffff', text: 'FRBS' },
-            'BBC News': { bgColor: 'cc0000', textColor: 'ffffff', text: 'BBC' },
+            'BBC News': { bgColor: 'cc0000', textColor: 'ffffff', text: 'BBC' }, // Corrected to BBC News
             'Seeking Alpha': { bgColor: 'f9a61a', textColor: '000000', text: 'SA' },
         };
         const genericPlaceholderColors = ['00BFFF', '4B0082', '800080', 'FF1493', 'FF8C00', '20B2AA', 'DA70D6'];
-
         const articlesData = [
             { id: 1, category: 'Crude Oil', title: 'Oil Prices Surge Amid Supply Concerns', date: 'May 3, 2025', source: 'Reuters', link: 'https://www.reuters.com/markets/commodities/oil-prices-set-weekly-loss-potential-more-global-supply-2025-04-25/', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTb6lvykJKGImtGYCRe-6TY7ElBaV452dtP7GXx-zo9ltbKKRXWE-u7lATyYO-b4Dv7iz8&usqp=CAU' },
             { id: 2, category: 'Crude Oil', title: 'OPEC+ Extends Production Cuts', date: 'May 3, 2025', source: 'Bloomberg', link: 'https://www.bloomberg.com/news/articles/2024-12-05/opec-delays-revival-of-its-oil-production-by-three-months', image: 'data:image/png;base64,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' },
@@ -497,42 +421,249 @@
             { id: 21, category: 'Earnings', title: 'ExxonMobil Posts Strong Q1 Results', date: 'May 3, 2025', source: 'Reuters', link: 'https://example.com/article-21', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTb6lvykJKGImtGYCRe-6TY7ElBaV452dtP7GXx-zo9ltbKKRXWE-u7lATyYO-b4Dv7iz8&usqp=CAU' }
         ];    
 
+        // --- Function to Initialize and Run All Header Related Logic ---
+        function initializeHeaderAndAuth() {
+            // Get DOM Elements for Header and Menus (ensure these IDs match your header.html)
+            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
+            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
+            const authLinkMobile = document.getElementById('authLinkMobile');
+            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
+            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
+            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile'); // Make sure this ID exists in header.html
+            const earningsLinkMobile = document.getElementById('earningsLinkMobile'); // Make sure this ID exists in header.html
+            const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
+            const menuOverlay = document.getElementById('menu-overlay');
+            const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
+            const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
+            const slideoutCloseButton = document.getElementById('slideout-close-button');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
 
-        const newsGrid = document.getElementById('newsGrid');
+            // Firebase configuration
+            const firebaseConfig = {
+                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // IMPORTANT: Secure this in a real application
+                authDomain: "linq-b27a8.firebaseapp.com",
+                projectId: "linq-b27a8",
+                storageBucket: "linq-b27a8.appspot.com",
+                messagingSenderId: "1067901051826",
+                appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+            };
 
+            // Initialize Firebase if it hasn't been already
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            const auth = firebase.auth();
+
+            // Firebase Authentication State Change Listener
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    // --- User is LOGGED IN ---
+                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
+                    if (profileAndMenuDesktop) {
+                        profileAndMenuDesktop.classList.remove('hidden');
+                        profileAndMenuDesktop.classList.add('flex');
+                    }
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "My Profile";
+                        authLinkMobile.href = "profile.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
+                } else {
+                    // --- User is LOGGED OUT ---
+                    if (authLinkDesktopLogin) {
+                        authLinkDesktopLogin.classList.remove('hidden');
+                        authLinkDesktopLogin.classList.add('nav-link-button');
+                    }
+                    if (profileAndMenuDesktop) profileAndMenuDesktop.classList.add('hidden');
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "Login";
+                        authLinkMobile.href = "login.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
+                        closeDesktopMenu();
+                    }
+                }
+                setActiveNavLink(); // Update active navigation link styling
+            });
+
+            // Logout Function
+            function handleLogout(e) {
+                e.preventDefault();
+                if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
+                auth.signOut().then(() => console.log("User signed out"))
+                              .catch(error => console.error("Sign out error", error));
+            }
+
+            if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
+            if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
+
+            // Navigation Link Styling
+            function setActiveNavLink() {
+                const currentPath = window.location.pathname.split("/").pop() || "index.html";
+                const navLinks = document.querySelectorAll('nav.fixed a.nav-link, #mobile-menu a.nav-link');
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    const linkHref = link.getAttribute('href');
+                    const linkDataPage = link.dataset.page;
+                    if (linkHref === currentPath || ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html" || linkDataPage === "index" || linkDataPage === "index-mobile"))) {
+                        link.classList.add('active');
+                    }
+                });
+                if (currentPath === "community.html") { // Example for other pages
+                    document.querySelector('nav.fixed a.nav-link[href="community.html"]')?.classList.add('active');
+                    document.querySelector('#mobile-menu a.nav-link[href="community.html"]')?.classList.add('active');
+                }
+            }
+
+            // Mobile Menu Toggle
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            }
+
+            // Desktop Slide-Out Menu
+            function openDesktopMenu() {
+                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.add('open');
+                if (menuOverlay) menuOverlay.classList.add('active');
+                document.body.classList.add('overflow-hidden');
+            }
+            function closeDesktopMenu() {
+                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open');
+                if (menuOverlay) menuOverlay.classList.remove('active');
+                document.body.classList.remove('overflow-hidden');
+            }
+            if (desktopHamburgerButton) {
+                desktopHamburgerButton.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                    else openDesktopMenu();
+                });
+            }
+            if (menuOverlay) menuOverlay.addEventListener('click', closeDesktopMenu);
+            if (slideoutCloseButton) slideoutCloseButton.addEventListener('click', closeDesktopMenu);
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+            });
+
+            // Call functions that depend on the header being loaded
+            setActiveNavLink(); // Initial call after header is loaded
+        }
+
+        // --- Fetch and Inject Header, then Initialize Header Logic ---
+        fetch('header.html') // Make sure header.html is in the same directory or provide the correct path
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok for header.html');
+                }
+                return response.text();
+            })
+            .then(data => {
+                const navbarElement = document.getElementById('navbar');
+                if (navbarElement) {
+                    navbarElement.innerHTML = data;
+                    initializeHeaderAndAuth(); // NOW initialize all header-dependent JS
+                } else {
+                    console.error('Navbar element not found. Header cannot be loaded.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching or loading header:', error);
+                // Fallback or error message for the user if header doesn't load
+                const navbarElement = document.getElementById('navbar');
+                if(navbarElement) navbarElement.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
+            });
+
+        // --- Page-Specific Functions (can be outside fetch if they don't depend on header elements) ---
+        async function fetchFinnhubQuote(symbol) {
+            const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`Finnhub API error for ${symbol}: ${response.status}`);
+                const data = await response.json();
+                const price = data.c !== undefined ? data.c.toFixed(2) : 'N/A';
+                const change = data.d !== undefined ? data.d.toFixed(2) : 'N/A';
+                const percent = data.dp !== undefined ? data.dp.toFixed(2) : 'N/A';
+                return { price, change, percent };
+            } catch (err) {
+                console.error(`Error fetching ${symbol} from Finnhub:`, err);
+                return { price: 'N/A', change: 'N/A', percent: 'N/A' };
+            }
+        }
+
+        async function updateTickerBanner() {
+            const tickerContent = document.getElementById('tickerContent');
+            const navElement = document.querySelector('nav.fixed'); // This needs header to be loaded
+            
+            // This part of ticker update can run even if header isn't fully processed yet for margin
+            // but ideally, run it after header is confirmed loaded if navHeight is critical early.
+            // For now, we assume nav.fixed might exist if header.html is structured with it.
+            let navHeight = 60; // Default height
+            if (navElement) { // This check might be too early if navElement is inside fetched header
+                 navHeight = navElement.offsetHeight;
+            }
+             if (tickerContent) {
+                tickerContent.parentElement.style.marginTop = `${navHeight}px`;
+            }
+
+
+            if (tickerContent) {
+                tickerContent.innerHTML = ''; // Clear previous items
+                let allItemsHTML = '';
+                for (const symbol of ENERGY_STOCKS) {
+                    const data = await fetchFinnhubQuote(symbol);
+                    const changeClass = data.percent !== 'N/A' ? (parseFloat(data.percent) >= 0 ? 'positive' : 'negative') : '';
+                    const percentDisplay = data.percent !== 'N/A' ? `${parseFloat(data.percent) >= 0 ? '+' : ''}${data.percent}%` : 'N/A';
+                    allItemsHTML += `<span class="ticker-item">${symbol}: <span class="text-white">$${data.price}</span> <span class="${changeClass}">${percentDisplay}</span></span>`;
+                }
+                // Ensure enough content for smooth scrolling
+                const repeatCount = Math.max(2, Math.ceil(window.innerWidth / (ENERGY_STOCKS.length * 100)) + 5); // Heuristic
+                tickerContent.innerHTML = allItemsHTML.repeat(repeatCount);
+            }
+        }
+        
         function displayArticles(articlesToDisplay) {
+            const newsGrid = document.getElementById('newsGrid');
             if (!newsGrid) return;
-            newsGrid.innerHTML = '';
+            newsGrid.innerHTML = ''; // Clear existing articles
             articlesToDisplay.forEach((article, index) => {
                 const articleElement = document.createElement('article');
                 articleElement.className = 'news-card';
                 articleElement.setAttribute('data-category', article.category);
 
                 let imageUrl = article.image;
-                if (imageUrl === 'YOUR_IMAGE_ADDRESS_HERE') {
+                // Fallback for placeholder images
+                if (!imageUrl || imageUrl === 'YOUR_IMAGE_ADDRESS_HERE') {
                     const specificPlaceholder = sourcePlaceholders[article.source];
                     if (specificPlaceholder) {
                         imageUrl = `https://placehold.co/50x50/${specificPlaceholder.bgColor}/${specificPlaceholder.textColor}?text=${specificPlaceholder.text}&font=Lexend`;
                     } else {
                         const colorIndex = index % genericPlaceholderColors.length;
                         const bgColor = genericPlaceholderColors[colorIndex];
-                        const textColor = 'FFFFFF';
-                        imageUrl = `https://placehold.co/50x50/${bgColor}/${textColor}?text=${article.source.charAt(0).toUpperCase()}&font=Lexend`;
+                        const textColor = 'FFFFFF'; // Assuming white text for generic placeholders
+                        imageUrl = `https://placehold.co/50x50/${bgColor}/${textColor}?text=${article.source ? article.source.charAt(0).toUpperCase() : 'N'}&font=Lexend`;
                     }
                 }
 
                 articleElement.innerHTML = `
                     <div class="news-source-logo-container">
-                        <img src="${imageUrl}" alt="${article.source} Logo" class="news-source-logo">
+                        <img src="${imageUrl}" alt="${article.source || 'Source'} Logo" class="news-source-logo" onerror="this.src='https://placehold.co/50x50/cccccc/333333?text=Error&font=Lexend'; this.alt='Image error'">
                     </div>
                     <div class="news-content-wrapper">
                         <div class="news-text-content">
                             <h3 class="news-title">
-                                <a href="${article.link}" target="_blank">${article.title}</a>
+                                <a href="${article.link || '#'}" target="_blank" rel="noopener noreferrer">${article.title || 'Untitled Article'}</a>
                             </h3>
                             <div class="news-meta-tags">
-                                <p class="news-meta">${article.date} &bull; ${article.source}</p>
-                                <span class="news-tag">${article.category}</span>
+                                <p class="news-meta">${article.date || 'N/A Date'} &bull; ${article.source || 'N/A Source'}</p>
+                                <span class="news-tag">${article.category || 'General'}</span>
                             </div>
                         </div>
                         <div class="favorite-btn-area">
@@ -551,8 +682,9 @@
         }
 
         function filterArticles() {
-            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-            const activeCategoryButtons = document.querySelectorAll('.filter-button.active');
+            const searchInput = document.getElementById('searchInput');
+            const searchQuery = searchInput ? searchInput.value.toLowerCase() : "";
+            const activeCategoryButtons = document.querySelectorAll('#categoryList .filter-button.active');
             const selectedCategories = Array.from(activeCategoryButtons).map(btn => btn.getAttribute('data-category'));
 
             let filteredArticles = articlesData;
@@ -563,9 +695,9 @@
             
             if (searchQuery) {
                 filteredArticles = filteredArticles.filter(article =>
-                    article.title.toLowerCase().includes(searchQuery) ||
-                    article.source.toLowerCase().includes(searchQuery) ||
-                    article.category.toLowerCase().includes(searchQuery)
+                    (article.title && article.title.toLowerCase().includes(searchQuery)) ||
+                    (article.source && article.source.toLowerCase().includes(searchQuery)) ||
+                    (article.category && article.category.toLowerCase().includes(searchQuery))
                 );
             }
             displayArticles(filteredArticles);
@@ -582,10 +714,12 @@
             }
             localStorage.setItem('linqFavoritesV2', JSON.stringify(favorites));
             updateFavoriteIcons();
+            // If on favorites page, re-render favorites
             if (document.getElementById('favoritesGrid')) { 
-                 displayFavoriteArticles(); 
+                 displayFavoriteArticles(); // Assuming this function exists on favorites.html
             }
         }
+
         function updateFavoriteIcons() { 
              document.querySelectorAll('.favorite-btn').forEach(button => {
                 const articleId = String(button.getAttribute('data-id'));
@@ -600,9 +734,11 @@
                 }
             });
         }
+
         function addFavoriteButtonListeners() { 
             document.querySelectorAll('.favorite-btn').forEach(button => {
-                button.removeEventListener('click', handleFavoriteClick);
+                // Remove old listener to prevent multiple attachments if called multiple times
+                button.removeEventListener('click', handleFavoriteClick); 
                 button.addEventListener('click', handleFavoriteClick);
             });
         }
@@ -612,296 +748,45 @@
             toggleFavorite(articleId);
         }
 
-        function showTerms(event) { event.preventDefault(); document.getElementById('termsContent').style.display = 'block'; }
-        function closeTerms() { document.getElementById('termsContent').style.display = 'none'; }
-        function showPrivacy(event) { event.preventDefault(); document.getElementById('privacyContent').style.display = 'block'; }
-        function closePrivacy() { document.getElementById('privacyContent').style.display = 'none'; }
+        // Modal functions
+        function showTermsModal(event) { event.preventDefault(); document.getElementById('termsContent').style.display = 'block'; }
+        function closeTermsModal() { document.getElementById('termsContent').style.display = 'none'; }
+        function showPrivacyModal(event) { event.preventDefault(); document.getElementById('privacyContent').style.display = 'block'; }
+        function closePrivacyModal() { document.getElementById('privacyContent').style.display = 'none'; }
+        
+        // Close modals if clicked outside
         window.onclick = function(event) { 
-            if (event.target == document.getElementById('termsContent')) closeTerms();
-            if (event.target == document.getElementById('privacyContent')) closePrivacy();
+            if (event.target == document.getElementById('termsContent')) closeTermsModal();
+            if (event.target == document.getElementById('privacyContent')) closePrivacyModal();
         };
 
-        const categoryButtons = document.querySelectorAll('#categoryList .filter-button');
-        categoryButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                this.classList.toggle('active');
-                filterArticles();
-            });
-        });
-
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) { searchInput.addEventListener('input', filterArticles); }
-
-        // Header Interactivity Logic (Copied from header_logic.js and adapted)
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu'); 
-        const menuOverlay = document.getElementById('menu-overlay');
-        const slideoutCloseButton = document.getElementById('slideout-close-button'); 
-        const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
-
-        if (mobileMenuButton && mobileMenu) {
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-        }
-
-        function openDesktopMenu() {
-            if (desktopSlideOutMenu) desktopSlideOutMenu.classList.add('open');
-            if (menuOverlay) menuOverlay.classList.add('active');
-            document.body.classList.add('overflow-hidden');
-        }
-
-        function closeDesktopMenu() {
-            if (desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open');
-            if (menuOverlay) menuOverlay.classList.remove('active');
-            document.body.classList.remove('overflow-hidden');
-        }
-
-        if (desktopHamburgerButton) {
-            desktopHamburgerButton.addEventListener('click', (event) => {
-                event.stopPropagation(); 
-                if (desktopSlideOutMenu.classList.contains('open')) {
-                    closeDesktopMenu();
-                } else {
-                    openDesktopMenu();
-                }
-            });
-        }
-        if (menuOverlay) {
-            menuOverlay.addEventListener('click', closeDesktopMenu);
-        }
-        if(slideoutCloseButton) { 
-            slideoutCloseButton.addEventListener('click', closeDesktopMenu);
-        }
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
-                closeDesktopMenu();
-            }
-        });
-
-        function setActiveNavLink() {
-            const currentPath = window.location.pathname.split("/").pop() || "index.html"; // Default to index.html if path is empty
-            const desktopNavLinks = document.querySelectorAll('nav.fixed .hidden.md\\:flex a.nav-link');
-            const mobileNavLinks = document.querySelectorAll('#mobile-menu a.nav-link');
-
-            desktopNavLinks.forEach(link => {
-                link.classList.remove('active');
-                // Check if the link's href matches the current path or if it's the base index.html
-                if (link.getAttribute('href') === currentPath || (currentPath === 'index.html' && link.getAttribute('href') === 'index.html')) {
-                     if(link.dataset.page === "index") link.classList.add('active'); // Only for "News" on index.html
-                }
-            });
-            mobileNavLinks.forEach(link => {
-                link.classList.remove('active');
-                 if (link.getAttribute('href') === currentPath || (currentPath === 'index.html' && link.getAttribute('href') === 'index.html')) {
-                     if(link.dataset.page === "index-mobile") link.classList.add('active');
-                }
-            });
-             // Specifically activate "News" on index.html
-            if (currentPath === "index.html" || currentPath === "") {
-                document.querySelector('a.nav-link[data-page="index"]')?.classList.add('active');
-                document.querySelector('#mobile-menu a.nav-link[data-page="index-mobile"]')?.classList.add('active');
-            }
-        }
-
-
-        // This entire block replaces your current document.addEventListener('DOMContentLoaded', () => { ... });
+        // Event listeners for category filters and search (can be set up after DOM is ready)
         document.addEventListener('DOMContentLoaded', () => {
-            // Initial calls that run once when the page loads
-            updateTickerBanner(); // Your existing function
-            displayArticles(articlesData); // Your existing function to display articles
-        
-            // Firebase configuration
-            const firebaseConfig = {
-                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-                authDomain: "linq-b27a8.firebaseapp.com",
-                projectId: "linq-b27a8",
-                storageBucket: "linq-b27a8.appspot.com",
-                messagingSenderId: "1067901051826",
-                appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-            };
-        
-            // Initialize Firebase if it hasn't been already
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            const auth = firebase.auth();
-        
-            // --- Get DOM Elements for Header and Menus ---
-            // Desktop elements
-            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
-            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
-            // Note: marketsLinkDesktop and favoritesLinkDesktop from your snippet are not directly toggled by auth state here,
-            // but are part of the header.html structure.
-        
-            // Mobile menu elements
-            const authLinkMobile = document.getElementById('authLinkMobile'); // Login/Profile link
-            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
-            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile');
-            const earningsLinkMobile = document.getElementById('earningsLinkMobile');
-        
-            // Slide-out panel elements
-            const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
-            const menuOverlay = document.getElementById('menu-overlay'); // Ensure this element exists in your header.html or main HTML
-            const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
-            const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
-            const slideoutCloseButton = document.getElementById('slideout-close-button');
-            const mobileMenuButton = document.getElementById('mobile-menu-button'); // For mobile menu toggle
-            const mobileMenu = document.getElementById('mobile-menu'); // The mobile menu itself
-        
-            // --- Firebase Authentication State Change Listener ---
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    // --- User is LOGGED IN ---
-                    // Desktop: Hide Login button, Show Profile Pic + Hamburger
-                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
-                    if (profileAndMenuDesktop) {
-                        profileAndMenuDesktop.classList.remove('hidden');
-                        profileAndMenuDesktop.classList.add('flex'); // Ensure it's displayed as flex
-                    }
-        
-                    // Mobile: Update auth link to Profile, show Logout & other logged-in links
-                    if (authLinkMobile) {
-                        authLinkMobile.textContent = "My Profile";
-                        authLinkMobile.href = "profile.html";
-                    }
-                    if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
-                    if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
-                    if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
-                    if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
-        
-                } else {
-                    // --- User is LOGGED OUT ---
-                    // Desktop: Show Login button, Hide Profile Pic + Hamburger
-                    if (authLinkDesktopLogin) {
-                        authLinkDesktopLogin.classList.remove('hidden');
-                        authLinkDesktopLogin.classList.add('nav-link-button');
-                    }
-                    if (profileAndMenuDesktop) profileAndMenuDesktop.classList.add('hidden');
-        
-                    // Mobile: Update auth link to Login, hide Logout & other logged-in links
-                    if (authLinkMobile) {
-                        authLinkMobile.textContent = "Login";
-                        authLinkMobile.href = "login.html";
-                    }
-                    if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
-                    if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
-                    if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
-                    if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
-        
-                    // If slide-out menu was open, close it on logout
-                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
-                        closeDesktopMenu();
-                    }
-                }
-                setActiveNavLink(); // Update active navigation link styling after auth state change
+            // These are page content initializations, not header dependent, so can be here.
+            updateTickerBanner(); // Call this to load ticker data
+            displayArticles(articlesData); // Display initial articles
+            filterArticles(); // Apply any default filters or search
+
+            const categoryButtons = document.querySelectorAll('#categoryList .filter-button');
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    filterArticles();
+                });
             });
-        
-            // --- Logout Function ---
-            function handleLogout(e) {
-                e.preventDefault();
-                if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
-                    closeDesktopMenu(); // Close slide-out if open
-                }
-                if (mobileMenu && !mobileMenu.classList.contains('hidden')) { // Close mobile menu if open
-                    mobileMenu.classList.add('hidden');
-                }
-                auth.signOut().then(() => {
-                    console.log("User signed out");
-                    // window.location.href = 'index.html'; // Optional: redirect after logout
-                }).catch(error => console.error("Sign out error", error));
+
+            const searchInputElement = document.getElementById('searchInput');
+            if (searchInputElement) { 
+                searchInputElement.addEventListener('input', filterArticles); 
             }
-        
-            // Attach logout event listeners
-            if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
-            if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
-        
-            // --- Navigation Link Styling ---
-            function setActiveNavLink() {
-                const currentPath = window.location.pathname.split("/").pop() || "index.html";
-                // Selects links from both desktop nav and mobile menu
-                const navLinks = document.querySelectorAll('nav.fixed a.nav-link, #mobile-menu a.nav-link');
-        
-                navLinks.forEach(link => {
-                    link.classList.remove('active'); // Remove active from all
-                    const linkHref = link.getAttribute('href');
-                    const linkDataPage = link.dataset.page; // For specific 'News' link on index.html
-        
-                    // Check if the link's href matches the current path
-                    if (linkHref === currentPath) {
-                        link.classList.add('active');
-                    }
-                    // Special handling for index.html and its "News" link (data-page="index" or "index-mobile")
-                    else if ((currentPath === "index.html" || currentPath === "") &&
-                               (linkHref === "index.html" || linkDataPage === "index" || linkDataPage === "index-mobile")) {
-                        link.classList.add('active');
-                    }
-                });
-        
-                // Explicitly activate Community if on community.html (example for other pages)
-                if (currentPath === "community.html") {
-                    document.querySelector('nav.fixed a.nav-link[href="community.html"]')?.classList.add('active');
-                    document.querySelector('#mobile-menu a.nav-link[href="community.html"]')?.classList.add('active');
-                }
-                // Add similar explicit activations for Markets.html, etc., if needed.
-            }
-        
-            // --- Mobile Menu Toggle Functionality ---
-            if (mobileMenuButton && mobileMenu) {
-                mobileMenuButton.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
-                    // Optional: Toggle body class to prevent scroll when mobile menu is open
-                    // document.body.classList.toggle('overflow-hidden', !mobileMenu.classList.contains('hidden'));
-                });
-            }
-        
-            // --- Desktop Slide-Out Menu Functionality ---
-            function openDesktopMenu() {
-                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.add('open');
-                if (menuOverlay) menuOverlay.classList.add('active'); // Show overlay
-                document.body.classList.add('overflow-hidden'); // Prevent body scroll
-            }
-        
-            function closeDesktopMenu() {
-                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open');
-                if (menuOverlay) menuOverlay.classList.remove('active'); // Hide overlay
-                document.body.classList.remove('overflow-hidden'); // Allow body scroll
-            }
-        
-            if (desktopHamburgerButton) {
-                desktopHamburgerButton.addEventListener('click', (event) => {
-                    event.stopPropagation(); // Prevent event bubbling
-                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
-                        closeDesktopMenu();
-                    } else {
-                        openDesktopMenu();
-                    }
-                });
-            }
-        
-            if (menuOverlay) { // If you have an overlay to click to close the menu
-                menuOverlay.addEventListener('click', closeDesktopMenu);
-            }
-        
-            if (slideoutCloseButton) {
-                slideoutCloseButton.addEventListener('click', closeDesktopMenu);
-            }
-        
-            // Close slide-out menu with Escape key
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
-                    closeDesktopMenu();
-                }
-            });
-        
-            // --- Initial call to filter articles (if applicable to this page) ---
-            filterArticles(); // Your existing function
-        
-            // The initial setActiveNavLink() call is now handled within onAuthStateChanged
-            // to ensure it runs after any auth-related DOM changes.
+
+            // Add listeners for terms/privacy links if they exist
+            const termsLink = document.querySelector('a[href="#terms"]'); // Example selector
+            const privacyLink = document.querySelector('a[href="#privacy"]'); // Example selector
+            if(termsLink) termsLink.addEventListener('click', showTermsModal);
+            if(privacyLink) privacyLink.addEventListener('click', showPrivacyModal);
         });
+
     </script>
 </body>
 </html>
