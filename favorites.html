@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linq - Your Favorite Intelligence</title>
+    <title>Linq - Your Favorites</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Lexend', sans-serif;
             background-color: #0A0A0A;
             color: #E0E0E0;
-            font-weight: 400; /* Default font weight from community.html */
+            font-weight: 400;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -24,32 +24,32 @@
         ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
         ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
 
-        /* Header Styles from community.html (user prompt) */
+        /* User-provided Header Styles */
         nav.fixed {
-            background-color: rgba(10, 10, 10, 0.85); 
+            background-color: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(10px) saturate(150%);
             -webkit-backdrop-filter: blur(10px) saturate(150%);
-            border-bottom: 1px solid #222222; 
+            border-bottom: 1px solid #222222;
         }
         .nav-link {
-            transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease; 
+            transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
             font-weight: 500;
-            color: #B0B0B0; 
+            color: #B0B0B0;
             opacity: 0.8;   
-            padding: 0.5rem 0.75rem; 
-            border-radius: 0.375rem; 
-            font-size: 0.875rem; 
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem; /* text-sm equivalent */
         }
-        .nav-link:hover { 
-            color: #FFFFFF; 
-            opacity: 1; 
-            background-color: rgba(255,255,255,0.05); 
+        .nav-link:hover { /* This style will apply on hover for all nav links, including active */
+            color: #FFFFFF;
+            opacity: 1;
+            background-color: rgba(255,255,255,0.05);
         }
-        /* Active link style for "Favorites" on this page */
-        .nav-link.active {
+        /* Active link style: White text, no special background unless hovered */
+        .nav-link.active { /* Applied to the current page's nav link */
             color: #FFFFFF; 
             opacity: 1;
-            background-color: rgba(0, 191, 255, 0.1); /* Subtle blue highlight for active */
+            background-color: transparent; /* No persistent background for active */
         }
         
         .profile-icon-placeholder { 
@@ -91,7 +91,7 @@
         .desktop-dropdown-menu #logoutButtonDesktop { color: #EF4444; } 
         .desktop-dropdown-menu #logoutButtonDesktop:hover { background-color: rgba(239, 68, 68, 0.15); color: #FFAAAA; } 
 
-        #mobile-menu .nav-link.active {
+        #mobile-menu .nav-link.active { /* Mobile active link */
             color: #FFFFFF; 
             background-color: rgba(0, 191, 255, 0.1); 
             opacity: 1;
@@ -147,7 +147,6 @@
         .favorite-btn.favorited { color: #00BFFF; fill: #00BFFF; }
         .favorite-btn svg { width: 100%; height: 100%; }
 
-
         .no-favorites-message, .auth-message { 
             text-align: center; color: #A0A0A0; font-size: 1.1rem; padding: 3rem 1rem;
             background-color: #121212; border-radius: 0.5rem; border: 1px solid #2a2a2a;
@@ -155,7 +154,6 @@
         }
         .auth-message a { color: #00BFFF; text-decoration: underline;}
         .auth-message a:hover { color: #00A9E0;}
-
 
         .footer {
             background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem;
@@ -167,7 +165,7 @@
         .page-content-wrapper {
             flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px; 
             margin: 0 auto; padding-left: 1rem; padding-right: 1rem;
-            padding-top: 10px; /* Reduced top padding for main content */
+            padding-top: 10px; 
         }
     </style>
 </head>
@@ -179,7 +177,6 @@
                 <a href="index.html" class="nav-link text-sm">News</a>
                 <a href="community.html" class="nav-link text-sm">Community</a>
                 <a href="favorites.html" id="favoritesLinkDesktop" class="nav-link text-sm active hidden">Favorites</a>
-                
                 <div id="desktopAuthArea" class="flex items-center space-x-3">
                     <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm">Login</a> 
                     <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
@@ -220,20 +217,24 @@
             <a href="earnings.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Earnings Calendar</a>
             <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a>
             <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Community</a> 
-            <a href="favorites.html" id="favoritesLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 active hidden">Favorites</a> {/* Active class added */}
+            <a href="favorites.html" id="favoritesLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 active hidden">Favorites</a>
             <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Logout</a>
         </div>
     </nav>
 
     <main class="page-content-wrapper container mx-auto p-4 sm:p-6 lg:p-8">
-        <h1 class="page-title">Your <span class="accent-text">Favorite</span> Intelligence</h1>
-        
-        <div id="authMessage" class="auth-message hidden">
-            You must be logged in to view your favorites. <a href="login.html">Login here</a>.
+        <div id="favoritesContent">
+            <h1 class="page-title">Your <span class="accent-text">Favorite</span></h1>
+            <div id="newsFavoritesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+                {/* Favorited news articles will be loaded here */}
+            </div>
         </div>
-
-        <div id="newsFavoritesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-            {/* Favorited news articles will be loaded here */}
+        
+        <div id="authMessageContainer" class="hidden">
+             <h1 class="page-title"><span class="accent-text">Your Favorites</span></h1>
+            <div id="authMessage" class="auth-message">
+                You must be logged in to view your favorites. <a href="login.html">Login here</a>.
+            </div>
         </div>
     </main>
 
@@ -255,15 +256,13 @@
             apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
             authDomain: "linq-b27a8.firebaseapp.com",
             projectId: "linq-b27a8",
-            storageBucket: "linq-b27a8.appspot.com", // Corrected from .firebasestorage.app if it was a typo
+            storageBucket: "linq-b27a8.appspot.com",
             messagingSenderId: "1067901051826",
             appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        // const db = firebase.firestore(); // Firestore not explicitly used in this version for favorites display logic
 
-        // Placeholder colors for news article images if actual image is not provided
         const sourcePlaceholders = {
             'Reuters': { bgColor: 'eeeeee', textColor: '333333', text: 'RTRS' },
             'Bloomberg': { bgColor: '007bff', textColor: 'ffffff', text: 'BBG' },
@@ -274,7 +273,7 @@
         };
         const genericPlaceholderColors = ['00BFFF', '4B0082', '800080', 'FF1493', 'FF8C00', '20B2AA', 'DA70D6'];
 
-        const articlesData = [ // This should ideally be from a shared source or API
+        const articlesData = [ 
             { id: "1", category: 'Crude Oil', title: 'Oil Prices Surge Amid Supply Concerns', date: 'May 10, 2025', source: 'Reuters', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
             { id: "2", category: 'Crude Oil', title: 'OPEC+ Extends Production Cuts', date: 'May 9, 2025', source: 'Bloomberg', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
             { id: "3", category: 'Natural Gas', title: 'Global Demand for Crude Hits Record', date: 'May 10, 2025', source: 'CNBC', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
@@ -299,7 +298,7 @@
 
             favoritedArticlesDetails.forEach((article, index) => {
                 const articleElement = document.createElement('div');
-                articleElement.className = 'news-card'; // Main card class
+                articleElement.className = 'news-card'; 
 
                 let imageUrl = article.image;
                 if (imageUrl === 'YOUR_IMAGE_ADDRESS_HERE') {
@@ -345,16 +344,16 @@
         function toggleFavoriteOnFavoritesPage(articleId) {
             const idStr = String(articleId);
             const index = favorites.indexOf(idStr);
-            if (index > -1) { // Should always be true if button is for an existing favorite
+            if (index > -1) { 
                 favorites.splice(index, 1);
             }
             localStorage.setItem('linqFavoritesV2', JSON.stringify(favorites));
-            displayFavoriteArticles(); // Re-render the favorites page
+            displayFavoriteArticles(); 
         }
 
         function addFavoriteButtonListeners() {
             document.querySelectorAll('#newsFavoritesGrid .favorite-btn').forEach(button => {
-                button.removeEventListener('click', handleUnfavoriteClick); // Ensure no duplicate listeners
+                button.removeEventListener('click', handleUnfavoriteClick);
                 button.addEventListener('click', handleUnfavoriteClick);
             });
         }
@@ -397,9 +396,8 @@
             const logoutButtonMobile = document.getElementById('logoutButtonMobile');
             const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
             const logoutButtonDesktop = document.getElementById('logoutButtonDesktop');
-            const newsFavoritesGrid = document.getElementById('newsFavoritesGrid');
-            const authMessage = document.getElementById('authMessage');
-
+            const favoritesContent = document.getElementById('favoritesContent');
+            const authMessageContainer = document.getElementById('authMessageContainer');
 
             auth.onAuthStateChanged(user => {
                 if (user) {
@@ -411,9 +409,9 @@
                     if(authLinkMobile) { authLinkMobile.textContent = "Profile"; authLinkMobile.href = "profile.html"; }
                     if(logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
                     if(favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
-
-                    if(authMessage) authMessage.classList.add('hidden');
-                    if(newsFavoritesGrid) newsFavoritesGrid.classList.remove('hidden');
+                    
+                    if(favoritesContent) favoritesContent.classList.remove('hidden');
+                    if(authMessageContainer) authMessageContainer.classList.add('hidden');
                     displayFavoriteArticles();
 
                 } else {
@@ -427,8 +425,8 @@
                     if(favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
                     if(desktopDropdown) desktopDropdown.style.display = 'none';
 
-                    if(authMessage) authMessage.classList.remove('hidden');
-                    if(newsFavoritesGrid) newsFavoritesGrid.classList.add('hidden');
+                    if(favoritesContent) favoritesContent.classList.add('hidden');
+                    if(authMessageContainer) authMessageContainer.classList.remove('hidden');
                 }
             });
 
