@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linq AI - Energy Earnings Calendar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        /* Base styles from Modern Black Theme */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0A;
+            color: #E0E0E0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: #1A1A1A; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
+        ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
+
+        /* Page Content Wrapper */
+        .page-content-wrapper {
+            flex-grow: 1;
+            padding-top: 2rem; /* Adjusted padding since header is removed */
+            padding-bottom: 4rem; /* Space for footer */
+            width: 100%;
+            max-width: 1200px; /* Wider for calendar view */
+            margin: 0 auto;
+        }
+
+        /* Page Title Section */
+        .calendar-page-heading-container { 
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding: 0 1rem;
+        }
+        .calendar-page-title {
+            font-size: 2.75rem;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+        .calendar-page-title .accent-text { color: #00BFFF; }
+        .calendar-page-subtitle {
+            font-size: 1.125rem;
+            color: #A0A0A0;
+            margin-top: 0.5rem;
+            font-weight: 400;
+        }
+
+        /* Filters Bar */
+        .filters-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1rem;
+            background-color: rgba(26, 26, 26, 0.7); 
+            backdrop-filter: blur(8px);
+            border-radius: 0.75rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid #282828;
+        }
+        .filter-group { display: flex; flex-direction: column; gap: 0.25rem; flex-grow: 1; min-width: 150px;}
+        .filter-group label { font-size: 0.8rem; color: #A0A0A0; margin-bottom: 0.25rem; }
+        .filter-select, .filter-input {
+            background-color: #121212;
+            border: 1px solid #333333;
+            color: #E0E0E0;
+            padding: 0.625rem 0.875rem;
+            border-radius: 0.375rem;
+            font-size: 0.9rem;
+            appearance: none; 
+        }
+        .filter-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%23A0A0A0' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.25em;
+        }
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: #00BFFF;
+            box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.2);
+        }
+
+        /* Calendar Section Titles */
+        .calendar-section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333333;
+        }
+        .calendar-section-title .accent-text { color: #00BFFF; }
+
+        /* Earnings Call Card */
+        .earnings-card {
+            background-color: #121212;
+            border: 1px solid #282828;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            box-shadow: 0 4px 15px -5px rgba(0,0,0,0.3);
+        }
+        .earnings-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px -8px rgba(0, 191, 255, 0.25);
+            border-color: #00BFFF;
+        }
+        .card-header { display: flex; align-items: center; gap: 1rem; }
+        .company-logo-placeholder {
+            width: 48px; height: 48px;
+            background-color: #282828;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 1.25rem; color: #00BFFF;
+            border: 2px solid #333333;
+        }
+        .company-info h3 { font-size: 1.25rem; font-weight: 600; color: #FFFFFF; }
+        .company-info .ticker { font-size: 0.9rem; color: #A0A0A0; }
+        .earnings-details { display: flex; flex-direction: column; gap: 0.5rem; }
+        .detail-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; color: #B0B0B0; }
+        .detail-item i { color: #00BFFF; width: 16px; text-align: center; }
+        .detail-label { font-weight: 500; color: #E0E0E0; }
+        .card-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
+        .action-btn {
+            background-color: #1A1A1A;
+            color: #00BFFF;
+            border: 1px solid #00BFFF;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            cursor: pointer;
+        }
+        .action-btn:hover { background-color: #00BFFF; color: #FFFFFF; }
+        .action-btn i { font-size: 0.9rem; }
+
+        /* Footer */
+        .footer {
+            background-color: #080808;
+            color: #A0A0A0;
+            padding: 2.5rem 1rem;
+            border-top: 1px solid #1A1A1A;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+        .footer a { color: #B0B0B0; transition: color 0.2s ease; }
+        .footer a:hover { color: #00BFFF; }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .calendar-page-title { font-size: 2.25rem; }
+            .calendar-page-subtitle { font-size: 1rem; }
+            .filters-bar { flex-direction: column; }
+            .filter-group { min-width: 100%; }
+            .earnings-card { padding: 1rem; }
+            .company-info h3 { font-size: 1.1rem; }
+            .card-actions { justify-content: flex-start; }
+        }
+         @media (max-width: 480px) {
+            .calendar-page-title { font-size: 1.85rem;}
+            .calendar-page-subtitle { font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="page-content-wrapper px-4 sm:px-6 lg:px-8">
+        <div class="calendar-page-heading-container">
+            <h1 class="calendar-page-title">Energy Sector <span class="accent-text">Earnings Calendar</span></h1>
+            <p class="calendar-page-subtitle">Stay Ahead with Upcoming Energy Company Earnings Announcements</p>
+        </div>
+
+        <div class="filters-bar">
+            <div class="filter-group">
+                <label for="date-range">Date Range</label>
+                <select id="date-range" class="filter-select">
+                    <option>Next 7 Days</option>
+                    <option>Next 30 Days</option>
+                    <option>This Quarter</option>
+                    <option>Custom Range</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="sector">Sector</label>
+                <select id="sector" class="filter-select">
+                    <option>All Energy</option>
+                    <option>Oil & Gas E&P</option>
+                    <option>Midstream</option>
+                    <option>Oilfield Services</option>
+                    <option>Renewables</option>
+                    <option>Utilities</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="market-cap">Market Cap</label>
+                <select id="market-cap" class="filter-select">
+                    <option>All</option>
+                    <option>Large Cap (>$10B)</option>
+                    <option>Mid Cap ($2B-$10B)</option>
+                    <option>Small Cap (<$2B)</option>
+                </select>
+            </div>
+            <div class="filter-group flex-grow-[2]">
+                <label for="search-company">Search Company</label>
+                <input type="text" id="search-company" class="filter-input" placeholder="Enter ticker or name...">
+            </div>
+        </div>
+
+        <div>
+            <h2 class="calendar-section-title">Next <span class="accent-text">7 Days</span> (May 12 - May 18, 2025)</h2>
+            
+            <div class="earnings-card">
+                <div class="card-header">
+                    <div class="company-logo-placeholder"><span>XOM</span></div>
+                    <div class="company-info">
+                        <h3>ExxonMobil Corporation</h3>
+                        <p class="ticker">NYSE: XOM</p>
+                    </div>
+                </div>
+                <div class="earnings-details">
+                    <div class="detail-item"><i class="fas fa-calendar-alt"></i> <span class="detail-label">Date:</span> May 14, 2025</div>
+                    <div class="detail-item"><i class="fas fa-clock"></i> <span class="detail-label">Time:</span> 09:00 AM ET</div>
+                    <div class="detail-item"><i class="fas fa-chart-line"></i> <span class="detail-label">Period:</span> Q1 2025 Earnings</div>
+                </div>
+                <div class="card-actions">
+                    <button class="action-btn add-to-calendar-btn"
+                            data-company="ExxonMobil Corporation"
+                            data-ticker="XOM"
+                            data-date="2025-05-14"
+                            data-time="09:00"
+                            data-timezone="ET" 
+                            data-period="Q1 2025">
+                        <i class="fas fa-calendar-plus"></i> Add to Calendar
+                    </button>
+                    <button class="action-btn"><i class="fas fa-broadcast-tower"></i> Webcast</button>
+                    <button class="action-btn"><i class="fas fa-file-alt"></i> Transcript</button>
+                </div>
+            </div>
+
+            <div class="earnings-card">
+                <div class="card-header">
+                    <div class="company-logo-placeholder"><span>NEE</span></div>
+                    <div class="company-info">
+                        <h3>NextEra Energy, Inc.</h3>
+                        <p class="ticker">NYSE: NEE</p>
+                    </div>
+                </div>
+                <div class="earnings-details">
+                    <div class="detail-item"><i class="fas fa-calendar-alt"></i> <span class="detail-label">Date:</span> May 15, 2025</div>
+                    <div class="detail-item"><i class="fas fa-clock"></i> <span class="detail-label">Time:</span> 10:00 AM ET</div>
+                    <div class="detail-item"><i class="fas fa-chart-line"></i> <span class="detail-label">Period:</span> Q1 2025 Earnings</div>
+                </div>
+                <div class="card-actions">
+                     <button class="action-btn add-to-calendar-btn"
+                            data-company="NextEra Energy, Inc."
+                            data-ticker="NEE"
+                            data-date="2025-05-15"
+                            data-time="10:00"
+                            data-timezone="ET"
+                            data-period="Q1 2025">
+                        <i class="fas fa-calendar-plus"></i> Add to Calendar
+                    </button>
+                    <button class="action-btn"><i class="fas fa-broadcast-tower"></i> Webcast</button>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="calendar-section-title">Upcoming This Month <span class="accent-text">(May 2025)</span></h2>
+             <div class="earnings-card">
+                <div class="card-header">
+                    <div class="company-logo-placeholder"><span>CVX</span></div>
+                    <div class="company-info">
+                        <h3>Chevron Corporation</h3>
+                        <p class="ticker">NYSE: CVX</p>
+                    </div>
+                </div>
+                <div class="earnings-details">
+                    <div class="detail-item"><i class="fas fa-calendar-alt"></i> <span class="detail-label">Date:</span> May 21, 2025</div>
+                    <div class="detail-item"><i class="fas fa-clock"></i> <span class="detail-label">Time:</span> 11:00 AM ET</div>
+                    <div class="detail-item"><i class="fas fa-chart-line"></i> <span class="detail-label">Period:</span> Q1 2025 Earnings</div>
+                </div>
+                <div class="card-actions">
+                    <button class="action-btn add-to-calendar-btn"
+                            data-company="Chevron Corporation"
+                            data-ticker="CVX"
+                            data-date="2025-05-21"
+                            data-time="11:00"
+                            data-timezone="ET"
+                            data-period="Q1 2025">
+                        <i class="fas fa-calendar-plus"></i> Add to Calendar
+                    </button>
+                    <button class="action-btn"><i class="fas fa-broadcast-tower"></i> Webcast</button>
+                </div>
+            </div>
+            <div class="earnings-card">
+                <div class="card-header">
+                    <div class="company-logo-placeholder"><span>SLB</span></div>
+                    <div class="company-info">
+                        <h3>Schlumberger Limited</h3>
+                        <p class="ticker">NYSE: SLB</p>
+                    </div>
+                </div>
+                <div class="earnings-details">
+                    <div class="detail-item"><i class="fas fa-calendar-alt"></i> <span class="detail-label">Date:</span> May 28, 2025</div>
+                    <div class="detail-item"><i class="fas fa-clock"></i> <span class="detail-label">Time:</span> 08:30 AM ET</div>
+                    <div class="detail-item"><i class="fas fa-chart-line"></i> <span class="detail-label">Period:</span> Q1 2025 Earnings</div>
+                </div>
+                <div class="card-actions">
+                    <button class="action-btn add-to-calendar-btn"
+                            data-company="Schlumberger Limited"
+                            data-ticker="SLB"
+                            data-date="2025-05-28"
+                            data-time="08:30"
+                            data-timezone="ET"
+                            data-period="Q1 2025">
+                        <i class="fas fa-calendar-plus"></i> Add to Calendar
+                    </button>
+                    <button class="action-btn"><i class="fas fa-broadcast-tower"></i> Webcast</button>
+                    <button class="action-btn"><i class="fas fa-info-circle"></i> View Details</button>
+                </div>
+            </div>
+        </div>
+
+         <div>
+            <h2 class="calendar-section-title">Later <span class="accent-text">(June 2025 & Beyond)</span></h2>
+            <div class="earnings-card">
+                <div class="card-header">
+                    <div class="company-logo-placeholder"><span>SHEL</span></div>
+                    <div class="company-info">
+                        <h3>Shell plc</h3>
+                        <p class="ticker">NYSE: SHEL</p>
+                    </div>
+                </div>
+                <div class="earnings-details">
+                    <div class="detail-item"><i class="fas fa-calendar-alt"></i> <span class="detail-label">Date:</span> June 05, 2025</div>
+                    <div class="detail-item"><i class="fas fa-clock"></i> <span class="detail-label">Time:</span> 09:00 AM GMT</div> <div class="detail-item"><i class="fas fa-chart-line"></i> <span class="detail-label">Period:</span> Q2 2025 Earnings</div>
+                </div>
+                <div class="card-actions">
+                    <button class="action-btn add-to-calendar-btn"
+                            data-company="Shell plc"
+                            data-ticker="SHEL"
+                            data-date="2025-06-05"
+                            data-time="09:00"
+                            data-timezone="GMT" 
+                            data-period="Q2 2025">
+                        <i class="fas fa-calendar-plus"></i> Add to Calendar
+                    </button>
+                    <button class="action-btn"><i class="fas fa-broadcast-tower"></i> Webcast</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; <span id="current-year"></span> Linq Energy Intelligence. Advanced AI for a Brighter Future.</p>
+        <nav class="text-xs space-x-3 mt-2">
+            <a href="#">Privacy Policy</a> |
+            <a href="#">Terms of Service</a> |
+            <a href="#">Contact Us</a> |
+            <a href="#">API Status</a>
+        </nav>
+    </footer>
+
+    <script>
+        // Update current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Update global time in top bar (though top bar is removed, keeping script for completeness if re-added)
+        // function updateGlobalTime() {
+        //     const now = new Date();
+        //     const options = { timeZone: 'UTC', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+        //     const timeString = now.toLocaleTimeString('en-GB', options);
+        //     const globalTimeEl = document.getElementById('global-time');
+        //     if (globalTimeEl) {
+        //         globalTimeEl.textContent = timeString + ' UTC';
+        //     }
+        // }
+        // updateGlobalTime();
+        // setInterval(updateGlobalTime, 1000);
+
+        // --- "Add to Calendar" Functionality ---
+        document.querySelectorAll('.add-to-calendar-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const company = this.dataset.company;
+                const ticker = this.dataset.ticker;
+                const date = this.dataset.date; // YYYY-MM-DD
+                const time = this.dataset.time; // HH:MM
+                const timezone = this.dataset.timezone; // e.g., ET, GMT
+                const period = this.dataset.period;
+
+                const [year, month, day] = date.split('-').map(Number);
+                const [hour, minute] = time.split(':').map(Number);
+                
+                let utcYear = year;
+                let utcMonth = month -1; 
+                let utcDay = day;
+                let utcHour = hour;
+
+                if (timezone === "ET") { 
+                    utcHour = hour + 4; // Simplified: Assumes ET is UTC-4 (e.g. EDT). Not DST-proof.
+                } else if (timezone === "GMT") {
+                    // GMT is UTC
+                }
+                // Add other timezone conversions as needed or use a library for robust handling.
+
+                const startDateUtc = new Date(Date.UTC(utcYear, utcMonth, utcDay, utcHour, minute, 0));
+                const endDateUtc = new Date(startDateUtc.getTime() + (60 * 60 * 1000)); // Assume 1 hour duration
+
+                const formatDateToICS = (dateObj) => {
+                    return dateObj.getUTCFullYear() +
+                           ('0' + (dateObj.getUTCMonth() + 1)).slice(-2) +
+                           ('0' + dateObj.getUTCDate()).slice(-2) + 'T' +
+                           ('0' + dateObj.getUTCHours()).slice(-2) +
+                           ('0' + dateObj.getUTCMinutes()).slice(-2) +
+                           ('0' + dateObj.getUTCSeconds()).slice(-2) + 'Z';
+                };
+
+                const dtstamp = formatDateToICS(new Date());
+                const dtstart = formatDateToICS(startDateUtc);
+                const dtend = formatDateToICS(endDateUtc);
+                
+                const summary = `${ticker} ${period} Earnings Call`;
+                const description = `${company} (${ticker}) ${period} earnings call.\nEvent time: ${time} ${timezone}.`;
+                const uid = `${dtstart}-${ticker.replace(/[^a-zA-Z0-9]/g, "")}@linq.ai`;
+
+                const icsContent = [
+                    'BEGIN:VCALENDAR',
+                    'VERSION:2.0',
+                    'PRODID:-//LinqAI//EarningsCalendar//EN',
+                    'BEGIN:VEVENT',
+                    `UID:${uid}`,
+                    `DTSTAMP:${dtstamp}`,
+                    `DTSTART:${dtstart}`,
+                    `DTEND:${dtend}`,
+                    `SUMMARY:${summary}`,
+                    `DESCRIPTION:${description.replace(/\n/g, '\\n')}`,
+                    'LOCATION:Webcast/Conference Call', 
+                    'END:VEVENT',
+                    'END:VCALENDAR'
+                ].join('\r\n');
+
+                const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `${ticker}_${period.replace(/\s+/g, '_')}_earnings.ics`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(link.href);
+            });
+        });
+    </script>
+
+</body>
+</html>
