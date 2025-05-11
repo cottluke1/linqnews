@@ -1,328 +1,59 @@
-<nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3 bg-gray-900 bg-opacity-80 backdrop-blur-md border-b border-gray-700">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-        <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
-        
-        <div class="hidden md:flex items-center space-x-5">
-            <a href="index.html" class="nav-link text-sm" data-page="index">News</a>
-            <a href="community.html" class="nav-link text-sm" data-page="community">Community</a>
-            <a href="Markets.html" id="marketsLinkDesktop" class="nav-link text-sm" data-page="markets">Markets</a>
-            
-            <div id="desktopAuthContainer">
-                <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button">Login</a>
-                
-                <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
-                    <a href="profile.html" id="profileLinkDesktop" title="My Profile">
-                        <div class="profile-icon-placeholder">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
-                            </svg>
+    <nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
+            <div class="hidden md:flex items-center space-x-5">
+                <a href="index.html" class="nav-link text-sm">News</a>
+                <a href="community.html" class="nav-link text-sm active">Community</a> 
+                <a href="Markets.html" id="marketsLinkDesktop" class="nav-link text-sm">Markets</a> 
+                <div id="desktopAuthArea" class="flex items-center space-x-3">
+                    <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button">Login</a> 
+                    <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
+                        <a href="profile.html" id="profileLinkDesktop" title="My Profile">
+                            <div class="profile-icon-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </a>
+                        <div class="desktop-hamburger-menu">
+                            <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                            </button>
                         </div>
-                    </a>
-                    <div class="desktop-hamburger-menu">
-                        <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                        </button>
                     </div>
                 </div>
             </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
         </div>
-        
-        <div class="md:hidden">
-            <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
+        <div id="mobile-menu" class="md:hidden hidden bg-gray-900 bg-opacity-90 backdrop-blur-md">
+            <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Login</a>
+            <a href="linqai.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Linq Ai</a>
+            <a href="earnings.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Earnings Calendar</a>
+            <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a> 
+            <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 active">Community</a> 
+            <a href="Markets.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Markets</a>
+            <a href="favorites.html" id="favoritesLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden">Favorites</a>
+            <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Logout</a>
         </div>
-    </div>
-
-    <div id="mobile-menu" class="md:hidden hidden bg-gray-900 bg-opacity-95 backdrop-blur-md">
-        <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700" data-page="index-mobile">News</a>
-        <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700" data-page="community-mobile">Community</a>
-        <a href="Markets.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700" data-page="markets-mobile">Markets</a>
-        
-        <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 nav-link-button">Login</a>
-        
-        <a href="profile.html" id="profileLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden" data-page="profile-mobile">Profile</a>
-        <a href="linqai.html" id="linqAiLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden" data-page="linqai-mobile">Linq Ai</a>
-        <a href="earnings.html" id="earningsLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden" data-page="earnings-mobile">Earnings Calendar</a>
-        <a href="favorites.html" id="favoritesLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden" data-page="favorites-mobile">Favorites</a>
-        <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Logout</a>
-    </div>
-</nav>
-
-<div id="desktop-slideout-menu" class="slide-out-panel">
-    <div class="slide-out-panel-header">
-        <button id="slideout-close-button" class="slide-out-panel-close-btn" aria-label="Close menu">&times;</button>
-    </div>
-    <nav class="slide-out-panel-nav">
-        <a href="linqai.html">Linq AI</a>
-        <a href="earnings.html">Earnings Calendar</a>
-        <a href="favorites.html">Favorites</a> 
-        <a href="profile.html">My Profile</a> 
-        <a href="#" id="logoutButtonSlideout">Logout</a> 
     </nav>
-</div>
-
-<div id="menu-overlay" class="hidden"></div> <style>
-    body { font-family: 'Lexend', sans-serif; background-color: #0A0A0A; color: #E0E0E0; }
-    body.overflow-hidden { overflow: hidden; }
-
-    .nav-link {
-        transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
-        font-weight: 500;
-        color: #B0B0B0; 
-        opacity: 0.8;   
-        padding: 0.5rem 0.75rem;
-        border-radius: 0.375rem;
-        font-size: 0.875rem; 
-    }
-    .nav-link:hover { 
-        color: #FFFFFF;
-        opacity: 1;
-        background-color: rgba(255,255,255,0.05);
-    }
-    .nav-link.active { 
-        color: #FFFFFF; 
-        opacity: 1;
-        /* background-color: rgba(0, 191, 255, 0.1); */ /* Example active style, adjust as needed */
-    }
     
-    #authLinkDesktopLogin.nav-link-button,
-    #authLinkMobile.nav-link-button { 
-        background-color: #00BFFF; 
-        color: #FFFFFF !important; 
-        opacity: 1 !important; 
-        padding: 0.5rem 1rem; 
-    }
-    #authLinkDesktopLogin.nav-link-button:hover,
-    #authLinkMobile.nav-link-button:hover {
-        background-color: #00A9E0; 
-    }
-    
-    .profile-icon-placeholder { 
-        width: 2.25rem; height: 2.25rem; 
-        background-color: #333; border-radius: 50%; 
-        display: inline-flex; align-items: center; justify-content: center; 
-        cursor: pointer; border: 2px solid #4A4A4A; 
-    }
-    .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; }
-    .profile-icon-placeholder:hover { border-color: #00BFFF; } 
-
-    .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;} 
-    .desktop-hamburger-icon:hover { color: #FFFFFF; background-color: rgba(255,255,255,0.1); }
-    .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; }
-
-    .slide-out-panel { 
-        display: flex; flex-direction: column;
-        position: fixed; top: 0; right: 0; width: 320px; height: 100vh; 
-        background-color: #18181B; box-shadow: -10px 0 30px rgba(0,0,0,0.4); 
-        z-index: 1002; /* Higher than overlay */
-        transform: translateX(100%); 
-        transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
-        padding: 1.5rem; overflow-y: auto; border-left: 1px solid #3F3F46; 
-    }
-    .slide-out-panel.open { transform: translateX(0); }
-    .slide-out-panel-header {
-        display: flex; justify-content: flex-end; align-items: center;
-        padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #3F3F46; 
-    }
-    .slide-out-panel-close-btn {
-        background: none; border: none; color: #A0A0A0; font-size: 1.875rem; 
-        cursor: pointer; padding: 0.25rem; line-height: 1;
-        transition: color 0.2s ease, transform 0.2s ease;
-    }
-    .slide-out-panel-close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
-    .slide-out-panel-nav { flex-grow: 1; display: flex; flex-direction: column; }
-    .slide-out-panel a {
-        color: #D4D4D8; padding: 1rem 1.25rem; text-decoration: none; display: block; 
-        font-size: 0.95rem; font-weight: 500; 
-        transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease; 
-        border-left: 4px solid transparent; margin: 0.375rem 0; border-radius: 0.375rem; 
-    }
-    .slide-out-panel a:hover { background-color: #27272A; color: #FFFFFF; border-left-color: #00BFFF; }
-    .slide-out-panel #logoutButtonSlideout { 
-        color: #F87171 !important; margin-top: auto; padding-top: 1rem; border-top: 1px solid #3F3F46; 
-    }
-    .slide-out-panel #logoutButtonSlideout:hover { 
-        background-color: rgba(248, 113, 113, 0.1); color: #FECACA !important; border-left-color: #F87171;
-    } 
-
-    #menu-overlay {
-        display: none; position: fixed; inset: 0;
-        background-color: rgba(0, 0, 0, 0.65); 
-        z-index: 1001; /* Below slide-out, above content */
-        opacity: 0;
-        transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    }
-    #menu-overlay.active { display: block; opacity: 1; }
-    #mobile-menu .nav-link.active { color: #FFFFFF; background-color: rgba(0, 191, 255, 0.1); opacity: 1; }
-</style>
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // Replace with your actual API key
-        authDomain: "linq-b27a8.firebaseapp.com",
-        projectId: "linq-b27a8",
-        storageBucket: "linq-b27a8.appspot.com", 
-        messagingSenderId: "1067901051826",
-        appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    // Desktop elements
-    const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
-    const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
-    
-    // Mobile elements
-    const authLinkMobile = document.getElementById('authLinkMobile');
-    const profileLinkMobile = document.getElementById('profileLinkMobile');
-    const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-    const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
-    const linqAiLinkMobile = document.getElementById('linqAiLinkMobile');
-    const earningsLinkMobile = document.getElementById('earningsLinkMobile');
-    
-    // Desktop Slide-out Menu elements
-    const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
-    const menuOverlay = document.getElementById('menu-overlay');
-    const slideoutCloseButton = document.getElementById('slideout-close-button');
-    const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
-    const logoutButtonSlideout = document.getElementById('logoutButtonSlideout');
-
-    // Links within the slide-out panel (these are always present in HTML, JS toggles visibility of panel)
-    // No need to individually hide/show these if the panel itself is hidden when logged out.
-    // The hamburger button that shows this panel will only be visible when logged in.
-
-    onAuthStateChanged(auth, (user) => {
-        const isLoggedIn = !!user;
-
-        // --- Desktop View Logic ---
-        if (authLinkDesktopLogin) {
-            authLinkDesktopLogin.classList.toggle('hidden', isLoggedIn);
-            // Ensure it has button style only when visible (logged out)
-            authLinkDesktopLogin.classList.toggle('nav-link-button', !isLoggedIn); 
-        }
-        if (profileAndMenuDesktop) {
-            profileAndMenuDesktop.classList.toggle('hidden', !isLoggedIn);
-        }
-
-        // --- Mobile Menu View Logic ---
-        const mobileLoggedInLinks = [
-            profileLinkMobile, linqAiLinkMobile, earningsLinkMobile, 
-            favoritesLinkMobile, logoutButtonMobile
-        ];
-
-        if (isLoggedIn) {
-            if (authLinkMobile) authLinkMobile.classList.add('hidden'); // Hide "Login" button
-            mobileLoggedInLinks.forEach(link => link && link.classList.remove('hidden'));
-        } else {
-            if (authLinkMobile) authLinkMobile.classList.remove('hidden'); // Show "Login" button
-            mobileLoggedInLinks.forEach(link => link && link.classList.add('hidden'));
-            // Ensure mobile menu is closed if user logs out
-            if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
-                mobileMenu.classList.add('hidden');
-            }
-        }
-        
-        // --- Desktop Slide-out Menu Logic ---
-        // The slide-out menu is only triggered by the hamburger, which is part of profileAndMenuDesktop (shown when logged in).
-        // So, if not logged in, the trigger isn't there. If the menu was somehow open and user logs out, close it.
-        if (!isLoggedIn) {
-            if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
-                closeDesktopMenu();
-            }
-        }
-        setActiveNavLink(); // Update active link after auth state changes
-    });
-
-    function handleLogout(event) {
-        event.preventDefault();
-        signOut(auth).then(() => {
-            console.log('User signed out');
-            // window.location.href = 'index.html'; // Optionally redirect or reload
-        }).catch((error) => {
-            console.error('Sign out error', error);
-        });
-    }
-
-    if (logoutButtonSlideout) logoutButtonSlideout.addEventListener('click', handleLogout);
-    if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
-
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-    }
-
-    function openDesktopMenu() {
-        if (desktopSlideOutMenu) desktopSlideOutMenu.classList.add('open');
-        if (menuOverlay) menuOverlay.classList.add('active');
-        document.body.classList.add('overflow-hidden');
-    }
-
-    function closeDesktopMenu() {
-        if (desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open');
-        if (menuOverlay) menuOverlay.classList.remove('active');
-        document.body.classList.remove('overflow-hidden');
-    }
-
-    if (desktopHamburgerButton) {
-        desktopHamburgerButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
-                closeDesktopMenu();
-            } else {
-                openDesktopMenu();
-            }
-        });
-    }
-
-    if (slideoutCloseButton) slideoutCloseButton.addEventListener('click', closeDesktopMenu);
-    if (menuOverlay) menuOverlay.addEventListener('click', closeDesktopMenu);
-    
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
-            closeDesktopMenu();
-        }
-    });
-
-    function setActiveNavLink() {
-        const currentPath = window.location.pathname.split('/').pop() || "index.html";
-        const allLinks = document.querySelectorAll('.nav-link'); // Select all potential nav links
-
-        allLinks.forEach(link => {
-            link.classList.remove('active');
-            const linkPage = link.dataset.page; // Assumes you add data-page attributes
-            const linkHref = link.getAttribute('href');
-
-            if (linkHref === currentPath || (currentPath === "index.html" && linkHref === "index.html")) {
-                link.classList.add('active');
-            }
-            // Handle cases where data-page might be more specific for active states
-            if (linkPage === "index" && (currentPath === "index.html" || currentPath === "")) {
-                 link.classList.add('active');
-            } else if (linkPage === "index-mobile" && (currentPath === "index.html" || currentPath === "")) {
-                 link.classList.add('active');
-            } else if (linkPage && linkPage.replace('-mobile', '') === currentPath.replace('.html', '')) {
-                 link.classList.add('active');
-            }
-        });
-         // Ensure "News" is active on the homepage by default if no other specific match
-        if (currentPath === "index.html" || currentPath === "") {
-            const newsDesktop = document.querySelector('.nav-link[data-page="index"]');
-            const newsMobile = document.querySelector('.nav-link[data-page="index-mobile"]');
-            if(newsDesktop) newsDesktop.classList.add('active');
-            if(newsMobile) newsMobile.classList.add('active');
-        }
-    }
-    document.addEventListener('DOMContentLoaded', setActiveNavLink);
-</script>
+    <div id="desktop-slideout-menu" class="slide-out-panel">
+        <div class="slide-out-panel-header">
+            <button id="slideout-close-button" class="slide-out-panel-close-btn" aria-label="Close menu">&times;</button>
+        </div>
+        <nav class="slide-out-panel-nav">
+            <a href="linqai.html">Linq AI</a>
+            <a href="earnings.html">Earnings Calendar</a>
+            <a href="favorites.html">Favorites</a> 
+            <a href="profile.html">My Profile</a>
+            <a href="#" id="logoutButtonSlideout">Logout</a> 
+        </nav>
+    </div>
