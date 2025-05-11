@@ -706,11 +706,13 @@
         }
 
 
+        // This entire block replaces your current document.addEventListener('DOMContentLoaded', () => { ... });
         document.addEventListener('DOMContentLoaded', () => {
-            updateTickerBanner();
-            displayArticles(articlesData);
-            setActiveNavLink(); // Set active link on initial load
-
+            // Initial calls that run once when the page loads
+            updateTickerBanner(); // Your existing function
+            displayArticles(articlesData); // Your existing function to display articles
+        
+            // Firebase configuration
             const firebaseConfig = {
                 apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
                 authDomain: "linq-b27a8.firebaseapp.com",
@@ -719,57 +721,186 @@
                 messagingSenderId: "1067901051826",
                 appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
             };
-            if (!firebase.apps.length) { // Ensure Firebase is initialized only once
+        
+            // Initialize Firebase if it hasn't been already
+            if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
             }
             const auth = firebase.auth();
-            
+        
+            // --- Get DOM Elements for Header and Menus ---
+            // Desktop elements
             const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
             const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
-            const marketsLinkDesktop = document.getElementById('marketsLinkDesktop'); 
-            const favoritesLinkDesktop = document.getElementById('favoritesLinkDesktop'); // Added for consistency
-            const authLinkMobile = document.getElementById('authLinkMobile');
+            // Note: marketsLinkDesktop and favoritesLinkDesktop from your snippet are not directly toggled by auth state here,
+            // but are part of the header.html structure.
+        
+            // Mobile menu elements
+            const authLinkMobile = document.getElementById('authLinkMobile'); // Login/Profile link
             const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile'); 
-            const logoutButtonDesktop = document.getElementById('logoutButtonSlideout'); 
-
+            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
+            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile');
+            const earningsLinkMobile = document.getElementById('earningsLinkMobile');
+        
+            // Slide-out panel elements
+            const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
+            const menuOverlay = document.getElementById('menu-overlay'); // Ensure this element exists in your header.html or main HTML
+            const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
+            const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
+            const slideoutCloseButton = document.getElementById('slideout-close-button');
+            const mobileMenuButton = document.getElementById('mobile-menu-button'); // For mobile menu toggle
+            const mobileMenu = document.getElementById('mobile-menu'); // The mobile menu itself
+        
+            // --- Firebase Authentication State Change Listener ---
             auth.onAuthStateChanged(user => {
                 if (user) {
-                    if(authLinkDesktopLogin) {
-                        authLinkDesktopLogin.classList.add('hidden');
-                        authLinkDesktopLogin.classList.remove('nav-link-button'); 
+                    // --- User is LOGGED IN ---
+                    // Desktop: Hide Login button, Show Profile Pic + Hamburger
+                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
+                    if (profileAndMenuDesktop) {
+                        profileAndMenuDesktop.classList.remove('hidden');
+                        profileAndMenuDesktop.classList.add('flex'); // Ensure it's displayed as flex
                     }
-                    if(profileAndMenuDesktop) { profileAndMenuDesktop.classList.remove('hidden'); profileAndMenuDesktop.classList.add('flex'); }
-                    // favoritesLinkDesktop is now in the slide-out, so its direct visibility in main nav is not managed here
-                    if(authLinkMobile) { authLinkMobile.textContent = "Profile"; authLinkMobile.href = "profile.html"; }
-                    if(logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
-                    if(favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden'); 
+        
+                    // Mobile: Update auth link to Profile, show Logout & other logged-in links
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "My Profile";
+                        authLinkMobile.href = "profile.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
+        
                 } else {
-                     if(authLinkDesktopLogin) {
+                    // --- User is LOGGED OUT ---
+                    // Desktop: Show Login button, Hide Profile Pic + Hamburger
+                    if (authLinkDesktopLogin) {
                         authLinkDesktopLogin.classList.remove('hidden');
-                        authLinkDesktopLogin.classList.add('nav-link-button'); 
-                     }
-                     if(profileAndMenuDesktop) { profileAndMenuDesktop.classList.add('hidden'); profileAndMenuDesktop.classList.remove('flex'); }
-                     if(authLinkMobile) { authLinkMobile.textContent = "Login"; authLinkMobile.href = "login.html"; }
-                     if(logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
-                     if(favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden'); 
-                     if(desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open'); 
-                     if(menuOverlay) menuOverlay.classList.remove('active');
-                     document.body.classList.remove('overflow-hidden');
+                        authLinkDesktopLogin.classList.add('nav-link-button');
+                    }
+                    if (profileAndMenuDesktop) profileAndMenuDesktop.classList.add('hidden');
+        
+                    // Mobile: Update auth link to Login, hide Logout & other logged-in links
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "Login";
+                        authLinkMobile.href = "login.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
+        
+                    // If slide-out menu was open, close it on logout
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
+                        closeDesktopMenu();
+                    }
                 }
-                setActiveNavLink(); // Re-check active link after auth state might change nav items
+                setActiveNavLink(); // Update active navigation link styling after auth state change
             });
-            
+        
+            // --- Logout Function ---
             function handleLogout(e) {
                 e.preventDefault();
-                closeDesktopMenu(); 
-                auth.signOut().then(() => { console.log("User signed out"); })
-                .catch(error => console.error("Sign out error", error));
+                if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
+                    closeDesktopMenu(); // Close slide-out if open
+                }
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) { // Close mobile menu if open
+                    mobileMenu.classList.add('hidden');
+                }
+                auth.signOut().then(() => {
+                    console.log("User signed out");
+                    // window.location.href = 'index.html'; // Optional: redirect after logout
+                }).catch(error => console.error("Sign out error", error));
             }
-            if(logoutButtonDesktop) logoutButtonDesktop.addEventListener('click', handleLogout);
-            if(logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
-            
-            filterArticles(); 
+        
+            // Attach logout event listeners
+            if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
+            if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
+        
+            // --- Navigation Link Styling ---
+            function setActiveNavLink() {
+                const currentPath = window.location.pathname.split("/").pop() || "index.html";
+                // Selects links from both desktop nav and mobile menu
+                const navLinks = document.querySelectorAll('nav.fixed a.nav-link, #mobile-menu a.nav-link');
+        
+                navLinks.forEach(link => {
+                    link.classList.remove('active'); // Remove active from all
+                    const linkHref = link.getAttribute('href');
+                    const linkDataPage = link.dataset.page; // For specific 'News' link on index.html
+        
+                    // Check if the link's href matches the current path
+                    if (linkHref === currentPath) {
+                        link.classList.add('active');
+                    }
+                    // Special handling for index.html and its "News" link (data-page="index" or "index-mobile")
+                    else if ((currentPath === "index.html" || currentPath === "") &&
+                               (linkHref === "index.html" || linkDataPage === "index" || linkDataPage === "index-mobile")) {
+                        link.classList.add('active');
+                    }
+                });
+        
+                // Explicitly activate Community if on community.html (example for other pages)
+                if (currentPath === "community.html") {
+                    document.querySelector('nav.fixed a.nav-link[href="community.html"]')?.classList.add('active');
+                    document.querySelector('#mobile-menu a.nav-link[href="community.html"]')?.classList.add('active');
+                }
+                // Add similar explicit activations for Markets.html, etc., if needed.
+            }
+        
+            // --- Mobile Menu Toggle Functionality ---
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    // Optional: Toggle body class to prevent scroll when mobile menu is open
+                    // document.body.classList.toggle('overflow-hidden', !mobileMenu.classList.contains('hidden'));
+                });
+            }
+        
+            // --- Desktop Slide-Out Menu Functionality ---
+            function openDesktopMenu() {
+                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.add('open');
+                if (menuOverlay) menuOverlay.classList.add('active'); // Show overlay
+                document.body.classList.add('overflow-hidden'); // Prevent body scroll
+            }
+        
+            function closeDesktopMenu() {
+                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open');
+                if (menuOverlay) menuOverlay.classList.remove('active'); // Hide overlay
+                document.body.classList.remove('overflow-hidden'); // Allow body scroll
+            }
+        
+            if (desktopHamburgerButton) {
+                desktopHamburgerButton.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Prevent event bubbling
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
+                        closeDesktopMenu();
+                    } else {
+                        openDesktopMenu();
+                    }
+                });
+            }
+        
+            if (menuOverlay) { // If you have an overlay to click to close the menu
+                menuOverlay.addEventListener('click', closeDesktopMenu);
+            }
+        
+            if (slideoutCloseButton) {
+                slideoutCloseButton.addEventListener('click', closeDesktopMenu);
+            }
+        
+            // Close slide-out menu with Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
+                    closeDesktopMenu();
+                }
+            });
+        
+            // --- Initial call to filter articles (if applicable to this page) ---
+            filterArticles(); // Your existing function
+        
+            // The initial setActiveNavLink() call is now handled within onAuthStateChanged
+            // to ensure it runs after any auth-related DOM changes.
         });
     </script>
 </body>
