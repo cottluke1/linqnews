@@ -5,34 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linq AI - Account</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <style>
         /* --- Enhanced Color Scheme & Variables --- */
         :root {
-            --primary-bg: #121212; /* Even darker, more premium base */
-            --secondary-bg: #1E1E1E; /* Cards and main elements background */
-            --tertiary-bg: #2A2A2A; /* Header/footer and distinct sections */
-            --hover-bg: #333333; /* Hover state for list items, etc. */
-
-            --text-primary: #F5F5F5; /* Slightly warmer white */
-            --text-secondary: #A0A0A0; /* Softer gray for less emphasis */
+            --primary-bg: #121212;
+            --secondary-bg: #1E1E1E;
+            --tertiary-bg: #2A2A2A;
+            --hover-bg: #333333;
+            --text-primary: #F5F5F5;
+            --text-secondary: #A0A0A0;
             --text-placeholder: #666666;
-
-            --accent-blue: #007AFF; /* Apple's Human Interface Blue - vibrant and modern */
+            --accent-blue: #007AFF;
             --accent-blue-darker: #0059B3;
             --accent-blue-hover: #0062CC;
-
-            --border-color: #383838; /* Softer border */
-            --border-color-light: #4D4D4D; /* For subtle dividers */
-
-            --success-green: #34C759; /* Apple's Green */
-            --error-red: #FF3B30; /* Apple's Red */
-
+            --border-color: #383838;
+            --border-color-light: #4D4D4D;
+            --success-green: #34C759;
+            --error-red: #FF3B30;
             --font-family: 'Roboto', sans-serif;
-
             --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
             --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
-
             --border-radius-sm: 4px;
             --border-radius-md: 8px;
             --border-radius-lg: 12px;
@@ -49,15 +44,21 @@
             font-family: var(--font-family);
             background-color: var(--primary-bg);
             color: var(--text-primary);
-            line-height: 1.65; /* Slightly more spacious line height */
+            line-height: 1.65;
             font-size: 16px;
-            -webkit-font-smoothing: antialiased; /* Smoother fonts on WebKit */
-            -moz-osx-font-smoothing: grayscale; /* Smoother fonts on Firefox */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex; /* Added to allow footer to stick to bottom */
+            flex-direction: column; /* Added */
+            min-height: 100vh; /* Added */
+        }
+        body.overflow-hidden { /* For use with modals/slide-out menus */
+            overflow: hidden;
         }
 
         .container {
-            width: 92%; /* Slightly wider for a more modern feel */
-            max-width: 1280px; /* Increased max-width */
+            width: 92%;
+            max-width: 1280px;
             margin: 0 auto;
             padding: 0 20px;
         }
@@ -67,7 +68,6 @@
             margin-bottom: 0.75em;
             font-weight: 500;
         }
-
         h1 { font-size: 2.4em; letter-spacing: -0.5px; }
         h2 { font-size: 1.9em; }
         h3 { font-size: 1.5em; }
@@ -82,565 +82,304 @@
             text-decoration: none;
             transition: color 0.2s ease-in-out;
         }
+        a:hover { color: var(--accent-blue-darker); }
+        .link { font-weight: 500; }
 
-        a:hover {
-            color: var(--accent-blue-darker);
+        /* Styles for the dynamically loaded header (nav.fixed, .nav-link etc.) */
+        /* These should ideally be in header.html or a shared CSS file linked by header.html */
+        /* For now, including essential ones here if not already present in header.html's scope */
+        nav.fixed { /* Assuming header.html uses this class structure */
+            background-color: rgba(10, 10, 10, 0.85) !important; /* Use !important if needed to override */
+            backdrop-filter: blur(10px) saturate(150%) !important;
+            -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+            border-bottom: 1px solid #222222 !important;
+            position: fixed !important; /* Ensure it's fixed */
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            z-index: 1000 !important; /* Ensure it's above other content */
+            padding: 0.75rem 0 !important; /* Match py-3 */
         }
-
-        .link {
-            font-weight: 500;
+        .nav-link {
+            transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+            font-weight: 500; color: #B0B0B0; opacity: 0.8;   
+            padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; 
         }
-
-        /* --- Header --- */
-        header {
-            background-color: var(--tertiary-bg);
-            padding: 1em 0;
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: var(--shadow-sm);
+        .nav-link:hover { color: #FFFFFF; opacity: 1; background-color: rgba(255,255,255,0.05); }
+        .nav-link.active { color: #FFFFFF; opacity: 1; background-color: transparent; }
+        #authLinkDesktopLogin.nav-link-button {
+            background-color: #00BFFF; color: #FFFFFF !important; opacity: 1 !important; padding: 0.5rem 1rem; 
         }
-
-        header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        #authLinkDesktopLogin.nav-link-button:hover { background-color: #00A9E0; opacity: 1; }
+        .profile-icon-placeholder { 
+            width: 2.25rem; height: 2.25rem; background-color: #333; border-radius: 50%; 
+            display: inline-flex; align-items: center; justify-content: center; 
+            cursor: pointer; border: 2px solid #4A4A4A; 
         }
-
-        header .logo {
-            font-size: 1.9em;
-            font-weight: 700;
-            color: var(--text-primary);
+        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; } 
+        .profile-icon-placeholder:hover { border-color: #00BFFF; } 
+        .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;} 
+        .desktop-hamburger-icon:hover { color: #FFFFFF; background-color: rgba(255,255,255,0.1); }
+        .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; } 
+        .slide-out-panel { 
+            display: flex; flex-direction: column; position: fixed; top: 0; right: 0; 
+            width: 320px; height: 100vh; background-color: #18181B; 
+            box-shadow: -10px 0 30px rgba(0,0,0,0.4); z-index: 1001; 
+            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            padding: 1.5rem; overflow-y: auto; border-left: 1px solid #3F3F46; 
         }
-
-        header nav a {
-            color: var(--text-secondary);
-            margin-left: 25px; /* Increased spacing */
-            font-weight: 500;
-            padding: 8px 0;
-            position: relative;
+        .slide-out-panel.open { transform: translateX(0); }
+        .slide-out-panel-header {
+            display: flex; justify-content: flex-end; align-items: center;
+            padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #3F3F46; 
         }
-        /* Underline effect for active/hover nav link */
-        header nav a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -2px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: var(--accent-blue);
-            transition: width 0.3s ease;
+        .slide-out-panel-close-btn {
+            background: none; border: none; color: #A0A0A0; font-size: 1.875rem; 
+            cursor: pointer; padding: 0.25rem; line-height: 1;
+            transition: color 0.2s ease, transform 0.2s ease;
         }
-
-        header nav a.active,
-        header nav a:hover {
-            color: var(--text-primary); /* Brighter on hover/active */
+        .slide-out-panel-close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
+        .slide-out-panel-nav { flex-grow: 1; display: flex; flex-direction: column; }
+        .slide-out-panel a {
+            color: #D4D4D8; padding: 1rem 1.25rem; text-decoration: none; display: block; 
+            font-size: 0.95rem; font-weight: 500; 
+            transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease; 
+            border-left: 4px solid transparent; margin: 0.375rem 0; border-radius: 0.375rem; 
         }
-        header nav a.active::after,
-        header nav a:hover::after {
-            width: 100%;
+        .slide-out-panel a:hover { background-color: #27272A; color: #FFFFFF; border-left-color: #00BFFF; }
+        .slide-out-panel #logoutButtonSlideout { 
+            color: #F87171 !important; margin-top: auto; padding-top: 1rem; border-top: 1px solid #3F3F46; 
         }
-
-
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            font-size: 1.6em;
-            cursor: pointer;
+        .slide-out-panel #logoutButtonSlideout:hover { 
+            background-color: rgba(248, 113, 113, 0.1); color: #FECACA !important; border-left-color: #F87171;
+        } 
+        #menu-overlay {
+            display: none; position: fixed; inset: 0;
+            background-color: rgba(0, 0, 0, 0.65); z-index: 1000; 
+            opacity: 0; transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
+        #menu-overlay.active { display: block; opacity: 1; }
+        /* End of Header specific styles */
 
 
         /* --- Main Content Area --- */
+        main {
+            padding-top: 70px; /* Adjust this based on actual loaded header height */
+            flex-grow: 1; /* Added for footer push */
+        }
         main .container {
             display: flex;
-            padding-top: 40px; /* Increased padding */
+            padding-top: 40px; 
             padding-bottom: 40px;
-            gap: 40px; /* Increased gap */
+            gap: 40px; 
         }
 
         /* --- Sidebar --- */
         .sidebar {
-            flex: 0 0 260px; /* Slightly wider sidebar */
+            flex: 0 0 260px; 
             background-color: var(--secondary-bg);
             padding: 30px;
-            border-radius: var(--border-radius-lg); /* More rounded corners */
+            border-radius: var(--border-radius-lg); 
             height: fit-content;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-md);
         }
-
         .sidebar h2 {
             font-size: 1.6em;
             margin-bottom: 25px;
             border-bottom: 1px solid var(--border-color-light);
             padding-bottom: 15px;
         }
-
-        .sidebar ul {
-            list-style: none;
-        }
-
+        .sidebar ul { list-style: none; }
         .sidebar ul li a {
-            display: block;
-            padding: 14px 18px; /* Increased padding */
-            color: var(--text-secondary);
-            border-radius: var(--border-radius-md);
-            margin-bottom: 8px; /* Increased spacing */
+            display: block; padding: 14px 18px; color: var(--text-secondary);
+            border-radius: var(--border-radius-md); margin-bottom: 8px; 
             font-weight: 500;
             transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.1s ease;
         }
-
         .sidebar ul li a:hover {
-            background-color: var(--hover-bg);
-            color: var(--text-primary);
+            background-color: var(--hover-bg); color: var(--text-primary);
             transform: translateX(3px);
         }
         .sidebar ul li a.active-link {
-            background-color: var(--accent-blue);
-            color: white;
-            font-weight: 700; /* Bolder active link */
+            background-color: var(--accent-blue); color: white; font-weight: 700; 
             box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
         }
         .sidebar ul li a.active-link:hover {
-            background-color: var(--accent-blue-darker);
-            transform: translateX(0);
+            background-color: var(--accent-blue-darker); transform: translateX(0);
         }
-
-
-        .sidebar ul li a.logout-link {
-            color: var(--error-red);
-        }
+        .sidebar ul li a.logout-link { color: var(--error-red); }
         .sidebar ul li a.logout-link:hover {
-            background-color: rgba(255, 59, 48, 0.1); /* Subtle red background on hover */
-            color: var(--error-red);
+            background-color: rgba(255, 59, 48, 0.1); color: var(--error-red);
         }
-
 
         /* --- Content Area --- */
-        .content {
-            flex: 1;
-        }
-
-        .content-section {
-            display: none;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-
-        .content-section.active-section {
-            display: block;
-        }
-
+        .content { flex: 1; }
+        .content-section { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .content-section.active-section { display: block; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .card {
-            background-color: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-lg);
-            margin-bottom: 35px; /* Increased margin */
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-            transition: box-shadow 0.3s ease;
+            background-color: var(--secondary-bg); border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg); margin-bottom: 35px; 
+            overflow: hidden; box-shadow: var(--shadow-md); transition: box-shadow 0.3s ease;
         }
-        .card:hover {
-            box-shadow: var(--shadow-lg);
-        }
-
+        .card:hover { box-shadow: var(--shadow-lg); }
         .card-header {
-            padding: 25px 30px; /* Increased padding */
-            border-bottom: 1px solid var(--border-color-light);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 25px 30px; border-bottom: 1px solid var(--border-color-light);
+            display: flex; justify-content: space-between; align-items: center;
             background-color: var(--tertiary-bg);
         }
-
-        .card-header h3 {
-            margin-bottom: 0;
-            font-size: 1.3em; /* Slightly smaller for card headers */
-        }
-
-        .card-body {
-            padding: 30px; /* Increased padding */
-        }
+        .card-header h3 { margin-bottom: 0; font-size: 1.3em; }
+        .card-body { padding: 30px; }
 
         /* Profile Specific */
-        .profile-info-container {
-            display: flex;
-            align-items: flex-start;
-            gap: 30px;
-        }
-
-        .profile-info {
-            flex-grow: 1;
-        }
-
-        .info-item {
-            margin-bottom: 18px; /* Increased spacing */
-        }
-
+        .profile-info-container { display: flex; align-items: flex-start; gap: 30px; }
+        .profile-info { flex-grow: 1; }
+        .info-item { margin-bottom: 18px; }
         .info-item label {
-            display: block;
-            color: var(--text-secondary);
-            font-size: 0.9em;
-            margin-bottom: 6px;
-            font-weight: 500;
-            text-transform: uppercase; /* Uppercase labels for a more formal look */
-            letter-spacing: 0.5px;
+            display: block; color: var(--text-secondary); font-size: 0.9em;
+            margin-bottom: 6px; font-weight: 500;
+            text-transform: uppercase; letter-spacing: 0.5px;
         }
-
-        .info-item p {
-            color: var(--text-primary);
-            font-size: 1.05em; /* Slightly larger text for info */
-            margin: 0;
-        }
-
-        .avatar-section {
-            text-align: center;
-            flex-shrink: 0;
-        }
-
+        .info-item p { color: var(--text-primary); font-size: 1.05em; margin: 0; }
+        .avatar-section { text-align: center; flex-shrink: 0; }
         .avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 4px solid var(--border-color); /* Thicker border */
-            margin-bottom: 15px;
-            object-fit: cover;
-            box-shadow: var(--shadow-sm);
+            width: 120px; height: 120px; border-radius: 50%;
+            border: 4px solid var(--border-color); margin-bottom: 15px;
+            object-fit: cover; box-shadow: var(--shadow-sm);
         }
-
 
         /* --- Forms --- */
-        .form-group {
-            margin-bottom: 25px; /* Increased spacing */
-        }
-
+        .form-group { margin-bottom: 25px; }
         .form-group label {
-            display: block;
-            color: var(--text-secondary);
-            margin-bottom: 10px; /* Increased spacing */
-            font-weight: 500;
-            font-size: 0.95em;
+            display: block; color: var(--text-secondary); margin-bottom: 10px; 
+            font-weight: 500; font-size: 0.95em;
         }
-
         .form-group input[type="text"],
         .form-group input[type="email"],
         .form-group input[type="password"],
         .form-group textarea {
-            width: 100%;
-            padding: 14px 18px; /* Increased padding */
-            background-color: var(--primary-bg); /* Darker input background */
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-md);
-            color: var(--text-primary);
-            font-size: 1em;
+            width: 100%; padding: 14px 18px; background-color: var(--primary-bg); 
+            border: 1px solid var(--border-color); border-radius: var(--border-radius-md);
+            color: var(--text-primary); font-size: 1em;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
-        .form-group input::placeholder {
-            color: var(--text-placeholder);
-        }
-
+        .form-group input::placeholder { color: var(--text-placeholder); }
         .form-group input[type="text"]:focus,
         .form-group input[type="email"]:focus,
         .form-group input[type="password"]:focus,
         .form-group textarea:focus {
-            outline: none;
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2); /* More prominent focus */
+            outline: none; border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2); 
         }
-
         .form-group input[type="checkbox"] {
-            margin-right: 12px;
-            vertical-align: middle;
-            accent-color: var(--accent-blue);
-            width: 18px; /* Custom checkbox size */
-            height: 18px;
-            cursor: pointer;
+            margin-right: 12px; vertical-align: middle; accent-color: var(--accent-blue);
+            width: 18px; height: 18px; cursor: pointer;
         }
         .form-group input[type="checkbox"] + label {
-            color: var(--text-secondary);
-            font-weight: normal;
-            cursor: pointer;
-            user-select: none;
+            color: var(--text-secondary); font-weight: normal;
+            cursor: pointer; user-select: none;
         }
-
 
         /* --- Buttons --- */
         .btn {
-            padding: 12px 24px; /* Increased padding */
-            border: none;
-            border-radius: var(--border-radius-md);
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600; /* Bolder buttons */
+            padding: 12px 24px; border: none; border-radius: var(--border-radius-md);
+            cursor: pointer; font-size: 1em; font-weight: 600; 
             transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
-            text-align: center;
-            letter-spacing: 0.3px;
+            text-align: center; letter-spacing: 0.3px;
         }
-        .btn:active {
-            transform: translateY(1px); /* Slight press effect */
-        }
-
+        .btn:active { transform: translateY(1px); }
         .btn-primary {
             background-image: linear-gradient(to right, var(--accent-blue) 0%, var(--accent-blue-darker) 100%);
-            color: #fff;
-            box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
+            color: #fff; box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
         }
-
         .btn-primary:hover {
             background-image: linear-gradient(to right, var(--accent-blue-hover) 0%, var(--accent-blue) 100%);
             box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
         }
-
         .btn-secondary {
-            background-color: var(--tertiary-bg);
-            color: var(--text-primary);
+            background-color: var(--tertiary-bg); color: var(--text-primary);
             border: 1px solid var(--border-color-light);
         }
-
-        .btn-secondary:hover {
-            background-color: var(--hover-bg);
-            border-color: var(--border-color);
-        }
-
+        .btn-secondary:hover { background-color: var(--hover-bg); border-color: var(--border-color); }
         .btn-outline {
-            background-color: transparent;
-            color: var(--accent-blue);
-            border: 2px solid var(--accent-blue); /* Thicker outline */
+            background-color: transparent; color: var(--accent-blue);
+            border: 2px solid var(--accent-blue); 
         }
-
-        .btn-outline:hover {
-            background-color: var(--accent-blue);
-            color: #fff;
-        }
-
+        .btn-outline:hover { background-color: var(--accent-blue); color: #fff; }
 
         /* Subscription Specific */
-        .subscription-info p {
-            margin-bottom: 10px;
-            color: var(--text-primary);
-            font-size: 1.05em;
-        }
+        .subscription-info p { margin-bottom: 10px; color: var(--text-primary); font-size: 1.05em; }
         .subscription-info p strong {
-            color: var(--text-secondary);
-            min-width: 120px; /* Wider label area */
-            display: inline-block;
-            font-weight: 500;
+            color: var(--text-secondary); min-width: 120px; 
+            display: inline-block; font-weight: 500;
         }
 
         /* Security Specific */
-        .status-active {
-            color: var(--success-green);
-            font-weight: bold;
-        }
-        .status-inactive {
-            color: var(--error-red);
-            font-weight: bold;
-        }
+        .status-active { color: var(--success-green); font-weight: bold; }
+        .status-inactive { color: var(--error-red); font-weight: bold; }
 
         /* Activity Specific */
-        .activity-list {
-            list-style: none;
-            padding-left: 0;
-        }
+        .activity-list { list-style: none; padding-left: 0; }
         .activity-list li {
-            padding: 12px 0; /* Increased padding */
-            border-bottom: 1px solid var(--border-color-light);
-            color: var(--text-secondary);
-            font-size: 0.95em;
+            padding: 12px 0; border-bottom: 1px solid var(--border-color-light);
+            color: var(--text-secondary); font-size: 0.95em;
         }
-        .activity-list li:last-child {
-            border-bottom: none;
-        }
+        .activity-list li:last-child { border-bottom: none; }
 
         /* FAQ List */
-        .faq-list {
-            list-style: disc; /* Use disc for better visual cue */
-            padding-left: 20px; /* Indent list items */
-            margin-bottom: 25px;
-        }
-        .faq-list li {
-            margin-bottom: 12px;
-        }
-        .faq-list li a {
-            color: var(--text-secondary);
-        }
-        .faq-list li a:hover {
-            color: var(--accent-blue);
-            text-decoration: underline;
-        }
-
+        .faq-list { list-style: disc; padding-left: 20px; margin-bottom: 25px; }
+        .faq-list li { margin-bottom: 12px; }
+        .faq-list li a { color: var(--text-secondary); }
+        .faq-list li a:hover { color: var(--accent-blue); text-decoration: underline; }
 
         /* --- Footer --- */
         footer {
-            background-color: var(--tertiary-bg);
-            color: var(--text-secondary);
-            padding: 30px 0; /* Increased padding */
-            text-align: center;
+            background-color: var(--tertiary-bg); color: var(--text-secondary);
+            padding: 30px 0; text-align: center;
             border-top: 1px solid var(--border-color);
-            margin-top: 50px; /* Increased margin */
+            margin-top: auto; /* Changed from 50px to auto for flexbox */
         }
-
         footer .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
         }
-
-        footer p {
-            margin: 0;
-        }
-
-        .footer-links a {
-            color: var(--text-secondary);
-            margin-left: 20px;
-            font-size: 0.9em;
-        }
-
-        .footer-links a:hover {
-            color: var(--accent-blue);
-        }
-
+        footer p { margin: 0; }
+        .footer-links a { color: var(--text-secondary); margin-left: 20px; font-size: 0.9em; }
+        .footer-links a:hover { color: var(--accent-blue); }
 
         /* --- Responsive Design --- */
         @media (max-width: 992px) {
-            main .container {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                flex: 0 0 auto;
-                width: 100%;
-                margin-bottom: 30px;
-                height: auto;
-            }
-            .profile-info-container {
-                flex-direction: column;
-                align-items: center;
-            }
-            .avatar-section {
-                margin-left: 0;
-                margin-top: 25px;
-            }
+            main .container { flex-direction: column; }
+            .sidebar { flex: 0 0 auto; width: 100%; margin-bottom: 30px; height: auto; }
+            .profile-info-container { flex-direction: column; align-items: center; }
+            .avatar-section { margin-left: 0; margin-top: 25px; }
         }
-
         @media (max-width: 768px) {
-            header nav {
-                display: none;
-                flex-direction: column;
-                width: 100%;
-                position: absolute;
-                top: 100%; /* Position below header */
-                left: 0;
-                background-color: var(--tertiary-bg);
-                border-top: 1px solid var(--border-color);
-                box-shadow: var(--shadow-md);
-                padding: 10px 0;
-            }
-
-            header nav.active {
-                display: flex;
-            }
-
-            header nav a {
-                margin: 0;
-                padding: 12px 20px;
-                text-align: left; /* Align text left for dropdown feel */
-                width: 100%;
-            }
-             header nav a::after { /* Remove underline for mobile nav items */
-                display: none;
-            }
-            header nav a:hover, header nav a.active {
-                background-color: var(--hover-bg);
-                color: var(--text-primary);
-            }
-
-
-            .menu-toggle {
-                display: block;
-            }
-
-            h1 { font-size: 2em; }
-            h2 { font-size: 1.6em; }
-            h3 { font-size: 1.3em; }
-
-            .card-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px; /* Add gap for stacked items */
-            }
-            .card-header button {
-                margin-top: 10px;
-                width: 100%; /* Make button full width in mobile card header */
-            }
-
-            .btn {
-                padding: 12px 18px; /* Adjust button padding for smaller screens */
-                font-size: 0.95em;
-            }
-
-            footer .container {
-                flex-direction: column;
-                gap: 15px;
-            }
-            .footer-links {
-                margin-top: 10px;
-            }
-            .footer-links a {
-                margin: 0 10px;
-            }
+            /* Mobile nav is handled by header.html's own responsive styles */
+            h1 { font-size: 2em; } h2 { font-size: 1.6em; } h3 { font-size: 1.3em; }
+            .card-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .card-header button { margin-top: 10px; width: 100%; }
+            .btn { padding: 12px 18px; font-size: 0.95em; }
+            footer .container { flex-direction: column; gap: 15px; }
+            .footer-links { margin-top: 10px; }
+            .footer-links a { margin: 0 10px; }
         }
          @media (max-width: 480px) {
-            .container {
-                width: 95%;
-                padding: 0 15px;
-            }
-            h1 { font-size: 1.8em; }
-            h2 { font-size: 1.4em; }
-            h3 { font-size: 1.2em; }
-
-            .card-body, .card-header, .sidebar {
-                padding: 20px; /* Reduce padding on very small screens */
-            }
-            .btn {
-                width: 100%; /* Make all buttons full width on smallest screens */
-                margin-bottom: 10px;
-            }
-            .btn:last-child {
-                margin-bottom: 0;
-            }
-            .profile-info-container {
-                gap: 20px;
-            }
-            .avatar {
-                width: 100px;
-                height: 100px;
-            }
+            .container { width: 95%; padding: 0 15px; }
+            h1 { font-size: 1.8em; } h2 { font-size: 1.4em; } h3 { font-size: 1.2em; }
+            .card-body, .card-header, .sidebar { padding: 20px; }
+            .btn { width: 100%; margin-bottom: 10px; }
+            .btn:last-child { margin-bottom: 0; }
+            .profile-info-container { gap: 20px; }
+            .avatar { width: 100px; height: 100px; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo">LINQ</div>
-            <nav>
-                <a href="#">News</a>
-                <a href="#">Community</a>
-                <a href="#">Favorites</a>
-                <a href="#account" class="active">Account</a>
-                </nav>
-            <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
-        </div>
-    </header>
+    <div id="header-placeholder"></div>
 
     <main>
         <div class="container">
@@ -857,27 +596,185 @@
     </footer>
 
     <script>
+        // --- Function to Initialize and Run All Header Related Logic ---
+        // This function will be called AFTER header.html is fetched and injected.
+        function initializeHeaderAndAuth() {
+            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
+            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
+            const authLinkMobile = document.getElementById('authLinkMobile');
+            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
+            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
+            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile'); 
+            const earningsLinkMobile = document.getElementById('earningsLinkMobile'); 
+            const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
+            const menuOverlay = document.getElementById('menu-overlay'); 
+            const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
+            const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
+            const slideoutCloseButton = document.getElementById('slideout-close-button');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            // Firebase configuration
+            const firebaseConfig = { 
+                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // Store securely
+                authDomain: "linq-b27a8.firebaseapp.com",
+                projectId: "linq-b27a8",
+                storageBucket: "linq-b27a8.appspot.com",
+                messagingSenderId: "1067901051826",
+                appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+            };
+            if (!firebase.apps.length) { 
+                firebase.initializeApp(firebaseConfig);
+            }
+            const authInstance = firebase.auth();
+
+            authInstance.onAuthStateChanged(user => {
+                if (user) {
+                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
+                    if (profileAndMenuDesktop) {
+                        profileAndMenuDesktop.classList.remove('hidden');
+                        profileAndMenuDesktop.classList.add('flex');
+                    }
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "My Profile"; // Changed from "Profile"
+                        authLinkMobile.href = "profile.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
+                } else {
+                    if (authLinkDesktopLogin) {
+                        authLinkDesktopLogin.classList.remove('hidden');
+                        authLinkDesktopLogin.classList.add('nav-link-button');
+                    }
+                    if (profileAndMenuDesktop) profileAndMenuDesktop.classList.add('hidden');
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "Login";
+                        authLinkMobile.href = "login.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
+                        closeDesktopMenu();
+                    }
+                }
+                setActiveNavLink();
+            });
+
+            function handleLogout(e) {
+                e.preventDefault();
+                if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
+                authInstance.signOut().then(() => {
+                    console.log("User signed out");
+                    window.location.href = 'index.html'; // Redirect to homepage after logout
+                }).catch(error => console.error("Sign out error", error));
+            }
+
+            if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
+            if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
+
+            function setActiveNavLink() {
+                const currentPath = window.location.pathname.split("/").pop() || "index.html";
+                const navLinks = document.querySelectorAll('#header-placeholder nav.fixed a.nav-link, #header-placeholder #mobile-menu a.nav-link');
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    const linkHref = link.getAttribute('href');
+                    
+                    if (linkHref === currentPath) {
+                        link.classList.add('active');
+                    }
+                    // Special handling for index.html and its "News" link
+                    else if ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html" || link.dataset.page === "index" || link.dataset.page === "index-mobile")) {
+                        link.classList.add('active');
+                    }
+                    // Explicitly activate Profile link if on profile.html
+                    // This is a bit redundant if profile.html is the currentPath, but good for clarity
+                    else if (currentPath === "profile.html" && linkHref === "profile.html") {
+                         link.classList.add('active');
+                    }
+                });
+                 // Ensure "Account" or "Profile" in the sidebar is also handled if it's part of the main nav links logic
+                // For profile.html, the sidebar link for "Profile" should be active by default.
+                // The main nav in header.html doesn't have a direct "Account" link, profile pic links to profile.html
+            }
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            }
+
+            function openDesktopMenu() {
+                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.add('open');
+                if (menuOverlay) menuOverlay.classList.add('active');
+                document.body.classList.add('overflow-hidden');
+            }
+            function closeDesktopMenu() {
+                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open');
+                if (menuOverlay) menuOverlay.classList.remove('active');
+                document.body.classList.remove('overflow-hidden');
+            }
+            if (desktopHamburgerButton) {
+                desktopHamburgerButton.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                    else openDesktopMenu();
+                });
+            }
+            if (menuOverlay) menuOverlay.addEventListener('click', closeDesktopMenu);
+            if (slideoutCloseButton) slideoutCloseButton.addEventListener('click', closeDesktopMenu);
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+            });
+
+            setActiveNavLink(); // Initial call
+        }
+
+        // Fetch and Inject Header, then Initialize Header Logic
+        fetch('header.html') // Ensure header.html is in the correct path
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok for header.html');
+                return response.text();
+            })
+            .then(data => {
+                const headerPlaceholder = document.getElementById('header-placeholder');
+                if (headerPlaceholder) {
+                    headerPlaceholder.innerHTML = data;
+                    initializeHeaderAndAuth(); // Initialize header JS AFTER it's loaded
+                    // Adjust main content padding after header is loaded and its height is known
+                    const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
+                    if (fixedHeader) {
+                        document.querySelector('main').style.paddingTop = fixedHeader.offsetHeight + 'px';
+                    }
+                } else {
+                    console.error('Header placeholder element not found.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching header:', error);
+                const headerPlaceholder = document.getElementById('header-placeholder');
+                if(headerPlaceholder) headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
+            });
+
+        // --- Profile Page Specific JavaScript (from original profile.html) ---
         document.addEventListener('DOMContentLoaded', function () {
             const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
             const contentSections = document.querySelectorAll('.content-section');
-            const menuToggle = document.querySelector('.menu-toggle');
-            const nav = document.querySelector('header nav');
-            const mainHeader = document.querySelector('header'); // Get the header element
+            // const menuToggle = document.querySelector('.menu-toggle'); // This is part of the loaded header now
+            // const nav = document.querySelector('header nav'); // This is part of the loaded header now
+            // const mainHeader = document.querySelector('header'); // This is part of the loaded header now
 
-            // Function to handle active states for sidebar and content
             function showSection(sectionId) {
-                // Hide all content sections
                 contentSections.forEach(section => {
                     section.classList.remove('active-section');
                 });
-
-                // Show the target section
                 const targetSection = document.getElementById(sectionId);
                 if (targetSection) {
                     targetSection.classList.add('active-section');
                 }
-
-                // Update active link in sidebar
                 sidebarLinks.forEach(link => {
                     link.classList.remove('active-link');
                     if (link.getAttribute('href') === `#${sectionId}`) {
@@ -886,61 +783,56 @@
                 });
             }
 
-            // Sidebar navigation
             sidebarLinks.forEach(link => {
                 link.addEventListener('click', function (e) {
-                    if (!this.classList.contains('logout-link')) {
-                         e.preventDefault();
-                        const targetSectionId = this.getAttribute('href').substring(1);
-                        showSection(targetSectionId);
-                        window.location.hash = targetSectionId;
-                         // Close mobile nav if open
-                        if (nav.classList.contains('active')) {
-                            nav.classList.remove('active');
-                            menuToggle.setAttribute('aria-expanded', 'false');
+                    const targetSectionId = this.getAttribute('href').substring(1);
+                    if (targetSectionId === 'logout') {
+                        e.preventDefault(); // Prevent default anchor behavior for logout
+                        // Logout logic is handled by initializeHeaderAndAuth's handleLogout
+                        // Find the logout button in the loaded header and simulate a click, or call handleLogout directly if accessible
+                        const logoutBtnSlideout = document.getElementById('logoutButtonSlideout');
+                        const logoutBtnMobile = document.getElementById('logoutButtonMobile');
+                        if(logoutBtnSlideout && typeof handleLogout === 'function') { // Check if handleLogout is in scope
+                           // handleLogout(e); // This might not work if handleLogout is not globally scoped
+                           // For simplicity, we can just trigger the Firebase signout here if direct call is tricky
+                           if (firebase.auth().currentUser) {
+                               firebase.auth().signOut().then(() => {
+                                   console.log("User signed out from profile page sidebar.");
+                                   window.location.href = 'index.html';
+                               }).catch(error => console.error("Sign out error", error));
+                           }
+                        } else {
+                             console.log('Logout action triggered from profile sidebar.');
                         }
                     } else {
-                        console.log('Logout action triggered');
-                        // Example: window.location.href = '/logout';
+                        e.preventDefault();
+                        showSection(targetSectionId);
+                        window.location.hash = targetSectionId;
+                        // Close mobile nav if open (mobile nav is part of loaded header)
+                        const mobileNav = document.getElementById('mobile-menu');
+                        const mobileNavToggle = document.getElementById('mobile-menu-button');
+                        if (mobileNav && !mobileNav.classList.contains('hidden')) {
+                            mobileNav.classList.add('hidden');
+                            // if (mobileNavToggle) mobileNavToggle.setAttribute('aria-expanded', 'false');
+                        }
                     }
                 });
             });
 
-            // Check URL hash on page load/change to show the correct section
             function activateSectionFromHash() {
                 let hash = window.location.hash.substring(1);
-                if (!hash) { // If no hash, default to 'profile'
-                    hash = 'profile';
-                }
+                if (!hash) { hash = 'profile'; }
                 const sectionExists = Array.from(contentSections).some(section => section.id === hash);
                 if (sectionExists) {
                     showSection(hash);
                 } else {
-                    showSection('profile'); // Fallback to profile if hash is invalid
+                    showSection('profile'); 
                 }
             }
-
             activateSectionFromHash();
             window.addEventListener('hashchange', activateSectionFromHash);
 
-            // Hamburger menu toggle for mobile
-            if (menuToggle && nav) {
-                menuToggle.addEventListener('click', function() {
-                    const isExpanded = nav.classList.toggle('active');
-                    menuToggle.setAttribute('aria-expanded', isExpanded);
-                    // Adjust main content margin if header height changes due to nav
-                    if (mainHeader && window.innerWidth <= 768) { // Only on mobile
-                        if (isExpanded) {
-                            // This is a simple example; you might need a more robust way
-                            // to calculate the nav height if it's dynamic.
-                            // For now, assuming a fixed or max-height for the nav.
-                            // document.querySelector('main').style.marginTop = nav.offsetHeight + 'px';
-                        } else {
-                            // document.querySelector('main').style.marginTop = '0px';
-                        }
-                    }
-                });
-            }
+            // Mobile menu toggle for the original static header is removed as it's handled by the loaded header.js
         });
     </script>
 </body>
