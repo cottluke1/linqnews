@@ -22,13 +22,13 @@
         body.overflow-hidden { 
             overflow: hidden;
         }
-        /* Scrollbar styling from user */
+        /* Scrollbar styling */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #1A1A1A; }
         ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
         ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
 
-        /* Header Styles from user prompt */
+        /* Header Styles */
         nav.fixed {
             background-color: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(10px) saturate(150%);
@@ -49,13 +49,12 @@
             opacity: 1;
             background-color: rgba(255,255,255,0.05);
         }
-        .nav-link.active { /* For current page indication */
+        .nav-link.active {
             color: #FFFFFF; 
             opacity: 1;
             background-color: transparent; 
         }
-        
-        #authLinkDesktopLogin.nav-link-button { /* For Login button when not logged in */
+        #authLinkDesktopLogin.nav-link-button {
             background-color: #00BFFF; 
             color: #FFFFFF !important; 
             opacity: 1 !important; 
@@ -65,7 +64,6 @@
             background-color: #00A9E0; 
             opacity: 1;
         }
-        
         .profile-icon-placeholder { 
             width: 2.25rem; 
             height: 2.25rem; 
@@ -77,13 +75,10 @@
         }
         .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; } 
         .profile-icon-placeholder:hover { border-color: #00BFFF; } 
-
         .desktop-hamburger-menu { position: relative; display: inline-block; }
         .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;} 
         .desktop-hamburger-icon:hover { color: #FFFFFF; background-color: rgba(255,255,255,0.1); }
         .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; } 
-
-        /* Luxury Slide-Out Panel Styling from user */
         .slide-out-panel { 
             display: flex; 
             flex-direction: column;
@@ -101,16 +96,10 @@
             overflow-y: auto; 
             border-left: 1px solid #3F3F46; 
         }
-        .slide-out-panel.open {
-            transform: translateX(0);
-        }
+        .slide-out-panel.open { transform: translateX(0); }
         .slide-out-panel-header {
-            display: flex;
-            justify-content: flex-end; 
-            align-items: center;
-            padding-bottom: 1.25rem; 
-            margin-bottom: 1.25rem; 
-            border-bottom: 1px solid #3F3F46; 
+            display: flex; justify-content: flex-end; align-items: center;
+            padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #3F3F46; 
         }
         .slide-out-panel-close-btn {
             background: none; border: none; color: #A0A0A0; font-size: 1.875rem; 
@@ -118,99 +107,65 @@
             transition: color 0.2s ease, transform 0.2s ease;
         }
         .slide-out-panel-close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
-
-        .slide-out-panel-nav { 
-            flex-grow: 1; 
-            display: flex;
-            flex-direction: column;
-        }
+        .slide-out-panel-nav { flex-grow: 1; display: flex; flex-direction: column; }
         .slide-out-panel a {
-            color: #D4D4D8; 
-            padding: 1rem 1.25rem; 
-            text-decoration: none; 
-            display: block; 
-            font-size: 0.95rem; 
-            font-weight: 500; 
+            color: #D4D4D8; padding: 1rem 1.25rem; text-decoration: none; display: block; 
+            font-size: 0.95rem; font-weight: 500; 
             transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease; 
-            border-left: 4px solid transparent; 
-            margin: 0.375rem 0; 
-            border-radius: 0.375rem; 
+            border-left: 4px solid transparent; margin: 0.375rem 0; border-radius: 0.375rem; 
         }
-        .slide-out-panel a:hover { 
-            background-color: #27272A; 
-            color: #FFFFFF; 
-            border-left-color: #00BFFF; 
-        }
+        .slide-out-panel a:hover { background-color: #27272A; color: #FFFFFF; border-left-color: #00BFFF; }
         .slide-out-panel #logoutButtonSlideout { 
-            color: #F87171 !important; 
-            margin-top: auto; 
-            padding-top: 1rem; 
-            border-top: 1px solid #3F3F46; 
+            color: #F87171 !important; margin-top: auto; padding-top: 1rem; border-top: 1px solid #3F3F46; 
         }
         .slide-out-panel #logoutButtonSlideout:hover { 
-            background-color: rgba(248, 113, 113, 0.1); 
-            color: #FECACA !important; 
-            border-left-color: #F87171;
+            background-color: rgba(248, 113, 113, 0.1); color: #FECACA !important; border-left-color: #F87171;
         } 
-
         #menu-overlay {
-            display: none; 
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.65); 
-            z-index: 1000; 
-            opacity: 0;
-            transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: none; position: fixed; inset: 0;
+            background-color: rgba(0, 0, 0, 0.65); z-index: 1000; 
+            opacity: 0; transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
-        #menu-overlay.active {
-            display: block;
-            opacity: 1;
-        }
-
-        #mobile-menu .nav-link.active { 
-            color: #FFFFFF; 
-            background-color: rgba(0, 191, 255, 0.1); 
-            opacity: 1;
-        }
+        #menu-overlay.active { display: block; opacity: 1; }
+        #mobile-menu .nav-link.active { color: #FFFFFF; background-color: rgba(0, 191, 255, 0.1); opacity: 1; }
 
         /* Page Specific Styles */
-        .page-header { 
-            text-align: left; 
-            margin-bottom: 2.5rem; 
-        }
+        .page-header { text-align: left; margin-bottom: 2.5rem; }
         .page-title {
             font-size: 2.8rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.5rem;
             text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3);
         }
         .page-title .accent-text { color: #00BFFF; }
         .page-subtitle { font-size: 1.1rem; color: #A0A0A0; max-width: none; margin: 0; line-height: 1.6; }
-
-        .search-container { position: relative; } 
-        .search-input {
-            width: 100%; padding: 0.875rem 1rem 0.875rem 3rem; /* Left padding for icon */
+        
+        .search-input { /* Removed .search-container specific styling for icon */
+            width: 100%; padding: 0.875rem 1rem; /* Adjusted padding as icon is removed */
             background-color: #1A1A1A; border: 1px solid #333333; border-radius: 0.5rem;
             margin-bottom: 2rem; font-size: 1rem; color: #E0E0E0;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
-            line-height: normal; /* For better vertical alignment of placeholder */
-            height: 3rem; /* Explicit height to help center icon */
+            line-height: normal; height: 3rem; 
         }
         .search-input::placeholder { color: #777777; }
         .search-input:focus {
             border-color: #00BFFF; outline: none;
             box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.25);
         }
-        .search-container svg { 
-            position: absolute; left: 1rem; 
-            top: 50%; 
-            transform: translateY(-50%); /* Vertical centering for search icon */
-            width: 1.1rem; height: 1.1rem; color: #A0A0A0; pointer-events: none;
+        
+        .filter-section-wrapper { 
+            flex: 1; 
+            min-width: 280px; 
+            order: 2; 
+            /* Added padding-top to align filter content with posts, adjust value as needed */
+            /* Estimate: page-header (~6.9rem) + search-container (~5rem) = ~11.9rem */
+            /* padding-top: 11.9rem; /* This pushes the filter panel down */
+            /* Let's try a fixed pixel value that visually aligns with where posts start after the community page header and search bar */
+            padding-top: 165px; /* Adjust this value based on visual inspection */
         }
-
         .filter-panel {
             background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%);
             padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
             border: 1px solid #2a2a2a; position: sticky; 
-            top: 80px; /* Align with the top of the page content area */
+            top: 80px; /* Sticks 80px below viewport top, after main site header */
         }
         .filter-title { font-size: 1.25rem; font-weight: 600; color: #E0E0E0; margin-bottom: 1.25rem; }
         .filter-button {
@@ -226,7 +181,6 @@
             background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; font-weight: 600;
             border-color: #00BFFF;
         }
-        
         .post-card {
             background-color: #121212; border: 1px solid #282828; border-radius: 0.75rem;
             padding: 1.75rem; margin-bottom: 2rem;
@@ -251,7 +205,6 @@
             margin-left: 0.75rem; border: 1px solid rgba(0, 191, 255, 0.3);
         }
         .twitter-tweet-container { margin-top: 1rem; background-color: #101010; border-radius: 0.5rem; padding: 0.75rem; border: 1px solid #282828;}
-        
         .post-actions {
             display: flex; justify-content: flex-end; align-items: center;
             margin-top: 1.5rem; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid #282828;
@@ -263,98 +216,43 @@
             display: inline-flex; align-items: center; gap: 0.5rem;
         }
         .action-btn:hover { background-color: #1A1A1A; color: #00BFFF; border-color: #00BFFF; }
-        .action-btn i { font-size: 1rem; }
-        .favorite-btn.favorited {
-            color: #00BFFF; fill: #00BFFF; border-color: #00BFFF;
+        .action-btn i { font-size: 1rem; } /* Ensure icon size is consistent */
+        
+        .favorite-btn i.fas { display: none; } /* Hide solid star by default */
+        .favorite-btn i.far { display: inline-block; } /* Show regular star by default */
+        .favorite-btn.favorited i.fas { display: inline-block; color: #00BFFF;} /* Show solid star when favorited */
+        .favorite-btn.favorited i.far { display: none; } /* Hide regular star when favorited */
+        .favorite-btn.favorited { /* Style for the button itself when favorited */
+            color: #00BFFF; 
+            border-color: #00BFFF;
             background-color: rgba(0, 191, 255, 0.1);
         }
-        .favorite-btn.favorited i::before { content: '\f005'; font-weight: 900; }
-        .share-confirmation { display:none; font-size: 0.75rem; color: #00BFFF; margin-left:0.5rem; }
 
+        .share-confirmation { display:none; font-size: 0.75rem; color: #00BFFF; margin-left:0.5rem; }
         .footer {
             background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem;
             border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem; margin-top: auto;
         }
         .footer a { color: #B0B0B0; transition: color 0.2s ease; }
         .footer a:hover { color: #00BFFF; }
-        
         .page-content-wrapper {
             flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px; 
             margin: 0 auto; padding-left: 1rem; padding-right: 1rem;
-            padding-top: 80px; 
+            padding-top: 80px; /* Adjust if header height changes */
         }
         .community-main-grid { display: flex; flex-wrap: wrap; gap: 2rem; }
-        .posts-section { flex: 3; min-width: 0; order: 1; }
-        .filter-section-wrapper { flex: 1; min-width: 280px; order: 2; }
+        .posts-section { flex: 3; min-width: 0; order: 1; } 
+        /* .filter-section-wrapper defined above with padding-top */
         @media (max-width: 1023px) { 
             .community-main-grid { flex-direction: column; }
-            .posts-section, .filter-section-wrapper { flex: none; width: 100%; }
-            .filter-panel { position: static; order: 0; margin-bottom: 2rem; }
+            .posts-section, .filter-section-wrapper { flex: none; width: 100%; padding-top: 0; /* Reset padding for mobile */ }
+            .filter-panel { position: static; order: 0; margin-bottom: 2rem; } 
         }
     </style>
 </head>
 <body class="antialiased">
-    <nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
-            <div class="hidden md:flex items-center space-x-5">
-                <a href="index.html" class="nav-link text-sm">News</a>
-                <a href="community.html" class="nav-link text-sm active">Community</a> 
-                <a href="Markets.html" id="marketsLinkDesktop" class="nav-link text-sm">Markets</a> 
-                <div id="desktopAuthArea" class="flex items-center space-x-3">
-                    <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button">Login</a> 
-                    <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
-                        <a href="profile.html" id="profileLinkDesktop" title="My Profile">
-                            <div class="profile-icon-placeholder">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </a>
-                        <div class="desktop-hamburger-menu">
-                            <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-            </div>
+    <div id="navbar">
         </div>
-        <div id="mobile-menu" class="md:hidden hidden bg-gray-900 bg-opacity-90 backdrop-blur-md">
-            <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Login</a>
-            <a href="linqai.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Linq Ai</a>
-            <a href="earnings.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Earnings Calendar</a>
-            <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a> 
-            <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 active">Community</a> 
-            <a href="Markets.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Markets</a>
-            <a href="favorites.html" id="favoritesLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden">Favorites</a>
-            <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Logout</a>
-        </div>
-    </nav>
-    
-    <div id="desktop-slideout-menu" class="slide-out-panel">
-        <div class="slide-out-panel-header">
-            <button id="slideout-close-button" class="slide-out-panel-close-btn" aria-label="Close menu">&times;</button>
-        </div>
-        <nav class="slide-out-panel-nav">
-            <a href="linqai.html">Linq AI</a>
-            <a href="earnings.html">Earnings Calendar</a>
-            <a href="favorites.html">Favorites</a> 
-            <a href="profile.html">My Profile</a>
-            <a href="#" id="logoutButtonSlideout">Logout</a> 
-        </nav>
-    </div>
-
-    <div id="menu-overlay" class="hidden"></div> 
 
     <main class="page-content-wrapper">
         <div class="community-main-grid">
@@ -365,12 +263,11 @@
                 </header>
                 
                 <div class="search-container">
-                    <input type="text" id="searchInputCommunity" placeholder="Search community posts..." class="search-input !pl-4">
+                    <input type="text" id="searchInputCommunity" placeholder="Search community posts..." class="search-input">
                 </div>
 
                 <div id="postsContainerCommunity" class="space-y-8">
-                    {/* Community posts will be dynamically inserted here */}
-                </div>
+                    </div>
             </section>
 
             <aside class="filter-section-wrapper">
@@ -399,6 +296,151 @@
     </footer>
 
     <script>
+        // --- Function to Initialize and Run All Header Related Logic ---
+        function initializeHeaderAndAuth() {
+            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
+            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
+            const authLinkMobile = document.getElementById('authLinkMobile');
+            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
+            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
+            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile'); 
+            const earningsLinkMobile = document.getElementById('earningsLinkMobile'); 
+            const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
+            const menuOverlay = document.getElementById('menu-overlay');
+            const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
+            const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
+            const slideoutCloseButton = document.getElementById('slideout-close-button');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (!firebase.apps.length) { 
+                const firebaseConfigShared = { 
+                    apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // Store securely
+                    authDomain: "linq-b27a8.firebaseapp.com",
+                    projectId: "linq-b27a8",
+                    storageBucket: "linq-b27a8.appspot.com",
+                    messagingSenderId: "1067901051826",
+                    appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+                };
+                firebase.initializeApp(firebaseConfigShared);
+            }
+            const authInstance = firebase.auth();
+
+            authInstance.onAuthStateChanged(user => {
+                if (user) {
+                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
+                    if (profileAndMenuDesktop) {
+                        profileAndMenuDesktop.classList.remove('hidden');
+                        profileAndMenuDesktop.classList.add('flex');
+                    }
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "My Profile";
+                        authLinkMobile.href = "profile.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
+                } else {
+                    if (authLinkDesktopLogin) {
+                        authLinkDesktopLogin.classList.remove('hidden');
+                        authLinkDesktopLogin.classList.add('nav-link-button');
+                    }
+                    if (profileAndMenuDesktop) profileAndMenuDesktop.classList.add('hidden');
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "Login";
+                        authLinkMobile.href = "login.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
+                        closeDesktopMenu();
+                    }
+                }
+                setActiveNavLink();
+            });
+
+            function handleLogout(e) {
+                e.preventDefault();
+                if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
+                authInstance.signOut().then(() => console.log("User signed out"))
+                              .catch(error => console.error("Sign out error", error));
+            }
+
+            if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
+            if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
+
+            function setActiveNavLink() {
+                const currentPath = window.location.pathname.split("/").pop() || "index.html";
+                const navLinks = document.querySelectorAll('nav.fixed a.nav-link, #mobile-menu a.nav-link');
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    const linkHref = link.getAttribute('href');
+                    const linkDataPage = link.dataset.page;
+                    if (linkHref === currentPath || ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html" || linkDataPage === "index" || linkDataPage === "index-mobile"))) {
+                        link.classList.add('active');
+                    }
+                    if (currentPath === "community.html" && linkHref === "community.html") {
+                         link.classList.add('active');
+                    }
+                });
+            }
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            }
+
+            function openDesktopMenu() {
+                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.add('open');
+                if (menuOverlay) menuOverlay.classList.add('active');
+                document.body.classList.add('overflow-hidden');
+            }
+            function closeDesktopMenu() {
+                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open');
+                if (menuOverlay) menuOverlay.classList.remove('active');
+                document.body.classList.remove('overflow-hidden');
+            }
+            if (desktopHamburgerButton) {
+                desktopHamburgerButton.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                    else openDesktopMenu();
+                });
+            }
+            if (menuOverlay) menuOverlay.addEventListener('click', closeDesktopMenu);
+            if (slideoutCloseButton) slideoutCloseButton.addEventListener('click', closeDesktopMenu);
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+            });
+
+            setActiveNavLink(); // Initial call
+        }
+
+        // Fetch and Inject Header, then Initialize Header Logic
+        fetch('header.html') 
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok for header.html');
+                return response.text();
+            })
+            .then(data => {
+                const navbarElement = document.getElementById('navbar');
+                if (navbarElement) {
+                    navbarElement.innerHTML = data;
+                    initializeHeaderAndAuth(); 
+                } else {
+                    console.error('Navbar element not found.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching header:', error);
+                const navbarElement = document.getElementById('navbar');
+                if(navbarElement) navbarElement.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
+            });
+
+        // --- Community Page Specific JavaScript ---
         document.getElementById('current-year-community').textContent = new Date().getFullYear();
 
         const twitterScriptCommunity = document.createElement('script');
@@ -407,19 +449,7 @@
         twitterScriptCommunity.charset = 'utf-8';
         document.body.appendChild(twitterScriptCommunity);
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-            authDomain: "linq-b27a8.firebaseapp.com",
-            projectId: "linq-b27a8",
-            storageBucket: "linq-b27a8.firebasestorage.app", 
-            messagingSenderId: "1067901051826",
-            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-        };
-        if (!firebase.apps.length) { 
-            firebase.initializeApp(firebaseConfig);
-        }
-        const auth = firebase.auth();
-
+        // Community posts data (as provided in original community.html)
         const communityPostsDataPage = [
             { id: 'tweet1', url: 'https://twitter.com/CRUDEOIL231/status/1919070053825495266', title: 'Saudi Production Levels & Brent Impact', meta: 'May 10, 2025 • JH (@CRUDEOIL231)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">If Saudis and OPEC+ maintain production levels without increasing output, and as a result, Brent crude prices barely hold steady around $70/bbl, would that be favorable for your positions?<br><br>Of course the best-case scenario is for prices to remain high, but that seems unlikely.…</p>&mdash; JH (@CRUDEOIL231) <a href="https://twitter.com/CRUDEOIL231/status/1919070053825495266?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
             { id: 'tweet2', url: 'https://twitter.com/LinqNews/status/1919171857409855978', title: "India's Rising Oil Consumption: A Key Global Demand Anchor", meta: 'May 10, 2025 • Linq AI Insights (@LinqAI)', category: 'Energy Demand', tweetContent: '<p lang="en" dir="ltr">India\'s oil consumption rose 4.5% YoY in March. Infrastructure buildout and strong GDP expectations place it as key global demand anchor in 2025.<a href="https://twitter.com/hashtag/India?src=hash&ref_src=twsrc%5Etfw">#India</a> <a href="https://twitter.com/hashtag/EnergyDemand?src=hash&ref_src=twsrc%5Etfw">#EnergyDemand</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; Linq AI Insights (@LinqAI) <a href="https://twitter.com/LinqNews/status/1919171857409855978?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
@@ -434,39 +464,35 @@
         function displayCommunityPostsPage(postsToDisplay) { 
             if (!postsContainerCommunity) return;
             postsContainerCommunity.innerHTML = ''; 
-
             if (postsToDisplay.length === 0) {
                 postsContainerCommunity.innerHTML = '<p class="text-center text-gray-500 py-8">No posts match your current filters.</p>';
                 return;
             }
-
             postsToDisplay.forEach(post => {
                 const postElement = document.createElement('article');
                 postElement.className = 'post-card';
                 postElement.setAttribute('data-category', post.category);
                 postElement.setAttribute('data-id', post.id); 
-
                 postElement.innerHTML = `
-                    <p class="post-title">${post.title}</p>
-                    <p class="post-meta">${post.meta} <span class="post-category-tag">${post.category}</span></p>
+                    <p class="post-title">${post.title || 'Untitled Post'}</p>
+                    <p class="post-meta">${post.meta || 'N/A'} <span class="post-category-tag">${post.category || 'General'}</span></p>
                     <div class="twitter-tweet-container">
                         <blockquote class="twitter-tweet" data-theme="dark" data-cards="hidden" data-conversation="none">
-                           ${post.tweetContent}
+                           ${post.tweetContent || ''}
                         </blockquote>
                     </div>
                     <div class="post-actions">
-                        <button class="action-btn share-btn" data-url="${post.url}" data-title="${post.title}">
+                        <button class="action-btn share-btn" data-url="${post.url || '#'}" data-title="${post.title || 'Untitled Post'}">
                             <i class="fas fa-share-alt"></i> Share
                         </button>
                         <span class="share-confirmation hidden">Link copied!</span>
                         <button class="action-btn favorite-btn" data-id="${post.id}" aria-label="Favorite post">
-                            <i class="far fa-star"></i> Favorite
+                            <i class="far fa-star"></i><i class="fas fa-star"></i> Favorite 
                         </button>
                     </div>
-                `;
+                `; // Combined far and fas for easier CSS toggling
                 postsContainerCommunity.appendChild(postElement);
             });
-
             if (window.twttr && window.twttr.widgets) {
                 window.twttr.widgets.load(postsContainerCommunity);
             }
@@ -475,20 +501,18 @@
         }
         
         function filterCommunityPostsPage() { 
-            const searchQuery = document.getElementById('searchInputCommunity').value.toLowerCase();
+            const searchInput = document.getElementById('searchInputCommunity');
+            const searchQuery = searchInput ? searchInput.value.toLowerCase() : "";
             const activeCategoryButtons = document.querySelectorAll('#categoryFiltersCommunity .filter-button.active');
             const selectedCategories = Array.from(activeCategoryButtons).map(btn => btn.getAttribute('data-category'));
-
             let filteredPosts = communityPostsDataPage;
-
             if (selectedCategories.length > 0) { 
                 filteredPosts = communityPostsDataPage.filter(post => selectedCategories.includes(post.category));
             }
-            
             if (searchQuery) {
                 filteredPosts = filteredPosts.filter(post =>
-                    post.title.toLowerCase().includes(searchQuery) ||
-                    post.meta.toLowerCase().includes(searchQuery) ||
+                    (post.title && post.title.toLowerCase().includes(searchQuery)) ||
+                    (post.meta && post.meta.toLowerCase().includes(searchQuery)) ||
                     (post.tweetContent && post.tweetContent.toLowerCase().includes(searchQuery))
                 );
             }
@@ -509,13 +533,11 @@
         function updateCommunityFavoriteIconsPage() { 
             document.querySelectorAll('#postsContainerCommunity .favorite-btn').forEach(button => {
                 const postId = button.getAttribute('data-id');
-                const icon = button.querySelector('i');
-                if (communityFavoritesPage.includes(postId)) {
+                const isFavorited = communityFavoritesPage.includes(postId);
+                if (isFavorited) {
                     button.classList.add('favorited');
-                    if (icon) { icon.classList.remove('far'); icon.classList.add('fas'); }
                 } else {
                     button.classList.remove('favorited');
-                    if (icon) { icon.classList.remove('fas'); icon.classList.add('far'); }
                 }
             });
         }
@@ -525,7 +547,6 @@
                 button.removeEventListener('click', handleCommunityFavoriteClickPage); 
                 button.addEventListener('click', handleCommunityFavoriteClickPage);
             });
-
             document.querySelectorAll('#postsContainerCommunity .share-btn').forEach(button => {
                 button.removeEventListener('click', handleShareClickPage); 
                 button.addEventListener('click', handleShareClickPage);
@@ -536,16 +557,13 @@
             const postId = button.getAttribute('data-id');
             toggleCommunityFavoritePage(postId);
         }
-
         function handleShareClickPage(event) { 
             const button = event.currentTarget;
             const url = button.getAttribute('data-url');
             const title = button.getAttribute('data-title');
             const confirmation = button.nextElementSibling; 
-
             if (navigator.share) {
-                navigator.share({ title: title, url: url })
-                    .catch(err => console.error('Error sharing:', err));
+                navigator.share({ title: title, url: url }).catch(err => console.error('Error sharing:', err));
             } else if (navigator.clipboard) {
                 navigator.clipboard.writeText(url).then(() => {
                     if(confirmation) {confirmation.style.display = 'inline'; confirmation.textContent = 'Link copied!';}
@@ -560,145 +578,20 @@
                  setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2000);
             }
         }
-
-        const categoryFilterButtonsPage = document.querySelectorAll('#categoryFiltersCommunity .filter-button'); 
-        categoryFilterButtonsPage.forEach(button => {
-            button.addEventListener('click', function() {
-                this.classList.toggle('active'); 
-                filterCommunityPostsPage();
-            });
-        });
-
-        const searchInputElementPage = document.getElementById('searchInputCommunity'); 
-        if (searchInputElementPage) { searchInputElementPage.addEventListener('input', filterCommunityPostsPage); }
         
-        // Header Interactivity Logic (Copied from user-provided header script)
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu'); 
-        const menuOverlay = document.getElementById('menu-overlay');
-        const slideoutCloseButton = document.getElementById('slideout-close-button'); 
-        const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
-
-        if (mobileMenuButton && mobileMenu) {
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-        }
-
-        function openDesktopMenu() {
-            if (desktopSlideOutMenu) desktopSlideOutMenu.classList.add('open');
-            if (menuOverlay) menuOverlay.classList.add('active');
-            document.body.classList.add('overflow-hidden');
-        }
-
-        function closeDesktopMenu() {
-            if (desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open');
-            if (menuOverlay) menuOverlay.classList.remove('active');
-            document.body.classList.remove('overflow-hidden');
-        }
-
-        if (desktopHamburgerButton) {
-            desktopHamburgerButton.addEventListener('click', (event) => {
-                event.stopPropagation(); 
-                if (desktopSlideOutMenu.classList.contains('open')) {
-                    closeDesktopMenu();
-                } else {
-                    openDesktopMenu();
-                }
-            });
-        }
-        if (menuOverlay) {
-            menuOverlay.addEventListener('click', closeDesktopMenu);
-        }
-        if(slideoutCloseButton) { 
-            slideoutCloseButton.addEventListener('click', closeDesktopMenu);
-        }
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
-                closeDesktopMenu();
-            }
-        });
-        
-        function setActiveNavLink() {
-            const currentFile = window.location.pathname.split("/").pop() || "index.html";
-            const pageMap = {
-                "index.html": "index",
-                "community.html": "community",
-                "Markets.html": "markets",
-                "favorites.html": "favorites" 
-            };
-            const currentPageKey = pageMap[currentFile] || "";
-
-            const desktopNavLinks = document.querySelectorAll('nav.fixed .hidden.md\\:flex a.nav-link[data-page]');
-            const mobileNavLinks = document.querySelectorAll('#mobile-menu a.nav-link[data-page]');
-
-            desktopNavLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.dataset.page === currentPageKey) {
-                    link.classList.add('active');
-                }
-            });
-            mobileNavLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.dataset.page === `${currentPageKey}-mobile`) {
-                    link.classList.add('active');
-                }
-            });
-        }
-
-
         document.addEventListener('DOMContentLoaded', () => {
-            setActiveNavLink(); // Set active link on initial load
-            displayCommunityPostsPage(communityPostsDataPage);
-            filterCommunityPostsPage(); 
-
-            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
-            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
-            const marketsLinkDesktop = document.getElementById('marketsLinkDesktop'); 
-            const favoritesLinkDesktop = document.getElementById('favoritesLinkDesktop'); // Main nav link
-            const authLinkMobile = document.getElementById('authLinkMobile');
-            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile'); // In mobile menu
-            const logoutButtonSlideout = document.getElementById('logoutButtonSlideout'); 
-
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    if(authLinkDesktopLogin) {
-                        authLinkDesktopLogin.classList.add('hidden');
-                        authLinkDesktopLogin.classList.remove('nav-link-button'); 
-                    }
-                    if(profileAndMenuDesktop) { profileAndMenuDesktop.classList.remove('hidden'); profileAndMenuDesktop.classList.add('flex'); }
-                    // The main favorites link is now in the slideout, so no need to manage its visibility here directly for desktop main nav
-                    // if(favoritesLinkDesktop) favoritesLinkDesktop.classList.remove('hidden'); 
-                    if(authLinkMobile) { authLinkMobile.textContent = "Profile"; authLinkMobile.href = "profile.html"; }
-                    if(logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
-                    if(favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden'); 
-                } else {
-                     if(authLinkDesktopLogin) {
-                        authLinkDesktopLogin.classList.remove('hidden');
-                        authLinkDesktopLogin.classList.add('nav-link-button'); 
-                     }
-                     if(profileAndMenuDesktop) { profileAndMenuDesktop.classList.add('hidden'); profileAndMenuDesktop.classList.remove('flex'); }
-                    // if(favoritesLinkDesktop) favoritesLinkDesktop.classList.add('hidden');
-                     if(authLinkMobile) { authLinkMobile.textContent = "Login"; authLinkMobile.href = "login.html"; }
-                     if(logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
-                     if(favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden'); 
-                     if(desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) { 
-                        closeDesktopMenu();
-                     }
-                }
-                 setActiveNavLink(); // Re-check active link after auth state might change nav items
+            displayCommunityPostsPage(communityPostsDataPage); 
+            const categoryFilterButtonsPage = document.querySelectorAll('#categoryFiltersCommunity .filter-button'); 
+            categoryFilterButtonsPage.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.classList.toggle('active'); 
+                    filterCommunityPostsPage();
+                });
             });
-            
-            function handleLogout(e) {
-                e.preventDefault();
-                closeDesktopMenu(); 
-                auth.signOut().then(() => { console.log("User signed out"); })
-                .catch(error => console.error("Sign out error", error));
+            const searchInputElementPage = document.getElementById('searchInputCommunity'); 
+            if (searchInputElementPage) { 
+                searchInputElementPage.addEventListener('input', filterCommunityPostsPage); 
             }
-            if(logoutButtonSlideout) logoutButtonSlideout.addEventListener('click', handleLogout);
-            if(logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
         });
     </script>
 </body>
