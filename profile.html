@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linq AI - Account</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Linq - Account</title>
+    <script src="https://cdn.tailwindcss.com"></script> <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <style>
-        /* --- Enhanced Color Scheme & Variables --- */
+        /* --- Enhanced Color Scheme & Variables (from original profile.html) --- */
         :root {
             --primary-bg: #121212;
             --secondary-bg: #1E1E1E;
@@ -33,13 +33,8 @@
             --border-radius-lg: 12px;
         }
 
-        /* --- Global Styles --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* --- Global Styles (from original profile.html) --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: var(--font-family);
             background-color: var(--primary-bg);
@@ -48,13 +43,11 @@
             font-size: 16px;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            display: flex; /* Added to allow footer to stick to bottom */
-            flex-direction: column; /* Added */
-            min-height: 100vh; /* Added */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        body.overflow-hidden { /* For use with modals/slide-out menus */
-            overflow: hidden;
-        }
+        body.overflow-hidden { overflow: hidden; }
 
         .container {
             width: 92%;
@@ -62,44 +55,43 @@
             margin: 0 auto;
             padding: 0 20px;
         }
-
-        h1, h2, h3, h4, h5, h6 {
-            color: var(--text-primary);
-            margin-bottom: 0.75em;
-            font-weight: 500;
-        }
+        h1, h2, h3, h4, h5, h6 { color: var(--text-primary); margin-bottom: 0.75em; font-weight: 500; }
         h1 { font-size: 2.4em; letter-spacing: -0.5px; }
         h2 { font-size: 1.9em; }
         h3 { font-size: 1.5em; }
-
-        p {
-            margin-bottom: 1.2em;
-            color: var(--text-secondary);
-        }
-
-        a {
-            color: var(--accent-blue);
-            text-decoration: none;
-            transition: color 0.2s ease-in-out;
-        }
+        p { margin-bottom: 1.2em; color: var(--text-secondary); }
+        a { color: var(--accent-blue); text-decoration: none; transition: color 0.2s ease-in-out; }
         a:hover { color: var(--accent-blue-darker); }
         .link { font-weight: 500; }
 
-        /* Styles for the dynamically loaded header (nav.fixed, .nav-link etc.) */
-        /* These should ideally be in header.html or a shared CSS file linked by header.html */
-        /* For now, including essential ones here if not already present in header.html's scope */
+        /* --- Styles for the dynamically loaded header.html --- */
+        /* These ensure the loaded header looks consistent with other pages */
         nav.fixed { /* Assuming header.html uses this class structure */
-            background-color: rgba(10, 10, 10, 0.85) !important; /* Use !important if needed to override */
+            background-color: rgba(10, 10, 10, 0.85) !important;
             backdrop-filter: blur(10px) saturate(150%) !important;
             -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
             border-bottom: 1px solid #222222 !important;
-            position: fixed !important; /* Ensure it's fixed */
+            position: fixed !important;
             top: 0 !important;
             left: 0 !important;
             width: 100% !important;
-            z-index: 1000 !important; /* Ensure it's above other content */
-            padding: 0.75rem 0 !important; /* Match py-3 */
+            z-index: 1000 !important;
+            padding: 0.75rem 0 !important; /* Tailwind py-3 equivalent */
         }
+        /* Ensure .container inside nav.fixed also behaves as expected */
+        nav.fixed .container { 
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            width: 100% !important; /* Override local .container if necessary */
+            max-width: 1280px !important; /* Match your site's max-width */
+            margin: 0 auto !important;
+            padding: 0 1rem !important; /* Tailwind px-4 */
+        }
+        @media (min-width: 640px) { nav.fixed .container { padding: 0 1.5rem !important; } } /* sm:px-6 */
+        @media (min-width: 1024px) { nav.fixed .container { padding: 0 2rem !important; } } /* lg:px-8 */
+
+
         .nav-link {
             transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
             font-weight: 500; color: #B0B0B0; opacity: 0.8;   
@@ -161,20 +153,19 @@
         #menu-overlay.active { display: block; opacity: 1; }
         /* End of Header specific styles */
 
-
         /* --- Main Content Area --- */
         main {
-            padding-top: 70px; /* Adjust this based on actual loaded header height */
-            flex-grow: 1; /* Added for footer push */
+            padding-top: 70px; /* Default, will be adjusted by JS after header loads */
+            flex-grow: 1;
         }
-        main .container {
+        main .container { /* This is the profile page's main container */
             display: flex;
             padding-top: 40px; 
             padding-bottom: 40px;
             gap: 40px; 
         }
 
-        /* --- Sidebar --- */
+        /* --- Sidebar (from original profile.html) --- */
         .sidebar {
             flex: 0 0 260px; 
             background-color: var(--secondary-bg);
@@ -184,12 +175,7 @@
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-md);
         }
-        .sidebar h2 {
-            font-size: 1.6em;
-            margin-bottom: 25px;
-            border-bottom: 1px solid var(--border-color-light);
-            padding-bottom: 15px;
-        }
+        .sidebar h2 { font-size: 1.6em; margin-bottom: 25px; border-bottom: 1px solid var(--border-color-light); padding-bottom: 15px; }
         .sidebar ul { list-style: none; }
         .sidebar ul li a {
             display: block; padding: 14px 18px; color: var(--text-secondary);
@@ -197,30 +183,20 @@
             font-weight: 500;
             transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.1s ease;
         }
-        .sidebar ul li a:hover {
-            background-color: var(--hover-bg); color: var(--text-primary);
-            transform: translateX(3px);
-        }
+        .sidebar ul li a:hover { background-color: var(--hover-bg); color: var(--text-primary); transform: translateX(3px); }
         .sidebar ul li a.active-link {
             background-color: var(--accent-blue); color: white; font-weight: 700; 
             box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
         }
-        .sidebar ul li a.active-link:hover {
-            background-color: var(--accent-blue-darker); transform: translateX(0);
-        }
+        .sidebar ul li a.active-link:hover { background-color: var(--accent-blue-darker); transform: translateX(0); }
         .sidebar ul li a.logout-link { color: var(--error-red); }
-        .sidebar ul li a.logout-link:hover {
-            background-color: rgba(255, 59, 48, 0.1); color: var(--error-red);
-        }
+        .sidebar ul li a.logout-link:hover { background-color: rgba(255, 59, 48, 0.1); color: var(--error-red); }
 
-        /* --- Content Area --- */
+        /* --- Content Area (from original profile.html) --- */
         .content { flex: 1; }
         .content-section { display: none; animation: fadeIn 0.4s ease-in-out; }
         .content-section.active-section { display: block; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         .card {
             background-color: var(--secondary-bg); border: 1px solid var(--border-color);
             border-radius: var(--border-radius-lg); margin-bottom: 35px; 
@@ -234,8 +210,6 @@
         }
         .card-header h3 { margin-bottom: 0; font-size: 1.3em; }
         .card-body { padding: 30px; }
-
-        /* Profile Specific */
         .profile-info-container { display: flex; align-items: flex-start; gap: 30px; }
         .profile-info { flex-grow: 1; }
         .info-item { margin-bottom: 18px; }
@@ -252,39 +226,24 @@
             object-fit: cover; box-shadow: var(--shadow-sm);
         }
 
-        /* --- Forms --- */
+        /* --- Forms (from original profile.html) --- */
         .form-group { margin-bottom: 25px; }
-        .form-group label {
-            display: block; color: var(--text-secondary); margin-bottom: 10px; 
-            font-weight: 500; font-size: 0.95em;
-        }
-        .form-group input[type="text"],
-        .form-group input[type="email"],
-        .form-group input[type="password"],
-        .form-group textarea {
+        .form-group label { display: block; color: var(--text-secondary); margin-bottom: 10px; font-weight: 500; font-size: 0.95em; }
+        .form-group input[type="text"], .form-group input[type="email"], .form-group input[type="password"], .form-group textarea {
             width: 100%; padding: 14px 18px; background-color: var(--primary-bg); 
             border: 1px solid var(--border-color); border-radius: var(--border-radius-md);
             color: var(--text-primary); font-size: 1em;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
         .form-group input::placeholder { color: var(--text-placeholder); }
-        .form-group input[type="text"]:focus,
-        .form-group input[type="email"]:focus,
-        .form-group input[type="password"]:focus,
-        .form-group textarea:focus {
+        .form-group input[type="text"]:focus, .form-group input[type="email"]:focus, .form-group input[type="password"]:focus, .form-group textarea:focus {
             outline: none; border-color: var(--accent-blue);
             box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2); 
         }
-        .form-group input[type="checkbox"] {
-            margin-right: 12px; vertical-align: middle; accent-color: var(--accent-blue);
-            width: 18px; height: 18px; cursor: pointer;
-        }
-        .form-group input[type="checkbox"] + label {
-            color: var(--text-secondary); font-weight: normal;
-            cursor: pointer; user-select: none;
-        }
+        .form-group input[type="checkbox"] { margin-right: 12px; vertical-align: middle; accent-color: var(--accent-blue); width: 18px; height: 18px; cursor: pointer; }
+        .form-group input[type="checkbox"] + label { color: var(--text-secondary); font-weight: normal; cursor: pointer; user-select: none; }
 
-        /* --- Buttons --- */
+        /* --- Buttons (from original profile.html) --- */
         .btn {
             padding: 12px 24px; border: none; border-radius: var(--border-radius-md);
             cursor: pointer; font-size: 1em; font-weight: 600; 
@@ -296,61 +255,38 @@
             background-image: linear-gradient(to right, var(--accent-blue) 0%, var(--accent-blue-darker) 100%);
             color: #fff; box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
         }
-        .btn-primary:hover {
-            background-image: linear-gradient(to right, var(--accent-blue-hover) 0%, var(--accent-blue) 100%);
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
-        }
-        .btn-secondary {
-            background-color: var(--tertiary-bg); color: var(--text-primary);
-            border: 1px solid var(--border-color-light);
-        }
+        .btn-primary:hover { background-image: linear-gradient(to right, var(--accent-blue-hover) 0%, var(--accent-blue) 100%); box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4); }
+        .btn-secondary { background-color: var(--tertiary-bg); color: var(--text-primary); border: 1px solid var(--border-color-light); }
         .btn-secondary:hover { background-color: var(--hover-bg); border-color: var(--border-color); }
-        .btn-outline {
-            background-color: transparent; color: var(--accent-blue);
-            border: 2px solid var(--accent-blue); 
-        }
+        .btn-outline { background-color: transparent; color: var(--accent-blue); border: 2px solid var(--accent-blue); }
         .btn-outline:hover { background-color: var(--accent-blue); color: #fff; }
 
-        /* Subscription Specific */
+        /* --- Other specific styles from profile.html --- */
         .subscription-info p { margin-bottom: 10px; color: var(--text-primary); font-size: 1.05em; }
-        .subscription-info p strong {
-            color: var(--text-secondary); min-width: 120px; 
-            display: inline-block; font-weight: 500;
-        }
-
-        /* Security Specific */
+        .subscription-info p strong { color: var(--text-secondary); min-width: 120px; display: inline-block; font-weight: 500; }
         .status-active { color: var(--success-green); font-weight: bold; }
         .status-inactive { color: var(--error-red); font-weight: bold; }
-
-        /* Activity Specific */
         .activity-list { list-style: none; padding-left: 0; }
-        .activity-list li {
-            padding: 12px 0; border-bottom: 1px solid var(--border-color-light);
-            color: var(--text-secondary); font-size: 0.95em;
-        }
+        .activity-list li { padding: 12px 0; border-bottom: 1px solid var(--border-color-light); color: var(--text-secondary); font-size: 0.95em; }
         .activity-list li:last-child { border-bottom: none; }
-
-        /* FAQ List */
         .faq-list { list-style: disc; padding-left: 20px; margin-bottom: 25px; }
         .faq-list li { margin-bottom: 12px; }
         .faq-list li a { color: var(--text-secondary); }
         .faq-list li a:hover { color: var(--accent-blue); text-decoration: underline; }
 
-        /* --- Footer --- */
+        /* --- Footer (from original profile.html) --- */
         footer {
             background-color: var(--tertiary-bg); color: var(--text-secondary);
             padding: 30px 0; text-align: center;
             border-top: 1px solid var(--border-color);
-            margin-top: auto; /* Changed from 50px to auto for flexbox */
+            margin-top: auto; 
         }
-        footer .container {
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
-        }
+        footer .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
         footer p { margin: 0; }
         .footer-links a { color: var(--text-secondary); margin-left: 20px; font-size: 0.9em; }
         .footer-links a:hover { color: var(--accent-blue); }
 
-        /* --- Responsive Design --- */
+        /* --- Responsive Design (from original profile.html, adjusted for loaded header) --- */
         @media (max-width: 992px) {
             main .container { flex-direction: column; }
             .sidebar { flex: 0 0 auto; width: 100%; margin-bottom: 30px; height: auto; }
@@ -358,7 +294,7 @@
             .avatar-section { margin-left: 0; margin-top: 25px; }
         }
         @media (max-width: 768px) {
-            /* Mobile nav is handled by header.html's own responsive styles */
+            /* Mobile nav is handled by header.html's own responsive styles (via initializeHeaderAndAuth) */
             h1 { font-size: 2em; } h2 { font-size: 1.6em; } h3 { font-size: 1.3em; }
             .card-header { flex-direction: column; align-items: flex-start; gap: 10px; }
             .card-header button { margin-top: 10px; width: 100%; }
@@ -392,8 +328,7 @@
                     <li><a href="#activity">Activity</a></li>
                     <li><a href="#notifications">Notifications</a></li>
                     <li><a href="#help">Help & Support</a></li>
-                    <li><a href="#logout" class="logout-link">Logout</a></li>
-                </ul>
+                    <li><a href="#" id="sidebar-logout-link" class="logout-link">Logout</a></li> </ul>
             </aside>
 
             <section class="content">
@@ -409,29 +344,24 @@
                                 <div class="profile-info">
                                     <div class="info-item">
                                         <label>Full Name</label>
-                                        <p>Alex Johnson</p>
-                                    </div>
+                                        <p id="profileFullName">Alex Johnson</p> </div>
                                     <div class="info-item">
                                         <label>Email Address</label>
-                                        <p>alex.johnson@example.com</p>
-                                    </div>
+                                        <p id="profileEmail">alex.johnson@example.com</p> </div>
                                     <div class="info-item">
                                         <label>Username</label>
-                                        <p>alexj</p>
-                                    </div>
+                                        <p id="profileUsername">alexj</p> </div>
                                     <div class="info-item">
                                         <label>Joined</label>
-                                        <p>May 10, 2024</p>
-                                    </div>
+                                        <p id="profileJoinedDate">May 10, 2024</p> </div>
                                 </div>
                                 <div class="avatar-section">
-                                    <img src="https://placehold.co/120x120/1E1E1E/F5F5F5?text=User&font=roboto" alt="User Avatar" class="avatar" onerror="this.onerror=null; this.src='https://placehold.co/120x120/2C2F33/EAEAEA?text=Error&font=roboto';">
+                                    <img src="https://placehold.co/120x120/1E1E1E/F5F5F5?text=User&font=roboto" alt="User Avatar" class="avatar" id="profileAvatar" onerror="this.onerror=null; this.src='https://placehold.co/120x120/2C2F33/EAEAEA?text=Error&font=roboto';">
                                     <button class="btn btn-secondary">Change Avatar</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <div class="card">
                         <div class="card-header">
                             <h3>Contact Preferences</h3>
@@ -597,7 +527,6 @@
 
     <script>
         // --- Function to Initialize and Run All Header Related Logic ---
-        // This function will be called AFTER header.html is fetched and injected.
         function initializeHeaderAndAuth() {
             const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
             const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
@@ -614,9 +543,8 @@
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
 
-            // Firebase configuration
             const firebaseConfig = { 
-                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // Store securely
+                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
                 authDomain: "linq-b27a8.firebaseapp.com",
                 projectId: "linq-b27a8",
                 storageBucket: "linq-b27a8.appspot.com",
@@ -630,20 +558,40 @@
 
             authInstance.onAuthStateChanged(user => {
                 if (user) {
+                    // User is LOGGED IN
                     if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
                     if (profileAndMenuDesktop) {
                         profileAndMenuDesktop.classList.remove('hidden');
                         profileAndMenuDesktop.classList.add('flex');
                     }
                     if (authLinkMobile) {
-                        authLinkMobile.textContent = "My Profile"; // Changed from "Profile"
+                        authLinkMobile.textContent = "My Profile";
                         authLinkMobile.href = "profile.html";
                     }
                     if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
                     if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
                     if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
                     if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
+
+                    // Populate profile page with user data (example)
+                    document.getElementById('profileFullName').textContent = user.displayName || 'N/A';
+                    document.getElementById('profileEmail').textContent = user.email || 'N/A';
+                    // Username might not be directly available, depends on your setup
+                    document.getElementById('profileUsername').textContent = user.email ? user.email.split('@')[0] : 'user'; 
+                    if (user.metadata && user.metadata.creationTime) {
+                        document.getElementById('profileJoinedDate').textContent = new Date(user.metadata.creationTime).toLocaleDateString();
+                    }
+                    if (user.photoURL) {
+                        document.getElementById('profileAvatar').src = user.photoURL;
+                    } else {
+                        // Use a default placeholder if no photoURL
+                        const initials = user.displayName ? user.displayName.charAt(0).toUpperCase() : (user.email ? user.email.charAt(0).toUpperCase() : 'U');
+                        document.getElementById('profileAvatar').src = `https://placehold.co/120x120/1E1E1E/F5F5F5?text=${initials}&font=roboto`;
+                    }
+
+
                 } else {
+                    // User is LOGGED OUT
                     if (authLinkDesktopLogin) {
                         authLinkDesktopLogin.classList.remove('hidden');
                         authLinkDesktopLogin.classList.add('nav-link-button');
@@ -660,22 +608,30 @@
                     if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
                         closeDesktopMenu();
                     }
+                     // Redirect to login page if not logged in and trying to access profile
+                    // window.location.href = 'login.html'; 
                 }
                 setActiveNavLink();
             });
 
-            function handleLogout(e) {
-                e.preventDefault();
+            // This is the global logout handler for header buttons
+            window.handleGlobalLogout = function(e) { // Make it global for sidebar link
+                if(e) e.preventDefault();
                 if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
                 if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
                 authInstance.signOut().then(() => {
                     console.log("User signed out");
-                    window.location.href = 'index.html'; // Redirect to homepage after logout
+                    window.location.href = 'index.html'; 
                 }).catch(error => console.error("Sign out error", error));
             }
 
-            if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
-            if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
+            if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', window.handleGlobalLogout);
+            if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', window.handleGlobalLogout);
+            
+            // Sidebar logout link
+            const sidebarLogout = document.getElementById('sidebar-logout-link');
+            if(sidebarLogout) sidebarLogout.addEventListener('click', window.handleGlobalLogout);
+
 
             function setActiveNavLink() {
                 const currentPath = window.location.pathname.split("/").pop() || "index.html";
@@ -684,23 +640,16 @@
                 navLinks.forEach(link => {
                     link.classList.remove('active');
                     const linkHref = link.getAttribute('href');
-                    
                     if (linkHref === currentPath) {
                         link.classList.add('active');
-                    }
-                    // Special handling for index.html and its "News" link
-                    else if ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html" || link.dataset.page === "index" || link.dataset.page === "index-mobile")) {
+                    } else if ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html" || link.dataset.page === "index" || link.dataset.page === "index-mobile")) {
                         link.classList.add('active');
-                    }
-                    // Explicitly activate Profile link if on profile.html
-                    // This is a bit redundant if profile.html is the currentPath, but good for clarity
-                    else if (currentPath === "profile.html" && linkHref === "profile.html") {
-                         link.classList.add('active');
+                    } else if (currentPath === "profile.html" && linkHref === "profile.html") { 
+                        // The profile picture in header.html links to profile.html. 
+                        // If you want that to appear "active", you'd need to style the parent or the icon itself.
+                        // For now, it won't show an "active" state in the main nav bar as there's no direct "Profile" text link there.
                     }
                 });
-                 // Ensure "Account" or "Profile" in the sidebar is also handled if it's part of the main nav links logic
-                // For profile.html, the sidebar link for "Profile" should be active by default.
-                // The main nav in header.html doesn't have a direct "Account" link, profile pic links to profile.html
             }
 
             if (mobileMenuButton && mobileMenu) {
@@ -734,7 +683,7 @@
         }
 
         // Fetch and Inject Header, then Initialize Header Logic
-        fetch('header.html') // Ensure header.html is in the correct path
+        fetch('header.html') 
             .then(response => {
                 if (!response.ok) throw new Error('Network response was not ok for header.html');
                 return response.text();
@@ -743,11 +692,11 @@
                 const headerPlaceholder = document.getElementById('header-placeholder');
                 if (headerPlaceholder) {
                     headerPlaceholder.innerHTML = data;
-                    initializeHeaderAndAuth(); // Initialize header JS AFTER it's loaded
-                    // Adjust main content padding after header is loaded and its height is known
+                    initializeHeaderAndAuth(); 
                     const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
                     if (fixedHeader) {
-                        document.querySelector('main').style.paddingTop = fixedHeader.offsetHeight + 'px';
+                        // Add a small buffer (e.g., 20px) to the header height for padding-top
+                        document.querySelector('main').style.paddingTop = (fixedHeader.offsetHeight + 20) + 'px';
                     }
                 } else {
                     console.error('Header placeholder element not found.');
@@ -760,21 +709,16 @@
             });
 
         // --- Profile Page Specific JavaScript (from original profile.html) ---
+        // This runs after the main DOM is loaded, and header logic runs after header fetch.
         document.addEventListener('DOMContentLoaded', function () {
             const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
             const contentSections = document.querySelectorAll('.content-section');
-            // const menuToggle = document.querySelector('.menu-toggle'); // This is part of the loaded header now
-            // const nav = document.querySelector('header nav'); // This is part of the loaded header now
-            // const mainHeader = document.querySelector('header'); // This is part of the loaded header now
-
+            
             function showSection(sectionId) {
-                contentSections.forEach(section => {
-                    section.classList.remove('active-section');
-                });
+                contentSections.forEach(section => section.classList.remove('active-section'));
                 const targetSection = document.getElementById(sectionId);
-                if (targetSection) {
-                    targetSection.classList.add('active-section');
-                }
+                if (targetSection) targetSection.classList.add('active-section');
+                
                 sidebarLinks.forEach(link => {
                     link.classList.remove('active-link');
                     if (link.getAttribute('href') === `#${sectionId}`) {
@@ -786,53 +730,26 @@
             sidebarLinks.forEach(link => {
                 link.addEventListener('click', function (e) {
                     const targetSectionId = this.getAttribute('href').substring(1);
-                    if (targetSectionId === 'logout') {
-                        e.preventDefault(); // Prevent default anchor behavior for logout
-                        // Logout logic is handled by initializeHeaderAndAuth's handleLogout
-                        // Find the logout button in the loaded header and simulate a click, or call handleLogout directly if accessible
-                        const logoutBtnSlideout = document.getElementById('logoutButtonSlideout');
-                        const logoutBtnMobile = document.getElementById('logoutButtonMobile');
-                        if(logoutBtnSlideout && typeof handleLogout === 'function') { // Check if handleLogout is in scope
-                           // handleLogout(e); // This might not work if handleLogout is not globally scoped
-                           // For simplicity, we can just trigger the Firebase signout here if direct call is tricky
-                           if (firebase.auth().currentUser) {
-                               firebase.auth().signOut().then(() => {
-                                   console.log("User signed out from profile page sidebar.");
-                                   window.location.href = 'index.html';
-                               }).catch(error => console.error("Sign out error", error));
-                           }
-                        } else {
-                             console.log('Logout action triggered from profile sidebar.');
-                        }
-                    } else {
-                        e.preventDefault();
+                    if (targetSectionId !== 'logout') { // Logout is handled by global handler now
+                         e.preventDefault();
                         showSection(targetSectionId);
                         window.location.hash = targetSectionId;
-                        // Close mobile nav if open (mobile nav is part of loaded header)
-                        const mobileNav = document.getElementById('mobile-menu');
-                        const mobileNavToggle = document.getElementById('mobile-menu-button');
+                        const mobileNav = document.getElementById('mobile-menu'); // From loaded header
                         if (mobileNav && !mobileNav.classList.contains('hidden')) {
                             mobileNav.classList.add('hidden');
-                            // if (mobileNavToggle) mobileNavToggle.setAttribute('aria-expanded', 'false');
                         }
                     }
+                    // For the logout link with id="sidebar-logout-link", the event listener is set up in initializeHeaderAndAuth
                 });
             });
 
             function activateSectionFromHash() {
-                let hash = window.location.hash.substring(1);
-                if (!hash) { hash = 'profile'; }
+                let hash = window.location.hash.substring(1) || 'profile';
                 const sectionExists = Array.from(contentSections).some(section => section.id === hash);
-                if (sectionExists) {
-                    showSection(hash);
-                } else {
-                    showSection('profile'); 
-                }
+                showSection(sectionExists ? hash : 'profile');
             }
             activateSectionFromHash();
             window.addEventListener('hashchange', activateSectionFromHash);
-
-            // Mobile menu toggle for the original static header is removed as it's handled by the loaded header.js
         });
     </script>
 </body>
