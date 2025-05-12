@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linq AI - Energy Earnings Calendar</title>
+    <title>Linq - Energy Earnings Calendar</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <style>
-        /* Base styles from Modern Black Theme */
+        /* Base styles */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #0A0A0A;
@@ -19,19 +20,108 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
+        body.overflow-hidden { /* For use with modals/slide-out menus */
+            overflow: hidden;
+        }
 
         ::-webkit-scrollbar { width: 10px; height: 10px; }
         ::-webkit-scrollbar-track { background: #1A1A1A; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
         ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
 
+        /* Styles for the dynamically loaded header.html */
+        nav.fixed {
+            background-color: rgba(10, 10, 10, 0.85) !important;
+            backdrop-filter: blur(10px) saturate(150%) !important;
+            -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+            border-bottom: 1px solid #222222 !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            z-index: 1000 !important;
+            padding: 0.75rem 0 !important;
+        }
+        nav.fixed .container { 
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            width: 100% !important;
+            max-width: 1280px !important; 
+            margin: 0 auto !important;
+            padding: 0 1rem !important; 
+        }
+        @media (min-width: 640px) { nav.fixed .container { padding: 0 1.5rem !important; } }
+        @media (min-width: 1024px) { nav.fixed .container { padding: 0 2rem !important; } }
+
+        .nav-link {
+            transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+            font-weight: 500; color: #B0B0B0; opacity: 0.8;   
+            padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; 
+        }
+        .nav-link:hover { color: #FFFFFF; opacity: 1; background-color: rgba(255,255,255,0.05); }
+        .nav-link.active { color: #FFFFFF; opacity: 1; background-color: transparent; }
+        #authLinkDesktopLogin.nav-link-button {
+            background-color: #00BFFF; color: #FFFFFF !important; opacity: 1 !important; padding: 0.5rem 1rem; 
+        }
+        #authLinkDesktopLogin.nav-link-button:hover { background-color: #00A9E0; opacity: 1; }
+        .profile-icon-placeholder { 
+            width: 2.25rem; height: 2.25rem; background-color: #333; border-radius: 50%; 
+            display: inline-flex; align-items: center; justify-content: center; 
+            cursor: pointer; border: 2px solid #4A4A4A; 
+        }
+        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; } 
+        .profile-icon-placeholder:hover { border-color: #00BFFF; } 
+        .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;} 
+        .desktop-hamburger-icon:hover { color: #FFFFFF; background-color: rgba(255,255,255,0.1); }
+        .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; } 
+        .slide-out-panel { 
+            display: flex; flex-direction: column; position: fixed; top: 0; right: 0; 
+            width: 320px; height: 100vh; background-color: #18181B; 
+            box-shadow: -10px 0 30px rgba(0,0,0,0.4); z-index: 1001; 
+            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            padding: 1.5rem; overflow-y: auto; border-left: 1px solid #3F3F46; 
+        }
+        .slide-out-panel.open { transform: translateX(0); }
+        .slide-out-panel-header {
+            display: flex; justify-content: flex-end; align-items: center;
+            padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #3F3F46; 
+        }
+        .slide-out-panel-close-btn {
+            background: none; border: none; color: #A0A0A0; font-size: 1.875rem; 
+            cursor: pointer; padding: 0.25rem; line-height: 1;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        .slide-out-panel-close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
+        .slide-out-panel-nav { flex-grow: 1; display: flex; flex-direction: column; }
+        .slide-out-panel a {
+            color: #D4D4D8; padding: 1rem 1.25rem; text-decoration: none; display: block; 
+            font-size: 0.95rem; font-weight: 500; 
+            transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease; 
+            border-left: 4px solid transparent; margin: 0.375rem 0; border-radius: 0.375rem; 
+        }
+        .slide-out-panel a:hover { background-color: #27272A; color: #FFFFFF; border-left-color: #00BFFF; }
+        .slide-out-panel #logoutButtonSlideout { 
+            color: #F87171 !important; margin-top: auto; padding-top: 1rem; border-top: 1px solid #3F3F46; 
+        }
+        .slide-out-panel #logoutButtonSlideout:hover { 
+            background-color: rgba(248, 113, 113, 0.1); color: #FECACA !important; border-left-color: #F87171;
+        } 
+        #menu-overlay {
+            display: none; position: fixed; inset: 0;
+            background-color: rgba(0, 0, 0, 0.65); z-index: 1000; 
+            opacity: 0; transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        #menu-overlay.active { display: block; opacity: 1; }
+        /* End of Header specific styles */
+
         /* Page Content Wrapper */
         .page-content-wrapper {
             flex-grow: 1;
-            padding-top: 2rem; /* Adjusted padding since header is removed */
+            padding-top: 80px; /* Adjusted: Start content below fixed header. Will be fine-tuned by JS. */
             padding-bottom: 4rem; /* Space for footer */
             width: 100%;
-            max-width: 1200px; /* Wider for calendar view */
+            max-width: 1200px; 
             margin: 0 auto;
         }
 
@@ -128,12 +218,12 @@
             font-weight: 600; font-size: 1.25rem; color: #00BFFF;
             border: 2px solid #333333;
         }
-        .company-info h3 { font-size: 1.25rem; font-weight: 600; color: #FFFFFF; }
+        .company-info h3 { font-size: 1.25rem; font-weight: 600; color: #FFFFFF; margin-bottom: 0.1rem;} /* Reduced margin */
         .company-info .ticker { font-size: 0.9rem; color: #A0A0A0; }
         .earnings-details { display: flex; flex-direction: column; gap: 0.5rem; }
         .detail-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; color: #B0B0B0; }
         .detail-item i { color: #00BFFF; width: 16px; text-align: center; }
-        .detail-label { font-weight: 500; color: #E0E0E0; }
+        .detail-label { font-weight: 500; color: #E0E0E0; margin-right: 0.25rem; }
         .card-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
         .action-btn {
             background-color: #1A1A1A;
@@ -158,6 +248,7 @@
             border-top: 1px solid #1A1A1A;
             text-align: center;
             font-size: 0.875rem;
+            margin-top: auto; /* Pushes footer to bottom in flex column */
         }
         .footer a { color: #B0B0B0; transition: color 0.2s ease; }
         .footer a:hover { color: #00BFFF; }
@@ -171,6 +262,7 @@
             .earnings-card { padding: 1rem; }
             .company-info h3 { font-size: 1.1rem; }
             .card-actions { justify-content: flex-start; }
+            .page-content-wrapper { padding-top: 70px; } /* Adjust if header height is different on mobile */
         }
          @media (max-width: 480px) {
             .calendar-page-title { font-size: 1.85rem;}
@@ -179,6 +271,7 @@
     </style>
 </head>
 <body class="antialiased">
+    <div id="header-placeholder"></div>
 
     <div class="page-content-wrapper px-4 sm:px-6 lg:px-8">
         <div class="calendar-page-heading-container">
@@ -379,30 +472,168 @@
     </footer>
 
     <script>
-        // Update current year in footer
+        // --- Function to Initialize and Run All Header Related Logic ---
+        function initializeHeaderAndAuth() {
+            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
+            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
+            const authLinkMobile = document.getElementById('authLinkMobile');
+            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
+            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
+            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile'); 
+            const earningsLinkMobile = document.getElementById('earningsLinkMobile'); 
+            const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
+            const menuOverlay = document.getElementById('menu-overlay'); 
+            const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
+            const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
+            const slideoutCloseButton = document.getElementById('slideout-close-button');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            const firebaseConfig = { 
+                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // Store securely
+                authDomain: "linq-b27a8.firebaseapp.com",
+                projectId: "linq-b27a8",
+                storageBucket: "linq-b27a8.appspot.com",
+                messagingSenderId: "1067901051826",
+                appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+            };
+            if (!firebase.apps.length) { 
+                firebase.initializeApp(firebaseConfig);
+            }
+            const authInstance = firebase.auth();
+
+            authInstance.onAuthStateChanged(user => {
+                if (user) {
+                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
+                    if (profileAndMenuDesktop) {
+                        profileAndMenuDesktop.classList.remove('hidden');
+                        profileAndMenuDesktop.classList.add('flex');
+                    }
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "My Profile";
+                        authLinkMobile.href = "profile.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
+                } else {
+                    if (authLinkDesktopLogin) {
+                        authLinkDesktopLogin.classList.remove('hidden');
+                        authLinkDesktopLogin.classList.add('nav-link-button');
+                    }
+                    if (profileAndMenuDesktop) profileAndMenuDesktop.classList.add('hidden');
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "Login";
+                        authLinkMobile.href = "login.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
+                        closeDesktopMenu();
+                    }
+                }
+                setActiveNavLink();
+            });
+
+            function handleLogout(e) {
+                e.preventDefault();
+                if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
+                authInstance.signOut().then(() => {
+                    console.log("User signed out");
+                    window.location.href = 'index.html'; 
+                }).catch(error => console.error("Sign out error", error));
+            }
+
+            if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
+            if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
+
+            function setActiveNavLink() {
+                const currentPath = window.location.pathname.split("/").pop() || "index.html";
+                const navLinks = document.querySelectorAll('#header-placeholder nav.fixed a.nav-link, #header-placeholder #mobile-menu a.nav-link');
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    const linkHref = link.getAttribute('href');
+                    
+                    if (linkHref === currentPath) {
+                        link.classList.add('active');
+                    } else if ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html" || link.dataset.page === "index" || link.dataset.page === "index-mobile")) {
+                        link.classList.add('active');
+                    } else if (currentPath === "earnings.html" && linkHref === "earnings.html") { 
+                         link.classList.add('active');
+                    }
+                });
+            }
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            }
+
+            function openDesktopMenu() {
+                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.add('open');
+                if (menuOverlay) menuOverlay.classList.add('active');
+                document.body.classList.add('overflow-hidden');
+            }
+            function closeDesktopMenu() {
+                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open');
+                if (menuOverlay) menuOverlay.classList.remove('active');
+                document.body.classList.remove('overflow-hidden');
+            }
+            if (desktopHamburgerButton) {
+                desktopHamburgerButton.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                    else openDesktopMenu();
+                });
+            }
+            if (menuOverlay) menuOverlay.addEventListener('click', closeDesktopMenu);
+            if (slideoutCloseButton) slideoutCloseButton.addEventListener('click', closeDesktopMenu);
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+            });
+
+            setActiveNavLink(); // Initial call
+        }
+
+        // Fetch and Inject Header, then Initialize Header Logic
+        fetch('header.html') 
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok for header.html');
+                return response.text();
+            })
+            .then(data => {
+                const headerPlaceholder = document.getElementById('header-placeholder');
+                if (headerPlaceholder) {
+                    headerPlaceholder.innerHTML = data;
+                    initializeHeaderAndAuth(); 
+                    const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
+                    if (fixedHeader) {
+                        document.querySelector('.page-content-wrapper').style.paddingTop = (fixedHeader.offsetHeight + 20) + 'px'; // 20px buffer
+                    }
+                } else {
+                    console.error('Header placeholder element not found.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching header:', error);
+                const headerPlaceholder = document.getElementById('header-placeholder');
+                if(headerPlaceholder) headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
+            });
+
+        // --- Earnings Page Specific JavaScript ---
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
-        // Update global time in top bar (though top bar is removed, keeping script for completeness if re-added)
-        // function updateGlobalTime() {
-        //     const now = new Date();
-        //     const options = { timeZone: 'UTC', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-        //     const timeString = now.toLocaleTimeString('en-GB', options);
-        //     const globalTimeEl = document.getElementById('global-time');
-        //     if (globalTimeEl) {
-        //         globalTimeEl.textContent = timeString + ' UTC';
-        //     }
-        // }
-        // updateGlobalTime();
-        // setInterval(updateGlobalTime, 1000);
-
-        // --- "Add to Calendar" Functionality ---
         document.querySelectorAll('.add-to-calendar-btn').forEach(button => {
             button.addEventListener('click', function() {
                 const company = this.dataset.company;
                 const ticker = this.dataset.ticker;
-                const date = this.dataset.date; // YYYY-MM-DD
-                const time = this.dataset.time; // HH:MM
-                const timezone = this.dataset.timezone; // e.g., ET, GMT
+                const date = this.dataset.date; 
+                const time = this.dataset.time; 
+                const timezone = this.dataset.timezone; 
                 const period = this.dataset.period;
 
                 const [year, month, day] = date.split('-').map(Number);
@@ -414,14 +645,13 @@
                 let utcHour = hour;
 
                 if (timezone === "ET") { 
-                    utcHour = hour + 4; // Simplified: Assumes ET is UTC-4 (e.g. EDT). Not DST-proof.
+                    utcHour = hour + 4; 
                 } else if (timezone === "GMT") {
                     // GMT is UTC
                 }
-                // Add other timezone conversions as needed or use a library for robust handling.
 
                 const startDateUtc = new Date(Date.UTC(utcYear, utcMonth, utcDay, utcHour, minute, 0));
-                const endDateUtc = new Date(startDateUtc.getTime() + (60 * 60 * 1000)); // Assume 1 hour duration
+                const endDateUtc = new Date(startDateUtc.getTime() + (60 * 60 * 1000)); // Assume 1 hour
 
                 const formatDateToICS = (dateObj) => {
                     return dateObj.getUTCFullYear() +
@@ -441,19 +671,12 @@
                 const uid = `${dtstart}-${ticker.replace(/[^a-zA-Z0-9]/g, "")}@linq.ai`;
 
                 const icsContent = [
-                    'BEGIN:VCALENDAR',
-                    'VERSION:2.0',
-                    'PRODID:-//LinqAI//EarningsCalendar//EN',
+                    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//LinqAI//EarningsCalendar//EN',
                     'BEGIN:VEVENT',
-                    `UID:${uid}`,
-                    `DTSTAMP:${dtstamp}`,
-                    `DTSTART:${dtstart}`,
-                    `DTEND:${dtend}`,
-                    `SUMMARY:${summary}`,
-                    `DESCRIPTION:${description.replace(/\n/g, '\\n')}`,
+                    `UID:${uid}`, `DTSTAMP:${dtstamp}`, `DTSTART:${dtstart}`, `DTEND:${dtend}`,
+                    `SUMMARY:${summary}`, `DESCRIPTION:${description.replace(/\n/g, '\\n')}`,
                     'LOCATION:Webcast/Conference Call', 
-                    'END:VEVENT',
-                    'END:VCALENDAR'
+                    'END:VEVENT', 'END:VCALENDAR'
                 ].join('\r\n');
 
                 const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
