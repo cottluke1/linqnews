@@ -6,7 +6,8 @@
     <title>Linq - Energy Markets</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="header_styles.css">
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <style>
         /* Page-specific styles for Markets.html */
         body {
@@ -14,13 +15,122 @@
             background-color: #0A0A0A;
             color: #E0E0E0;
             font-weight: 400;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        /* body.overflow-hidden is in header_styles.css */
+        body.overflow-hidden { /* From header_styles.css or shared logic */
+            overflow: hidden;
+        }
 
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #1A1A1A; }
         ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
         ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
+
+        /* Header Styles (Copied from community.html for consistency if header_styles.css is not used or is incomplete) */
+        /* It's better if header.html is self-contained or header_styles.css is comprehensive */
+        nav.fixed {
+            background-color: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(10px) saturate(150%);
+            -webkit-backdrop-filter: blur(10px) saturate(150%);
+            border-bottom: 1px solid #222222;
+        }
+        .nav-link {
+            transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+            font-weight: 500;
+            color: #B0B0B0;
+            opacity: 0.8;   
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem; 
+        }
+        .nav-link:hover { 
+            color: #FFFFFF;
+            opacity: 1;
+            background-color: rgba(255,255,255,0.05);
+        }
+        .nav-link.active {
+            color: #FFFFFF; 
+            opacity: 1;
+            background-color: transparent; 
+        }
+        #authLinkDesktopLogin.nav-link-button {
+            background-color: #00BFFF; 
+            color: #FFFFFF !important; 
+            opacity: 1 !important; 
+            padding: 0.5rem 1rem; 
+        }
+        #authLinkDesktopLogin.nav-link-button:hover {
+            background-color: #00A9E0; 
+            opacity: 1;
+        }
+        .profile-icon-placeholder { 
+            width: 2.25rem; 
+            height: 2.25rem; 
+            background-color: #333; 
+            border-radius: 50%; 
+            display: inline-flex; align-items: center; justify-content: center; 
+            cursor: pointer; 
+            border: 2px solid #4A4A4A; 
+        }
+        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; } 
+        .profile-icon-placeholder:hover { border-color: #00BFFF; } 
+        .desktop-hamburger-menu { position: relative; display: inline-block; }
+        .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;} 
+        .desktop-hamburger-icon:hover { color: #FFFFFF; background-color: rgba(255,255,255,0.1); }
+        .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; } 
+        .slide-out-panel { 
+            display: flex; 
+            flex-direction: column;
+            position: fixed; 
+            top: 0; 
+            right: 0; 
+            width: 320px; 
+            height: 100vh; 
+            background-color: #18181B; 
+            box-shadow: -10px 0 30px rgba(0,0,0,0.4); 
+            z-index: 1001; 
+            transform: translateX(100%); 
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            padding: 1.5rem; 
+            overflow-y: auto; 
+            border-left: 1px solid #3F3F46; 
+        }
+        .slide-out-panel.open { transform: translateX(0); }
+        .slide-out-panel-header {
+            display: flex; justify-content: flex-end; align-items: center;
+            padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #3F3F46; 
+        }
+        .slide-out-panel-close-btn {
+            background: none; border: none; color: #A0A0A0; font-size: 1.875rem; 
+            cursor: pointer; padding: 0.25rem; line-height: 1;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        .slide-out-panel-close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
+        .slide-out-panel-nav { flex-grow: 1; display: flex; flex-direction: column; }
+        .slide-out-panel a {
+            color: #D4D4D8; padding: 1rem 1.25rem; text-decoration: none; display: block; 
+            font-size: 0.95rem; font-weight: 500; 
+            transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease; 
+            border-left: 4px solid transparent; margin: 0.375rem 0; border-radius: 0.375rem; 
+        }
+        .slide-out-panel a:hover { background-color: #27272A; color: #FFFFFF; border-left-color: #00BFFF; }
+        .slide-out-panel #logoutButtonSlideout { 
+            color: #F87171 !important; margin-top: auto; padding-top: 1rem; border-top: 1px solid #3F3F46; 
+        }
+        .slide-out-panel #logoutButtonSlideout:hover { 
+            background-color: rgba(248, 113, 113, 0.1); color: #FECACA !important; border-left-color: #F87171;
+        } 
+        #menu-overlay {
+            display: none; position: fixed; inset: 0;
+            background-color: rgba(0, 0, 0, 0.65); z-index: 1000; 
+            opacity: 0; transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        #menu-overlay.active { display: block; opacity: 1; }
+        #mobile-menu .nav-link.active { color: #FFFFFF; background-color: rgba(0, 191, 255, 0.1); opacity: 1; }
+        /* End of Header Styles */
+
 
         .page-content-wrapper {
             flex-grow: 1;
@@ -30,7 +140,7 @@
             margin: 0 auto;
             padding-left: 1rem;
             padding-right: 1rem;
-            padding-top: 10px; /* Content starts below ticker */
+            padding-top: 80px; /* Adjusted: Content starts below the fixed header */
         }
 
         .page-main-title {
@@ -53,20 +163,6 @@
             margin-bottom: 2.5rem;
             font-weight: 400;
         }
-
-        /* Ticker Banner */
-        .ticker-banner {
-            background: #121212; color: #A0A0A0; padding: 0.625rem 0;
-            overflow: hidden; white-space: nowrap; position: relative;
-            width: 100%; z-index: 35; font-size: 0.8rem; line-height: 1.3;
-            border-bottom: 1px solid #282828;
-            /* margin-top will be set by JS to be below the fixed nav */
-        }
-        .ticker-content { display: inline-block; white-space: nowrap; animation: ticker-scroll 240s linear infinite; }
-        @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-        .ticker-item { display: inline-block; margin-right: 1.75rem; }
-        .ticker-item .positive { color: #22C55E; }
-        .ticker-item .negative { color: #EF4444; }
         
         /* Styles from the original markets.html for content */
         .glassmorphic-panel {
@@ -93,7 +189,7 @@
         .table-header th {
             position: sticky;
             top: 0px; 
-            background-color: rgba(20, 20, 20, 0.95);
+            background-color: rgba(20, 20, 20, 0.95); /* Darker for better contrast with content */
             color: #B0B0B0;
             z-index: 10;
         }
@@ -165,13 +261,8 @@
     </style>
 </head>
 <body class="antialiased">
-    <div id="header-placeholder"></div>
-
-    <div class="ticker-banner"> 
-        <div class="ticker-content" id="tickerContentMarkets">
-            {/* Ticker items can be loaded here by page-specific JS if needed */}
+    <div id="header-placeholder">
         </div>
-    </div>
 
     <main class="page-content-wrapper">
         <header class="page-header text-center">
@@ -363,11 +454,11 @@
                                 </tr>
                             </thead>
                             <tbody id="energyCompaniesBody">
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                      <div class="mt-4 text-sm text-gray-500">
-                    </div>
+                        </div>
                 </div>
             </section>
         </div>
@@ -382,9 +473,156 @@
         </nav>
     </footer>
 
-    <script src="header_logic.js" defer></script>
     <script>
-        // Page-specific JavaScript for Markets.html
+        // --- Function to Initialize and Run All Header Related Logic ---
+        // This function will be called AFTER header.html is fetched and injected.
+        function initializeHeaderAndAuth() {
+            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
+            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
+            const authLinkMobile = document.getElementById('authLinkMobile');
+            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
+            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
+            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile'); 
+            const earningsLinkMobile = document.getElementById('earningsLinkMobile'); 
+            const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
+            const menuOverlay = document.getElementById('menu-overlay'); // Ensure this ID exists in your header.html
+            const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
+            const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
+            const slideoutCloseButton = document.getElementById('slideout-close-button');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            // Firebase configuration
+            const firebaseConfig = { // Use a consistent config name
+                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // Store securely
+                authDomain: "linq-b27a8.firebaseapp.com",
+                projectId: "linq-b27a8",
+                storageBucket: "linq-b27a8.appspot.com",
+                messagingSenderId: "1067901051826",
+                appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+            };
+            if (!firebase.apps.length) { 
+                firebase.initializeApp(firebaseConfig);
+            }
+            const authInstance = firebase.auth();
+
+            authInstance.onAuthStateChanged(user => {
+                if (user) {
+                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
+                    if (profileAndMenuDesktop) {
+                        profileAndMenuDesktop.classList.remove('hidden');
+                        profileAndMenuDesktop.classList.add('flex');
+                    }
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "My Profile";
+                        authLinkMobile.href = "profile.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
+                } else {
+                    if (authLinkDesktopLogin) {
+                        authLinkDesktopLogin.classList.remove('hidden');
+                        authLinkDesktopLogin.classList.add('nav-link-button');
+                    }
+                    if (profileAndMenuDesktop) profileAndMenuDesktop.classList.add('hidden');
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "Login";
+                        authLinkMobile.href = "login.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
+                        closeDesktopMenu();
+                    }
+                }
+                setActiveNavLink();
+            });
+
+            function handleLogout(e) {
+                e.preventDefault();
+                if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
+                authInstance.signOut().then(() => console.log("User signed out"))
+                              .catch(error => console.error("Sign out error", error));
+            }
+
+            if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
+            if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
+
+            function setActiveNavLink() {
+                const currentPath = window.location.pathname.split("/").pop() || "index.html";
+                const navLinks = document.querySelectorAll('nav.fixed a.nav-link, #mobile-menu a.nav-link');
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    const linkHref = link.getAttribute('href');
+                    const linkDataPage = link.dataset.page;
+                    if (linkHref === currentPath || ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html" || linkDataPage === "index" || linkDataPage === "index-mobile"))) {
+                        link.classList.add('active');
+                    }
+                     // Explicitly activate Markets.html link
+                    if (currentPath === "Markets.html" && linkHref === "Markets.html") {
+                         link.classList.add('active');
+                    }
+                });
+            }
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            }
+
+            function openDesktopMenu() {
+                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.add('open');
+                if (menuOverlay) menuOverlay.classList.add('active');
+                document.body.classList.add('overflow-hidden');
+            }
+            function closeDesktopMenu() {
+                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open');
+                if (menuOverlay) menuOverlay.classList.remove('active');
+                document.body.classList.remove('overflow-hidden');
+            }
+            if (desktopHamburgerButton) {
+                desktopHamburgerButton.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                    else openDesktopMenu();
+                });
+            }
+            if (menuOverlay) menuOverlay.addEventListener('click', closeDesktopMenu);
+            if (slideoutCloseButton) slideoutCloseButton.addEventListener('click', closeDesktopMenu);
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+            });
+
+            setActiveNavLink(); // Initial call
+        }
+
+        // Fetch and Inject Header, then Initialize Header Logic
+        fetch('header.html') // Ensure header.html is in the correct path
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok for header.html');
+                return response.text();
+            })
+            .then(data => {
+                const headerPlaceholder = document.getElementById('header-placeholder');
+                if (headerPlaceholder) {
+                    headerPlaceholder.innerHTML = data;
+                    initializeHeaderAndAuth(); // Initialize header JS AFTER it's loaded
+                } else {
+                    console.error('Header placeholder element not found.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching header:', error);
+                const headerPlaceholder = document.getElementById('header-placeholder');
+                if(headerPlaceholder) headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
+            });
+
+
+        // --- Markets Page Specific JavaScript ---
         if(document.getElementById('current-year-markets')) {
             document.getElementById('current-year-markets').textContent = new Date().getFullYear();
         }
@@ -405,7 +643,10 @@
                 button.classList.add('tab-active');
                 button.classList.remove('tab-inactive');
                 const targetTab = button.getAttribute('data-tab');
-                document.getElementById(`${targetTab}-content`).classList.remove('hidden');
+                const targetElement = document.getElementById(`${targetTab}-content`);
+                if (targetElement) {
+                    targetElement.classList.remove('hidden');
+                }
             });
         });
 
@@ -479,34 +720,38 @@
         const allSectors = [...new Set(energyCompaniesData.map(company => company.sector))].sort();
         const allCountries = [...new Set(energyCompaniesData.map(company => company.country))].sort();
 
-        allSectors.forEach(sector => {
-            const option = document.createElement('option');
-            option.value = sector;
-            option.textContent = sector;
-            sectorFilter.appendChild(option);
-        });
-        allCountries.forEach(country => {
-            const option = document.createElement('option');
-            option.value = country;
-            option.textContent = country;
-            countryFilter.appendChild(option);
-        });
-
+        if (sectorFilter) {
+            allSectors.forEach(sector => {
+                const option = document.createElement('option');
+                option.value = sector;
+                option.textContent = sector;
+                sectorFilter.appendChild(option);
+            });
+        }
+        if (countryFilter) {
+            allCountries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country;
+                option.textContent = country;
+                countryFilter.appendChild(option);
+            });
+        }
+        
         let currentSortColumn = 'rank'; 
         let currentSortOrder = 'asc';
         const searchCompanyInput = document.getElementById('searchCompanyInput');
 
         function applyFiltersAndSearch() {
-            const searchTerm = searchCompanyInput.value.toLowerCase();
-            const selectedSector = sectorFilter.value;
-            const selectedCountry = countryFilter.value;
+            const searchTerm = searchCompanyInput ? searchCompanyInput.value.toLowerCase() : "";
+            const selectedSector = sectorFilter ? sectorFilter.value : "";
+            const selectedCountry = countryFilter ? countryFilter.value : "";
 
             let filteredData = energyCompaniesData.filter(company => {
                 const matchesSearch = searchTerm === '' ||
-                                      company.name.toLowerCase().includes(searchTerm) ||
-                                      company.ticker.toLowerCase().includes(searchTerm) ||
-                                      company.sector.toLowerCase().includes(searchTerm) ||
-                                      company.country.toLowerCase().includes(searchTerm);
+                                      (company.name && company.name.toLowerCase().includes(searchTerm)) ||
+                                      (company.ticker && company.ticker.toLowerCase().includes(searchTerm)) ||
+                                      (company.sector && company.sector.toLowerCase().includes(searchTerm)) ||
+                                      (company.country && company.country.toLowerCase().includes(searchTerm));
                 const matchesSector = selectedSector === '' || company.sector === selectedSector;
                 const matchesCountry = selectedCountry === '' || company.country === selectedCountry;
                 return matchesSearch && matchesSector && matchesCountry;
@@ -538,6 +783,7 @@
 
         function renderEnergyCompaniesTable(data) {
             const tableBody = document.getElementById('energyCompaniesBody');
+            if (!tableBody) return;
             tableBody.innerHTML = ''; 
             data.forEach(company => {
                 const row = tableBody.insertRow();
@@ -594,27 +840,13 @@
             });
         });
 
-        searchCompanyInput.addEventListener('input', applyFiltersAndSearch);
-        sectorFilter.addEventListener('change', applyFiltersAndSearch);
-        countryFilter.addEventListener('change', applyFiltersAndSearch);
+        if (searchCompanyInput) searchCompanyInput.addEventListener('input', applyFiltersAndSearch);
+        if (sectorFilter) sectorFilter.addEventListener('change', applyFiltersAndSearch);
+        if (countryFilter) countryFilter.addEventListener('change', applyFiltersAndSearch);
         
         // Initial render
-        currentSortColumn = 'rank';
-        currentSortOrder = 'asc';
-        applyFiltersAndSearch();
+        applyFiltersAndSearch(); // This will also sort and render
 
-        // Ticker Banner Logic (Simplified for this page)
-        const tickerContentMarkets = document.getElementById('tickerContentMarkets');
-        if (tickerContentMarkets) {
-            const navElement = document.querySelector('nav.fixed'); // Assuming header is loaded by now
-            let navHeight = navElement ? navElement.offsetHeight : 60; 
-            if(tickerContentMarkets.parentElement) {
-                 tickerContentMarkets.parentElement.style.marginTop = `${navHeight}px`;
-            }
-            // Example: You can fetch a few key market indices or commodities here
-            // For simplicity, using static text. Replace with actual data fetching.
-            tickerContentMarkets.innerHTML = '<span class="ticker-item">WTI Crude: $78.50 (+0.50%)</span> <span class="ticker-item">S&P 500: 4,120.75 (+0.37%)</span> <span class="ticker-item">10-Yr Treasury: 3.45% (+0.8bps)</span>';
-        }
     </script>
 </body>
 </html>
