@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linq - Your Bookmarks</title>
+    <title>Linq - Your Favorites</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -148,7 +148,8 @@
         .news-source-logo-container {
             flex-shrink: 0; margin-right: 1rem; width: 50px; height: 50px;
             display: flex; align-items: center; justify-content: center;
-            overflow: hidden; border-radius: 0.375rem; background-color: #1f2937; /* Added a subtle bg for logos */
+            overflow: hidden; border-radius: 0.375rem;
+            background-color: #18181b; /* Subtle background for logos */
         }
         .news-source-logo { max-width: 100%; max-height: 100%; object-fit: contain; }
         .news-content-wrapper { flex-grow: 1; display: flex; justify-content: space-between; align-items: flex-start; }
@@ -195,7 +196,14 @@
             border-radius: 1rem; font-size: 0.75rem; font-weight: 500;
             margin-left: 0.75rem; border: 1px solid rgba(0, 191, 255, 0.3);
         }
-        .twitter-tweet-container { margin-top: 1rem; background-color: transparent; /* Changed from #101010 for twitter widget to control */ border-radius: 0.5rem; padding: 0; /* Changed padding for twitter widget */ border: none; /* Changed border for twitter widget */ }
+        /* Styles for the container of the Twitter embed, allowing the widget to control its own styling */
+        .twitter-tweet-container {
+            margin-top: 1rem;
+            background-color: transparent; /* Let Twitter widget handle background */
+            border-radius: 0.5rem; /* Optional: can be inherited from Twitter widget */
+            padding: 0; /* Let Twitter widget handle padding */
+            border: none; /* Let Twitter widget handle border */
+        }
         .post-actions {
             display: flex; justify-content: flex-end; align-items: center;
             margin-top: 1.5rem; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid #282828;
@@ -235,16 +243,16 @@
     <div id="header-placeholder"></div>
 
     <main class="page-content-wrapper container mx-auto p-4 sm:p-6 lg:p-8">
-        <div id="favoritesPageContent"> <h1 class="page-main-title">Your <span class="accent-text">Bookmarks</span></h1>
+        <div id="favoritesPageContent"> <h1 class="page-main-title">Your <span class="accent-text">Favorites</span></h1>
 
             <div class="favorites-grid-container">
                 <div class="favorites-column" id="news-favorites-column">
-                    <h2>News Articles</h2>
+                    <h2>Favorite News Articles</h2>
                     <div id="newsFavoritesGrid">
                         </div>
                 </div>
                 <div class="favorites-column" id="community-favorites-column">
-                    <h2>Community Posts</h2>
+                    <h2>Favorite Community Posts</h2>
                     <div id="communityFavoritesGrid">
                         </div>
                 </div>
@@ -291,7 +299,7 @@
             const mobileMenu = document.getElementById('mobile-menu');
 
             const firebaseConfig = {
-                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // IMPORTANT: Keep your API keys secure and consider environment variables for production.
                 authDomain: "linq-b27a8.firebaseapp.com",
                 projectId: "linq-b27a8",
                 storageBucket: "linq-b27a8.appspot.com",
@@ -304,7 +312,7 @@
             const authInstance = firebase.auth();
 
             authInstance.onAuthStateChanged(user => {
-                const favoritesPageContent = document.getElementById('favoritesPageContent'); // Updated ID
+                const favoritesPageContent = document.getElementById('favoritesPageContent');
                 const authMessageContainer = document.getElementById('authMessageContainer');
 
                 if (user) {
@@ -325,7 +333,7 @@
                     if(favoritesPageContent) favoritesPageContent.classList.remove('hidden');
                     if(authMessageContainer) authMessageContainer.classList.add('hidden');
                     displayFavoriteArticles();
-                    displayFavoriteCommunityPosts(); // Call function to display community favorites
+                    displayFavoriteCommunityPosts();
 
                 } else {
                     if (authLinkDesktopLogin) {
@@ -438,20 +446,22 @@
 
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
+        // Updated sourcePlaceholders with some actual logo URLs.
+        // PLEASE REVIEW and replace with your preferred/higher-quality logos.
         const sourcePlaceholders = {
-            'Reuters': { bgColor: 'FF8000', textColor: 'FFFFFF', text: 'RTRS', logoUrl: 'https://www.reuters.com/pf/resources/images/reuters/logo-horizontal-dark.svg?d=107' /* Dark logo, good for light bg, adjust if needed or find white one*/ },
-            'Bloomberg': { bgColor: '000000', textColor: '007bff', text: 'BBG', logoUrl: 'https://assets.bwbx.io/images/users/ui/bloomberg-logo-light/1.0.1/img/logo.png' /* White logo */ },
-            'CNBC': { bgColor: '000000', textColor: 'FFFFFF', text: 'CNBC', logoUrl: 'https://www.cnbc.com/nbcuni_brand_logos/cnbc/CNBC_Logo_Horizontal_REV.png' /* White logo */},
-            'Forbes': { bgColor: '000000', textColor: 'FFFFFF', text: 'FRBS', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Forbes_logo_black.svg/320px-Forbes_logo_black.svg.png' /* Black text, provide white or adjust bg */ }, // Note: This is a black logo, might need a white version for dark backgrounds or CSS filter. For now, placeholder text might be better if this doesn't show well.
-            'BBC News': { bgColor: 'BB1919', textColor: 'FFFFFF', text: 'BBC', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/BBC_News_2022.svg/512px-BBC_News_2022.svg.png' /* Iconic red bg with white text */ },
-            'Seeking Alpha': { bgColor: 'F39200', textColor: '000000', text: 'SA', logoUrl: 'https://static.seekingalpha.com/assets/images/layout/seeking_alpha_logo_200x38_negative.png' /* White logo */},
+            'Reuters': { bgColor: 'FF8000', textColor: 'FFFFFF', text: 'RTRS', logoUrl: 'https://www.reuters.com/pf/resources/images/reuters/logo-horizontal-dark.svg?d=107' }, // Dark logo, good for light bg, adjust if needed or find white one
+            'Bloomberg': { bgColor: '000000', textColor: '007bff', text: 'BBG', logoUrl: 'https://assets.bwbx.io/images/users/ui/bloomberg-logo-light/1.0.1/img/logo.png' }, // White logo
+            'CNBC': { bgColor: '000000', textColor: 'FFFFFF', text: 'CNBC', logoUrl: 'https://www.cnbc.com/nbcuni_brand_logos/cnbc/CNBC_Logo_Horizontal_REV.png' }, // White logo
+            'Forbes': { bgColor: '222222', textColor: 'ffffff', text: 'FRBS', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Forbes_logo_white.svg/200px-Forbes_logo_white.svg.png' }, // Found a white SVG logo for Forbes
+            'BBC News': { bgColor: 'BB1919', textColor: 'FFFFFF', text: 'BBC', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/BBC_News_2022.svg/512px-BBC_News_2022.svg.png' }, // Iconic red bg with white text
+            'Seeking Alpha': { bgColor: 'F39200', textColor: '000000', text: 'SA', logoUrl: 'https://static.seekingalpha.com/assets/images/layout/seeking_alpha_logo_200x38_negative.png' }, // White logo
             // Add other sources with their logoUrl if available
         };
         const genericPlaceholderColors = ['00BFFF', '4B0082', '800080', 'FF1493', 'FF8C00', '20B2AA', 'DA70D6'];
 
+        // IMPORTANT: If you have specific images for these articles from index.html,
+        // replace 'YOUR_IMAGE_ADDRESS_HERE' with the actual image URL/path.
         const articlesData = [
-            // IMPORTANT: If you have specific images for these articles from index.html,
-            // replace 'YOUR_IMAGE_ADDRESS_HERE' with the actual image URL/path.
             { id: "1", category: 'Crude Oil', title: 'Oil Prices Surge Amid Supply Concerns', date: 'May 10, 2025', source: 'Reuters', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
             { id: "2", category: 'Crude Oil', title: 'OPEC+ Extends Production Cuts', date: 'May 9, 2025', source: 'Bloomberg', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
             { id: "3", category: 'Natural Gas', title: 'Global Demand for Crude Hits Record', date: 'May 10, 2025', source: 'CNBC', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
@@ -486,32 +496,33 @@
                 articleElement.className = 'news-card';
 
                 let imageUrl;
-                const placeholderImageString = 'YOUR_IMAGE_ADDRESS_HERE';
+                const placeholderImageString = 'YOUR_IMAGE_ADDRESS_HERE'; // String to identify placeholder image values in articlesData
                 const sourceInfo = sourcePlaceholders[article.source];
 
-                // 1. Try specific article image, if it's not the placeholder
-                if (article.image && article.image !== placeholderImageString) {
+                // 1. Prioritize specific article image if it's valid and not the placeholder string
+                if (article.image && article.image !== placeholderImageString && article.image.trim() !== '') {
                     imageUrl = article.image;
                 }
-                // 2. Else, try source logo URL, if it's not a placeholder in sourcePlaceholders
-                else if (sourceInfo && sourceInfo.logoUrl && !sourceInfo.logoUrl.startsWith('YOUR_') && !sourceInfo.logoUrl.endsWith('_URL_HERE')) {
+                // 2. Else, try the logoUrl from sourcePlaceholders if it's valid
+                else if (sourceInfo && sourceInfo.logoUrl && !sourceInfo.logoUrl.startsWith('YOUR_') && !sourceInfo.logoUrl.endsWith('_URL_HERE') && sourceInfo.logoUrl.trim() !== '') {
                     imageUrl = sourceInfo.logoUrl;
                 }
-                // 3. Else, generate placeholder
+                // 3. Else, generate a placeholder image
                 else {
                     if (sourceInfo && sourceInfo.bgColor && sourceInfo.textColor && sourceInfo.text) {
                         imageUrl = `https://placehold.co/50x50/${sourceInfo.bgColor}/${sourceInfo.textColor}?text=${encodeURIComponent(sourceInfo.text)}&font=Lexend`;
                     } else {
                         const colorIndex = index % genericPlaceholderColors.length;
                         const bgColor = genericPlaceholderColors[colorIndex];
-                        const textColor = 'FFFFFF'; // Assuming white text for generic placeholders
-                        imageUrl = `https://placehold.co/50x50/${bgColor}/${textColor}?text=${article.source ? encodeURIComponent(article.source.charAt(0).toUpperCase()) : 'N'}&font=Lexend`;
+                        const textColor = 'FFFFFF'; // Default white text for generic placeholders
+                        const sourceInitial = article.source ? encodeURIComponent(article.source.charAt(0).toUpperCase()) : 'N';
+                        imageUrl = `https://placehold.co/50x50/${bgColor}/${textColor}?text=${sourceInitial}&font=Lexend`;
                     }
                 }
 
                 articleElement.innerHTML = `
                     <div class="news-source-logo-container">
-                        <img src="${imageUrl}" alt="${article.source || 'Source'} Logo" class="news-source-logo" onerror="this.src='https://placehold.co/50x50/cccccc/333333?text=Err&font=Lexend'; this.alt='Image error'">
+                        <img src="${imageUrl}" alt="${article.source || 'Source'} Logo" class="news-source-logo" onerror="this.onerror=null; this.src='https://placehold.co/50x50/cccccc/333333?text=Err&font=Lexend'; this.alt='Image error fallback';">
                     </div>
                     <div class="news-content-wrapper">
                         <div class="news-text-content">
@@ -544,7 +555,7 @@
             }
             favoritedCommunityPosts.forEach(post => {
                 const postElement = document.createElement('article');
-                postElement.className = 'post-card'; // Use community post card styling
+                postElement.className = 'post-card';
                 postElement.setAttribute('data-id', post.id);
                 // Ensure tweetContent is a string, otherwise provide a fallback or log an error
                 const tweetContentHTML = typeof post.tweetContent === 'string' ? post.tweetContent : '<p>Could not load tweet content.</p>';
@@ -569,11 +580,14 @@
             if (window.twttr && window.twttr.widgets) {
                 window.twttr.widgets.load(communityFavoritesGrid);
             } else {
-                // Fallback or log if twitter script hasn't loaded yet
-                // console.log("Twitter widgets API not available yet. Tweets may not render correctly until it loads.");
-                // Could potentially queue this up or retry later if twitter script loads deferred.
+                // Fallback or log if twitter script hasn't loaded yet.
+                // It might also be that the script is still loading, so widgets.load() might be called again
+                // by the script itself once it's ready.
+                console.log("Twitter widgets API (twttr.widgets) not available yet or still loading. Tweets may not render correctly immediately.");
             }
-            addFavoriteButtonListeners(); // Add listeners to new community favorite buttons
+            addFavoriteButtonListeners();
+            // If you have share functionality, you might need to re-add listeners for share buttons here too
+            // addShareButtonListeners(); // Example
         }
 
 
@@ -594,11 +608,9 @@
 
         function addFavoriteButtonListeners() {
             document.querySelectorAll('#newsFavoritesGrid .favorite-btn, #communityFavoritesGrid .favorite-btn').forEach(button => {
-                button.removeEventListener('click', handleUnfavoriteClick);
+                button.removeEventListener('click', handleUnfavoriteClick); // Prevent multiple listeners
                 button.addEventListener('click', handleUnfavoriteClick);
             });
-            // Re-add share button listeners if they were part of community.html originally and needed for favorites
-            // For now, only favorite buttons are re-wired here.
         }
 
         function handleUnfavoriteClick(event) {
@@ -607,43 +619,6 @@
             const type = button.getAttribute('data-type'); // 'news' or 'community'
             toggleFavoriteOnFavoritesPage(articleId, type);
         }
-
-
-        function addShareButtonListeners() {
-            document.querySelectorAll('.share-btn').forEach(button => {
-                button.addEventListener('click', async event => {
-                    const url = button.dataset.url;
-                    const title = button.dataset.title;
-                    const confirmationSpan = button.nextElementSibling; // Assuming it's right after
-
-                    if (navigator.share) {
-                        try {
-                            await navigator.share({ title: title, url: url });
-                            console.log('Shared successfully');
-                        } catch (err) {
-                            console.error('Share failed:', err.message);
-                            // Fallback to copy link if Web Share API fails or is cancelled
-                            copyLinkToClipboard(url, confirmationSpan);
-                        }
-                    } else {
-                        copyLinkToClipboard(url, confirmationSpan);
-                    }
-                });
-            });
-        }
-
-        function copyLinkToClipboard(url, confirmationSpan) {
-            navigator.clipboard.writeText(url).then(() => {
-                if (confirmationSpan) {
-                    confirmationSpan.classList.remove('hidden');
-                    setTimeout(() => confirmationSpan.classList.add('hidden'), 2000);
-                }
-            }).catch(err => {
-                console.error('Failed to copy link: ', err);
-            });
-        }
-        */
-        // Ensure to call addShareButtonListeners() within displayFavoriteCommunityPosts if needed.
     </script>
 </body>
 </html>
