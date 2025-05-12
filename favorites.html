@@ -19,92 +19,114 @@
             flex-direction: column;
             min-height: 100vh;
         }
+        body.overflow-hidden { /* For use with modals/slide-out menus */
+            overflow: hidden;
+        }
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #1A1A1A; }
         ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
         ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
 
-        /* User-provided Header Styles */
+        /* Styles for the dynamically loaded header.html */
         nav.fixed {
-            background-color: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(10px) saturate(150%);
-            -webkit-backdrop-filter: blur(10px) saturate(150%);
-            border-bottom: 1px solid #222222;
+            background-color: rgba(10, 10, 10, 0.85) !important;
+            backdrop-filter: blur(10px) saturate(150%) !important;
+            -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+            border-bottom: 1px solid #222222 !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            z-index: 1000 !important;
+            padding: 0.75rem 0 !important;
         }
+        nav.fixed .container { 
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            width: 100% !important;
+            max-width: 1280px !important; 
+            margin: 0 auto !important;
+            padding: 0 1rem !important; 
+        }
+        @media (min-width: 640px) { nav.fixed .container { padding: 0 1.5rem !important; } }
+        @media (min-width: 1024px) { nav.fixed .container { padding: 0 2rem !important; } }
+
         .nav-link {
             transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
-            font-weight: 500;
-            color: #B0B0B0;
-            opacity: 0.8;   
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem; /* text-sm equivalent */
+            font-weight: 500; color: #B0B0B0; opacity: 0.8;   
+            padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; 
         }
-        .nav-link:hover { /* This style will apply on hover for all nav links, including active */
-            color: #FFFFFF;
-            opacity: 1;
-            background-color: rgba(255,255,255,0.05);
+        .nav-link:hover { color: #FFFFFF; opacity: 1; background-color: rgba(255,255,255,0.05); }
+        .nav-link.active { color: #FFFFFF; opacity: 1; background-color: transparent; }
+        #authLinkDesktopLogin.nav-link-button {
+            background-color: #00BFFF; color: #FFFFFF !important; opacity: 1 !important; padding: 0.5rem 1rem; 
         }
-        /* Active link style: White text, no special background unless hovered */
-        .nav-link.active { /* Applied to the current page's nav link */
-            color: #FFFFFF; 
-            opacity: 1;
-            background-color: transparent; /* No persistent background for active */
-        }
-        
+        #authLinkDesktopLogin.nav-link-button:hover { background-color: #00A9E0; opacity: 1; }
         .profile-icon-placeholder { 
-            width: 2.25rem; 
-            height: 2.25rem; 
-            background-color: #333; 
-            border-radius: 50%; 
+            width: 2.25rem; height: 2.25rem; background-color: #333; border-radius: 50%; 
             display: inline-flex; align-items: center; justify-content: center; 
-            cursor: pointer; 
-            border: 2px solid #4A4A4A; 
+            cursor: pointer; border: 2px solid #4A4A4A; 
         }
         .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; } 
         .profile-icon-placeholder:hover { border-color: #00BFFF; } 
-
-        .desktop-hamburger-menu { position: relative; display: inline-block; }
-        .desktop-hamburger-icon { cursor: pointer; padding: 0.25rem; color: #B0B0B0; } 
-        .desktop-hamburger-icon:hover { color: #FFFFFF; }
+        .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;} 
+        .desktop-hamburger-icon:hover { color: #FFFFFF; background-color: rgba(255,255,255,0.1); }
         .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; } 
-
-        .desktop-dropdown-menu { 
-            display: none; position: absolute; right: 0; top: calc(100% + 0.5rem); 
-            background-color: rgba(28, 28, 28, 0.95); 
-            backdrop-filter: blur(12px) saturate(160%); 
-            min-width: 200px; 
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5), 0 4px 6px -2px rgba(0,0,0,0.25); 
-            z-index: 55; 
-            border-radius: 0.5rem; 
-            border: 1px solid #333333; 
-            padding-top: 0.5rem; padding-bottom: 0.5rem; 
+        .slide-out-panel { 
+            display: flex; flex-direction: column; position: fixed; top: 0; right: 0; 
+            width: 320px; height: 100vh; background-color: #18181B; 
+            box-shadow: -10px 0 30px rgba(0,0,0,0.4); z-index: 1001; 
+            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            padding: 1.5rem; overflow-y: auto; border-left: 1px solid #3F3F46; 
         }
-        .desktop-dropdown-menu a {
-            color: #C0C0C0; padding: 0.625rem 1.25rem; 
-            text-decoration: none; display: block; 
-            font-size: 0.875rem; font-weight: 500; 
-            transition: background-color 0.2s ease, color 0.2s ease; 
-            border-radius: 0.25rem; margin: 0.25rem 0.5rem; 
+        .slide-out-panel.open { transform: translateX(0); }
+        .slide-out-panel-header {
+            display: flex; justify-content: flex-end; align-items: center;
+            padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #3F3F46; 
         }
-        .desktop-dropdown-menu a:hover { background-color: rgba(0, 191, 255, 0.15); color: #FFFFFF; } 
-        .desktop-dropdown-menu #logoutButtonDesktop { color: #EF4444; } 
-        .desktop-dropdown-menu #logoutButtonDesktop:hover { background-color: rgba(239, 68, 68, 0.15); color: #FFAAAA; } 
-
-        #mobile-menu .nav-link.active { /* Mobile active link */
-            color: #FFFFFF; 
-            background-color: rgba(0, 191, 255, 0.1); 
-            opacity: 1;
+        .slide-out-panel-close-btn {
+            background: none; border: none; color: #A0A0A0; font-size: 1.875rem; 
+            cursor: pointer; padding: 0.25rem; line-height: 1;
+            transition: color 0.2s ease, transform 0.2s ease;
         }
+        .slide-out-panel-close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
+        .slide-out-panel-nav { flex-grow: 1; display: flex; flex-direction: column; }
+        .slide-out-panel a {
+            color: #D4D4D8; padding: 1rem 1.25rem; text-decoration: none; display: block; 
+            font-size: 0.95rem; font-weight: 500; 
+            transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease; 
+            border-left: 4px solid transparent; margin: 0.375rem 0; border-radius: 0.375rem; 
+        }
+        .slide-out-panel a:hover { background-color: #27272A; color: #FFFFFF; border-left-color: #00BFFF; }
+        .slide-out-panel #logoutButtonSlideout { 
+            color: #F87171 !important; margin-top: auto; padding-top: 1rem; border-top: 1px solid #3F3F46; 
+        }
+        .slide-out-panel #logoutButtonSlideout:hover { 
+            background-color: rgba(248, 113, 113, 0.1); color: #FECACA !important; border-left-color: #F87171;
+        } 
+        #menu-overlay {
+            display: none; position: fixed; inset: 0;
+            background-color: rgba(0, 0, 0, 0.65); z-index: 1000; 
+            opacity: 0; transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        #menu-overlay.active { display: block; opacity: 1; }
+        /* End of Header specific styles */
 
+        .page-content-wrapper {
+            flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px; 
+            margin: 0 auto; padding-left: 1rem; padding-right: 1rem;
+            padding-top: 80px; /* Default, will be adjusted by JS */
+        }
+        /* Styles for .page-title and .accent-text are from the original favorites (1).html */
         .page-title {
             font-size: 2.5rem; font-weight: 700; color: #FFFFFF; margin-bottom: 2rem; text-align: center; 
-            padding-top: 80px; /* Space for fixed nav */
+            /* padding-top: 80px; This was in original, but .page-content-wrapper handles top padding now */
             text-shadow: 0px 2px 8px rgba(0, 191, 255, 0.25);
         }
         .page-title .accent-text { color: #00BFFF; }
 
-        /* News Card Styling from index.html */
+        /* News Card Styling from original favorites (1).html */
         .news-card {
             background-color: #0A0A0A; border-radius: 0.75rem; border: 1px solid #2D2D2D;
             box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.6); overflow: hidden;
@@ -122,7 +144,7 @@
         }
         .news-source-logo { max-width: 100%; max-height: 100%; object-fit: contain; }
         .news-content-wrapper { flex-grow: 1; display: flex; justify-content: space-between; align-items: flex-start; }
-        .news-text-content { /* For title, meta, tags */ }
+        .news-text-content {}
         .news-title {
             font-size: 1.1rem; font-weight: 500; color: #FFFFFF;
             margin-bottom: 0.25rem; line-height: 1.3;
@@ -144,9 +166,10 @@
             align-items: center; justify-content: center;
         }
         .favorite-btn:hover { color: #00BFFF; transform: scale(1.15); }
-        .favorite-btn.favorited { color: #00BFFF; fill: #00BFFF; }
-        .favorite-btn svg { width: 100%; height: 100%; }
+        .favorite-btn.favorited { color: #00BFFF; } 
+        .favorite-btn.favorited svg { fill: #00BFFF; stroke: #00BFFF; }
 
+        /* Styles for messages from original favorites (1).html */
         .no-favorites-message, .auth-message { 
             text-align: center; color: #A0A0A0; font-size: 1.1rem; padding: 3rem 1rem;
             background-color: #121212; border-radius: 0.5rem; border: 1px solid #2a2a2a;
@@ -155,85 +178,29 @@
         .auth-message a { color: #00BFFF; text-decoration: underline;}
         .auth-message a:hover { color: #00A9E0;}
 
+        /* Footer styles from original favorites (1).html */
         .footer {
             background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem;
             border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem; margin-top: auto;
         }
         .footer a { color: #B0B0B0; transition: color 0.2s ease; }
         .footer a:hover { color: #00BFFF; }
-        
-        .page-content-wrapper {
-            flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px; 
-            margin: 0 auto; padding-left: 1rem; padding-right: 1rem;
-            padding-top: 10px; 
-        }
     </style>
 </head>
 <body class="antialiased">
-    <nav class="fixed top-0 left-0 w-full z-50 shadow-md py-3">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
-            <div class="hidden md:flex items-center space-x-5">
-                <a href="index.html" class="nav-link text-sm">News</a>
-                <a href="community.html" class="nav-link text-sm">Community</a>
-                <a href="favorites.html" id="favoritesLinkDesktop" class="nav-link text-sm active hidden">Favorites</a>
-                <div id="desktopAuthArea" class="flex items-center space-x-3">
-                    <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm">Login</a> 
-                    <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
-                        <a href="profile.html" id="profileLinkDesktop" title="My Profile">
-                            <div class="profile-icon-placeholder">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </a>
-                        <div class="desktop-hamburger-menu">
-                            <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                                </svg>
-                            </button>
-                            <div id="desktop-dropdown" class="desktop-dropdown-menu">
-                                <a href="linqai.html">Linq AI</a>
-                                <a href="earnings.html">Earnings Calendar</a>
-                                <a href="profile.html">My Profile</a>
-                                <a href="#" id="logoutButtonDesktop">Logout</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-        <div id="mobile-menu" class="md:hidden hidden bg-gray-900 bg-opacity-90 backdrop-blur-md">
-            <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Login</a>
-            <a href="linqai.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Linq Ai</a>
-            <a href="earnings.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Earnings Calendar</a>
-            <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a>
-            <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Community</a> 
-            <a href="favorites.html" id="favoritesLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 active hidden">Favorites</a>
-            <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Logout</a>
-        </div>
-    </nav>
+    <div id="header-placeholder"></div>
 
     <main class="page-content-wrapper container mx-auto p-4 sm:p-6 lg:p-8">
-        <div id="favoritesContent">
+        <div id="favoritesContent"> 
             <h1 class="page-title">Your <span class="accent-text">Favorites</span></h1>
             <div id="newsFavoritesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-                {/* Favorited news articles will be loaded here */}
-            </div>
+                </div>
         </div>
         
-        <div id="authMessageContainer" class="hidden">
-             <h1 class="page-title"><span class="accent-text">Your Favorites</span></h1>
+        <div id="authMessageContainer" class="hidden"> 
+            <h1 class="page-title">Your <span class="accent-text">Favorites</span></h1>
             <div id="authMessage" class="auth-message">
-                You must be logged in to view your favorites. <a href="login.html">Login here</a>.
+                You must be logged in to view your favorites. <a href="login.html" class="text-cyan-400 hover:underline">Login here</a>.
             </div>
         </div>
     </main>
@@ -250,18 +217,189 @@
     </footer>
 
     <script>
+        // --- Function to Initialize and Run All Header Related Logic ---
+        // This function will be called AFTER header.html is fetched and injected.
+        function initializeHeaderAndAuth() {
+            // Get DOM Elements for Header and Menus (ensure these IDs match your header.html)
+            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
+            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
+            const authLinkMobile = document.getElementById('authLinkMobile');
+            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
+            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile'); 
+            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile'); 
+            const earningsLinkMobile = document.getElementById('earningsLinkMobile'); 
+            const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
+            const menuOverlay = document.getElementById('menu-overlay'); 
+            const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
+            const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
+            const slideoutCloseButton = document.getElementById('slideout-close-button');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            // Firebase configuration (already defined globally in original script, ensuring it's used)
+            // For safety, ensure it's initialized if not already, though original script initializes it globally.
+            const firebaseConfig = { 
+                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+                authDomain: "linq-b27a8.firebaseapp.com",
+                projectId: "linq-b27a8",
+                storageBucket: "linq-b27a8.appspot.com",
+                messagingSenderId: "1067901051826",
+                appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+            };
+            if (!firebase.apps.length) { 
+                firebase.initializeApp(firebaseConfig);
+            }
+            const authInstance = firebase.auth(); // Use this instance
+
+            // Firebase Authentication State Change Listener
+            // This listener now also handles showing/hiding favorites content vs. auth message
+            authInstance.onAuthStateChanged(user => {
+                const favoritesContent = document.getElementById('favoritesContent');
+                const authMessageContainer = document.getElementById('authMessageContainer');
+
+                if (user) {
+                    // User is LOGGED IN
+                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
+                    if (profileAndMenuDesktop) {
+                        profileAndMenuDesktop.classList.remove('hidden');
+                        profileAndMenuDesktop.classList.add('flex');
+                    }
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "My Profile";
+                        authLinkMobile.href = "profile.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
+                    
+                    if(favoritesContent) favoritesContent.classList.remove('hidden');
+                    if(authMessageContainer) authMessageContainer.classList.add('hidden');
+                    displayFavoriteArticles(); // Call existing function from original script
+
+                } else {
+                    // User is LOGGED OUT
+                    if (authLinkDesktopLogin) {
+                        authLinkDesktopLogin.classList.remove('hidden');
+                        authLinkDesktopLogin.classList.add('nav-link-button');
+                    }
+                    if (profileAndMenuDesktop) profileAndMenuDesktop.classList.add('hidden');
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "Login";
+                        authLinkMobile.href = "login.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
+                        closeDesktopMenu(); 
+                    }
+                    if(favoritesContent) favoritesContent.classList.add('hidden');
+                    if(authMessageContainer) authMessageContainer.classList.remove('hidden');
+                }
+                setActiveNavLink(); 
+            });
+
+            // Logout handler
+            function handleLogout(e) {
+                e.preventDefault();
+                if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
+                authInstance.signOut().then(() => {
+                    console.log("User signed out");
+                    window.location.href = 'index.html'; 
+                }).catch(error => console.error("Sign out error", error));
+            }
+
+            if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
+            if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
+
+            // Function to set active navigation link
+            function setActiveNavLink() {
+                const currentPath = window.location.pathname.split("/").pop() || "index.html";
+                const navLinks = document.querySelectorAll('#header-placeholder nav.fixed a.nav-link, #header-placeholder #mobile-menu a.nav-link');
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    const linkHref = link.getAttribute('href');
+                    if (linkHref === currentPath) {
+                        link.classList.add('active');
+                    } 
+                    else if ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html" || link.dataset.page === "index" || link.dataset.page === "index-mobile")) {
+                        link.classList.add('active');
+                    }
+                    else if (currentPath === "favorites.html" && linkHref === "favorites.html") {
+                         link.classList.add('active');
+                    }
+                });
+            }
+
+            // Mobile menu toggle
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            }
+
+            // Desktop slide-out menu functions
+            function openDesktopMenu() {
+                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.add('open');
+                if (menuOverlay) menuOverlay.classList.add('active');
+                document.body.classList.add('overflow-hidden');
+            }
+            function closeDesktopMenu() {
+                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open');
+                if (menuOverlay) menuOverlay.classList.remove('active');
+                document.body.classList.remove('overflow-hidden');
+            }
+            if (desktopHamburgerButton) {
+                desktopHamburgerButton.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                    else openDesktopMenu();
+                });
+            }
+            if (menuOverlay) menuOverlay.addEventListener('click', closeDesktopMenu);
+            if (slideoutCloseButton) slideoutCloseButton.addEventListener('click', closeDesktopMenu);
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+            });
+
+            setActiveNavLink(); // Initial call
+        }
+
+        // Fetch and Inject Header, then Initialize Header Logic
+        fetch('header.html') 
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok for header.html');
+                return response.text();
+            })
+            .then(data => {
+                const headerPlaceholder = document.getElementById('header-placeholder');
+                if (headerPlaceholder) {
+                    headerPlaceholder.innerHTML = data;
+                    initializeHeaderAndAuth(); 
+                    const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
+                    if (fixedHeader) {
+                        document.querySelector('.page-content-wrapper').style.paddingTop = (fixedHeader.offsetHeight + 20) + 'px'; 
+                    }
+                } else {
+                    console.error('Header placeholder element not found.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching header:', error);
+                const headerPlaceholder = document.getElementById('header-placeholder');
+                if(headerPlaceholder) headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
+            });
+
+        // --- Favorites Page Specific JavaScript (from original favorites (1).html) ---
+        // This part of the script is preserved from your original file.
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-            authDomain: "linq-b27a8.firebaseapp.com",
-            projectId: "linq-b27a8",
-            storageBucket: "linq-b27a8.appspot.com",
-            messagingSenderId: "1067901051826",
-            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+        // Firebase config and auth instance are already handled in initializeHeaderAndAuth
+        // const firebaseConfig = { ... };
+        // firebase.initializeApp(firebaseConfig); // This would be a re-initialization, avoid.
+        // const auth = firebase.auth(); // Use authInstance from initializeHeaderAndAuth
 
         const sourcePlaceholders = {
             'Reuters': { bgColor: 'eeeeee', textColor: '333333', text: 'RTRS' },
@@ -272,7 +410,7 @@
             'Seeking Alpha': { bgColor: 'f9a61a', textColor: '000000', text: 'SA' },
         };
         const genericPlaceholderColors = ['00BFFF', '4B0082', '800080', 'FF1493', 'FF8C00', '20B2AA', 'DA70D6'];
-
+        
         const articlesData = [ 
             { id: "1", category: 'Crude Oil', title: 'Oil Prices Surge Amid Supply Concerns', date: 'May 10, 2025', source: 'Reuters', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
             { id: "2", category: 'Crude Oil', title: 'OPEC+ Extends Production Cuts', date: 'May 9, 2025', source: 'Bloomberg', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
@@ -281,7 +419,6 @@
             { id: "5", category: 'Power', title: 'Global Power Grids Under Strain from Extreme Weather Events', date: 'May 10, 2025', source: 'BBC News', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
             { id: "6", category: 'Renewables', title: 'Solar Panel Efficiency Reaches New Heights, Driving Adoption', date: 'May 9, 2025', source: 'Seeking Alpha', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
         ];
-
         let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || [];
 
         function displayFavoriteArticles() {
@@ -301,35 +438,35 @@
                 articleElement.className = 'news-card'; 
 
                 let imageUrl = article.image;
-                if (imageUrl === 'YOUR_IMAGE_ADDRESS_HERE') {
+                if (imageUrl === 'YOUR_IMAGE_ADDRESS_HERE' || !imageUrl) { 
                     const specificPlaceholder = sourcePlaceholders[article.source];
                     if (specificPlaceholder) {
-                        imageUrl = `https://placehold.co/50x50/${specificPlaceholder.bgColor}/${specificPlaceholder.textColor}?text=${specificPlaceholder.text}&font=Inter`;
+                        imageUrl = `https://placehold.co/50x50/${specificPlaceholder.bgColor}/${specificPlaceholder.textColor}?text=${specificPlaceholder.text}&font=Lexend`; 
                     } else {
                         const colorIndex = index % genericPlaceholderColors.length;
                         const bgColor = genericPlaceholderColors[colorIndex];
                         const textColor = 'FFFFFF';
-                        imageUrl = `https://placehold.co/50x50/${bgColor}/${textColor}?text=${article.source.charAt(0).toUpperCase()}&font=Inter`;
+                        imageUrl = `https://placehold.co/50x50/${bgColor}/${textColor}?text=${article.source ? article.source.charAt(0).toUpperCase() : 'N'}&font=Lexend`; 
                     }
                 }
                 
                 articleElement.innerHTML = `
                     <div class="news-source-logo-container">
-                        <img src="${imageUrl}" alt="${article.source} Logo" class="news-source-logo">
+                        <img src="${imageUrl}" alt="${article.source || 'Source'} Logo" class="news-source-logo" onerror="this.src='https://placehold.co/50x50/cccccc/333333?text=Err&font=Lexend'; this.alt='Image error'">
                     </div>
                     <div class="news-content-wrapper">
                         <div class="news-text-content">
                             <h3 class="news-title">
-                                <a href="${article.link}" target="_blank">${article.title}</a>
+                                <a href="${article.link || '#'}" target="_blank" rel="noopener noreferrer">${article.title || 'Untitled Article'}</a>
                             </h3>
                             <div class="news-meta-tags">
-                                <p class="news-meta">${article.date} &bull; ${article.source}</p>
-                                <span class="news-tag">${article.category}</span>
+                                <p class="news-meta">${article.date || 'N/A Date'} &bull; ${article.source || 'N/A Source'}</p>
+                                <span class="news-tag">${article.category || 'General'}</span>
                             </div>
                         </div>
                         <div class="favorite-btn-area">
                             <button class="favorite-btn favorited" data-id="${article.id}" aria-label="Unfavorite article">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#00BFFF" stroke="#00BFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                                 </svg>
                             </button>
@@ -353,7 +490,7 @@
 
         function addFavoriteButtonListeners() {
             document.querySelectorAll('#newsFavoritesGrid .favorite-btn').forEach(button => {
-                button.removeEventListener('click', handleUnfavoriteClick);
+                button.removeEventListener('click', handleUnfavoriteClick); 
                 button.addEventListener('click', handleUnfavoriteClick);
             });
         }
@@ -364,80 +501,10 @@
             toggleFavoriteOnFavoritesPage(articleId);
         }
 
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        if (mobileMenuButton && mobileMenu) {
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-        }
-
-        const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
-        const desktopDropdown = document.getElementById('desktop-dropdown');
-        if (desktopHamburgerButton && desktopDropdown) {
-            desktopHamburgerButton.addEventListener('click', (event) => {
-                event.stopPropagation(); 
-                desktopDropdown.style.display = desktopDropdown.style.display === 'block' ? 'none' : 'block';
-            });
-        }
-        document.addEventListener('click', function(event) {
-            if (desktopDropdown && desktopHamburgerButton) {
-                if (!desktopHamburgerButton.contains(event.target) && !desktopDropdown.contains(event.target)) {
-                    desktopDropdown.style.display = 'none';
-                }
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
-            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
-            const favoritesLinkDesktop = document.getElementById('favoritesLinkDesktop');
-            const authLinkMobile = document.getElementById('authLinkMobile');
-            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
-            const logoutButtonDesktop = document.getElementById('logoutButtonDesktop');
-            const favoritesContent = document.getElementById('favoritesContent');
-            const authMessageContainer = document.getElementById('authMessageContainer');
-
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    // User is logged in
-                    if(authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
-                    if(profileAndMenuDesktop) { profileAndMenuDesktop.classList.remove('hidden'); profileAndMenuDesktop.classList.add('flex'); }
-                    if(favoritesLinkDesktop) favoritesLinkDesktop.classList.remove('hidden');
-
-                    if(authLinkMobile) { authLinkMobile.textContent = "Profile"; authLinkMobile.href = "profile.html"; }
-                    if(logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
-                    if(favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
-                    
-                    if(favoritesContent) favoritesContent.classList.remove('hidden');
-                    if(authMessageContainer) authMessageContainer.classList.add('hidden');
-                    displayFavoriteArticles();
-
-                } else {
-                    // User is not logged in
-                    if(authLinkDesktopLogin) authLinkDesktopLogin.classList.remove('hidden');
-                    if(profileAndMenuDesktop) { profileAndMenuDesktop.classList.add('hidden'); profileAndMenuDesktop.classList.remove('flex'); }
-                    if(favoritesLinkDesktop) favoritesLinkDesktop.classList.add('hidden');
-
-                    if(authLinkMobile) { authLinkMobile.textContent = "Login"; authLinkMobile.href = "login.html"; }
-                    if(logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
-                    if(favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
-                    if(desktopDropdown) desktopDropdown.style.display = 'none';
-
-                    if(favoritesContent) favoritesContent.classList.add('hidden');
-                    if(authMessageContainer) authMessageContainer.classList.remove('hidden');
-                }
-            });
-
-            function handleLogout(e) {
-                e.preventDefault();
-                auth.signOut().then(() => { console.log("User signed out"); })
-                .catch(error => console.error("Sign out error", error));
-            }
-            if(logoutButtonDesktop) logoutButtonDesktop.addEventListener('click', handleLogout);
-            if(logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
-        });
+        // The original DOMContentLoaded listener from favorites (1).html that handled auth
+        // is now effectively merged into the initializeHeaderAndAuth function,
+        // which is called after the header is fetched.
+        // So, no separate DOMContentLoaded for auth is needed here anymore.
     </script>
 </body>
 </html>
