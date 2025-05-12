@@ -35,81 +35,81 @@
             position: fixed !important; top: 0 !important; left: 0 !important;
             width: 100% !important; z-index: 1000 !important; padding: 0.75rem 0 !important;
         }
-        nav.fixed .container { 
+        nav.fixed .container {
             display: flex !important; justify-content: space-between !important; align-items: center !important;
-            width: 100% !important; max-width: 1280px !important; 
-            margin: 0 auto !important; padding: 0 1rem !important; 
+            width: 100% !important; max-width: 1280px !important;
+            margin: 0 auto !important; padding: 0 1rem !important;
         }
         @media (min-width: 640px) { nav.fixed .container { padding: 0 1.5rem !important; } }
         @media (min-width: 1024px) { nav.fixed .container { padding: 0 2rem !important; } }
         .nav-link {
             transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
-            font-weight: 500; color: #B0B0B0; opacity: 0.8;   
-            padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; 
+            font-weight: 500; color: #B0B0B0; opacity: 0.8;
+            padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem;
         }
         .nav-link:hover { color: #FFFFFF; opacity: 1; background-color: rgba(255,255,255,0.05); }
         .nav-link.active { color: #FFFFFF; opacity: 1; background-color: transparent; }
         #authLinkDesktopLogin.nav-link-button {
-            background-color: #00BFFF; color: #FFFFFF !important; opacity: 1 !important; padding: 0.5rem 1rem; 
+            background-color: #00BFFF; color: #FFFFFF !important; opacity: 1 !important; padding: 0.5rem 1rem;
         }
         #authLinkDesktopLogin.nav-link-button:hover { background-color: #00A9E0; opacity: 1; }
-        .profile-icon-placeholder { 
-            width: 2.25rem; height: 2.25rem; background-color: #333; border-radius: 50%; 
-            display: inline-flex; align-items: center; justify-content: center; 
-            cursor: pointer; border: 2px solid #4A4A4A; 
+        .profile-icon-placeholder {
+            width: 2.25rem; height: 2.25rem; background-color: #333; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            cursor: pointer; border: 2px solid #4A4A4A;
         }
-        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; } 
-        .profile-icon-placeholder:hover { border-color: #00BFFF; } 
-        .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;} 
+        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; }
+        .profile-icon-placeholder:hover { border-color: #00BFFF; }
+        .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;}
         .desktop-hamburger-icon:hover { color: #FFFFFF; background-color: rgba(255,255,255,0.1); }
-        .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; } 
-        .slide-out-panel { 
-            display: flex; flex-direction: column; position: fixed; top: 0; right: 0; 
-            width: 320px; height: 100vh; background-color: #18181B; 
-            box-shadow: -10px 0 30px rgba(0,0,0,0.4); z-index: 1001; 
-            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
-            padding: 1.5rem; overflow-y: auto; border-left: 1px solid #3F3F46; 
+        .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; }
+        .slide-out-panel {
+            display: flex; flex-direction: column; position: fixed; top: 0; right: 0;
+            width: 320px; height: 100vh; background-color: #18181B;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.4); z-index: 1001;
+            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            padding: 1.5rem; overflow-y: auto; border-left: 1px solid #3F3F46;
         }
         .slide-out-panel.open { transform: translateX(0); }
         .slide-out-panel-header {
             display: flex; justify-content: flex-end; align-items: center;
-            padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #3F3F46; 
+            padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #3F3F46;
         }
         .slide-out-panel-close-btn {
-            background: none; border: none; color: #A0A0A0; font-size: 1.875rem; 
+            background: none; border: none; color: #A0A0A0; font-size: 1.875rem;
             cursor: pointer; padding: 0.25rem; line-height: 1;
             transition: color 0.2s ease, transform 0.2s ease;
         }
         .slide-out-panel-close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
         .slide-out-panel-nav { flex-grow: 1; display: flex; flex-direction: column; }
         .slide-out-panel a {
-            color: #D4D4D8; padding: 1rem 1.25rem; text-decoration: none; display: block; 
-            font-size: 0.95rem; font-weight: 500; 
-            transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease; 
-            border-left: 4px solid transparent; margin: 0.375rem 0; border-radius: 0.375rem; 
+            color: #D4D4D8; padding: 1rem 1.25rem; text-decoration: none; display: block;
+            font-size: 0.95rem; font-weight: 500;
+            transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease;
+            border-left: 4px solid transparent; margin: 0.375rem 0; border-radius: 0.375rem;
         }
         .slide-out-panel a:hover { background-color: #27272A; color: #FFFFFF; border-left-color: #00BFFF; }
-        .slide-out-panel #logoutButtonSlideout { 
-            color: #F87171 !important; margin-top: auto; padding-top: 1rem; border-top: 1px solid #3F3F46; 
+        .slide-out-panel #logoutButtonSlideout {
+            color: #F87171 !important; margin-top: auto; padding-top: 1rem; border-top: 1px solid #3F3F46;
         }
-        .slide-out-panel #logoutButtonSlideout:hover { 
+        .slide-out-panel #logoutButtonSlideout:hover {
             background-color: rgba(248, 113, 113, 0.1); color: #FECACA !important; border-left-color: #F87171;
-        } 
+        }
         #menu-overlay {
             display: none; position: fixed; inset: 0;
-            background-color: rgba(0, 0, 0, 0.65); z-index: 1000; 
+            background-color: rgba(0, 0, 0, 0.65); z-index: 1000;
             opacity: 0; transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         #menu-overlay.active { display: block; opacity: 1; }
         /* End of Header specific styles */
 
         .page-content-wrapper {
-            flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px; 
+            flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px;
             margin: 0 auto; padding-left: 1rem; padding-right: 1rem;
             padding-top: 80px; /* Default, will be adjusted by JS */
         }
-        .page-main-title { 
-            font-size: 2.5rem; font-weight: 700; color: #FFFFFF; margin-bottom: 1rem; text-align: center; 
+        .page-main-title { /* Changed from .page-title to avoid conflict if header.html has .page-title */
+            font-size: 2.5rem; font-weight: 700; color: #FFFFFF; margin-bottom: 1rem; text-align: center;
             text-shadow: 0px 2px 8px rgba(0, 191, 255, 0.25);
         }
         .page-main-title .accent-text { color: #00BFFF; }
@@ -134,7 +134,7 @@
             border-bottom: 1px solid #374151; /* border-gray-700 */
         }
 
-        /* News Card Styling */
+        /* News Card Styling (from index.html / original favorites) */
         .news-card {
             background-color: #0A0A0A; border-radius: 0.75rem; border: 1px solid #2D2D2D;
             box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.6); overflow: hidden;
@@ -148,7 +148,7 @@
         .news-source-logo-container {
             flex-shrink: 0; margin-right: 1rem; width: 50px; height: 50px;
             display: flex; align-items: center; justify-content: center;
-            overflow: hidden; border-radius: 0.375rem;
+            overflow: hidden; border-radius: 0.375rem; background-color: #1f2937; /* Added a subtle bg for logos */
         }
         .news-source-logo { max-width: 100%; max-height: 100%; object-fit: contain; }
         .news-content-wrapper { flex-grow: 1; display: flex; justify-content: space-between; align-items: flex-start; }
@@ -164,27 +164,20 @@
             display: inline-block; border: 1px solid rgba(0, 191, 255, 0.3);
         }
         .favorite-btn-area { flex-shrink: 0; margin-left: 1rem; }
-        .favorite-btn { /* Common style for all favorite buttons */
-            width: 2.5rem; /* Increased size for better tap target with icon only */
-            height: 2.5rem;
-            color: #777777; cursor: pointer;
-            transition: color 0.2s ease, transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease; 
-            background: none;
-            border: 1px solid #333333; /* Default border like other action buttons */
-            padding: 0; display: inline-flex;
+        .favorite-btn {
+            width: 1.5rem; height: 1.5rem; color: #777777; cursor: pointer;
+            transition: color 0.2s ease, transform 0.2s ease; background: none;
+            border: none; padding: 0; display: inline-flex;
             align-items: center; justify-content: center;
-            border-radius: 0.375rem; /* Consistent with other action buttons */
         }
-        .favorite-btn:hover { color: #00BFFF; transform: scale(1.15); border-color: #00BFFF; background-color: rgba(0, 191, 255, 0.1); }
-        
-        /* News favorite button specific (if any, but using common for now) */
-        .news-card .favorite-btn.favorited { color: #00BFFF; border-color: #00BFFF; background-color: rgba(0,191,255,0.15); } 
-        .news-card .favorite-btn.favorited svg { fill: #00BFFF; stroke: #00BFFF; }
+        .favorite-btn:hover { color: #00BFFF; transform: scale(1.15); }
+        .favorite-btn.favorited { color: #00BFFF; }
+        .favorite-btn.favorited svg { fill: #00BFFF; stroke: #00BFFF; }
 
-        /* Community Post Card Styling */
+        /* Community Post Card Styling (from community.html) */
         .post-card {
             background-color: #121212; border: 1px solid #282828; border-radius: 0.75rem;
-            padding: 1.75rem; margin-bottom: 1.5rem;
+            padding: 1.75rem; margin-bottom: 1.5rem; /* Consistent margin with news-card */
             transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
             box-shadow: 0 4px 15px -5px rgba(0,0,0,0.4); display: flex; flex-direction: column;
         }
@@ -202,37 +195,27 @@
             border-radius: 1rem; font-size: 0.75rem; font-weight: 500;
             margin-left: 0.75rem; border: 1px solid rgba(0, 191, 255, 0.3);
         }
-        .twitter-tweet-container { margin-top: 1rem; background-color: #101010; border-radius: 0.5rem; padding: 0.75rem; border: 1px solid #282828;}
+        .twitter-tweet-container { margin-top: 1rem; background-color: transparent; /* Changed from #101010 for twitter widget to control */ border-radius: 0.5rem; padding: 0; /* Changed padding for twitter widget */ border: none; /* Changed border for twitter widget */ }
         .post-actions {
             display: flex; justify-content: flex-end; align-items: center;
             margin-top: 1.5rem; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid #282828;
         }
-        .action-btn { /* Base for Share and Community Favorite buttons */
+        .action-btn {
             background-color: transparent; border: 1px solid #333333; color: #A0A0A0;
             border-radius: 0.375rem; padding: 0.5rem 0.75rem; font-size: 0.875rem;
             font-weight: 500; cursor: pointer; transition: all 0.2s ease;
             display: inline-flex; align-items: center; gap: 0.5rem;
         }
         .action-btn:hover { background-color: #1A1A1A; color: #00BFFF; border-color: #00BFFF; }
-        .action-btn i { font-size: 1rem; } /* Icon size for Share button */
-        
-        /* Community Favorite Button - Icon Only */
-        .post-card .favorite-btn { /* Overrides common .favorite-btn for size if needed, but using common for now */
-            padding: 0.5rem; /* Adjust padding for icon-only button */
-        }
-        .post-card .favorite-btn i.fas { display: none; } 
-        .post-card .favorite-btn i.far { display: inline-block; font-size: 1rem; /* Ensure icon is visible */ } 
-        .post-card .favorite-btn.favorited i.fas { display: inline-block; color: #00BFFF; font-size: 1rem; }
+        .action-btn i { font-size: 1rem; }
+        .post-card .favorite-btn i.fas { display: none; }
+        .post-card .favorite-btn i.far { display: inline-block; }
+        .post-card .favorite-btn.favorited i.fas { display: inline-block; color: #00BFFF;}
         .post-card .favorite-btn.favorited i.far { display: none; }
-        .post-card .favorite-btn.favorited { 
-            color: #00BFFF; 
-            border-color: #00BFFF; 
-            background-color: rgba(0, 191, 255, 0.1); 
-        }
+        .post-card .favorite-btn.favorited { color: #00BFFF; border-color: #00BFFF; background-color: rgba(0, 191, 255, 0.1); }
 
-        .share-confirmation { display:none; font-size: 0.75rem; color: #00BFFF; margin-left:0.5rem; }
-        
-        .no-favorites-message, .auth-message { 
+
+        .no-favorites-message, .auth-message {
             text-align: center; color: #A0A0A0; font-size: 1.1rem; padding: 3rem 1rem;
             background-color: #121212; border-radius: 0.5rem; border: 1px solid #2a2a2a;
             margin-top: 2rem;
@@ -252,9 +235,8 @@
     <div id="header-placeholder"></div>
 
     <main class="page-content-wrapper container mx-auto p-4 sm:p-6 lg:p-8">
-        <div id="favoritesPageContent"> 
-            <h1 class="page-main-title">Your <span class="accent-text">Favorites</span></h1>
-            
+        <div id="favoritesPageContent"> <h1 class="page-main-title">Your <span class="accent-text">Favorites</span></h1>
+
             <div class="favorites-grid-container">
                 <div class="favorites-column" id="news-favorites-column">
                     <h2>Favorite News Articles</h2>
@@ -268,8 +250,8 @@
                 </div>
             </div>
         </div>
-        
-        <div id="authMessageContainer" class="hidden"> 
+
+        <div id="authMessageContainer" class="hidden">
             <h1 class="page-main-title">Your <span class="accent-text">Favorites</span></h1>
             <div id="authMessage" class="auth-message">
                 You must be logged in to view your favorites. <a href="login.html" class="text-cyan-400 hover:underline">Login here</a>.
@@ -288,6 +270,8 @@
         </div>
     </footer>
 
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
     <script>
         // --- Function to Initialize and Run All Header Related Logic ---
         function initializeHeaderAndAuth() {
@@ -295,18 +279,18 @@
             const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
             const authLinkMobile = document.getElementById('authLinkMobile');
             const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile'); 
-            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile'); 
-            const earningsLinkMobile = document.getElementById('earningsLinkMobile'); 
+            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
+            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile');
+            const earningsLinkMobile = document.getElementById('earningsLinkMobile');
             const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
-            const menuOverlay = document.getElementById('menu-overlay'); 
+            const menuOverlay = document.getElementById('menu-overlay');
             const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
             const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
             const slideoutCloseButton = document.getElementById('slideout-close-button');
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
 
-            const firebaseConfig = { 
+            const firebaseConfig = {
                 apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
                 authDomain: "linq-b27a8.firebaseapp.com",
                 projectId: "linq-b27a8",
@@ -314,13 +298,13 @@
                 messagingSenderId: "1067901051826",
                 appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
             };
-            if (!firebase.apps.length) { 
+            if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
             }
-            const authInstance = firebase.auth(); 
+            const authInstance = firebase.auth();
 
             authInstance.onAuthStateChanged(user => {
-                const favoritesPageContent = document.getElementById('favoritesPageContent');
+                const favoritesPageContent = document.getElementById('favoritesPageContent'); // Updated ID
                 const authMessageContainer = document.getElementById('authMessageContainer');
 
                 if (user) {
@@ -337,11 +321,11 @@
                     if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
                     if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
                     if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
-                    
+
                     if(favoritesPageContent) favoritesPageContent.classList.remove('hidden');
                     if(authMessageContainer) authMessageContainer.classList.add('hidden');
-                    displayFavoriteArticles(); 
-                    displayFavoriteCommunityPosts();
+                    displayFavoriteArticles();
+                    displayFavoriteCommunityPosts(); // Call function to display community favorites
 
                 } else {
                     if (authLinkDesktopLogin) {
@@ -358,12 +342,12 @@
                     if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
                     if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
                     if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
-                        closeDesktopMenu(); 
+                        closeDesktopMenu();
                     }
                     if(favoritesPageContent) favoritesPageContent.classList.add('hidden');
                     if(authMessageContainer) authMessageContainer.classList.remove('hidden');
                 }
-                setActiveNavLink(); 
+                setActiveNavLink();
             });
 
             function handleLogout(e) {
@@ -372,7 +356,7 @@
                 if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
                 authInstance.signOut().then(() => {
                     console.log("User signed out");
-                    window.location.href = 'index.html'; 
+                    window.location.href = 'index.html';
                 }).catch(error => console.error("Sign out error", error));
             }
 
@@ -382,13 +366,13 @@
             function setActiveNavLink() {
                 const currentPath = window.location.pathname.split("/").pop() || "index.html";
                 const navLinks = document.querySelectorAll('#header-placeholder nav.fixed a.nav-link, #header-placeholder #mobile-menu a.nav-link');
-                
+
                 navLinks.forEach(link => {
                     link.classList.remove('active');
                     const linkHref = link.getAttribute('href');
                     if (linkHref === currentPath) {
                         link.classList.add('active');
-                    } 
+                    }
                     else if ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html" || link.dataset.page === "index" || link.dataset.page === "index-mobile")) {
                         link.classList.add('active');
                     }
@@ -425,10 +409,10 @@
                 if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
             });
 
-            setActiveNavLink(); 
+            setActiveNavLink();
         }
 
-        fetch('header.html') 
+        fetch('header.html')
             .then(response => {
                 if (!response.ok) throw new Error('Network response was not ok for header.html');
                 return response.text();
@@ -437,10 +421,10 @@
                 const headerPlaceholder = document.getElementById('header-placeholder');
                 if (headerPlaceholder) {
                     headerPlaceholder.innerHTML = data;
-                    initializeHeaderAndAuth(); 
+                    initializeHeaderAndAuth();
                     const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
                     if (fixedHeader) {
-                        document.querySelector('.page-content-wrapper').style.paddingTop = (fixedHeader.offsetHeight + 20) + 'px'; 
+                        document.querySelector('.page-content-wrapper').style.paddingTop = (fixedHeader.offsetHeight + 20) + 'px';
                     }
                 } else {
                     console.error('Header placeholder element not found.');
@@ -455,16 +439,19 @@
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
         const sourcePlaceholders = {
-            'Reuters': { bgColor: 'eeeeee', textColor: '333333', text: 'RTRS', logoUrl: 'YOUR_REUTERS_LOGO_URL_HERE' },
-            'Bloomberg': { bgColor: '007bff', textColor: 'ffffff', text: 'BBG', logoUrl: 'YOUR_BLOOMBERG_LOGO_URL_HERE' },
-            'CNBC': { bgColor: 'c40029', textColor: 'ffffff', text: 'CNBC', logoUrl: 'YOUR_CNBC_LOGO_URL_HERE' },
-            'Forbes': { bgColor: '222222', textColor: 'ffffff', text: 'FRBS', logoUrl: 'YOUR_FORBES_LOGO_URL_HERE' },
-            'BBC News': { bgColor: 'cc0000', textColor: 'ffffff', text: 'BBC', logoUrl: 'YOUR_BBCNEWS_LOGO_URL_HERE' },
-            'Seeking Alpha': { bgColor: 'f9a61a', textColor: '000000', text: 'SA', logoUrl: 'YOUR_SEEKINGALPHA_LOGO_URL_HERE' },
+            'Reuters': { bgColor: 'FF8000', textColor: 'FFFFFF', text: 'RTRS', logoUrl: 'https://www.reuters.com/pf/resources/images/reuters/logo-horizontal-dark.svg?d=107' /* Dark logo, good for light bg, adjust if needed or find white one*/ },
+            'Bloomberg': { bgColor: '000000', textColor: '007bff', text: 'BBG', logoUrl: 'https://assets.bwbx.io/images/users/ui/bloomberg-logo-light/1.0.1/img/logo.png' /* White logo */ },
+            'CNBC': { bgColor: '000000', textColor: 'FFFFFF', text: 'CNBC', logoUrl: 'https://www.cnbc.com/nbcuni_brand_logos/cnbc/CNBC_Logo_Horizontal_REV.png' /* White logo */},
+            'Forbes': { bgColor: '000000', textColor: 'FFFFFF', text: 'FRBS', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Forbes_logo_black.svg/320px-Forbes_logo_black.svg.png' /* Black text, provide white or adjust bg */ }, // Note: This is a black logo, might need a white version for dark backgrounds or CSS filter. For now, placeholder text might be better if this doesn't show well.
+            'BBC News': { bgColor: 'BB1919', textColor: 'FFFFFF', text: 'BBC', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/BBC_News_2022.svg/512px-BBC_News_2022.svg.png' /* Iconic red bg with white text */ },
+            'Seeking Alpha': { bgColor: 'F39200', textColor: '000000', text: 'SA', logoUrl: 'https://static.seekingalpha.com/assets/images/layout/seeking_alpha_logo_200x38_negative.png' /* White logo */},
+            // Add other sources with their logoUrl if available
         };
         const genericPlaceholderColors = ['00BFFF', '4B0082', '800080', 'FF1493', 'FF8C00', '20B2AA', 'DA70D6'];
-        
-        const articlesData = [ 
+
+        const articlesData = [
+            // IMPORTANT: If you have specific images for these articles from index.html,
+            // replace 'YOUR_IMAGE_ADDRESS_HERE' with the actual image URL/path.
             { id: "1", category: 'Crude Oil', title: 'Oil Prices Surge Amid Supply Concerns', date: 'May 10, 2025', source: 'Reuters', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
             { id: "2", category: 'Crude Oil', title: 'OPEC+ Extends Production Cuts', date: 'May 9, 2025', source: 'Bloomberg', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
             { id: "3", category: 'Natural Gas', title: 'Global Demand for Crude Hits Record', date: 'May 10, 2025', source: 'CNBC', link: '#', image: 'YOUR_IMAGE_ADDRESS_HERE' },
@@ -474,12 +461,12 @@
         ];
         let newsFavorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || [];
 
-        const communityPostsDataPage = [ 
-            { id: 'tweet1', url: 'https://twitter.com/CRUDEOIL231/status/1919070053825495266', title: 'Saudi Production Levels & Brent Impact', meta: 'May 10, 2025 • JH (@CRUDEOIL231)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">If Saudis and OPEC+ maintain production levels... unlikely.…</p>&mdash; JH (@CRUDEOIL231) <a href="https://twitter.com/CRUDEOIL231/status/1919070053825495266?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
-            { id: 'tweet2', url: 'https://twitter.com/LinqNews/status/1919171857409855978', title: "India's Rising Oil Consumption", meta: 'May 10, 2025 • Linq AI Insights (@LinqAI)', category: 'Energy Demand', tweetContent: '<p lang="en" dir="ltr">India\'s oil consumption rose 4.5% YoY...</p>&mdash; Linq AI Insights (@LinqAI) <a href="https://twitter.com/LinqNews/status/1919171857409855978?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
-            { id: 'tweet3', url: 'https://twitter.com/Rory_Johnston/status/1919158874172530712', title: 'Crude Gaps Down on OPEC+ News', meta: 'May 09, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Market Analysis', tweetContent: '<p lang="en" dir="ltr">Crude gaps down >$2/bbl...</p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1919158874172530712?ref_src=twsrc%5Etfw">May 4, 2025</a>'},
-            { id: 'tweet4', url: 'https://twitter.com/aeberman12/status/1919396685362373026', title: 'Riyadh’s Strategic Oil Play', meta: 'May 05, 2025 • Art Berman (@aeberman12)', category: 'Energy', tweetContent: '<p lang="en" dir="ltr">My take: Riyadh is betting...</p>&mdash; Art Berman (@aeberman12) <a href="https://twitter.com/aeberman12/status/1919396685362373026?ref_src=twsrc%5Etfw">May 5, 2025</a>'},
-            { id: 'tweet5', url: 'https://twitter.com/IPAAaccess/status/1919510569553432731', title: 'IPAA Supports Budget Provisions', meta: 'May 05, 2025 • IPAA American Energy (@IPAAaccess)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">IPAA and a coalition of energy trade groups wrote...</p>&mdash; IPAA American Energy (@IPAAaccess) <a href="https://twitter.com/IPAAaccess/status/1919510569553432731?ref_src=twsrc%5Etfw">May 5, 2025</a>'}
+        const communityPostsDataPage = [ // Data from community.html
+            { id: 'tweet1', url: 'https://twitter.com/CRUDEOIL231/status/1919070053825495266', title: 'Saudi Production Levels & Brent Impact', meta: 'May 10, 2025 • JH (@CRUDEOIL231)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">If Saudis and OPEC+ maintain production levels... unlikely. Brent $110-$120 this summer - book it. Inventory builds not high enough to offset demand increases as we move into driving season. Refineries are already warning about diesel shortages in Europe too... wild summer ahead.</p>&mdash; JH (@CRUDEOIL231) <a href="https://twitter.com/CRUDEOIL231/status/1919070053825495266?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
+            { id: 'tweet2', url: 'https://twitter.com/LinqNews/status/1919171857409855978', title: "India's Rising Oil Consumption", meta: 'May 10, 2025 • Linq AI Insights (@LinqAI)', category: 'Energy Demand', tweetContent: '<p lang="en" dir="ltr">India\'s oil consumption rose 4.5% YoY in April to 4.9 million bpd, driven by strong factory activity and travel demand. Gasoline sales up 11%, diesel +3%. Signals robust economic momentum. <a href="https://twitter.com/search?q=%23OOTT&amp;src=ctag&amp;ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://twitter.com/search?q=%23IndiaEnergy&amp;src=ctag&amp;ref_src=twsrc%5Etfw">#IndiaEnergy</a></p>&mdash; Linq AI Insights (@LinqAI) <a href="https://twitter.com/LinqNews/status/1919171857409855978?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
+            { id: 'tweet3', url: 'https://twitter.com/Rory_Johnston/status/1919158874172530712', title: 'Crude Gaps Down on OPEC+ News', meta: 'May 09, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Market Analysis', tweetContent: '<p lang="en" dir="ltr">Crude gaps down >$2/bbl at the Asia open on reports that OPEC+ is considering exempting Russia from its production targets. Fascinating development given the existing strains on Russian output and the potential signal it sends about managing global supply. <a href="https://twitter.com/search?q=%23OPEC&amp;src=ctag&amp;ref_src=twsrc%5Etfw">#OPEC</a> <a href="https://twitter.com/search?q=%23OilPrice&amp;src=ctag&amp;ref_src=twsrc%5Etfw">#OilPrice</a></p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1919158874172530712?ref_src=twsrc%5Etfw">May 4, 2025</a>'},
+            { id: 'tweet4', url: 'https://twitter.com/aeberman12/status/1919396685362373026', title: 'Riyadh’s Strategic Oil Play', meta: 'May 05, 2025 • Art Berman (@aeberman12)', category: 'Energy', tweetContent: '<p lang="en" dir="ltr">My take: Riyadh is betting that high prices won’t destroy demand enough to matter before their expanded capacity comes online. A risky game, but they\'ve played it before. The real question is global recession risk. <a href="https://twitter.com/search?q=%23OilStrategy&amp;src=ctag&amp;ref_src=twsrc%5Etfw">#OilStrategy</a> <a href="https://twitter.com/search?q=%23EnergyMarkets&amp;src=ctag&amp;ref_src=twsrc%5Etfw">#EnergyMarkets</a></p>&mdash; Art Berman (@aeberman12) <a href="https://twitter.com/aeberman12/status/1919396685362373026?ref_src=twsrc%5Etfw">May 5, 2025</a>'},
+            { id: 'tweet5', url: 'https://twitter.com/IPAAaccess/status/1919510569553432731', title: 'IPAA Supports Budget Provisions', meta: 'May 05, 2025 • IPAA American Energy (@IPAAaccess)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">IPAA and a coalition of energy trade groups wrote to House leadership today urging support for budget provisions that promote domestic oil and natural gas production. Essential for American energy security and economic strength. Read it here: [link] <a href="https://twitter.com/search?q=%23USenergy&amp;src=ctag&amp;ref_src=twsrc%5Etfw">#USenergy</a></p>&mdash; IPAA American Energy (@IPAAaccess) <a href="https://twitter.com/IPAAaccess/status/1919510569553432731?ref_src=twsrc%5Etfw">May 5, 2025</a>'}
         ];
         let communityFavorites = JSON.parse(localStorage.getItem('linqCommunityFavoritesV1')) || [];
 
@@ -487,7 +474,7 @@
         function displayFavoriteArticles() {
             const newsFavoritesGrid = document.getElementById('newsFavoritesGrid');
             if (!newsFavoritesGrid) return;
-            newsFavoritesGrid.innerHTML = ''; 
+            newsFavoritesGrid.innerHTML = '';
             const favoritedArticlesDetails = articlesData.filter(article => newsFavorites.includes(String(article.id)));
 
             if (favoritedArticlesDetails.length === 0) {
@@ -496,19 +483,32 @@
             }
             favoritedArticlesDetails.forEach((article, index) => {
                 const articleElement = document.createElement('div');
-                articleElement.className = 'news-card'; 
-                let imageUrl = sourcePlaceholders[article.source]?.logoUrl || article.image; 
-                if (imageUrl === 'YOUR_IMAGE_ADDRESS_HERE' || !imageUrl) { 
-                    const specificPlaceholder = sourcePlaceholders[article.source];
-                    if (specificPlaceholder && specificPlaceholder.bgColor && specificPlaceholder.textColor) { 
-                        imageUrl = `https://placehold.co/50x50/${specificPlaceholder.bgColor}/${specificPlaceholder.textColor}?text=${specificPlaceholder.text}&font=Lexend`; 
+                articleElement.className = 'news-card';
+
+                let imageUrl;
+                const placeholderImageString = 'YOUR_IMAGE_ADDRESS_HERE';
+                const sourceInfo = sourcePlaceholders[article.source];
+
+                // 1. Try specific article image, if it's not the placeholder
+                if (article.image && article.image !== placeholderImageString) {
+                    imageUrl = article.image;
+                }
+                // 2. Else, try source logo URL, if it's not a placeholder in sourcePlaceholders
+                else if (sourceInfo && sourceInfo.logoUrl && !sourceInfo.logoUrl.startsWith('YOUR_') && !sourceInfo.logoUrl.endsWith('_URL_HERE')) {
+                    imageUrl = sourceInfo.logoUrl;
+                }
+                // 3. Else, generate placeholder
+                else {
+                    if (sourceInfo && sourceInfo.bgColor && sourceInfo.textColor && sourceInfo.text) {
+                        imageUrl = `https://placehold.co/50x50/${sourceInfo.bgColor}/${sourceInfo.textColor}?text=${encodeURIComponent(sourceInfo.text)}&font=Lexend`;
                     } else {
                         const colorIndex = index % genericPlaceholderColors.length;
                         const bgColor = genericPlaceholderColors[colorIndex];
-                        const textColor = 'FFFFFF';
-                        imageUrl = `https://placehold.co/50x50/${bgColor}/${textColor}?text=${article.source ? article.source.charAt(0).toUpperCase() : 'N'}&font=Lexend`; 
+                        const textColor = 'FFFFFF'; // Assuming white text for generic placeholders
+                        imageUrl = `https://placehold.co/50x50/${bgColor}/${textColor}?text=${article.source ? encodeURIComponent(article.source.charAt(0).toUpperCase()) : 'N'}&font=Lexend`;
                     }
                 }
+
                 articleElement.innerHTML = `
                     <div class="news-source-logo-container">
                         <img src="${imageUrl}" alt="${article.source || 'Source'} Logo" class="news-source-logo" onerror="this.src='https://placehold.co/50x50/cccccc/333333?text=Err&font=Lexend'; this.alt='Image error'">
@@ -544,28 +544,36 @@
             }
             favoritedCommunityPosts.forEach(post => {
                 const postElement = document.createElement('article');
-                postElement.className = 'post-card'; 
+                postElement.className = 'post-card'; // Use community post card styling
                 postElement.setAttribute('data-id', post.id);
-                // MODIFIED BUTTON: Removed the word "Favorite"
+                // Ensure tweetContent is a string, otherwise provide a fallback or log an error
+                const tweetContentHTML = typeof post.tweetContent === 'string' ? post.tweetContent : '<p>Could not load tweet content.</p>';
+
                 postElement.innerHTML = `
                     <p class="post-title">${post.title || 'Untitled Post'}</p>
                     <p class="post-meta">${post.meta || 'N/A'} <span class="post-category-tag">${post.category || 'General'}</span></p>
                     <div class="twitter-tweet-container">
-                        <blockquote class="twitter-tweet" data-theme="dark" data-cards="hidden" data-conversation="none">${post.tweetContent || ''}</blockquote>
+                        <blockquote class="twitter-tweet" data-theme="dark" data-cards="hidden" data-conversation="none">${tweetContentHTML}</blockquote>
                     </div>
                     <div class="post-actions">
                         <button class="action-btn share-btn" data-url="${post.url || '#'}" data-title="${post.title || 'Untitled Post'}"><i class="fas fa-share-alt"></i> Share</button>
                         <span class="share-confirmation hidden">Link copied!</span>
                         <button class="action-btn favorite-btn favorited" data-id="${post.id}" data-type="community" aria-label="Unfavorite post">
-                            <i class="far fa-star"></i><i class="fas fa-star"></i> 
+                            <i class="far fa-star"></i><i class="fas fa-star"></i> Favorite
                         </button>
                     </div>`;
                 communityFavoritesGrid.appendChild(postElement);
             });
-             if (window.twttr && window.twttr.widgets) { 
+
+            // Reload Twitter widgets if the script is loaded and available
+            if (window.twttr && window.twttr.widgets) {
                 window.twttr.widgets.load(communityFavoritesGrid);
+            } else {
+                // Fallback or log if twitter script hasn't loaded yet
+                // console.log("Twitter widgets API not available yet. Tweets may not render correctly until it loads.");
+                // Could potentially queue this up or retry later if twitter script loads deferred.
             }
-            addFavoriteButtonListeners(); 
+            addFavoriteButtonListeners(); // Add listeners to new community favorite buttons
         }
 
 
@@ -586,17 +594,56 @@
 
         function addFavoriteButtonListeners() {
             document.querySelectorAll('#newsFavoritesGrid .favorite-btn, #communityFavoritesGrid .favorite-btn').forEach(button => {
-                button.removeEventListener('click', handleUnfavoriteClick); 
+                button.removeEventListener('click', handleUnfavoriteClick);
                 button.addEventListener('click', handleUnfavoriteClick);
             });
+            // Re-add share button listeners if they were part of community.html originally and needed for favorites
+            // For now, only favorite buttons are re-wired here.
         }
 
         function handleUnfavoriteClick(event) {
             const button = event.currentTarget;
             const articleId = button.getAttribute('data-id');
-            const type = button.getAttribute('data-type'); 
+            const type = button.getAttribute('data-type'); // 'news' or 'community'
             toggleFavoriteOnFavoritesPage(articleId, type);
         }
+
+
+        function addShareButtonListeners() {
+            document.querySelectorAll('.share-btn').forEach(button => {
+                button.addEventListener('click', async event => {
+                    const url = button.dataset.url;
+                    const title = button.dataset.title;
+                    const confirmationSpan = button.nextElementSibling; // Assuming it's right after
+
+                    if (navigator.share) {
+                        try {
+                            await navigator.share({ title: title, url: url });
+                            console.log('Shared successfully');
+                        } catch (err) {
+                            console.error('Share failed:', err.message);
+                            // Fallback to copy link if Web Share API fails or is cancelled
+                            copyLinkToClipboard(url, confirmationSpan);
+                        }
+                    } else {
+                        copyLinkToClipboard(url, confirmationSpan);
+                    }
+                });
+            });
+        }
+
+        function copyLinkToClipboard(url, confirmationSpan) {
+            navigator.clipboard.writeText(url).then(() => {
+                if (confirmationSpan) {
+                    confirmationSpan.classList.remove('hidden');
+                    setTimeout(() => confirmationSpan.classList.add('hidden'), 2000);
+                }
+            }).catch(err => {
+                console.error('Failed to copy link: ', err);
+            });
+        }
+        */
+        // Ensure to call addShareButtonListeners() within displayFavoriteCommunityPosts if needed.
     </script>
 </body>
 </html>
