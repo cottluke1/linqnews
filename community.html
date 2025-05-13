@@ -29,7 +29,6 @@
         ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
 
         /* Header Styles (Assuming header.html provides the fixed header structure) */
-        /* Styles below are for elements potentially loaded from header.html */
         nav.fixed {
             background-color: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(10px) saturate(150%);
@@ -140,25 +139,18 @@
         .page-title .accent-text { color: #00BFFF; }
         .page-subtitle { font-size: 1.1rem; color: #A0A0A0; max-width: none; margin: 0; line-height: 1.6; }
 
-        /* Sticky Search Bar */
+        /* Search Bar (Reverted - Not Sticky) */
         .search-container {
-            position: sticky;
-            /* Adjust top based on your fixed header's height */
-            /* e.g., if header is 60px, maybe stick at 70px or 75px */
-            top: 75px;
-            z-index: 900; /* Lower than header (1000) but above content */
-            background-color: #0A0A0A; /* Match page background */
-            padding-top: 1rem; /* Add some space above the input */
-            padding-bottom: 1rem; /* Add space below the input */
-            margin-bottom: 1rem; /* Adjust margin since padding is added */
+             /* Removed sticky properties */
+             margin-bottom: 2rem; /* Restore margin if needed */
         }
         .search-input {
             width: 100%; padding: 0.875rem 1rem;
             background-color: #1A1A1A; border: 1px solid #333333; border-radius: 0.5rem;
-            /* Removed margin-bottom from here, handled by container now */
             font-size: 1rem; color: #E0E0E0;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
             line-height: normal; height: 3rem;
+             /* margin-bottom restored if it was part of original non-sticky style */
         }
         .search-input::placeholder { color: #777777; }
         .search-input:focus {
@@ -166,19 +158,20 @@
             box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.25);
         }
 
+        /* Filter Panel */
         .filter-section-wrapper {
             flex: 1;
             min-width: 280px;
             order: 2;
-             /* Removed fixed padding-top, rely on sticky positioning */
+            /* Add padding-top to align with posts visually if needed, adjust value */
+             padding-top: 165px; /* Adjust this based on header/search height */
         }
         .filter-panel {
             background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%);
             padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
             border: 1px solid #2a2a2a; position: sticky;
-            /* Adjust top based on header + sticky search bar height */
-            /* Header (~60px) + Search Container Padding/Height (~60-70px?) */
-            top: 150px; /* Adjust this value based on visual inspection */
+             /* Sticks below the main site header (assuming header height ~60-80px) */
+            top: 80px; /* Adjust this based on header height */
         }
         .filter-title { font-size: 1.25rem; font-weight: 600; color: #E0E0E0; margin-bottom: 1.25rem; }
         .filter-button {
@@ -186,14 +179,17 @@
             margin-bottom: 0.5rem; border-radius: 0.375rem; color: #B0B0B0; font-weight: 500;
             transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
             background-color: #1A1A1A; border: 1px solid #333333;
+            cursor: pointer; /* Ensure pointer cursor */
         }
         .filter-button:hover {
             background-color: rgba(0, 191, 255, 0.1); color: #FFFFFF; border-color: #00BFFF;
         }
-        .filter-button.active {
+        .filter-button.active { /* Style for selected filter(s) */
             background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; font-weight: 600;
             border-color: #00BFFF;
         }
+
+        /* Post Card */
         .post-card {
             background-color: #121212; border: 1px solid #282828; border-radius: 0.75rem;
             padding: 1.75rem; margin-bottom: 2rem;
@@ -217,19 +213,23 @@
             border-radius: 1rem; font-size: 0.75rem; font-weight: 500;
             margin-left: 0.75rem; border: 1px solid rgba(0, 191, 255, 0.3);
         }
-        /* Center the blockquote (rendered tweet) within its container */
         .twitter-tweet-container {
             margin-top: 1rem;
-            background-color: transparent; /* Let widget handle background */
+            background-color: transparent;
             border-radius: 0.5rem;
             padding: 0;
             border: none;
-            display: flex; /* Added */
-            justify-content: center; /* Added */
+            display: flex;
+            justify-content: center;
         }
         .post-actions {
-            display: flex; justify-content: flex-end; align-items: center;
-            margin-top: 1.5rem; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid #282828;
+            display: flex; /* Use flexbox for alignment */
+            justify-content: flex-end; /* Align items (buttons, span) to the right */
+            align-items: center; /* Vertically center items */
+            margin-top: 1.5rem;
+            gap: 0.75rem; /* Space between buttons */
+            padding-top: 1rem;
+            border-top: 1px solid #282828;
         }
         .action-btn {
             background-color: transparent; border: 1px solid #333333; color: #A0A0A0;
@@ -246,21 +246,31 @@
         .favorite-btn.favorited i.far { display: none; }
         .favorite-btn.favorited {
             color: #00BFFF;
-            border-color: #00BFFF; /* Optional: match border color */
-            background-color: rgba(0, 191, 255, 0.1); /* Optional: subtle background */
+            border-color: #00BFFF;
+            background-color: rgba(0, 191, 255, 0.1);
         }
-         /* Adjust favorite button padding if it's icon-only */
         .post-actions .favorite-btn {
-            padding: 0.5rem; /* Example padding for icon-only */
+            padding: 0.5rem; /* Padding for icon-only favorite button */
         }
 
-        .share-confirmation { display:none; font-size: 0.75rem; color: #00BFFF; margin-left:0.5rem; }
+        /* Share Confirmation Span */
+        .share-confirmation {
+            display: none; /* Hidden by default */
+            font-size: 0.75rem;
+            color: #00BFFF;
+            margin-right: auto; /* Pushes this element to the left */
+            padding-left: 0; /* Adjust if needed */
+        }
+
+        /* Footer */
         .footer {
             background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem;
             border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem; margin-top: auto;
         }
         .footer a { color: #B0B0B0; transition: color 0.2s ease; }
         .footer a:hover { color: #00BFFF; }
+
+        /* Layout */
         .page-content-wrapper {
             flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px;
             margin: 0 auto; padding-left: 1rem; padding-right: 1rem;
@@ -269,12 +279,14 @@
         .community-main-grid { display: flex; flex-wrap: wrap; gap: 2rem; }
         .posts-section { flex: 3; min-width: 0; order: 1; }
         /* .filter-section-wrapper defined above */
+
+        /* Responsive Layout */
         @media (max-width: 1023px) {
             .community-main-grid { flex-direction: column; }
-            .posts-section, .filter-section-wrapper { flex: none; width: 100%; }
-            .filter-panel { position: static; order: 0; margin-bottom: 2rem; top: auto; /* Reset sticky top */ }
-             /* Reset sticky search for mobile if needed, or adjust top */
-            .search-container { position: static; top: auto; padding-top: 0; margin-bottom: 2rem;}
+            .posts-section, .filter-section-wrapper { flex: none; width: 100%; padding-top: 0; /* Reset padding */ }
+            .filter-panel { position: static; order: 0; margin-bottom: 2rem; top: auto; /* Reset sticky */ }
+            .search-container { position: static; top: auto; /* Ensure search is not sticky on mobile */ }
+             .filter-section-wrapper { padding-top: 0; } /* Reset padding */
         }
     </style>
 </head>
@@ -308,7 +320,7 @@
                         <button class="filter-button" data-category="Policy">Policy & Markets</button>
                         <button class="filter-button" data-category="Market Analysis">Market Analysis</button>
                         <button class="filter-button" data-category="Energy Demand">Energy Demand</button>
-                         <button class="filter-button active" data-category="All">All Categories</button> </div>
+                    </div>
                 </div>
             </aside>
         </div>
@@ -326,7 +338,9 @@
     <script>
         // --- Function to Initialize and Run All Header Related Logic ---
         function initializeHeaderAndAuth() {
-            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
+            // (Header initialization and auth logic remains the same as previous version)
+            // ... [omitted for brevity, assume it's the same as the previous version] ...
+             const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
             const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
             const authLinkMobile = document.getElementById('authLinkMobile');
             const logoutButtonMobile = document.getElementById('logoutButtonMobile');
@@ -477,7 +491,6 @@
         // --- Community Page Specific JavaScript ---
         document.getElementById('current-year-community').textContent = new Date().getFullYear();
 
-        // Load Twitter widgets script dynamically (already present in original script)
         const twitterScriptCommunity = document.createElement('script');
         twitterScriptCommunity.src = 'https://platform.twitter.com/widgets.js';
         twitterScriptCommunity.async = true;
@@ -507,9 +520,9 @@
                 postElement.className = 'post-card';
                 postElement.setAttribute('data-category', post.category);
                 postElement.setAttribute('data-id', post.id);
-                // Check if tweetContent is a string before using it
                 const tweetHTML = typeof post.tweetContent === 'string' ? post.tweetContent : '<p>Error loading tweet content.</p>';
 
+                // Updated HTML structure for post-actions
                 postElement.innerHTML = `
                     <p class="post-title">${post.title || 'Untitled Post'}</p>
                     <p class="post-meta">${post.meta || 'N/A'} <span class="post-category-tag">${post.category || 'General'}</span></p>
@@ -519,48 +532,50 @@
                         </blockquote>
                     </div>
                     <div class="post-actions">
+                        <span class="share-confirmation hidden" style="margin-right: auto;">Linq link copied!</span>
                          <button class="action-btn favorite-btn" data-id="${post.id}" aria-label="Toggle Favorite">
                             <i class="far fa-star"></i><i class="fas fa-star"></i>
                         </button>
                         <button class="action-btn share-btn" data-id="${post.id}" data-title="${post.title || 'Untitled Post'}">
                             <i class="fas fa-share-alt"></i> Share
                         </button>
-                        <span class="share-confirmation hidden" style="margin-left: auto;">Linq link copied!</span>
                     </div>
                 `;
                 postsContainerCommunity.appendChild(postElement);
             });
-            // Reload Twitter widgets after adding new posts
+
             if (window.twttr && window.twttr.widgets) {
                 window.twttr.widgets.load(postsContainerCommunity);
             } else {
                  console.log("Twitter widgets API not ready when attempting to load posts.");
-                 // Consider adding a listener for when the script loads if this is consistently an issue
             }
             updateCommunityFavoriteIconsPage();
             addPostActionListenersPage();
         }
 
+        // Updated Filter Function
         function filterCommunityPostsPage() {
             const searchInput = document.getElementById('searchInputCommunity');
-            const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : ""; // Trim whitespace
-            const activeCategoryButton = document.querySelector('#categoryFiltersCommunity .filter-button.active');
-            const selectedCategory = activeCategoryButton ? activeCategoryButton.getAttribute('data-category') : 'All'; // Default to 'All'
+            const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : "";
+            // Get all active category buttons
+            const activeCategoryButtons = document.querySelectorAll('#categoryFiltersCommunity .filter-button.active');
+            // Extract the category names from the active buttons
+            const selectedCategories = Array.from(activeCategoryButtons).map(btn => btn.getAttribute('data-category'));
 
             let filteredPosts = communityPostsDataPage;
 
-            // Filter by category (if not 'All')
-            if (selectedCategory !== 'All') {
-                filteredPosts = filteredPosts.filter(post => post.category === selectedCategory);
+            // Filter by selected categories (if any are selected)
+            if (selectedCategories.length > 0) {
+                filteredPosts = filteredPosts.filter(post => selectedCategories.includes(post.category));
             }
+            // If no categories are selected, filteredPosts remains all posts (or is already filtered by search)
 
             // Filter by search query
             if (searchQuery) {
                 filteredPosts = filteredPosts.filter(post =>
                     (post.title && post.title.toLowerCase().includes(searchQuery)) ||
                     (post.meta && post.meta.toLowerCase().includes(searchQuery)) ||
-                    // Be careful searching tweetContent, it might contain HTML
-                    (post.tweetContent && post.tweetContent.toLowerCase().includes(searchQuery)) ||
+                    (post.tweetContent && post.tweetContent.toLowerCase().includes(searchQuery)) || // Basic search in tweet content
                     (post.category && post.category.toLowerCase().includes(searchQuery))
                 );
             }
@@ -592,7 +607,6 @@
         }
 
         function addPostActionListenersPage() {
-             // Remove existing listeners before adding new ones to prevent duplicates
             document.querySelectorAll('#postsContainerCommunity .favorite-btn').forEach(button => {
                 button.removeEventListener('click', handleCommunityFavoriteClickPage);
                 button.addEventListener('click', handleCommunityFavoriteClickPage);
@@ -608,22 +622,28 @@
             toggleCommunityFavoritePage(postId);
         }
 
-        // Updated Share Click Handler
+        // Share Click Handler (Emphasize placeholder URL)
         function handleShareClickPage(event) {
             const button = event.currentTarget;
-            const postId = button.getAttribute('data-id'); // Get post ID from button
+            const postId = button.getAttribute('data-id');
             const title = button.getAttribute('data-title');
-            // *** IMPORTANT: Replace this base URL with your actual site's post URL structure ***
+
+            // --- IMPORTANT ---
+            // --- Replace 'https://your-linq-site.com/community/post/' with your actual website's URL structure for posts ---
             const linqPostUrl = `https://your-linq-site.com/community/post/${postId}`;
-            const confirmation = button.nextElementSibling; // Assumes confirmation span is next sibling
+            console.warn("Share button clicked. Using placeholder URL:", linqPostUrl, " - REMEMBER TO REPLACE THIS in the code!");
+            // --- IMPORTANT ---
+
+            // Find the confirmation span relative to the clicked button's parent (.post-actions)
+            const confirmation = button.closest('.post-actions')?.querySelector('.share-confirmation');
 
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(linqPostUrl).then(() => {
                     if(confirmation) {
-                        confirmation.textContent = 'Linq link copied!'; // Update text
-                        confirmation.style.display = 'inline';
+                        confirmation.textContent = 'Linq link copied!';
+                        confirmation.style.display = 'inline'; // Show the message
                     }
-                    setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2500); // Increased timeout slightly
+                    setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2500);
                 }).catch(err => {
                     console.error('Failed to copy Linq link:', err);
                     if(confirmation) {
@@ -633,7 +653,6 @@
                     setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2500);
                 });
             } else {
-                 // Fallback for browsers without clipboard API (rare)
                  console.warn('Clipboard API not available.');
                  if(confirmation) {
                      confirmation.textContent = 'Copy not supported.';
@@ -650,24 +669,16 @@
             const categoryFilterButtonsPage = document.querySelectorAll('#categoryFiltersCommunity .filter-button');
             categoryFilterButtonsPage.forEach(button => {
                 button.addEventListener('click', function() {
-                    // Deactivate all buttons first
-                    categoryFilterButtonsPage.forEach(btn => btn.classList.remove('active'));
-                    // Activate the clicked button
-                    this.classList.add('active');
-                    filterCommunityPostsPage(); // Refilter posts
+                    // Allow toggling active state for multiple selections
+                    this.classList.toggle('active');
+                    filterCommunityPostsPage(); // Refilter posts based on all active buttons
                 });
             });
 
-            // Set 'All Categories' as active by default
-             const allCategoriesButton = document.querySelector('#categoryFiltersCommunity .filter-button[data-category="All"]');
-             if (allCategoriesButton) {
-                 allCategoriesButton.classList.add('active');
-             }
-
+            // No default active category button anymore
 
             const searchInputElementPage = document.getElementById('searchInputCommunity');
             if (searchInputElementPage) {
-                // Use 'input' event for real-time filtering as user types
                 searchInputElementPage.addEventListener('input', filterCommunityPostsPage);
             }
         });
