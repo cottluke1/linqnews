@@ -19,7 +19,7 @@
             flex-direction: column;
             min-height: 100vh;
         }
-        body.overflow-hidden { 
+        body.overflow-hidden {
             overflow: hidden;
         }
         /* Scrollbar styling */
@@ -28,102 +28,104 @@
         ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
         ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
 
-        /* Header Styles */
+        /* Header Styles (Assuming header.html provides the fixed header structure) */
+        /* Styles below are for elements potentially loaded from header.html */
         nav.fixed {
             background-color: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(10px) saturate(150%);
             -webkit-backdrop-filter: blur(10px) saturate(150%);
             border-bottom: 1px solid #222222;
+            /* Assuming header.html makes it position:fixed, top:0, left:0, width:100%, z-index:1000 */
         }
         .nav-link {
             transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
             font-weight: 500;
             color: #B0B0B0;
-            opacity: 0.8;   
+            opacity: 0.8;
             padding: 0.5rem 0.75rem;
             border-radius: 0.375rem;
-            font-size: 0.875rem; 
+            font-size: 0.875rem;
         }
-        .nav-link:hover { 
+        .nav-link:hover {
             color: #FFFFFF;
             opacity: 1;
             background-color: rgba(255,255,255,0.05);
         }
         .nav-link.active {
-            color: #FFFFFF; 
+            color: #FFFFFF;
             opacity: 1;
-            background-color: transparent; 
+            background-color: transparent;
         }
         #authLinkDesktopLogin.nav-link-button {
-            background-color: #00BFFF; 
-            color: #FFFFFF !important; 
-            opacity: 1 !important; 
-            padding: 0.5rem 1rem; 
+            background-color: #00BFFF;
+            color: #FFFFFF !important;
+            opacity: 1 !important;
+            padding: 0.5rem 1rem;
         }
         #authLinkDesktopLogin.nav-link-button:hover {
-            background-color: #00A9E0; 
+            background-color: #00A9E0;
             opacity: 1;
         }
-        .profile-icon-placeholder { 
-            width: 2.25rem; 
-            height: 2.25rem; 
-            background-color: #333; 
-            border-radius: 50%; 
-            display: inline-flex; align-items: center; justify-content: center; 
-            cursor: pointer; 
-            border: 2px solid #4A4A4A; 
+        .profile-icon-placeholder {
+            width: 2.25rem;
+            height: 2.25rem;
+            background-color: #333;
+            border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            border: 2px solid #4A4A4A;
         }
-        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; } 
-        .profile-icon-placeholder:hover { border-color: #00BFFF; } 
+        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; }
+        .profile-icon-placeholder:hover { border-color: #00BFFF; }
         .desktop-hamburger-menu { position: relative; display: inline-block; }
-        .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;} 
+        .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;}
         .desktop-hamburger-icon:hover { color: #FFFFFF; background-color: rgba(255,255,255,0.1); }
-        .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; } 
-        .slide-out-panel { 
-            display: flex; 
+        .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; }
+        .slide-out-panel {
+            display: flex;
             flex-direction: column;
-            position: fixed; 
-            top: 0; 
-            right: 0; 
-            width: 320px; 
-            height: 100vh; 
-            background-color: #18181B; 
-            box-shadow: -10px 0 30px rgba(0,0,0,0.4); 
-            z-index: 1001; 
-            transform: translateX(100%); 
-            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
-            padding: 1.5rem; 
-            overflow-y: auto; 
-            border-left: 1px solid #3F3F46; 
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 320px;
+            height: 100vh;
+            background-color: #18181B;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.4);
+            z-index: 1001;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            padding: 1.5rem;
+            overflow-y: auto;
+            border-left: 1px solid #3F3F46;
         }
         .slide-out-panel.open { transform: translateX(0); }
         .slide-out-panel-header {
             display: flex; justify-content: flex-end; align-items: center;
-            padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #3F3F46; 
+            padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #3F3F46;
         }
         .slide-out-panel-close-btn {
-            background: none; border: none; color: #A0A0A0; font-size: 1.875rem; 
+            background: none; border: none; color: #A0A0A0; font-size: 1.875rem;
             cursor: pointer; padding: 0.25rem; line-height: 1;
             transition: color 0.2s ease, transform 0.2s ease;
         }
         .slide-out-panel-close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
         .slide-out-panel-nav { flex-grow: 1; display: flex; flex-direction: column; }
         .slide-out-panel a {
-            color: #D4D4D8; padding: 1rem 1.25rem; text-decoration: none; display: block; 
-            font-size: 0.95rem; font-weight: 500; 
-            transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease; 
-            border-left: 4px solid transparent; margin: 0.375rem 0; border-radius: 0.375rem; 
+            color: #D4D4D8; padding: 1rem 1.25rem; text-decoration: none; display: block;
+            font-size: 0.95rem; font-weight: 500;
+            transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease;
+            border-left: 4px solid transparent; margin: 0.375rem 0; border-radius: 0.375rem;
         }
         .slide-out-panel a:hover { background-color: #27272A; color: #FFFFFF; border-left-color: #00BFFF; }
-        .slide-out-panel #logoutButtonSlideout { 
-            color: #F87171 !important; margin-top: auto; padding-top: 1rem; border-top: 1px solid #3F3F46; 
+        .slide-out-panel #logoutButtonSlideout {
+            color: #F87171 !important; margin-top: auto; padding-top: 1rem; border-top: 1px solid #3F3F46;
         }
-        .slide-out-panel #logoutButtonSlideout:hover { 
+        .slide-out-panel #logoutButtonSlideout:hover {
             background-color: rgba(248, 113, 113, 0.1); color: #FECACA !important; border-left-color: #F87171;
-        } 
+        }
         #menu-overlay {
             display: none; position: fixed; inset: 0;
-            background-color: rgba(0, 0, 0, 0.65); z-index: 1000; 
+            background-color: rgba(0, 0, 0, 0.65); z-index: 1000;
             opacity: 0; transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         #menu-overlay.active { display: block; opacity: 1; }
@@ -137,35 +139,46 @@
         }
         .page-title .accent-text { color: #00BFFF; }
         .page-subtitle { font-size: 1.1rem; color: #A0A0A0; max-width: none; margin: 0; line-height: 1.6; }
-        
-        .search-input { /* Removed .search-container specific styling for icon */
-            width: 100%; padding: 0.875rem 1rem; /* Adjusted padding as icon is removed */
+
+        /* Sticky Search Bar */
+        .search-container {
+            position: sticky;
+            /* Adjust top based on your fixed header's height */
+            /* e.g., if header is 60px, maybe stick at 70px or 75px */
+            top: 75px;
+            z-index: 900; /* Lower than header (1000) but above content */
+            background-color: #0A0A0A; /* Match page background */
+            padding-top: 1rem; /* Add some space above the input */
+            padding-bottom: 1rem; /* Add space below the input */
+            margin-bottom: 1rem; /* Adjust margin since padding is added */
+        }
+        .search-input {
+            width: 100%; padding: 0.875rem 1rem;
             background-color: #1A1A1A; border: 1px solid #333333; border-radius: 0.5rem;
-            margin-bottom: 2rem; font-size: 1rem; color: #E0E0E0;
+            /* Removed margin-bottom from here, handled by container now */
+            font-size: 1rem; color: #E0E0E0;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
-            line-height: normal; height: 3rem; 
+            line-height: normal; height: 3rem;
         }
         .search-input::placeholder { color: #777777; }
         .search-input:focus {
             border-color: #00BFFF; outline: none;
             box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.25);
         }
-        
-        .filter-section-wrapper { 
-            flex: 1; 
-            min-width: 280px; 
-            order: 2; 
-            /* Added padding-top to align filter content with posts, adjust value as needed */
-            /* Estimate: page-header (~6.9rem) + search-container (~5rem) = ~11.9rem */
-            /* padding-top: 11.9rem; /* This pushes the filter panel down */
-            /* Let's try a fixed pixel value that visually aligns with where posts start after the community page header and search bar */
-            padding-top: 165px; /* Adjust this value based on visual inspection */
+
+        .filter-section-wrapper {
+            flex: 1;
+            min-width: 280px;
+            order: 2;
+             /* Removed fixed padding-top, rely on sticky positioning */
         }
         .filter-panel {
             background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%);
             padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
-            border: 1px solid #2a2a2a; position: sticky; 
-            top: 80px; /* Sticks 80px below viewport top, after main site header */
+            border: 1px solid #2a2a2a; position: sticky;
+            /* Adjust top based on header + sticky search bar height */
+            /* Header (~60px) + Search Container Padding/Height (~60-70px?) */
+            top: 150px; /* Adjust this value based on visual inspection */
         }
         .filter-title { font-size: 1.25rem; font-weight: 600; color: #E0E0E0; margin-bottom: 1.25rem; }
         .filter-button {
@@ -177,7 +190,7 @@
         .filter-button:hover {
             background-color: rgba(0, 191, 255, 0.1); color: #FFFFFF; border-color: #00BFFF;
         }
-        .filter-button.active { 
+        .filter-button.active {
             background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; font-weight: 600;
             border-color: #00BFFF;
         }
@@ -204,7 +217,16 @@
             border-radius: 1rem; font-size: 0.75rem; font-weight: 500;
             margin-left: 0.75rem; border: 1px solid rgba(0, 191, 255, 0.3);
         }
-        .twitter-tweet-container { margin-top: 1rem; background-color: #101010; border-radius: 0.5rem; padding: 0.75rem; border: 1px solid #282828;}
+        /* Center the blockquote (rendered tweet) within its container */
+        .twitter-tweet-container {
+            margin-top: 1rem;
+            background-color: transparent; /* Let widget handle background */
+            border-radius: 0.5rem;
+            padding: 0;
+            border: none;
+            display: flex; /* Added */
+            justify-content: center; /* Added */
+        }
         .post-actions {
             display: flex; justify-content: flex-end; align-items: center;
             margin-top: 1.5rem; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid #282828;
@@ -216,16 +238,20 @@
             display: inline-flex; align-items: center; gap: 0.5rem;
         }
         .action-btn:hover { background-color: #1A1A1A; color: #00BFFF; border-color: #00BFFF; }
-        .action-btn i { font-size: 1rem; } /* Ensure icon size is consistent */
-        
-        .favorite-btn i.fas { display: none; } /* Hide solid star by default */
-        .favorite-btn i.far { display: inline-block; } /* Show regular star by default */
-        .favorite-btn.favorited i.fas { display: inline-block; color: #00BFFF;} /* Show solid star when favorited */
-        .favorite-btn.favorited i.far { display: none; } /* Hide regular star when favorited */
-        .favorite-btn.favorited { /* Style for the button itself when favorited */
-            color: #00BFFF; 
-            border-color: #00BFFF;
-            background-color: rgba(0, 191, 255, 0.1);
+        .action-btn i { font-size: 1rem; }
+
+        .favorite-btn i.fas { display: none; }
+        .favorite-btn i.far { display: inline-block; }
+        .favorite-btn.favorited i.fas { display: inline-block; color: #00BFFF;}
+        .favorite-btn.favorited i.far { display: none; }
+        .favorite-btn.favorited {
+            color: #00BFFF;
+            border-color: #00BFFF; /* Optional: match border color */
+            background-color: rgba(0, 191, 255, 0.1); /* Optional: subtle background */
+        }
+         /* Adjust favorite button padding if it's icon-only */
+        .post-actions .favorite-btn {
+            padding: 0.5rem; /* Example padding for icon-only */
         }
 
         .share-confirmation { display:none; font-size: 0.75rem; color: #00BFFF; margin-left:0.5rem; }
@@ -236,17 +262,19 @@
         .footer a { color: #B0B0B0; transition: color 0.2s ease; }
         .footer a:hover { color: #00BFFF; }
         .page-content-wrapper {
-            flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px; 
+            flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px;
             margin: 0 auto; padding-left: 1rem; padding-right: 1rem;
             padding-top: 80px; /* Adjust if header height changes */
         }
         .community-main-grid { display: flex; flex-wrap: wrap; gap: 2rem; }
-        .posts-section { flex: 3; min-width: 0; order: 1; } 
-        /* .filter-section-wrapper defined above with padding-top */
-        @media (max-width: 1023px) { 
+        .posts-section { flex: 3; min-width: 0; order: 1; }
+        /* .filter-section-wrapper defined above */
+        @media (max-width: 1023px) {
             .community-main-grid { flex-direction: column; }
-            .posts-section, .filter-section-wrapper { flex: none; width: 100%; padding-top: 0; /* Reset padding for mobile */ }
-            .filter-panel { position: static; order: 0; margin-bottom: 2rem; } 
+            .posts-section, .filter-section-wrapper { flex: none; width: 100%; }
+            .filter-panel { position: static; order: 0; margin-bottom: 2rem; top: auto; /* Reset sticky top */ }
+             /* Reset sticky search for mobile if needed, or adjust top */
+            .search-container { position: static; top: auto; padding-top: 0; margin-bottom: 2rem;}
         }
     </style>
 </head>
@@ -261,7 +289,7 @@
                     <h1 class="page-title">The <span class="accent-text">Linq</span> to Your Community</h1>
                     <p class="page-subtitle">Real-Time Insights from Energy Experts</p>
                 </header>
-                
+
                 <div class="search-container">
                     <input type="text" id="searchInputCommunity" placeholder="Search community posts..." class="search-input">
                 </div>
@@ -280,7 +308,7 @@
                         <button class="filter-button" data-category="Policy">Policy & Markets</button>
                         <button class="filter-button" data-category="Market Analysis">Market Analysis</button>
                         <button class="filter-button" data-category="Energy Demand">Energy Demand</button>
-                    </div>
+                         <button class="filter-button active" data-category="All">All Categories</button> </div>
                 </div>
             </aside>
         </div>
@@ -303,8 +331,8 @@
             const authLinkMobile = document.getElementById('authLinkMobile');
             const logoutButtonMobile = document.getElementById('logoutButtonMobile');
             const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
-            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile'); 
-            const earningsLinkMobile = document.getElementById('earningsLinkMobile'); 
+            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile');
+            const earningsLinkMobile = document.getElementById('earningsLinkMobile');
             const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
             const menuOverlay = document.getElementById('menu-overlay');
             const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
@@ -313,8 +341,8 @@
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
 
-            if (!firebase.apps.length) { 
-                const firebaseConfigShared = { 
+            if (!firebase.apps.length) {
+                const firebaseConfigShared = {
                     apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // Store securely
                     authDomain: "linq-b27a8.firebaseapp.com",
                     projectId: "linq-b27a8",
@@ -327,6 +355,7 @@
             const authInstance = firebase.auth();
 
             authInstance.onAuthStateChanged(user => {
+                // Update UI based on auth state (logic from original script)
                 if (user) {
                     if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
                     if (profileAndMenuDesktop) {
@@ -367,7 +396,7 @@
                 if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
                 if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
                 authInstance.signOut().then(() => console.log("User signed out"))
-                              .catch(error => console.error("Sign out error", error));
+                        .catch(error => console.error("Sign out error", error));
             }
 
             if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
@@ -375,19 +404,24 @@
 
             function setActiveNavLink() {
                 const currentPath = window.location.pathname.split("/").pop() || "index.html";
-                const navLinks = document.querySelectorAll('nav.fixed a.nav-link, #mobile-menu a.nav-link');
+                // Ensure selectors target links within the loaded header
+                const navLinks = document.querySelectorAll('#navbar nav.fixed a.nav-link, #navbar #mobile-menu a.nav-link');
                 navLinks.forEach(link => {
                     link.classList.remove('active');
                     const linkHref = link.getAttribute('href');
-                    const linkDataPage = link.dataset.page;
-                    if (linkHref === currentPath || ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html" || linkDataPage === "index" || linkDataPage === "index-mobile"))) {
+                    const linkDataPage = link.dataset.page; // Assuming header links might have data-page
+                    // Check for index page variations
+                    const isIndex = (currentPath === "index.html" || currentPath === "") &&
+                                    (linkHref === "index.html" || linkDataPage === "index" || linkDataPage === "index-mobile");
+                    // Check for community page
+                    const isCommunity = currentPath === "community.html" && linkHref === "community.html";
+
+                    if (linkHref === currentPath || isIndex || isCommunity) {
                         link.classList.add('active');
-                    }
-                    if (currentPath === "community.html" && linkHref === "community.html") {
-                         link.classList.add('active');
                     }
                 });
             }
+
 
             if (mobileMenuButton && mobileMenu) {
                 mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
@@ -420,7 +454,7 @@
         }
 
         // Fetch and Inject Header, then Initialize Header Logic
-        fetch('header.html') 
+        fetch('header.html')
             .then(response => {
                 if (!response.ok) throw new Error('Network response was not ok for header.html');
                 return response.text();
@@ -429,7 +463,7 @@
                 const navbarElement = document.getElementById('navbar');
                 if (navbarElement) {
                     navbarElement.innerHTML = data;
-                    initializeHeaderAndAuth(); 
+                    initializeHeaderAndAuth(); // Initialize header logic AFTER loading it
                 } else {
                     console.error('Navbar element not found.');
                 }
@@ -443,27 +477,27 @@
         // --- Community Page Specific JavaScript ---
         document.getElementById('current-year-community').textContent = new Date().getFullYear();
 
+        // Load Twitter widgets script dynamically (already present in original script)
         const twitterScriptCommunity = document.createElement('script');
         twitterScriptCommunity.src = 'https://platform.twitter.com/widgets.js';
         twitterScriptCommunity.async = true;
         twitterScriptCommunity.charset = 'utf-8';
         document.body.appendChild(twitterScriptCommunity);
 
-        // Community posts data (as provided in original community.html)
         const communityPostsDataPage = [
-            { id: 'tweet1', url: 'https://twitter.com/CRUDEOIL231/status/1919070053825495266', title: 'Saudi Production Levels & Brent Impact', meta: 'May 10, 2025 • JH (@CRUDEOIL231)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">If Saudis and OPEC+ maintain production levels without increasing output, and as a result, Brent crude prices barely hold steady around $70/bbl, would that be favorable for your positions?<br><br>Of course the best-case scenario is for prices to remain high, but that seems unlikely.…</p>&mdash; JH (@CRUDEOIL231) <a href="https://twitter.com/CRUDEOIL231/status/1919070053825495266?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
-            { id: 'tweet2', url: 'https://twitter.com/LinqNews/status/1919171857409855978', title: "India's Rising Oil Consumption: A Key Global Demand Anchor", meta: 'May 10, 2025 • Linq AI Insights (@LinqAI)', category: 'Energy Demand', tweetContent: '<p lang="en" dir="ltr">India\'s oil consumption rose 4.5% YoY in March. Infrastructure buildout and strong GDP expectations place it as key global demand anchor in 2025.<a href="https://twitter.com/hashtag/India?src=hash&ref_src=twsrc%5Etfw">#India</a> <a href="https://twitter.com/hashtag/EnergyDemand?src=hash&ref_src=twsrc%5Etfw">#EnergyDemand</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; Linq AI Insights (@LinqAI) <a href="https://twitter.com/LinqNews/status/1919171857409855978?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
-            { id: 'tweet3', url: 'https://twitter.com/Rory_Johnston/status/1919158874172530712', title: 'Crude Gaps Down on OPEC+ News - Brent Back in $50s?', meta: 'May 09, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Market Analysis', tweetContent: '<p lang="en" dir="ltr">Crude gaps down >$2/bbl—Brent back in the $50s—on Asia open following OPEC headline-filled weekend.<br><br>Hard to know what, exactly, was priced in going into weekend—even if the ~400 kbpd June production hike was priced in, the entire unwind by November threat/rumour certainly wasn’t <a href="https://t.co/oMqvcPx0U8">pic.twitter.com/oMqvcPx0U8</a></p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1919158874172530712?ref_src=twsrc%5Etfw">May 4, 2025</a>'},
-            { id: 'tweet4', url: 'https://twitter.com/aeberman12/status/1919396685362373026', title: 'Riyadh’s Strategic Oil Play', meta: 'May 05, 2025 • Art Berman (@aeberman12)', category: 'Energy', tweetContent: '<p lang="en" dir="ltr">My take:<br><br>Riyadh is betting that looming sanctions and tighter supply will push oil prices higher.<br><br>It’s a preemptive move to shape sentiment, not just follow it.<a href="https://t.co/g98C6IMwWl">https://t.co/g98C6IMwWl</a><a href="https://twitter.com/hashtag/energy?src=hash&ref_src=twsrc%5Etfw">#energy</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://twitter.com/hashtag/oilandgas?src=hash&ref_src=twsrc%5Etfw">#oilandgas</a> <a href="https://twitter.com/hashtag/WTI?src=hash&ref_src=twsrc%5Etfw">#WTI</a> <a href="https://twitter.com/hashtag/CrudeOil?src=hash&ref_src=twsrc%5Etfw">#CrudeOil</a> <a href="https://twitter.com/hashtag/fintwit?src=hash&ref_src=twsrc%5Etfw">#fintwit</a> <a href="https://twitter.com/hashtag/OPEC?src=hash&ref_src=twsrc%5Etfw">#OPEC</a> <a href="https://twitter.com/hashtag/Commodities?src=hash&ref_src=twsrc%5Etfw">#Commodities</a> <a href="https://twitter.com/hashtag/commoditiesmarket?src=hash&ref_src=twsrc%5Etfw">#commoditiesmarket</a> <a href="https://t.co/qhfZgyHTnM">pic.twitter.com/qhfZgyHTnM</a></p>&mdash; Art Berman (@aeberman12) <a href="https://twitter.com/aeberman12/status/1919396685362373026?ref_src=twsrc%5Etfw">May 5, 2025</a>'},
-            { id: 'tweet5', url: 'https://twitter.com/IPAAaccess/status/1919510569553432731', title: 'IPAA Supports Budget Reconciliation Provisions', meta: 'May 05, 2025 • IPAA American Energy (@IPAAaccess)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">IPAA and a coalition of energy trade groups wrote to <a href="https://twitter.com/SpeakerJohnson?ref_src=twsrc%5Etfw">@SpeakerJohnson</a> expressing strong support for the <a href="https://twitter.com/hashtag/budgetreconciliation?src=hash&ref_src=twsrc%5Etfw">#budgetreconciliation</a> provisions currently under consideration by the <a href="https://twitter.com/NatResources?ref_src=twsrc%5Etfw">@NatResources</a>. "These provisions, included in the House Natural Resources bill text will increase domestic… <a href="https://t.co/QQIcQvG64S">pic.twitter.com/QQIcQvG64S</a></p>&mdash; IPAA American Energy (@IPAAaccess) <a href="https://twitter.com/IPAAaccess/status/1919510569553432731?ref_src=twsrc%5Etfw">May 5, 2025</a>'}
+             { id: 'tweet1', url: 'https://twitter.com/CRUDEOIL231/status/1919070053825495266', title: 'Saudi Production Levels & Brent Impact', meta: 'May 10, 2025 • JH (@CRUDEOIL231)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">If Saudis and OPEC+ maintain production levels without increasing output, and as a result, Brent crude prices barely hold steady around $70/bbl, would that be favorable for your positions?<br><br>Of course the best-case scenario is for prices to remain high, but that seems unlikely.…</p>&mdash; JH (@CRUDEOIL231) <a href="https://twitter.com/CRUDEOIL231/status/1919070053825495266?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
+             { id: 'tweet2', url: 'https://twitter.com/LinqNews/status/1919171857409855978', title: "India's Rising Oil Consumption: A Key Global Demand Anchor", meta: 'May 10, 2025 • Linq AI Insights (@LinqAI)', category: 'Energy Demand', tweetContent: '<p lang="en" dir="ltr">India\'s oil consumption rose 4.5% YoY in March. Infrastructure buildout and strong GDP expectations place it as key global demand anchor in 2025.<a href="https://twitter.com/hashtag/India?src=hash&ref_src=twsrc%5Etfw">#India</a> <a href="https://twitter.com/hashtag/EnergyDemand?src=hash&ref_src=twsrc%5Etfw">#EnergyDemand</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; Linq AI Insights (@LinqAI) <a href="https://twitter.com/LinqNews/status/1919171857409855978?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
+             { id: 'tweet3', url: 'https://twitter.com/Rory_Johnston/status/1919158874172530712', title: 'Crude Gaps Down on OPEC+ News - Brent Back in $50s?', meta: 'May 09, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Market Analysis', tweetContent: '<p lang="en" dir="ltr">Crude gaps down >$2/bbl—Brent back in the $50s—on Asia open following OPEC headline-filled weekend.<br><br>Hard to know what, exactly, was priced in going into weekend—even if the ~400 kbpd June production hike was priced in, the entire unwind by November threat/rumour certainly wasn’t <a href="https://t.co/oMqvcPx0U8">pic.twitter.com/oMqvcPx0U8</a></p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1919158874172530712?ref_src=twsrc%5Etfw">May 4, 2025</a>'},
+             { id: 'tweet4', url: 'https://twitter.com/aeberman12/status/1919396685362373026', title: 'Riyadh’s Strategic Oil Play', meta: 'May 05, 2025 • Art Berman (@aeberman12)', category: 'Energy', tweetContent: '<p lang="en" dir="ltr">My take:<br><br>Riyadh is betting that looming sanctions and tighter supply will push oil prices higher.<br><br>It’s a preemptive move to shape sentiment, not just follow it.<a href="https://t.co/g98C6IMwWl">https://t.co/g98C6IMwWl</a><a href="https://twitter.com/hashtag/energy?src=hash&ref_src=twsrc%5Etfw">#energy</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://twitter.com/hashtag/oilandgas?src=hash&ref_src=twsrc%5Etfw">#oilandgas</a> <a href="https://twitter.com/hashtag/WTI?src=hash&ref_src=twsrc%5Etfw">#WTI</a> <a href="https://twitter.com/hashtag/CrudeOil?src=hash&ref_src=twsrc%5Etfw">#CrudeOil</a> <a href="https://twitter.com/hashtag/fintwit?src=hash&ref_src=twsrc%5Etfw">#fintwit</a> <a href="https://twitter.com/hashtag/OPEC?src=hash&ref_src=twsrc%5Etfw">#OPEC</a> <a href="https://twitter.com/hashtag/Commodities?src=hash&ref_src=twsrc%5Etfw">#Commodities</a> <a href="https://twitter.com/hashtag/commoditiesmarket?src=hash&ref_src=twsrc%5Etfw">#commoditiesmarket</a> <a href="https://t.co/qhfZgyHTnM">pic.twitter.com/qhfZgyHTnM</a></p>&mdash; Art Berman (@aeberman12) <a href="https://twitter.com/aeberman12/status/1919396685362373026?ref_src=twsrc%5Etfw">May 5, 2025</a>'},
+             { id: 'tweet5', url: 'https://twitter.com/IPAAaccess/status/1919510569553432731', title: 'IPAA Supports Budget Reconciliation Provisions', meta: 'May 05, 2025 • IPAA American Energy (@IPAAaccess)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">IPAA and a coalition of energy trade groups wrote to <a href="https://twitter.com/SpeakerJohnson?ref_src=twsrc%5Etfw">@SpeakerJohnson</a> expressing strong support for the <a href="https://twitter.com/hashtag/budgetreconciliation?src=hash&ref_src=twsrc%5Etfw">#budgetreconciliation</a> provisions currently under consideration by the <a href="https://twitter.com/NatResources?ref_src=twsrc%5Etfw">@NatResources</a>. "These provisions, included in the House Natural Resources bill text will increase domestic… <a href="https://t.co/QQIcQvG64S">pic.twitter.com/QQIcQvG64S</a></p>&mdash; IPAA American Energy (@IPAAaccess) <a href="https://twitter.com/IPAAaccess/status/1919510569553432731?ref_src=twsrc%5Etfw">May 5, 2025</a>'}
         ];
-        
-        const postsContainerCommunity = document.getElementById('postsContainerCommunity');
-        let communityFavoritesPage = JSON.parse(localStorage.getItem('linqCommunityFavoritesV1')) || []; 
 
-        function displayCommunityPostsPage(postsToDisplay) { 
+        const postsContainerCommunity = document.getElementById('postsContainerCommunity');
+        let communityFavoritesPage = JSON.parse(localStorage.getItem('linqCommunityFavoritesV1')) || [];
+
+        function displayCommunityPostsPage(postsToDisplay) {
             if (!postsContainerCommunity) return;
-            postsContainerCommunity.innerHTML = ''; 
+            postsContainerCommunity.innerHTML = '';
             if (postsToDisplay.length === 0) {
                 postsContainerCommunity.innerHTML = '<p class="text-center text-gray-500 py-8">No posts match your current filters.</p>';
                 return;
@@ -472,54 +506,69 @@
                 const postElement = document.createElement('article');
                 postElement.className = 'post-card';
                 postElement.setAttribute('data-category', post.category);
-                postElement.setAttribute('data-id', post.id); 
+                postElement.setAttribute('data-id', post.id);
+                // Check if tweetContent is a string before using it
+                const tweetHTML = typeof post.tweetContent === 'string' ? post.tweetContent : '<p>Error loading tweet content.</p>';
+
                 postElement.innerHTML = `
                     <p class="post-title">${post.title || 'Untitled Post'}</p>
                     <p class="post-meta">${post.meta || 'N/A'} <span class="post-category-tag">${post.category || 'General'}</span></p>
                     <div class="twitter-tweet-container">
                         <blockquote class="twitter-tweet" data-theme="dark" data-cards="hidden" data-conversation="none">
-                           ${post.tweetContent || ''}
+                           ${tweetHTML}
                         </blockquote>
                     </div>
                     <div class="post-actions">
-                        <button class="action-btn share-btn" data-url="${post.url || '#'}" data-title="${post.title || 'Untitled Post'}">
+                         <button class="action-btn favorite-btn" data-id="${post.id}" aria-label="Toggle Favorite">
+                            <i class="far fa-star"></i><i class="fas fa-star"></i>
+                        </button>
+                        <button class="action-btn share-btn" data-id="${post.id}" data-title="${post.title || 'Untitled Post'}">
                             <i class="fas fa-share-alt"></i> Share
                         </button>
-                        <span class="share-confirmation hidden">Link copied!</span>
-                        <button class="action-btn favorite-btn" data-id="${post.id}" aria-label="Favorite post">
-                            <i class="far fa-star"></i><i class="fas fa-star"></i> Favorite 
-                        </button>
+                        <span class="share-confirmation hidden" style="margin-left: auto;">Linq link copied!</span>
                     </div>
-                `; // Combined far and fas for easier CSS toggling
+                `;
                 postsContainerCommunity.appendChild(postElement);
             });
+            // Reload Twitter widgets after adding new posts
             if (window.twttr && window.twttr.widgets) {
                 window.twttr.widgets.load(postsContainerCommunity);
+            } else {
+                 console.log("Twitter widgets API not ready when attempting to load posts.");
+                 // Consider adding a listener for when the script loads if this is consistently an issue
             }
-            updateCommunityFavoriteIconsPage(); 
-            addPostActionListenersPage(); 
+            updateCommunityFavoriteIconsPage();
+            addPostActionListenersPage();
         }
-        
-        function filterCommunityPostsPage() { 
+
+        function filterCommunityPostsPage() {
             const searchInput = document.getElementById('searchInputCommunity');
-            const searchQuery = searchInput ? searchInput.value.toLowerCase() : "";
-            const activeCategoryButtons = document.querySelectorAll('#categoryFiltersCommunity .filter-button.active');
-            const selectedCategories = Array.from(activeCategoryButtons).map(btn => btn.getAttribute('data-category'));
+            const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : ""; // Trim whitespace
+            const activeCategoryButton = document.querySelector('#categoryFiltersCommunity .filter-button.active');
+            const selectedCategory = activeCategoryButton ? activeCategoryButton.getAttribute('data-category') : 'All'; // Default to 'All'
+
             let filteredPosts = communityPostsDataPage;
-            if (selectedCategories.length > 0) { 
-                filteredPosts = communityPostsDataPage.filter(post => selectedCategories.includes(post.category));
+
+            // Filter by category (if not 'All')
+            if (selectedCategory !== 'All') {
+                filteredPosts = filteredPosts.filter(post => post.category === selectedCategory);
             }
+
+            // Filter by search query
             if (searchQuery) {
                 filteredPosts = filteredPosts.filter(post =>
                     (post.title && post.title.toLowerCase().includes(searchQuery)) ||
                     (post.meta && post.meta.toLowerCase().includes(searchQuery)) ||
-                    (post.tweetContent && post.tweetContent.toLowerCase().includes(searchQuery))
+                    // Be careful searching tweetContent, it might contain HTML
+                    (post.tweetContent && post.tweetContent.toLowerCase().includes(searchQuery)) ||
+                    (post.category && post.category.toLowerCase().includes(searchQuery))
                 );
             }
             displayCommunityPostsPage(filteredPosts);
         }
 
-        function toggleCommunityFavoritePage(postId) { 
+
+        function toggleCommunityFavoritePage(postId) {
             const index = communityFavoritesPage.indexOf(postId);
             if (index > -1) {
                 communityFavoritesPage.splice(index, 1);
@@ -530,7 +579,7 @@
             updateCommunityFavoriteIconsPage();
         }
 
-        function updateCommunityFavoriteIconsPage() { 
+        function updateCommunityFavoriteIconsPage() {
             document.querySelectorAll('#postsContainerCommunity .favorite-btn').forEach(button => {
                 const postId = button.getAttribute('data-id');
                 const isFavorited = communityFavoritesPage.includes(postId);
@@ -542,55 +591,84 @@
             });
         }
 
-        function addPostActionListenersPage() { 
+        function addPostActionListenersPage() {
+             // Remove existing listeners before adding new ones to prevent duplicates
             document.querySelectorAll('#postsContainerCommunity .favorite-btn').forEach(button => {
-                button.removeEventListener('click', handleCommunityFavoriteClickPage); 
+                button.removeEventListener('click', handleCommunityFavoriteClickPage);
                 button.addEventListener('click', handleCommunityFavoriteClickPage);
             });
             document.querySelectorAll('#postsContainerCommunity .share-btn').forEach(button => {
-                button.removeEventListener('click', handleShareClickPage); 
-                button.addEventListener('click', handleShareClickPage);
+                 button.removeEventListener('click', handleShareClickPage);
+                 button.addEventListener('click', handleShareClickPage);
             });
         }
-        function handleCommunityFavoriteClickPage(event) { 
+        function handleCommunityFavoriteClickPage(event) {
             const button = event.currentTarget;
             const postId = button.getAttribute('data-id');
             toggleCommunityFavoritePage(postId);
         }
-        function handleShareClickPage(event) { 
+
+        // Updated Share Click Handler
+        function handleShareClickPage(event) {
             const button = event.currentTarget;
-            const url = button.getAttribute('data-url');
+            const postId = button.getAttribute('data-id'); // Get post ID from button
             const title = button.getAttribute('data-title');
-            const confirmation = button.nextElementSibling; 
-            if (navigator.share) {
-                navigator.share({ title: title, url: url }).catch(err => console.error('Error sharing:', err));
-            } else if (navigator.clipboard) {
-                navigator.clipboard.writeText(url).then(() => {
-                    if(confirmation) {confirmation.style.display = 'inline'; confirmation.textContent = 'Link copied!';}
-                    setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2000);
+            // *** IMPORTANT: Replace this base URL with your actual site's post URL structure ***
+            const linqPostUrl = `https://your-linq-site.com/community/post/${postId}`;
+            const confirmation = button.nextElementSibling; // Assumes confirmation span is next sibling
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(linqPostUrl).then(() => {
+                    if(confirmation) {
+                        confirmation.textContent = 'Linq link copied!'; // Update text
+                        confirmation.style.display = 'inline';
+                    }
+                    setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2500); // Increased timeout slightly
                 }).catch(err => {
-                     console.error('Error copying:', err);
-                     if(confirmation) {confirmation.style.display = 'inline'; confirmation.textContent = 'Copy failed!';}
-                     setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2000);
+                    console.error('Failed to copy Linq link:', err);
+                    if(confirmation) {
+                        confirmation.textContent = 'Copy failed!';
+                        confirmation.style.display = 'inline';
+                    }
+                    setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2500);
                 });
             } else {
-                 if(confirmation) {confirmation.style.display = 'inline'; confirmation.textContent = 'Sharing not supported.';}
-                 setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2000);
+                 // Fallback for browsers without clipboard API (rare)
+                 console.warn('Clipboard API not available.');
+                 if(confirmation) {
+                     confirmation.textContent = 'Copy not supported.';
+                     confirmation.style.display = 'inline';
+                 }
+                 setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2500);
             }
         }
-        
+
+
         document.addEventListener('DOMContentLoaded', () => {
-            displayCommunityPostsPage(communityPostsDataPage); 
-            const categoryFilterButtonsPage = document.querySelectorAll('#categoryFiltersCommunity .filter-button'); 
+            displayCommunityPostsPage(communityPostsDataPage); // Initial display
+
+            const categoryFilterButtonsPage = document.querySelectorAll('#categoryFiltersCommunity .filter-button');
             categoryFilterButtonsPage.forEach(button => {
                 button.addEventListener('click', function() {
-                    this.classList.toggle('active'); 
-                    filterCommunityPostsPage();
+                    // Deactivate all buttons first
+                    categoryFilterButtonsPage.forEach(btn => btn.classList.remove('active'));
+                    // Activate the clicked button
+                    this.classList.add('active');
+                    filterCommunityPostsPage(); // Refilter posts
                 });
             });
-            const searchInputElementPage = document.getElementById('searchInputCommunity'); 
-            if (searchInputElementPage) { 
-                searchInputElementPage.addEventListener('input', filterCommunityPostsPage); 
+
+            // Set 'All Categories' as active by default
+             const allCategoriesButton = document.querySelector('#categoryFiltersCommunity .filter-button[data-category="All"]');
+             if (allCategoriesButton) {
+                 allCategoriesButton.classList.add('active');
+             }
+
+
+            const searchInputElementPage = document.getElementById('searchInputCommunity');
+            if (searchInputElementPage) {
+                // Use 'input' event for real-time filtering as user types
+                searchInputElementPage.addEventListener('input', filterCommunityPostsPage);
             }
         });
     </script>
