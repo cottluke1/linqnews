@@ -565,10 +565,11 @@
             let filteredPosts = communityPostsDataPage;
 
             // Filter by selected categories (if any are selected)
+            // Post must match AT LEAST ONE of the selected categories if categories are selected
             if (selectedCategories.length > 0) {
                 filteredPosts = filteredPosts.filter(post => selectedCategories.includes(post.category));
             }
-            // If no categories are selected, filteredPosts remains all posts (or is already filtered by search)
+            // If no categories are selected, all posts are considered for search filtering.
 
             // Filter by search query
             if (searchQuery) {
@@ -622,19 +623,18 @@
             toggleCommunityFavoritePage(postId);
         }
 
-        // Share Click Handler (Emphasize placeholder URL)
+        // Share Click Handler (Updated with correct URL)
         function handleShareClickPage(event) {
             const button = event.currentTarget;
             const postId = button.getAttribute('data-id');
             const title = button.getAttribute('data-title');
 
-            // --- IMPORTANT ---
-            // --- Replace 'https://your-linq-site.com/community/post/' with your actual website's URL structure for posts ---
-            const linqPostUrl = `https://your-linq-site.com/community/post/${postId}`;
-            console.warn("Share button clicked. Using placeholder URL:", linqPostUrl, " - REMEMBER TO REPLACE THIS in the code!");
-            // --- IMPORTANT ---
+            // --- CORRECTED URL ---
+            const linqPostUrl = `https://cottluke1.github.io/linqnews5/community/post/${postId}`;
+            // --- CORRECTED URL ---
+            console.log("Sharing Linq link:", linqPostUrl);
 
-            // Find the confirmation span relative to the clicked button's parent (.post-actions)
+
             const confirmation = button.closest('.post-actions')?.querySelector('.share-confirmation');
 
             if (navigator.clipboard) {
