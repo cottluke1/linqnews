@@ -139,10 +139,9 @@
         .page-title .accent-text { color: #00BFFF; }
         .page-subtitle { font-size: 1.1rem; color: #A0A0A0; max-width: none; margin: 0; line-height: 1.6; }
 
-        /* Search Bar (Reverted - Not Sticky) */
+        /* Search Bar (Not Sticky) */
         .search-container {
-             /* Removed sticky properties */
-             margin-bottom: 2rem; /* Restore margin if needed */
+             margin-bottom: 2rem;
         }
         .search-input {
             width: 100%; padding: 0.875rem 1rem;
@@ -150,7 +149,6 @@
             font-size: 1rem; color: #E0E0E0;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
             line-height: normal; height: 3rem;
-             /* margin-bottom restored if it was part of original non-sticky style */
         }
         .search-input::placeholder { color: #777777; }
         .search-input:focus {
@@ -163,14 +161,12 @@
             flex: 1;
             min-width: 280px;
             order: 2;
-            /* Add padding-top to align with posts visually if needed, adjust value */
              padding-top: 165px; /* Adjust this based on header/search height */
         }
         .filter-panel {
             background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%);
             padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
             border: 1px solid #2a2a2a; position: sticky;
-             /* Sticks below the main site header (assuming header height ~60-80px) */
             top: 80px; /* Adjust this based on header height */
         }
         .filter-title { font-size: 1.25rem; font-weight: 600; color: #E0E0E0; margin-bottom: 1.25rem; }
@@ -179,12 +175,12 @@
             margin-bottom: 0.5rem; border-radius: 0.375rem; color: #B0B0B0; font-weight: 500;
             transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
             background-color: #1A1A1A; border: 1px solid #333333;
-            cursor: pointer; /* Ensure pointer cursor */
+            cursor: pointer;
         }
         .filter-button:hover {
             background-color: rgba(0, 191, 255, 0.1); color: #FFFFFF; border-color: #00BFFF;
         }
-        .filter-button.active { /* Style for selected filter(s) */
+        .filter-button.active {
             background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; font-weight: 600;
             border-color: #00BFFF;
         }
@@ -223,11 +219,11 @@
             justify-content: center;
         }
         .post-actions {
-            display: flex; /* Use flexbox for alignment */
-            justify-content: flex-end; /* Align items (buttons, span) to the right */
-            align-items: center; /* Vertically center items */
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
             margin-top: 1.5rem;
-            gap: 0.75rem; /* Space between buttons */
+            gap: 0.75rem;
             padding-top: 1rem;
             border-top: 1px solid #282828;
         }
@@ -250,19 +246,17 @@
             background-color: rgba(0, 191, 255, 0.1);
         }
         .post-actions .favorite-btn {
-            padding: 0.5rem; /* Padding for icon-only favorite button */
+            padding: 0.5rem;
         }
 
-        /* Share Confirmation Span */
         .share-confirmation {
-            display: none; /* Hidden by default */
+            display: none;
             font-size: 0.75rem;
             color: #00BFFF;
             margin-right: auto; /* Pushes this element to the left */
-            padding-left: 0; /* Adjust if needed */
+            padding-left: 0;
         }
 
-        /* Footer */
         .footer {
             background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem;
             border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem; margin-top: auto;
@@ -270,23 +264,20 @@
         .footer a { color: #B0B0B0; transition: color 0.2s ease; }
         .footer a:hover { color: #00BFFF; }
 
-        /* Layout */
         .page-content-wrapper {
             flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px;
             margin: 0 auto; padding-left: 1rem; padding-right: 1rem;
-            padding-top: 80px; /* Adjust if header height changes */
+            padding-top: 80px;
         }
         .community-main-grid { display: flex; flex-wrap: wrap; gap: 2rem; }
         .posts-section { flex: 3; min-width: 0; order: 1; }
-        /* .filter-section-wrapper defined above */
 
-        /* Responsive Layout */
         @media (max-width: 1023px) {
             .community-main-grid { flex-direction: column; }
-            .posts-section, .filter-section-wrapper { flex: none; width: 100%; padding-top: 0; /* Reset padding */ }
-            .filter-panel { position: static; order: 0; margin-bottom: 2rem; top: auto; /* Reset sticky */ }
-            .search-container { position: static; top: auto; /* Ensure search is not sticky on mobile */ }
-             .filter-section-wrapper { padding-top: 0; } /* Reset padding */
+            .posts-section, .filter-section-wrapper { flex: none; width: 100%; padding-top: 0; }
+            .filter-panel { position: static; order: 0; margin-bottom: 2rem; top: auto; }
+            .search-container { position: static; top: auto; }
+             .filter-section-wrapper { padding-top: 0; }
         }
     </style>
 </head>
@@ -338,9 +329,7 @@
     <script>
         // --- Function to Initialize and Run All Header Related Logic ---
         function initializeHeaderAndAuth() {
-            // (Header initialization and auth logic remains the same as previous version)
-            // ... [omitted for brevity, assume it's the same as the previous version] ...
-             const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
+            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
             const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
             const authLinkMobile = document.getElementById('authLinkMobile');
             const logoutButtonMobile = document.getElementById('logoutButtonMobile');
@@ -369,7 +358,6 @@
             const authInstance = firebase.auth();
 
             authInstance.onAuthStateChanged(user => {
-                // Update UI based on auth state (logic from original script)
                 if (user) {
                     if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
                     if (profileAndMenuDesktop) {
@@ -418,16 +406,13 @@
 
             function setActiveNavLink() {
                 const currentPath = window.location.pathname.split("/").pop() || "index.html";
-                // Ensure selectors target links within the loaded header
                 const navLinks = document.querySelectorAll('#navbar nav.fixed a.nav-link, #navbar #mobile-menu a.nav-link');
                 navLinks.forEach(link => {
                     link.classList.remove('active');
                     const linkHref = link.getAttribute('href');
-                    const linkDataPage = link.dataset.page; // Assuming header links might have data-page
-                    // Check for index page variations
+                    const linkDataPage = link.dataset.page;
                     const isIndex = (currentPath === "index.html" || currentPath === "") &&
                                     (linkHref === "index.html" || linkDataPage === "index" || linkDataPage === "index-mobile");
-                    // Check for community page
                     const isCommunity = currentPath === "community.html" && linkHref === "community.html";
 
                     if (linkHref === currentPath || isIndex || isCommunity) {
@@ -464,10 +449,9 @@
                 if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
             });
 
-            setActiveNavLink(); // Initial call
+            setActiveNavLink();
         }
 
-        // Fetch and Inject Header, then Initialize Header Logic
         fetch('header.html')
             .then(response => {
                 if (!response.ok) throw new Error('Network response was not ok for header.html');
@@ -477,7 +461,7 @@
                 const navbarElement = document.getElementById('navbar');
                 if (navbarElement) {
                     navbarElement.innerHTML = data;
-                    initializeHeaderAndAuth(); // Initialize header logic AFTER loading it
+                    initializeHeaderAndAuth();
                 } else {
                     console.error('Navbar element not found.');
                 }
@@ -488,7 +472,6 @@
                 if(navbarElement) navbarElement.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
             });
 
-        // --- Community Page Specific JavaScript ---
         document.getElementById('current-year-community').textContent = new Date().getFullYear();
 
         const twitterScriptCommunity = document.createElement('script');
@@ -522,7 +505,6 @@
                 postElement.setAttribute('data-id', post.id);
                 const tweetHTML = typeof post.tweetContent === 'string' ? post.tweetContent : '<p>Error loading tweet content.</p>';
 
-                // Updated HTML structure for post-actions
                 postElement.innerHTML = `
                     <p class="post-title">${post.title || 'Untitled Post'}</p>
                     <p class="post-meta">${post.meta || 'N/A'} <span class="post-category-tag">${post.category || 'General'}</span></p>
@@ -532,7 +514,7 @@
                         </blockquote>
                     </div>
                     <div class="post-actions">
-                        <span class="share-confirmation hidden" style="margin-right: auto;">Linq copied!</span>
+                        <span class="share-confirmation hidden" style="margin-right: auto;">Linq link copied!</span>
                          <button class="action-btn favorite-btn" data-id="${post.id}" aria-label="Toggle Favorite">
                             <i class="far fa-star"></i><i class="fas fa-star"></i>
                         </button>
@@ -553,30 +535,23 @@
             addPostActionListenersPage();
         }
 
-        // Updated Filter Function
         function filterCommunityPostsPage() {
             const searchInput = document.getElementById('searchInputCommunity');
             const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : "";
-            // Get all active category buttons
             const activeCategoryButtons = document.querySelectorAll('#categoryFiltersCommunity .filter-button.active');
-            // Extract the category names from the active buttons
             const selectedCategories = Array.from(activeCategoryButtons).map(btn => btn.getAttribute('data-category'));
 
             let filteredPosts = communityPostsDataPage;
 
-            // Filter by selected categories (if any are selected)
-            // Post must match AT LEAST ONE of the selected categories if categories are selected
             if (selectedCategories.length > 0) {
                 filteredPosts = filteredPosts.filter(post => selectedCategories.includes(post.category));
             }
-            // If no categories are selected, all posts are considered for search filtering.
 
-            // Filter by search query
             if (searchQuery) {
                 filteredPosts = filteredPosts.filter(post =>
                     (post.title && post.title.toLowerCase().includes(searchQuery)) ||
                     (post.meta && post.meta.toLowerCase().includes(searchQuery)) ||
-                    (post.tweetContent && post.tweetContent.toLowerCase().includes(searchQuery)) || // Basic search in tweet content
+                    (post.tweetContent && post.tweetContent.toLowerCase().includes(searchQuery)) ||
                     (post.category && post.category.toLowerCase().includes(searchQuery))
                 );
             }
@@ -623,25 +598,36 @@
             toggleCommunityFavoritePage(postId);
         }
 
-        // Share Click Handler (Updated with correct URL)
+        // Updated Share Click Handler to point to share.html
         function handleShareClickPage(event) {
             const button = event.currentTarget;
-            const postId = button.getAttribute('data-id');
+            const postId = button.getAttribute('data-id'); // Get post ID from button
             const title = button.getAttribute('data-title');
 
-            // --- CORRECTED URL ---
-            const linqPostUrl = `https://cottluke1.github.io/linqnews5/community/post/${postId}`;
-            // --- CORRECTED URL ---
-            console.log("Sharing Linq link:", linqPostUrl);
+            // Construct the URL for share.html with the postId as a query parameter.
+            // This assumes share.html is in the same directory as community.html
+            // or a path relative to the current page's directory.
+            // For GitHub pages, if community.html is at /linqnews5/community.html,
+            // and share.html is at /linqnews5/share.html, then 'share.html' is correct.
+            const sharePageRelativeUrl = `share.html?postId=${postId}`;
 
+            // Resolve to an absolute URL to ensure it works correctly from any path.
+            // window.location.origin gives "https://cottluke1.github.io"
+            // window.location.pathname gives "/linqnews5/community.html" (or similar)
+            // We want the base path like "/linqnews5/"
+            const currentPath = window.location.pathname;
+            const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1); // e.g., "/linqnews5/"
+            const fullLinqPostUrl = new URL(sharePageRelativeUrl, window.location.origin + basePath).href;
+
+            console.log("Attempting to copy share link:", fullLinqPostUrl); // For debugging
 
             const confirmation = button.closest('.post-actions')?.querySelector('.share-confirmation');
 
             if (navigator.clipboard) {
-                navigator.clipboard.writeText(linqPostUrl).then(() => {
+                navigator.clipboard.writeText(fullLinqPostUrl).then(() => {
                     if(confirmation) {
                         confirmation.textContent = 'Linq link copied!';
-                        confirmation.style.display = 'inline'; // Show the message
+                        confirmation.style.display = 'inline';
                     }
                     setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2500);
                 }).catch(err => {
@@ -664,18 +650,15 @@
 
 
         document.addEventListener('DOMContentLoaded', () => {
-            displayCommunityPostsPage(communityPostsDataPage); // Initial display
+            displayCommunityPostsPage(communityPostsDataPage);
 
             const categoryFilterButtonsPage = document.querySelectorAll('#categoryFiltersCommunity .filter-button');
             categoryFilterButtonsPage.forEach(button => {
                 button.addEventListener('click', function() {
-                    // Allow toggling active state for multiple selections
                     this.classList.toggle('active');
-                    filterCommunityPostsPage(); // Refilter posts based on all active buttons
+                    filterCommunityPostsPage();
                 });
             });
-
-            // No default active category button anymore
 
             const searchInputElementPage = document.getElementById('searchInputCommunity');
             if (searchInputElementPage) {
