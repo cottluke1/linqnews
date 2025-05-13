@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linq - Previous Energy Earnings Reports</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <style>
+        /* Base styles (same as earnings.html) */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0A;
+            color: #E0E0E0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        body.overflow-hidden {
+            overflow: hidden;
+        }
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: #1A1A1A; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
+        ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
+
+        /* Header styles (assuming header.html is used) */
+        nav.fixed {
+            background-color: rgba(10, 10, 10, 0.85) !important;
+            backdrop-filter: blur(10px) saturate(150%) !important;
+            -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+            border-bottom: 1px solid #222222 !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            z-index: 1000 !important;
+            padding: 0.75rem 0 !important;
+        }
+        nav.fixed .container { 
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            width: 100% !important;
+            max-width: 1280px !important; 
+            margin: 0 auto !important;
+            padding: 0 1rem !important; 
+        }
+        @media (min-width: 640px) { nav.fixed .container { padding: 0 1.5rem !important; } }
+        @media (min-width: 1024px) { nav.fixed .container { padding: 0 2rem !important; } }
+        .nav-link {
+            transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+            font-weight: 500; color: #B0B0B0; opacity: 0.8;   
+            padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; 
+        }
+        .nav-link:hover { color: #FFFFFF; opacity: 1; background-color: rgba(255,255,255,0.05); }
+        .nav-link.active { color: #FFFFFF; opacity: 1; background-color: transparent; }
+        #authLinkDesktopLogin.nav-link-button {
+            background-color: #00BFFF; color: #FFFFFF !important; opacity: 1 !important; padding: 0.5rem 1rem; 
+        }
+        #authLinkDesktopLogin.nav-link-button:hover { background-color: #00A9E0; opacity: 1; }
+        .profile-icon-placeholder { 
+            width: 2.25rem; height: 2.25rem; background-color: #333; border-radius: 50%; 
+            display: inline-flex; align-items: center; justify-content: center; 
+            cursor: pointer; border: 2px solid #4A4A4A; 
+        }
+        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; } 
+        .profile-icon-placeholder:hover { border-color: #00BFFF; } 
+        .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;} 
+        .desktop-hamburger-icon:hover { color: #FFFFFF; background-color: rgba(255,255,255,0.1); }
+        .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; } 
+        .slide-out-panel { 
+            display: flex; flex-direction: column; position: fixed; top: 0; right: 0; 
+            width: 320px; height: 100vh; background-color: #18181B; 
+            box-shadow: -10px 0 30px rgba(0,0,0,0.4); z-index: 1001; 
+            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            padding: 1.5rem; overflow-y: auto; border-left: 1px solid #3F3F46; 
+        }
+        .slide-out-panel.open { transform: translateX(0); }
+        .slide-out-panel-header {
+            display: flex; justify-content: flex-end; align-items: center;
+            padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #3F3F46; 
+        }
+        .slide-out-panel-close-btn {
+            background: none; border: none; color: #A0A0A0; font-size: 1.875rem; 
+            cursor: pointer; padding: 0.25rem; line-height: 1;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        .slide-out-panel-close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
+        .slide-out-panel-nav { flex-grow: 1; display: flex; flex-direction: column; }
+        .slide-out-panel a {
+            color: #D4D4D8; padding: 1rem 1.25rem; text-decoration: none; display: block; 
+            font-size: 0.95rem; font-weight: 500; 
+            transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease; 
+            border-left: 4px solid transparent; margin: 0.375rem 0; border-radius: 0.375rem; 
+        }
+        .slide-out-panel a:hover { background-color: #27272A; color: #FFFFFF; border-left-color: #00BFFF; }
+        .slide-out-panel #logoutButtonSlideout { 
+            color: #F87171 !important; margin-top: auto; padding-top: 1rem; border-top: 1px solid #3F3F46; 
+        }
+        .slide-out-panel #logoutButtonSlideout:hover { 
+            background-color: rgba(248, 113, 113, 0.1); color: #FECACA !important; border-left-color: #F87171;
+        } 
+        #menu-overlay {
+            display: none; position: fixed; inset: 0;
+            background-color: rgba(0, 0, 0, 0.65); z-index: 1000; 
+            opacity: 0; transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        #menu-overlay.active { display: block; opacity: 1; }
+
+        /* Page Content Wrapper */
+        .page-content-wrapper {
+            flex-grow: 1;
+            padding-top: 80px; 
+            padding-bottom: 4rem;
+            width: 100%;
+            max-width: 1200px; 
+            margin: 0 auto;
+        }
+
+        /* Page Title Section */
+        .calendar-page-heading-container { 
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding: 0 1rem;
+        }
+        .calendar-page-title {
+            font-size: 2.75rem;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+        .calendar-page-title .accent-text { color: #00BFFF; }
+        .calendar-page-subtitle {
+            font-size: 1.125rem;
+            color: #A0A0A0;
+            margin-top: 0.5rem;
+            font-weight: 400;
+        }
+
+        /* Filters Bar */
+        .filters-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1rem;
+            background-color: rgba(26, 26, 26, 0.7); 
+            backdrop-filter: blur(8px);
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #282828;
+        }
+        .filter-group { display: flex; flex-direction: column; gap: 0.25rem; flex-grow: 1; min-width: 150px;}
+        .filter-group label { font-size: 0.8rem; color: #A0A0A0; margin-bottom: 0.25rem; }
+        .filter-select, .filter-input {
+            background-color: #121212;
+            border: 1px solid #333333;
+            color: #E0E0E0;
+            padding: 0.625rem 0.875rem;
+            border-radius: 0.375rem;
+            font-size: 0.9rem;
+            appearance: none; 
+        }
+        .filter-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%23A0A0A0' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.25em;
+        }
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: #00BFFF;
+            box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.2);
+        }
+
+        /* Back Button */
+        .back-btn-container {
+            display: flex;
+            justify-content: center; /* Center the button */
+            margin-bottom: 2.5rem; 
+        }
+        .back-btn {
+            background-image: linear-gradient(to right, #007ACC, #00BFFF);
+            color: #FFFFFF;
+            font-weight: 500;
+            padding: 0.75rem 1.75rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px -5px rgba(0, 150, 255, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            text-decoration: none; /* For a tag */
+        }
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px -5px rgba(0, 150, 255, 0.6);
+            background-image: linear-gradient(to right, #006BB2, #00A9E0);
+        }
+        .back-btn i {
+            font-size: 1rem;
+        }
+
+        /* Calendar Section Titles */
+        .calendar-section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333333;
+        }
+        .calendar-section-title .accent-text { color: #00BFFF; }
+
+        /* Earnings Call Card */
+        .earnings-card {
+            background-color: #121212;
+            border: 1px solid #282828;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            box-shadow: 0 4px 15px -5px rgba(0,0,0,0.3);
+        }
+        .earnings-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px -8px rgba(0, 191, 255, 0.25);
+            border-color: #00BFFF;
+        }
+        .card-header { display: flex; align-items: center; gap: 1rem; }
+        .company-logo-placeholder {
+            width: 48px; height: 48px;
+            background-color: #282828;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 1.25rem; color: #00BFFF;
+            border: 2px solid #333333;
+        }
+        .company-info h3 { font-size: 1.25rem; font-weight: 600; color: #FFFFFF; margin-bottom: 0.1rem;}
+        .company-info .ticker { font-size: 0.9rem; color: #A0A0A0; }
+        .earnings-details { display: flex; flex-direction: column; gap: 0.5rem; }
+        .detail-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; color: #B0B0B0; }
+        .detail-item i { color: #00BFFF; width: 16px; text-align: center; }
+        .detail-label { font-weight: 500; color: #E0E0E0; margin-right: 0.25rem; }
+        .eps-actual { color: #4CAF50; /* Green for positive */ }
+        .eps-miss { color: #F44336; /* Red for negative/miss */ }
+        .card-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
+        .action-btn {
+            background-color: #1A1A1A;
+            color: #00BFFF;
+            border: 1px solid #00BFFF;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            cursor: pointer;
+            text-decoration: none; /* For a tag */
+        }
+        .action-btn:hover { background-color: #00BFFF; color: #FFFFFF; }
+        .action-btn i { font-size: 0.9rem; }
+        
+        /* Footer */
+        .footer {
+            background-color: #080808;
+            color: #A0A0A0;
+            padding: 2.5rem 1rem;
+            border-top: 1px solid #1A1A1A;
+            text-align: center;
+            font-size: 0.875rem;
+            margin-top: auto;
+        }
+        .footer a { color: #B0B0B0; transition: color 0.2s ease; }
+        .footer a:hover { color: #00BFFF; }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .calendar-page-title { font-size: 2.25rem; }
+            .calendar-page-subtitle { font-size: 1rem; }
+            .filters-bar { flex-direction: column; }
+            .filter-group { min-width: 100%; }
+            .earnings-card { padding: 1rem; }
+            .company-info h3 { font-size: 1.1rem; }
+            .card-actions { justify-content: flex-start; }
+            .page-content-wrapper { padding-top: 70px; }
+        }
+         @media (max-width: 480px) {
+            .calendar-page-title { font-size: 1.85rem;}
+            .calendar-page-subtitle { font-size: 0.9rem; }
+            .back-btn { padding: 0.6rem 1.25rem; font-size: 0.9rem;}
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div id="header-placeholder"></div>
+
+    <div class="page-content-wrapper px-4 sm:px-6 lg:px-8">
+        <div class="calendar-page-heading-container">
+            <h1 class="calendar-page-title">Previous Energy Sector <span class="accent-text">Earnings Reports</span></h1>
+            <p class="calendar-page-subtitle">Review Past Performance and Transcripts from Leading Energy Companies</p>
+        </div>
+
+        <div class="filters-bar">
+            <div class="filter-group">
+                <label for="date-range-previous">Date Range</label>
+                <select id="date-range-previous" class="filter-select">
+                    <option value="all_past">All Past Year</option>
+                    <option value="q1_2025">Q1 2025</option>
+                    <option value="q4_2024">Q4 2024</option>
+                    <option value="q3_2024">Q3 2024</option>
+                    <option value="q2_2024">Q2 2024</option>
+                    </select>
+            </div>
+            <div class="filter-group">
+                <label for="sector-previous">Sector</label>
+                <select id="sector-previous" class="filter-select">
+                    <option value="all">All Energy</option>
+                    <option value="oil_gas_ep">Oil & Gas E&P</option>
+                    <option value="midstream">Midstream</option>
+                    <option value="oilfield_services">Oilfield Services</option>
+                    <option value="renewables">Renewables</option>
+                    <option value="utilities">Utilities</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="market-cap-previous">Market Cap</label>
+                <select id="market-cap-previous" class="filter-select">
+                    <option value="all">All</option>
+                    <option value="large">Large Cap (>$10B)</option>
+                    <option value="mid">Mid Cap ($2B-$10B)</option>
+                    <option value="small">Small Cap (<$2B)</option>
+                </select>
+            </div>
+            <div class="filter-group flex-grow-[2]">
+                <label for="search-company-previous">Search Company</label>
+                <input type="text" id="search-company-previous" class="filter-input" placeholder="Enter ticker or name...">
+            </div>
+        </div>
+
+        <div class="back-btn-container">
+            <a href="earnings.html" id="back-to-upcoming-btn" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Upcoming Earnings
+            </a>
+        </div>
+
+        <div id="previous-earnings-container">
+            </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; <span id="current-year"></span> Linq Energy Intelligence. Advanced AI for a Brighter Future.</p>
+        <nav class="text-xs space-x-3 mt-2">
+            <a href="#">Privacy Policy</a> |
+            <a href="#">Terms of Service</a> |
+            <a href="#">Contact Us</a> |
+            <a href="#">API Status</a>
+        </nav>
+    </footer>
+
+    <script>
+        // --- Function to Initialize and Run All Header Related Logic ---
+        function initializeHeaderAndAuth() {
+            // This function would be identical to the one in earnings.html
+            // It handles Firebase auth, navigation links, mobile menu, desktop slide-out panel.
+            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
+            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
+            const authLinkMobile = document.getElementById('authLinkMobile');
+            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
+            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
+            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile'); 
+            const earningsLinkMobile = document.getElementById('earningsLinkMobile'); 
+            const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
+            const menuOverlay = document.getElementById('menu-overlay'); 
+            const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
+            const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
+            const slideoutCloseButton = document.getElementById('slideout-close-button');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            const firebaseConfig = { 
+                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // Store securely
+                authDomain: "linq-b27a8.firebaseapp.com",
+                projectId: "linq-b27a8",
+                storageBucket: "linq-b27a8.appspot.com",
+                messagingSenderId: "1067901051826",
+                appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+            };
+            if (!firebase.apps.length) { 
+                firebase.initializeApp(firebaseConfig);
+            }
+            const authInstance = firebase.auth();
+
+            authInstance.onAuthStateChanged(user => {
+                if (user) {
+                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
+                    if (profileAndMenuDesktop) {
+                        profileAndMenuDesktop.classList.remove('hidden');
+                        profileAndMenuDesktop.classList.add('flex');
+                    }
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "My Profile";
+                        authLinkMobile.href = "profile.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
+                } else {
+                    if (authLinkDesktopLogin) {
+                        authLinkDesktopLogin.classList.remove('hidden');
+                        authLinkDesktopLogin.classList.add('nav-link-button');
+                    }
+                    if (profileAndMenuDesktop) profileAndMenuDesktop.classList.add('hidden');
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "Login";
+                        authLinkMobile.href = "login.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
+                        closeDesktopMenu();
+                    }
+                }
+                setActiveNavLink();
+            });
+
+            function handleLogout(e) {
+                e.preventDefault();
+                if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
+                authInstance.signOut().then(() => {
+                    console.log("User signed out");
+                    window.location.href = 'index.html'; 
+                }).catch(error => console.error("Sign out error", error));
+            }
+
+            if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
+            if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
+
+            function setActiveNavLink() {
+                const currentPath = window.location.pathname.split("/").pop() || "index.html";
+                const navLinks = document.querySelectorAll('#header-placeholder nav.fixed a.nav-link, #header-placeholder #mobile-menu a.nav-link');
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    const linkHref = link.getAttribute('href');
+                    if (currentPath === "previous_earnings.html" && linkHref === "earnings.html") {
+                         link.classList.add('active'); // Keep "Earnings" nav link active
+                    } else if (linkHref === currentPath) {
+                        link.classList.add('active');
+                    } else if ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html" || link.dataset.page === "index" || link.dataset.page === "index-mobile")) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            }
+
+            function openDesktopMenu() {
+                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.add('open');
+                if (menuOverlay) menuOverlay.classList.add('active');
+                document.body.classList.add('overflow-hidden');
+            }
+            function closeDesktopMenu() {
+                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open');
+                if (menuOverlay) menuOverlay.classList.remove('active');
+                document.body.classList.remove('overflow-hidden');
+            }
+            if (desktopHamburgerButton) {
+                desktopHamburgerButton.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                    else openDesktopMenu();
+                });
+            }
+            if (menuOverlay) menuOverlay.addEventListener('click', closeDesktopMenu);
+            if (slideoutCloseButton) slideoutCloseButton.addEventListener('click', closeDesktopMenu);
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+            });
+            setActiveNavLink();
+        }
+
+        // Fetch and Inject Header, then Initialize Header Logic
+        fetch('header.html') 
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok for header.html');
+                return response.text();
+            })
+            .then(data => {
+                const headerPlaceholder = document.getElementById('header-placeholder');
+                if (headerPlaceholder) {
+                    headerPlaceholder.innerHTML = data;
+                    initializeHeaderAndAuth(); 
+                    const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
+                    if (fixedHeader) {
+                        document.querySelector('.page-content-wrapper').style.paddingTop = (fixedHeader.offsetHeight + 20) + 'px';
+                    }
+                } else {
+                    console.error('Header placeholder element not found.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching header:', error);
+            });
+
+        // --- Previous Earnings Page Specific JavaScript ---
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // --- DATA FOR PREVIOUS EARNINGS ---
+        // NOTE: This is a sample. For a production app, this data would come from a database/API.
+        // EPS data is illustrative. Actual links for webcasts/transcripts need to be sourced.
+        const previousEarningsData = [
+            // Q1 2025
+            { company: "ExxonMobil Corporation", ticker: "XOM", sector:"oil_gas_ep", marketCap: "large", date: "2025-02-20", time: "09:00 AM ET", period: "Q1 2025 Results", projectedEPS: "2.50", actualEPS: "2.55", webcastUrl: "https://corporate.exxonmobil.com/investors/events-and-presentations", transcriptUrl: "transcripts/XOM_Q1_2025.html" },
+            { company: "Chevron Corporation", ticker: "CVX", sector:"oil_gas_ep", marketCap: "large", date: "2025-02-22", time: "11:00 AM ET", period: "Q1 2025 Results", projectedEPS: "3.10", actualEPS: "3.05", webcastUrl: "https://www.chevron.com/investors/events-presentations", transcriptUrl: "transcripts/CVX_Q1_2025.html" },
+            { company: "Shell plc", ticker: "SHEL", sector:"oil_gas_ep", marketCap: "large", date: "2025-03-05", time: "09:00 AM GMT", period: "Q1 2025 Results", projectedEPS: "1.80", actualEPS: "1.88", webcastUrl: "https://www.shell.com/investors/financial-results-and-reporting/quarterly-results.html", transcriptUrl: "transcripts/SHEL_Q1_2025.html" },
+            { company: "ConocoPhillips", ticker: "COP", sector:"oil_gas_ep", marketCap: "large", date: "2025-02-15", time: "10:30 AM ET", period: "Q1 2025 Results", projectedEPS: "2.00", actualEPS: "2.10", webcastUrl: "https://www.conocophillips.com/investors/events-and-presentations/", transcriptUrl: "transcripts/COP_Q1_2025.html" },
+            { company: "Schlumberger Limited", ticker: "SLB", sector:"oilfield_services", marketCap: "large", date: "2025-02-18", time: "08:30 AM ET", period: "Q1 2025 Results", projectedEPS: "0.65", actualEPS: "0.68", webcastUrl: "https://investorcenter.slb.com/financial-information/quarterly-results", transcriptUrl: "transcripts/SLB_Q1_2025.html" },
+            { company: "NextEra Energy, Inc.", ticker: "NEE", sector:"utilities", marketCap: "large", date: "2025-02-25", time: "10:00 AM ET", period: "Q1 2025 Results", projectedEPS: "0.80", actualEPS: "0.78", webcastUrl: "https://www.investor.nexteraenergy.com/events-presentations", transcriptUrl: "transcripts/NEE_Q1_2025.html" },
+            { company: "Occidental Petroleum", ticker: "OXY", sector:"oil_gas_ep", marketCap: "large", date: "2025-02-27", time: "11:00 AM ET", period: "Q1 2025 Results", projectedEPS: "0.70", actualEPS: "0.75", webcastUrl: "https://www.oxy.com/investors/events-and-presentations/", transcriptUrl: "transcripts/OXY_Q1_2025.html" },
+            { company: "EOG Resources", ticker: "EOG", sector:"oil_gas_ep", marketCap: "large", date: "2025-03-03", time: "09:30 AM ET", period: "Q1 2025 Results", projectedEPS: "2.90", actualEPS: "3.00", webcastUrl: "https://investors.eogresources.com/events-and-presentations", transcriptUrl: "transcripts/EOG_Q1_2025.html" },
+            { company: "Pioneer Natural Resources (by XOM)", ticker: "PXD", sector:"oil_gas_ep", marketCap: "large", date: "2025-03-06", time: "10:00 AM ET", period: "Q1 2025 Results", projectedEPS: "5.50", actualEPS: "5.60", webcastUrl: "#", transcriptUrl: "transcripts/PXD_Q1_2025.html" }, // Acquired by XOM
+            { company: "Kinder Morgan, Inc.", ticker: "KMI", sector:"midstream", marketCap: "large", date: "2025-02-19", time: "04:30 PM ET", period: "Q1 2025 Results", projectedEPS: "0.30", actualEPS: "0.31", webcastUrl: "https://ir.kindermorgan.com/events-and-presentations/default.aspx", transcriptUrl: "transcripts/KMI_Q1_2025.html" },
+            { company: "BP p.l.c.", ticker: "BP", sector:"oil_gas_ep", marketCap: "large", date: "2025-03-01", time: "08:00 AM GMT", period: "Q1 2025 Results", projectedEPS: "0.90", actualEPS: "0.95", webcastUrl: "https://www.bp.com/en/global/corporate/investors/results-and-reporting.html", transcriptUrl: "transcripts/BP_Q1_2025.html" },
+            { company: "TotalEnergies SE", ticker: "TTE", sector:"oil_gas_ep", marketCap: "large", date: "2025-02-28", time: "10:00 AM CET", period: "Q1 2025 Results", projectedEPS: "2.10", actualEPS: "2.15", webcastUrl: "https://totalenergies.com/investors/results-investor-presentations", transcriptUrl: "transcripts/TTE_Q1_2025.html" },
+            { company: "Enbridge Inc.", ticker: "ENB", sector:"midstream", marketCap: "large", date: "2025-03-04", time: "09:00 AM ET", period: "Q1 2025 Results", projectedEPS: "0.60", actualEPS: "0.62", webcastUrl: "https://www.enbridge.com/investment-center/events-and-presentations", transcriptUrl: "transcripts/ENB_Q1_2025.html" },
+            { company: "Valero Energy Corporation", ticker: "VLO", sector:"oil_gas_ep", marketCap: "large", date: "2025-02-26", time: "10:00 AM ET", period: "Q1 2025 Results", projectedEPS: "4.50", actualEPS: "4.58", webcastUrl: "https://www.investorvalero.com/events-and-presentations/default.aspx", transcriptUrl: "transcripts/VLO_Q1_2025.html" },
+            { company: "Phillips 66", ticker: "PSX", sector:"midstream", marketCap: "large", date: "2025-02-27", time: "12:00 PM ET", period: "Q1 2025 Results", projectedEPS: "3.20", actualEPS: "3.25", webcastUrl: "https://investor.phillips66.com/financial-information/presentations/default.aspx", transcriptUrl: "transcripts/PSX_Q1_2025.html" },
+
+            // Q4 2024
+            { company: "ExxonMobil Corporation", ticker: "XOM", sector:"oil_gas_ep", marketCap: "large", date: "2024-11-20", time: "09:00 AM ET", period: "Q4 2024 Results", projectedEPS: "2.40", actualEPS: "2.48", webcastUrl: "https://corporate.exxonmobil.com/investors/events-and-presentations", transcriptUrl: "transcripts/XOM_Q4_2024.html" },
+            { company: "Chevron Corporation", ticker: "CVX", sector:"oil_gas_ep", marketCap: "large", date: "2024-11-22", time: "11:00 AM ET", period: "Q4 2024 Results", projectedEPS: "3.00", actualEPS: "3.15", webcastUrl: "https://www.chevron.com/investors/events-presentations", transcriptUrl: "transcripts/CVX_Q4_2024.html" },
+            { company: "Shell plc", ticker: "SHEL", sector:"oil_gas_ep", marketCap: "large", date: "2024-12-04", time: "09:00 AM GMT", period: "Q4 2024 Results", projectedEPS: "1.75", actualEPS: "1.70", webcastUrl: "https://www.shell.com/investors/financial-results-and-reporting/quarterly-results.html", transcriptUrl: "transcripts/SHEL_Q4_2024.html" },
+            { company: "ConocoPhillips", ticker: "COP", sector:"oil_gas_ep", marketCap: "large", date: "2024-11-15", time: "10:30 AM ET", period: "Q4 2024 Results", projectedEPS: "1.90", actualEPS: "1.98", webcastUrl: "https://www.conocophillips.com/investors/events-and-presentations/", transcriptUrl: "transcripts/COP_Q4_2024.html" },
+            { company: "Schlumberger Limited", ticker: "SLB", sector:"oilfield_services", marketCap: "large", date: "2024-11-18", time: "08:30 AM ET", period: "Q4 2024 Results", projectedEPS: "0.62", actualEPS: "0.65", webcastUrl: "https://investorcenter.slb.com/financial-information/quarterly-results", transcriptUrl: "transcripts/SLB_Q4_2024.html" },
+            // ... Add more Q4 2024 data for other companies ...
+
+            // Q3 2024
+            { company: "ExxonMobil Corporation", ticker: "XOM", sector:"oil_gas_ep", marketCap: "large", date: "2024-08-21", time: "09:00 AM ET", period: "Q3 2024 Results", projectedEPS: "2.30", actualEPS: "2.35", webcastUrl: "https://corporate.exxonmobil.com/investors/events-and-presentations", transcriptUrl: "transcripts/XOM_Q3_2024.html" },
+            { company: "Chevron Corporation", ticker: "CVX", sector:"oil_gas_ep", marketCap: "large", date: "2024-08-23", time: "11:00 AM ET", period: "Q3 2024 Results", projectedEPS: "2.90", actualEPS: "2.95", webcastUrl: "https://www.chevron.com/investors/events-presentations", transcriptUrl: "transcripts/CVX_Q3_2024.html" },
+            { company: "Shell plc", ticker: "SHEL", sector:"oil_gas_ep", marketCap: "large", date: "2024-09-06", time: "09:00 AM GMT", period: "Q3 2024 Results", projectedEPS: "1.65", actualEPS: "1.72", webcastUrl: "https://www.shell.com/investors/financial-results-and-reporting/quarterly-results.html", transcriptUrl: "transcripts/SHEL_Q3_2024.html" },
+            // ... Add more Q3 2024 data ...
+
+            // Q2 2024
+            { company: "ExxonMobil Corporation", ticker: "XOM", sector:"oil_gas_ep", marketCap: "large", date: "2024-05-22", time: "09:00 AM ET", period: "Q2 2024 Results", projectedEPS: "2.20", actualEPS: "2.28", webcastUrl: "https://corporate.exxonmobil.com/investors/events-and-presentations", transcriptUrl: "transcripts/XOM_Q2_2024.html" },
+            { company: "Chevron Corporation", ticker: "CVX", sector:"oil_gas_ep", marketCap: "large", date: "2024-05-24", time: "11:00 AM ET", period: "Q2 2024 Results", projectedEPS: "2.80", actualEPS: "2.75", webcastUrl: "https://www.chevron.com/investors/events-presentations", transcriptUrl: "transcripts/CVX_Q2_2024.html" },
+            { company: "Shell plc", ticker: "SHEL", sector:"oil_gas_ep", marketCap: "large", date: "2024-06-07", time: "09:00 AM GMT", period: "Q2 2024 Results", projectedEPS: "1.50", actualEPS: "1.55", webcastUrl: "https://www.shell.com/investors/financial-results-and-reporting/quarterly-results.html", transcriptUrl: "transcripts/SHEL_Q2_2024.html" },
+            // ... Add more Q2 2024 data ...
+            // Reminder: Continue populating with more of the top 100 energy companies for all four quarters.
+        ];
+
+        function createEarningsCard(data) {
+            const card = document.createElement('div');
+            card.className = 'earnings-card';
+
+            const actual = parseFloat(data.actualEPS);
+            const projected = parseFloat(data.projectedEPS);
+            let epsClass = '';
+            let epsIndicator = '';
+            let beatMissAmount = '';
+
+            if (!isNaN(actual) && !isNaN(projected)) {
+                const diff = actual - projected;
+                beatMissAmount = Math.abs(diff).toFixed(2);
+                if (diff >= 0) {
+                    epsClass = 'eps-actual';
+                    epsIndicator = `(Beat by $${beatMissAmount})`;
+                } else {
+                    epsClass = 'eps-miss';
+                    epsIndicator = `(Missed by $${beatMissAmount})`;
+                }
+            } else if (isNaN(actual) && !isNaN(projected)) {
+                 epsClass = 'text-gray-400'; // Neutral if actual is N/A
+                 data.actualEPS = "N/A";
+            } else if (!isNaN(actual) && isNaN(projected)) {
+                data.projectedEPS = "N/A";
+            } else {
+                data.actualEPS = "N/A";
+                data.projectedEPS = "N/A";
+            }
+
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="company-logo-placeholder"><span>${data.ticker}</span></div>
+                    <div class="company-info">
+                        <h3>${data.company}</h3>
+                        <p class="ticker">NYSE: ${data.ticker}</p> </div>
+                </div>
+                <div class="earnings-details">
+                    <div class="detail-item"><i class="fas fa-calendar-alt"></i> <span class="detail-label">Date:</span> ${data.date}</div>
+                    <div class="detail-item"><i class="fas fa-clock"></i> <span class="detail-label">Time:</span> ${data.time}</div>
+                    <div class="detail-item"><i class="fas fa-chart-pie"></i> <span class="detail-label">Period:</span> ${data.period}</div>
+                    <div class="detail-item"><i class="fas fa-bullseye"></i> <span class="detail-label">Projected EPS:</span> ${data.projectedEPS === "N/A" ? "N/A" : "$" + data.projectedEPS}</div>
+                    <div class="detail-item"><i class="fas fa-dollar-sign"></i> <span class="detail-label">Actual EPS:</span> <span class="${epsClass}">${data.actualEPS === "N/A" ? "N/A" : "$" + data.actualEPS}</span> <span class="text-xs ml-1 ${epsClass}">${epsIndicator}</span></div>
+                </div>
+                <div class="card-actions">
+                    <a href="${data.webcastUrl}" target="_blank" class="action-btn" 
+                       onclick="if('${data.webcastUrl}' === '#') { showNotification('Webcast recording link not available for this report.'); return false; }">
+                       <i class="fas fa-broadcast-tower"></i> View Webcast Recording
+                    </a>
+                    <a href="${data.transcriptUrl}" target="_blank" class="action-btn" 
+                       onclick="if('${data.transcriptUrl}'.startsWith('transcripts/') && '${data.transcriptUrl}'.includes('.html') && '${data.transcriptUrl}' !== '#') { return true; } else { showNotification('Transcript link is a placeholder or not available. Please update with actual link.'); return false; }">
+                       <i class="fas fa-file-alt"></i> View Transcript
+                    </a>
+                </div>
+            `;
+            return card;
+        }
+        
+        function showNotification(message) {
+            const existingNotification = document.querySelector('.linq-notification');
+            if (existingNotification) {
+                document.body.removeChild(existingNotification);
+            }
+
+            const notification = document.createElement('div');
+            notification.className = 'linq-notification'; // Add a class for potential removal
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.left = '50%';
+            notification.style.transform = 'translateX(-50%)';
+            notification.style.backgroundColor = '#00BFFF'; // Linq accent color
+            notification.style.color = 'white';
+            notification.style.padding = '12px 25px';
+            notification.style.borderRadius = '6px';
+            notification.style.zIndex = '10001'; // Ensure it's on top
+            notification.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+            notification.style.fontSize = '0.9rem';
+            notification.style.textAlign = 'center';
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                     document.body.removeChild(notification);
+                }
+            }, 3500);
+        }
+
+
+        function displayEarnings(filters) {
+            const container = document.getElementById('previous-earnings-container');
+            container.innerHTML = ''; 
+
+            const { 
+                dateRange = 'all_past', 
+                sector = 'all', 
+                marketCap = 'all', 
+                searchTerm = '' 
+            } = filters;
+
+            const searchLower = searchTerm.toLowerCase();
+
+            const filteredData = previousEarningsData.filter(item => {
+                // Date Range Filter
+                let datePass = false;
+                if (dateRange === 'all_past') {
+                    datePass = true;
+                } else {
+                    const itemQuarterYear = item.period.split(' ')[0].toLowerCase() + "_" + item.date.substring(0,4); // e.g. q1_2025
+                    if (dateRange === itemQuarterYear) {
+                        datePass = true;
+                    }
+                }
+                if (!datePass) return false;
+
+                // Sector Filter
+                if (sector !== 'all' && item.sector !== sector) return false;
+                
+                // Market Cap Filter
+                if (marketCap !== 'all' && item.marketCap !== marketCap) return false;
+
+                // Search Term Filter (Company Name or Ticker)
+                if (searchTerm) {
+                    if (!item.company.toLowerCase().includes(searchLower) && !item.ticker.toLowerCase().includes(searchLower)) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+
+
+            // Group data by quarter for sectioning
+            const groupedData = filteredData.reduce((acc, item) => {
+                const year = item.date.substring(0,4);
+                const quarter = item.period.split(' ')[0]; // Q1, Q2 etc.
+                const quarterYearKey = `${quarter} ${year}`; // e.g., "Q1 2025"
+                
+                if (!acc[quarterYearKey]) {
+                    acc[quarterYearKey] = [];
+                }
+                acc[quarterYearKey].push(item);
+                return acc;
+            }, {});
+            
+            const sortedQuarterYearKeys = Object.keys(groupedData).sort((a, b) => {
+                const [aQ, aY] = a.split(' ');
+                const [bQ, bY] = b.split(' ');
+                if (bY !== aY) return parseInt(bY) - parseInt(aY); // Sort by year descending
+                return parseInt(bQ.substring(1)) - parseInt(aQ.substring(1)); // Sort by quarter descending (Q4 before Q1)
+            });
+
+            if (sortedQuarterYearKeys.length === 0) {
+                 container.innerHTML = '<p class="text-center text-gray-400 py-8">No earnings reports match the selected filters for the past year.</p>';
+                 return;
+            }
+
+            sortedQuarterYearKeys.forEach(quarterYearKey => {
+                const sectionTitle = document.createElement('h2');
+                sectionTitle.className = 'calendar-section-title';
+                const [quarter, year] = quarterYearKey.split(' ');
+                sectionTitle.innerHTML = `${quarter} <span class="accent-text">${year}</span> Reports`;
+                container.appendChild(sectionTitle);
+
+                groupedData[quarterYearKey]
+                    .sort((a,b) => new Date(b.date) - new Date(a.date)) // Sort items within quarter by date descending
+                    .forEach(item => {
+                        const card = createEarningsCard(item);
+                        container.appendChild(card);
+                    });
+            });
+        }
+        
+        // Initial display with all filters set to 'all' or empty
+        displayEarnings({
+            dateRange: document.getElementById('date-range-previous').value,
+            sector: document.getElementById('sector-previous').value,
+            marketCap: document.getElementById('market-cap-previous').value,
+            searchTerm: document.getElementById('search-company-previous').value
+        });
+
+        // Filter event listeners
+        const dateRangeFilter = document.getElementById('date-range-previous');
+        const sectorFilter = document.getElementById('sector-previous');
+        const marketCapFilter = document.getElementById('market-cap-previous');
+        const searchInput = document.getElementById('search-company-previous');
+
+        function applyFilters() {
+            displayEarnings({
+                dateRange: dateRangeFilter.value,
+                sector: sectorFilter.value,
+                marketCap: marketCapFilter.value,
+                searchTerm: searchInput.value
+            });
+        }
+
+        if(dateRangeFilter) dateRangeFilter.addEventListener('change', applyFilters);
+        if(sectorFilter) sectorFilter.addEventListener('change', applyFilters);
+        if(marketCapFilter) marketCapFilter.addEventListener('change', applyFilters);
+        if(searchInput) searchInput.addEventListener('input', applyFilters); // Use 'input' for live search
+
+    </script>
+
+</body>
+</html>
