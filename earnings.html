@@ -153,7 +153,7 @@
             background-color: rgba(26, 26, 26, 0.7); 
             backdrop-filter: blur(8px);
             border-radius: 0.75rem;
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.5rem; /* Adjusted margin */
             border: 1px solid #282828;
         }
         .filter-group { display: flex; flex-direction: column; gap: 0.25rem; flex-grow: 1; min-width: 150px;}
@@ -178,6 +178,37 @@
             border-color: #00BFFF;
             box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.2);
         }
+
+        /* Sleek Button for Previous Earnings */
+        .previous-earnings-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2.5rem; /* Spacing before next section */
+        }
+        .previous-earnings-btn {
+            background-image: linear-gradient(to right, #007ACC, #00BFFF);
+            color: #FFFFFF;
+            font-weight: 500;
+            padding: 0.75rem 1.75rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px -5px rgba(0, 150, 255, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+        .previous-earnings-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px -5px rgba(0, 150, 255, 0.6);
+            background-image: linear-gradient(to right, #006BB2, #00A9E0);
+        }
+         .previous-earnings-btn i {
+            font-size: 1rem;
+        }
+
 
         /* Calendar Section Titles */
         .calendar-section-title {
@@ -239,6 +270,17 @@
         }
         .action-btn:hover { background-color: #00BFFF; color: #FFFFFF; }
         .action-btn i { font-size: 0.9rem; }
+        .action-btn.disabled-btn {
+            background-color: #2a2a2a;
+            color: #707070;
+            border-color: #4a4a4a;
+            cursor: not-allowed;
+        }
+         .action-btn.disabled-btn:hover {
+            background-color: #2a2a2a;
+            color: #707070;
+        }
+
 
         /* Footer */
         .footer {
@@ -267,6 +309,7 @@
          @media (max-width: 480px) {
             .calendar-page-title { font-size: 1.85rem;}
             .calendar-page-subtitle { font-size: 0.9rem; }
+            .previous-earnings-btn { padding: 0.6rem 1.25rem; font-size: 0.9rem;}
         }
     </style>
 </head>
@@ -283,11 +326,11 @@
             <div class="filter-group">
                 <label for="date-range">Date Range</label>
                 <select id="date-range" class="filter-select">
+                    <option>All Upcoming</option>
                     <option>Next 7 Days</option>
                     <option>Next 30 Days</option>
                     <option>This Quarter</option>
-                    <option>Custom Range</option>
-                </select>
+                    </select>
             </div>
             <div class="filter-group">
                 <label for="sector">Sector</label>
@@ -315,6 +358,12 @@
             </div>
         </div>
 
+        <div class="previous-earnings-btn-container">
+            <button id="view-previous-earnings-btn" class="previous-earnings-btn">
+                <i class="fas fa-history"></i> View Previous Earnings Reports
+            </button>
+        </div>
+
         <div>
             <h2 class="calendar-section-title">Next <span class="accent-text">7 Days</span> (May 12 - May 18, 2025)</h2>
             
@@ -329,7 +378,7 @@
                 <div class="earnings-details">
                     <div class="detail-item"><i class="fas fa-calendar-alt"></i> <span class="detail-label">Date:</span> May 14, 2025</div>
                     <div class="detail-item"><i class="fas fa-clock"></i> <span class="detail-label">Time:</span> 09:00 AM ET</div>
-                    <div class="detail-item"><i class="fas fa-chart-line"></i> <span class="detail-label">Period:</span> Q1 2025 Earnings</div>
+                    <div class="detail-item"><i class="fas fa-chart-line"></i> <span class="detail-label">Period:</span> Q2 2025 Earnings</div>
                 </div>
                 <div class="card-actions">
                     <button class="action-btn add-to-calendar-btn"
@@ -338,11 +387,11 @@
                             data-date="2025-05-14"
                             data-time="09:00"
                             data-timezone="ET" 
-                            data-period="Q1 2025">
+                            data-period="Q2 2025">
                         <i class="fas fa-calendar-plus"></i> Add to Calendar
                     </button>
                     <button class="action-btn"><i class="fas fa-broadcast-tower"></i> Webcast</button>
-                    <button class="action-btn"><i class="fas fa-file-alt"></i> Transcript</button>
+                    <button class="action-btn transcript-upcoming-btn"><i class="fas fa-file-alt"></i> Transcript</button>
                 </div>
             </div>
 
@@ -357,7 +406,7 @@
                 <div class="earnings-details">
                     <div class="detail-item"><i class="fas fa-calendar-alt"></i> <span class="detail-label">Date:</span> May 15, 2025</div>
                     <div class="detail-item"><i class="fas fa-clock"></i> <span class="detail-label">Time:</span> 10:00 AM ET</div>
-                    <div class="detail-item"><i class="fas fa-chart-line"></i> <span class="detail-label">Period:</span> Q1 2025 Earnings</div>
+                    <div class="detail-item"><i class="fas fa-chart-line"></i> <span class="detail-label">Period:</span> Q2 2025 Earnings</div>
                 </div>
                 <div class="card-actions">
                      <button class="action-btn add-to-calendar-btn"
@@ -366,10 +415,11 @@
                             data-date="2025-05-15"
                             data-time="10:00"
                             data-timezone="ET"
-                            data-period="Q1 2025">
+                            data-period="Q2 2025">
                         <i class="fas fa-calendar-plus"></i> Add to Calendar
                     </button>
                     <button class="action-btn"><i class="fas fa-broadcast-tower"></i> Webcast</button>
+                    <button class="action-btn transcript-upcoming-btn"><i class="fas fa-file-alt"></i> Transcript</button>
                 </div>
             </div>
         </div>
@@ -387,7 +437,7 @@
                 <div class="earnings-details">
                     <div class="detail-item"><i class="fas fa-calendar-alt"></i> <span class="detail-label">Date:</span> May 21, 2025</div>
                     <div class="detail-item"><i class="fas fa-clock"></i> <span class="detail-label">Time:</span> 11:00 AM ET</div>
-                    <div class="detail-item"><i class="fas fa-chart-line"></i> <span class="detail-label">Period:</span> Q1 2025 Earnings</div>
+                    <div class="detail-item"><i class="fas fa-chart-line"></i> <span class="detail-label">Period:</span> Q2 2025 Earnings</div>
                 </div>
                 <div class="card-actions">
                     <button class="action-btn add-to-calendar-btn"
@@ -396,10 +446,11 @@
                             data-date="2025-05-21"
                             data-time="11:00"
                             data-timezone="ET"
-                            data-period="Q1 2025">
+                            data-period="Q2 2025">
                         <i class="fas fa-calendar-plus"></i> Add to Calendar
                     </button>
                     <button class="action-btn"><i class="fas fa-broadcast-tower"></i> Webcast</button>
+                    <button class="action-btn transcript-upcoming-btn"><i class="fas fa-file-alt"></i> Transcript</button>
                 </div>
             </div>
             <div class="earnings-card">
@@ -413,7 +464,7 @@
                 <div class="earnings-details">
                     <div class="detail-item"><i class="fas fa-calendar-alt"></i> <span class="detail-label">Date:</span> May 28, 2025</div>
                     <div class="detail-item"><i class="fas fa-clock"></i> <span class="detail-label">Time:</span> 08:30 AM ET</div>
-                    <div class="detail-item"><i class="fas fa-chart-line"></i> <span class="detail-label">Period:</span> Q1 2025 Earnings</div>
+                    <div class="detail-item"><i class="fas fa-chart-line"></i> <span class="detail-label">Period:</span> Q2 2025 Earnings</div>
                 </div>
                 <div class="card-actions">
                     <button class="action-btn add-to-calendar-btn"
@@ -422,11 +473,11 @@
                             data-date="2025-05-28"
                             data-time="08:30"
                             data-timezone="ET"
-                            data-period="Q1 2025">
+                            data-period="Q2 2025">
                         <i class="fas fa-calendar-plus"></i> Add to Calendar
                     </button>
                     <button class="action-btn"><i class="fas fa-broadcast-tower"></i> Webcast</button>
-                    <button class="action-btn"><i class="fas fa-info-circle"></i> View Details</button>
+                    <button class="action-btn transcript-upcoming-btn"><i class="fas fa-file-alt"></i> Transcript</button>
                 </div>
             </div>
         </div>
@@ -456,6 +507,7 @@
                         <i class="fas fa-calendar-plus"></i> Add to Calendar
                     </button>
                     <button class="action-btn"><i class="fas fa-broadcast-tower"></i> Webcast</button>
+                    <button class="action-btn transcript-upcoming-btn"><i class="fas fa-file-alt"></i> Transcript</button>
                 </div>
             </div>
         </div>
@@ -490,7 +542,7 @@
             const mobileMenu = document.getElementById('mobile-menu');
 
             const firebaseConfig = { 
-                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // Store securely
+                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // IMPORTANT: Store securely, not in client-side code for production
                 authDomain: "linq-b27a8.firebaseapp.com",
                 projectId: "linq-b27a8",
                 storageBucket: "linq-b27a8.appspot.com",
@@ -620,13 +672,14 @@
             })
             .catch(error => {
                 console.error('Error fetching header:', error);
-                const headerPlaceholder = document.getElementById('header-placeholder');
-                if(headerPlaceholder) headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
+                // const headerPlaceholder = document.getElementById('header-placeholder'); // Line removed
+                // if(headerPlaceholder) headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>"; // Line removed
             });
 
         // --- Earnings Page Specific JavaScript ---
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
+        // Add to Calendar Button Functionality
         document.querySelectorAll('.add-to-calendar-btn').forEach(button => {
             button.addEventListener('click', function() {
                 const company = this.dataset.company;
@@ -651,7 +704,7 @@
                 }
 
                 const startDateUtc = new Date(Date.UTC(utcYear, utcMonth, utcDay, utcHour, minute, 0));
-                const endDateUtc = new Date(startDateUtc.getTime() + (60 * 60 * 1000)); // Assume 1 hour
+                const endDateUtc = new Date(startDateUtc.getTime() + (60 * 60 * 1000)); 
 
                 const formatDateToICS = (dateObj) => {
                     return dateObj.getUTCFullYear() +
@@ -686,9 +739,44 @@
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                URL.revokeObjectURL(link.href);
+                URL.revokeObjectURL(link.href); 
             });
         });
+
+        // Transcript Button Functionality for Upcoming Earnings
+        document.querySelectorAll('.transcript-upcoming-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Using a more styled, non-blocking notification instead of alert()
+                const notification = document.createElement('div');
+                notification.textContent = 'Transcript will be available after the earnings call.';
+                notification.style.position = 'fixed';
+                notification.style.bottom = '20px';
+                notification.style.left = '50%';
+                notification.style.transform = 'translateX(-50%)';
+                notification.style.backgroundColor = '#00BFFF';
+                notification.style.color = 'white';
+                notification.style.padding = '10px 20px';
+                notification.style.borderRadius = '5px';
+                notification.style.zIndex = '10000';
+                notification.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+                document.body.appendChild(notification);
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 3000); // Notification disappears after 3 seconds
+            });
+        });
+        
+        // Event listener for the "View Previous Earnings Reports" button
+        const viewPreviousBtn = document.getElementById('view-previous-earnings-btn');
+        if (viewPreviousBtn) {
+            viewPreviousBtn.addEventListener('click', function() {
+                // Navigate to a placeholder page for previous earnings
+                window.location.href = 'previous_earnings.html'; 
+                // Alternatively, you could display a message or toggle a hidden section on this page
+                // alert('Navigating to previous earnings reports page (placeholder).'); 
+            });
+        }
+
     </script>
 
 </body>
