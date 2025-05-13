@@ -199,6 +199,7 @@
             align-items: center;
             gap: 0.5rem;
             font-size: 0.95rem;
+            text-decoration: none; /* For anchor tag */
         }
         .previous-earnings-btn:hover {
             transform: translateY(-2px);
@@ -270,7 +271,7 @@
         }
         .action-btn:hover { background-color: #00BFFF; color: #FFFFFF; }
         .action-btn i { font-size: 0.9rem; }
-        .action-btn.disabled-btn {
+        .action-btn.disabled-btn { /* Style for disabled transcript button if needed */
             background-color: #2a2a2a;
             color: #707070;
             border-color: #4a4a4a;
@@ -330,7 +331,7 @@
                     <option>Next 7 Days</option>
                     <option>Next 30 Days</option>
                     <option>This Quarter</option>
-                    </select>
+                </select>
             </div>
             <div class="filter-group">
                 <label for="sector">Sector</label>
@@ -359,9 +360,9 @@
         </div>
 
         <div class="previous-earnings-btn-container">
-            <button id="view-previous-earnings-btn" class="previous-earnings-btn">
+            <a href="previous_earnings.html" id="view-previous-earnings-btn" class="previous-earnings-btn">
                 <i class="fas fa-history"></i> View Previous Earnings Reports
-            </button>
+            </a>
         </div>
 
         <div>
@@ -390,7 +391,7 @@
                             data-period="Q2 2025">
                         <i class="fas fa-calendar-plus"></i> Add to Calendar
                     </button>
-                    <button class="action-btn"><i class="fas fa-broadcast-tower"></i> Webcast</button>
+                    <button class="action-btn webcast-btn" data-webcast-url="https://corporate.exxonmobil.com/investors/events-and-presentations"><i class="fas fa-broadcast-tower"></i> Webcast</button>
                     <button class="action-btn transcript-upcoming-btn"><i class="fas fa-file-alt"></i> Transcript</button>
                 </div>
             </div>
@@ -418,7 +419,7 @@
                             data-period="Q2 2025">
                         <i class="fas fa-calendar-plus"></i> Add to Calendar
                     </button>
-                    <button class="action-btn"><i class="fas fa-broadcast-tower"></i> Webcast</button>
+                    <button class="action-btn webcast-btn" data-webcast-url="https://www.investor.nexteraenergy.com/events-presentations"><i class="fas fa-broadcast-tower"></i> Webcast</button>
                     <button class="action-btn transcript-upcoming-btn"><i class="fas fa-file-alt"></i> Transcript</button>
                 </div>
             </div>
@@ -449,7 +450,7 @@
                             data-period="Q2 2025">
                         <i class="fas fa-calendar-plus"></i> Add to Calendar
                     </button>
-                    <button class="action-btn"><i class="fas fa-broadcast-tower"></i> Webcast</button>
+                    <button class="action-btn webcast-btn" data-webcast-url="https://www.chevron.com/investors/events-presentations"><i class="fas fa-broadcast-tower"></i> Webcast</button>
                     <button class="action-btn transcript-upcoming-btn"><i class="fas fa-file-alt"></i> Transcript</button>
                 </div>
             </div>
@@ -476,7 +477,7 @@
                             data-period="Q2 2025">
                         <i class="fas fa-calendar-plus"></i> Add to Calendar
                     </button>
-                    <button class="action-btn"><i class="fas fa-broadcast-tower"></i> Webcast</button>
+                    <button class="action-btn webcast-btn" data-webcast-url="https://investorcenter.slb.com/financial-information/quarterly-results"><i class="fas fa-broadcast-tower"></i> Webcast</button>
                     <button class="action-btn transcript-upcoming-btn"><i class="fas fa-file-alt"></i> Transcript</button>
                 </div>
             </div>
@@ -506,7 +507,7 @@
                             data-period="Q2 2025">
                         <i class="fas fa-calendar-plus"></i> Add to Calendar
                     </button>
-                    <button class="action-btn"><i class="fas fa-broadcast-tower"></i> Webcast</button>
+                    <button class="action-btn webcast-btn" data-webcast-url="https://www.shell.com/investors/financial-results-and-reporting/quarterly-results.html"><i class="fas fa-broadcast-tower"></i> Webcast</button>
                     <button class="action-btn transcript-upcoming-btn"><i class="fas fa-file-alt"></i> Transcript</button>
                 </div>
             </div>
@@ -542,7 +543,7 @@
             const mobileMenu = document.getElementById('mobile-menu');
 
             const firebaseConfig = { 
-                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // IMPORTANT: Store securely, not in client-side code for production
+                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // IMPORTANT: Store securely
                 authDomain: "linq-b27a8.firebaseapp.com",
                 projectId: "linq-b27a8",
                 storageBucket: "linq-b27a8.appspot.com",
@@ -672,8 +673,6 @@
             })
             .catch(error => {
                 console.error('Error fetching header:', error);
-                // const headerPlaceholder = document.getElementById('header-placeholder'); // Line removed
-                // if(headerPlaceholder) headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>"; // Line removed
             });
 
         // --- Earnings Page Specific JavaScript ---
@@ -697,14 +696,19 @@
                 let utcDay = day;
                 let utcHour = hour;
 
+                // Basic timezone adjustment 
                 if (timezone === "ET") { 
+                    // Assuming Eastern Time is UTC-4 (e.g., EDT). 
+                    // For May, EDT (UTC-4) is typically active.
+                    // A more robust solution would use a library for timezone conversions.
                     utcHour = hour + 4; 
                 } else if (timezone === "GMT") {
                     // GMT is UTC
                 }
+                // Add more timezone conversions if needed for other zones (CT, MT, PT etc.)
 
                 const startDateUtc = new Date(Date.UTC(utcYear, utcMonth, utcDay, utcHour, minute, 0));
-                const endDateUtc = new Date(startDateUtc.getTime() + (60 * 60 * 1000)); 
+                const endDateUtc = new Date(startDateUtc.getTime() + (60 * 60 * 1000)); // Assume 1 hour duration
 
                 const formatDateToICS = (dateObj) => {
                     return dateObj.getUTCFullYear() +
@@ -742,41 +746,56 @@
                 URL.revokeObjectURL(link.href); 
             });
         });
+        
+        function showNotification(message) {
+            const existingNotification = document.querySelector('.linq-notification');
+            if (existingNotification) {
+                document.body.removeChild(existingNotification);
+            }
+
+            const notification = document.createElement('div');
+            notification.className = 'linq-notification'; // Add a class for potential removal
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.left = '50%';
+            notification.style.transform = 'translateX(-50%)';
+            notification.style.backgroundColor = '#00BFFF'; // Linq accent color
+            notification.style.color = 'white';
+            notification.style.padding = '12px 25px';
+            notification.style.borderRadius = '6px';
+            notification.style.zIndex = '10001'; // Ensure it's on top
+            notification.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+            notification.style.fontSize = '0.9rem';
+            notification.style.textAlign = 'center';
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                     document.body.removeChild(notification);
+                }
+            }, 3500);
+        }
+
 
         // Transcript Button Functionality for Upcoming Earnings
         document.querySelectorAll('.transcript-upcoming-btn').forEach(button => {
             button.addEventListener('click', function() {
-                // Using a more styled, non-blocking notification instead of alert()
-                const notification = document.createElement('div');
-                notification.textContent = 'Transcript will be available after the earnings call.';
-                notification.style.position = 'fixed';
-                notification.style.bottom = '20px';
-                notification.style.left = '50%';
-                notification.style.transform = 'translateX(-50%)';
-                notification.style.backgroundColor = '#00BFFF';
-                notification.style.color = 'white';
-                notification.style.padding = '10px 20px';
-                notification.style.borderRadius = '5px';
-                notification.style.zIndex = '10000';
-                notification.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
-                document.body.appendChild(notification);
-                setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 3000); // Notification disappears after 3 seconds
+                showNotification('Transcript will be available after the earnings call.');
+            });
+        });
+
+        // Webcast Button Functionality for Upcoming Earnings
+        document.querySelectorAll('.webcast-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const webcastUrl = this.dataset.webcastUrl;
+                if (webcastUrl && webcastUrl !== '#') {
+                    window.open(webcastUrl, '_blank');
+                } else {
+                    showNotification('Webcast link not yet available or is a placeholder.');
+                }
             });
         });
         
-        // Event listener for the "View Previous Earnings Reports" button
-        const viewPreviousBtn = document.getElementById('view-previous-earnings-btn');
-        if (viewPreviousBtn) {
-            viewPreviousBtn.addEventListener('click', function() {
-                // Navigate to a placeholder page for previous earnings
-                window.location.href = 'previous_earnings.html'; 
-                // Alternatively, you could display a message or toggle a hidden section on this page
-                // alert('Navigating to previous earnings reports page (placeholder).'); 
-            });
-        }
-
     </script>
 
 </body>
