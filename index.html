@@ -252,7 +252,7 @@
         .favorite-btn-area { flex-shrink: 0; margin-left: 1rem; }
         .filter-panel {
             background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%);
-            padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
+            padding: 1.5rem; border-radius: 2rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
             border: 1px solid #2a2a2a; position: sticky; 
             top: 94px; 
         }
@@ -291,34 +291,36 @@
             position: absolute; left: 0.875rem; 
             width: 1.1rem; height: 1.1rem; color: #A0A0A0; pointer-events: none;
         }
-
-        /* MODIFIED: Favorite button styles for Font Awesome */
+        
+        /* MODIFIED: Favorite button styles for SVG Bookmark on News Page */
         .favorite-btn {
-            width: 1.75rem; 
-            height: 1.75rem;
-            color: #888888; /* Default color for empty star */
+            width: 2rem; /* Increased size for news page */
+            height: 2rem; /* Increased size for news page */
+            color: #888888; /* Default color for SVG stroke */
             cursor: pointer;
-            transition: color 0.2s ease, transform 0.2s ease; background: none;
-            border: none; padding: 0; display: inline-flex;
-            align-items: center; justify-content: center;
-            font-size: 1.25rem; /* Adjust icon size if needed */
+            transition: color 0.2s ease, transform 0.2s ease; 
+            background: none;
+            border: none; 
+            padding: 0.25rem; /* Added some padding around the SVG */
+            display: inline-flex;
+            align-items: center; 
+            justify-content: center;
         }
         .favorite-btn:hover { 
             color: #00BFFF; 
             transform: scale(1.15); 
         }
-        .favorite-btn i.fas { display: none; } /* Filled star hidden by default */
-        .favorite-btn i.far { display: inline-block; } /* Empty star shown by default */
-        
-        .favorite-btn.favorited i.fas { 
-            display: inline-block; 
-            color: #00BFFF; /* Blue color for filled star */
+        .favorite-btn svg {
+            width: 100%;
+            height: 100%;
+            stroke-width: 1.5; 
+            stroke: currentColor; 
+            fill: none; 
         }
-        .favorite-btn.favorited i.far { 
-            display: none; /* Hide empty star when favorited */
+        .favorite-btn.favorited svg {
+            fill: #00BFFF; 
+            stroke: #00BFFF; 
         }
-        /* Optional: if button itself needs style change when favorited */
-        /* .favorite-btn.favorited { background-color: rgba(0, 191, 255, 0.1); border-color: #00BFFF; } */
 
 
         .footer {
@@ -789,7 +791,10 @@
                         </div>
                         <div class="favorite-btn-area">
                             <button class="favorite-btn" data-id="${article.id}" aria-label="Toggle Favorite">
-                                <i class="far fa-star"></i><i class="fas fa-star"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" />
+                                </svg>
                             </button>
                         </div>
                     </div>
@@ -850,15 +855,18 @@
             // console.log("Updating favorite icons. Current favorites:", favorites); 
              document.querySelectorAll('.favorite-btn').forEach(button => {
                 const articleId = String(button.getAttribute('data-id')); 
-                // const farStar = button.querySelector('i.far'); // No longer needed with CSS handling
-                // const fasStar = button.querySelector('i.fas'); // No longer needed with CSS handling
+                const svgIcon = button.querySelector('svg'); // Get the SVG icon
+
+                if (!svgIcon) return; // Should not happen if HTML is correct
 
                 if (favorites.includes(articleId)) {
                     // console.log("Favorited:", articleId); 
                     button.classList.add('favorited');
+                    // CSS will handle the fill/stroke via .favorite-btn.favorited svg
                 } else {
                     // console.log("Not favorited:", articleId); 
                     button.classList.remove('favorited');
+                     // CSS will handle the fill/stroke via .favorite-btn svg
                 }
             });
         }
