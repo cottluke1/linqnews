@@ -1,14 +1,105 @@
-    <nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linq Navigation - Fixed</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Ensures the nav itself doesn't have a display issue initially if other CSS is slow */
+        nav.fixed {
+            display: block; /* Or 'flex' if the nav tag itself is a flex container, but its child is */
+        }
+
+        /* Custom CSS for the slide-out panel */
+        .slide-out-panel {
+            position: fixed;
+            top: 0;
+            right: -350px; /* Initially off-screen */
+            width: 320px;
+            height: 100%;
+            background-color: #1a202c; /* Tailwind gray-900 */
+            color: white;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+            transition: right 0.3s ease-in-out;
+            z-index: 1050;
+            padding-top: 50px; /* For close button or header */
+        }
+        .slide-out-panel.active {
+            right: 0;
+        }
+        .slide-out-panel-header {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .slide-out-panel-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .slide-out-panel-nav a {
+            display: block;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid #2d3748; /* Tailwind gray-800 */
+        }
+        .slide-out-panel-nav a:hover {
+            background-color: #2d3748; /* Tailwind gray-700 */
+        }
+
+        /* Styling for the profile icon placeholder and SVG for consistent size */
+        .profile-icon-placeholder svg {
+            width: 2rem; /* w-8 */
+            height: 2rem; /* h-8 */
+            color: white; /* Assuming nav background is dark */
+            /* Add other styles if needed, e.g., border-radius if you want it circled beyond the SVG shape */
+        }
+        .nav-link-button { /* From your original HTML */
+             padding: 0.5rem 1rem; /* py-2 px-4 */
+             border: 1px solid transparent; /* Example, adjust as needed */
+             /* text-white from Tailwind class */
+        }
+        .nav-link-button:hover {
+            /* Define hover state, e.g., background change */
+        }
+        /* Active nav link style */
+        .nav-link.active {
+            font-weight: bold; /* Example */
+            /* color: white; /* Example */
+        }
+        /* Base nav link styling */
+        .nav-link {
+            /* color: #D1D5DB; /* Tailwind gray-300 */
+        }
+        .nav-link:hover {
+            /* color: white; */
+        }
+
+        /* Attempt to mitigate header flash by ensuring critical body visibility after styles might parse */
+        /* This is optional and can be aggressive. Test without it first. */
+        /*
+        body {
+            visibility: hidden;
+        }
+        body.js-loaded {
+            visibility: visible;
+        }
+        */
+    </style>
+</head>
+<body class="bg-gray-100"> <nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3 bg-gray-800"> <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
             <div class="hidden md:flex items-center space-x-5">
-                <a href="index.html" class="nav-link text-sm">News</a>
-                <a href="community.html" class="nav-link text-sm active">Community</a> 
-                <a href="Markets.html" id="marketsLinkDesktop" class="nav-link text-sm">Markets</a> 
+                <a href="index.html" data-page="index" class="nav-link text-sm text-gray-300 hover:text-white">News</a>
+                <a href="community.html" data-page="community" class="nav-link text-sm text-gray-300 hover:text-white">Community</a> 
+                <a href="markets.html" id="marketsLinkDesktop" data-page="markets" class="nav-link text-sm text-gray-300 hover:text-white">Markets</a> 
                 <div id="desktopAuthArea" class="flex items-center space-x-3">
-                    <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button">Login</a> 
-                    <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
-                        <a href="profile.html" id="profileLinkDesktop" title="My Profile">
+                    <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button text-white">Login</a> 
+                    <div id="profileAndMenuDesktop" class="hidden items-center space-x-3"> <a href="profile.html" id="profileLinkDesktop" title="My Profile">
                             <div class="profile-icon-placeholder">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                     <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
@@ -34,14 +125,12 @@
             </div>
         </div>
         <div id="mobile-menu" class="md:hidden hidden bg-gray-900 bg-opacity-90 backdrop-blur-md">
-            <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Login</a>
-            <a href="linqai.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Linq Ai</a>
-            <a href="earnings.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Earnings Calendar</a>
-            <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a> 
-            <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 active">Community</a> 
-            <a href="Markets.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Markets</a>
-            <a href="favorites.html" id="favoritesLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden">Favorites</a>
-            <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Logout</a>
+            <a href="index.html" data-page="index-mobile" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">News</a> 
+            <a href="community.html" data-page="community-mobile" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Community</a> 
+            <a href="markets.html" data-page="markets-mobile" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Markets</a>
+            <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Login</a>
+            <a href="linqai.html" id="linqAiLinkMobile" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white hidden">Linq AI</a> <a href="earnings.html" id="earningsLinkMobile" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white hidden">Earnings Calendar</a> <a href="favorites.html" id="favoritesLinkMobile" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white hidden">Favorites</a>
+            <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Logout</a>
         </div>
     </nav>
     
@@ -50,10 +139,164 @@
             <button id="slideout-close-button" class="slide-out-panel-close-btn" aria-label="Close menu">&times;</button>
         </div>
         <nav class="slide-out-panel-nav">
-            <a href="linqai.html">Linq AI</a>
-            <a href="earnings.html">Earnings Calendar</a>
-            <a href="favorites.html">Favorites</a> 
-            <a href="profile.html">My Profile</a>
+            <a href="linqai.html" id="linqAiLinkSlideout">Linq AI</a>
+            <a href="earnings.html" id="earningsLinkSlideout">Earnings Calendar</a>
+            <a href="favorites.html" id="favoritesLinkSlideout">Favorites</a> 
+            <a href="profile.html" id="profileLinkSlideout">My Profile</a>
             <a href="#" id="logoutButtonSlideout">Logout</a> 
         </nav>
     </div>
+
+    <div class="pt-20 h-screen bg-gray-200 p-10"> <h1 class="text-2xl">Page Content</h1>
+        <p>Scroll down to see the navbar remains fixed.</p>
+        <div style="height: 1500px;"></div>
+    </div>
+
+
+    <script>
+    // Optional: Body visibility trick to potentially reduce FOUC. Test carefully.
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     document.body.classList.add('js-loaded');
+    // });
+
+    // Main navigation script
+    (function() {
+        // --- AUTHENTICATION STATUS ---
+        // CRITICAL: Replace 'true' with your actual fast authentication check (e.g., from a cookie or localStorage).
+        // For testing, you can toggle this value.
+        const isLoggedIn = true; 
+        console.log('[NAV SCRIPT] Auth Check: isLoggedIn is set to', isLoggedIn);
+
+        // --- ELEMENT SELECTORS ---
+        // Desktop
+        const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
+        const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop'); // This is the key DIV to toggle
+        const profileLinkDesktop = document.getElementById('profileLinkDesktop'); // The <a> tag for the profile icon itself (for potential direct styling if needed)
+
+        // Mobile
+        const authLinkMobile = document.getElementById('authLinkMobile');
+        const logoutButtonMobile = document.getElementById('logoutButtonMobile');
+        const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
+        const linqAiLinkMobile = document.getElementById('linqAiLinkMobile');
+        const earningsLinkMobile = document.getElementById('earningsLinkMobile');
+
+        // Desktop Slideout Menu Links (Auth-dependent ones)
+        const logoutButtonSlideout = document.getElementById('logoutButtonSlideout');
+        const profileLinkSlideout = document.getElementById('profileLinkSlideout'); // My Profile link in slideout
+        const favoritesLinkSlideout = document.getElementById('favoritesLinkSlideout'); // Favorites link in slideout
+        // Assuming LinqAI and Earnings in slideout are always visible in the menu structure
+
+        // --- CONSOLE LOGGING FOR DEBUGGING ELEMENT SELECTION ---
+        console.log('[NAV SCRIPT] authLinkDesktopLogin:', authLinkDesktopLogin);
+        console.log('[NAV SCRIPT] profileAndMenuDesktop:', profileAndMenuDesktop);
+        console.log('[NAV SCRIPT] profileLinkDesktop (actual icon link):', profileLinkDesktop);
+
+
+        // --- UI UPDATE BASED ON LOGIN STATE ---
+        if (isLoggedIn) {
+            console.log('[NAV SCRIPT] User is LOGGED IN. Updating UI...');
+            // Desktop: Show profile/menu, hide login button
+            if (authLinkDesktopLogin) {
+                authLinkDesktopLogin.style.display = 'none';
+                console.log('[NAV SCRIPT] Login button hidden.');
+            }
+            if (profileAndMenuDesktop) {
+                profileAndMenuDesktop.classList.remove('hidden'); // This shows the profile pic and hamburger
+                profileAndMenuDesktop.style.display = 'flex'; // Tailwind's 'items-center space-x-3' implies flex
+                console.log('[NAV SCRIPT] profileAndMenuDesktop (profile pic & hamburger) shown.');
+            }
+
+            // Mobile: Show logout, hide login, show auth-dependent links
+            if (authLinkMobile) authLinkMobile.style.display = 'none';
+            if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
+            if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
+            if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden'); // Show if auth-dependent
+            if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden'); // Show if auth-dependent
+
+
+            // Desktop Slideout: Show auth-dependent links
+            if (logoutButtonSlideout) logoutButtonSlideout.style.display = 'block'; // Or 'inline', 'flex' as appropriate
+            if (profileLinkSlideout) profileLinkSlideout.style.display = 'block';
+            if (favoritesLinkSlideout) favoritesLinkSlideout.style.display = 'block';
+
+        } else { // User is LOGGED OUT
+            console.log('[NAV SCRIPT] User is LOGGED OUT. Updating UI...');
+            // Desktop: Show login button, hide profile/menu
+            if (authLinkDesktopLogin) {
+                authLinkDesktopLogin.style.display = ''; // Revert to default display (likely inline-flex due to nav-link-button potentially)
+                console.log('[NAV SCRIPT] Login button shown.');
+            }
+            if (profileAndMenuDesktop) {
+                profileAndMenuDesktop.classList.add('hidden');
+                profileAndMenuDesktop.style.display = 'none'; // Explicitly hide
+                console.log('[NAV SCRIPT] profileAndMenuDesktop (profile pic & hamburger) hidden.');
+            }
+
+            // Mobile: Show login, hide logout, hide auth-dependent links
+            if (authLinkMobile) authLinkMobile.style.display = 'block';
+            if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+            if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
+            if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden'); // Hide if auth-dependent
+            if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden'); // Hide if auth-dependent
+
+            // Desktop Slideout: Hide auth-dependent links
+            if (logoutButtonSlideout) logoutButtonSlideout.style.display = 'none';
+            if (profileLinkSlideout) profileLinkSlideout.style.display = 'none';
+            if (favoritesLinkSlideout) favoritesLinkSlideout.style.display = 'none';
+        }
+
+        // --- ACTIVE PAGE LINK STYLING ---
+        // Example: Get current page from URL (simplified)
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const navLinksDesktop = document.querySelectorAll('.hidden.md\\:flex a.nav-link[data-page]');
+        const navLinksMobile = document.querySelectorAll('#mobile-menu a.nav-link[data-page]');
+
+        navLinksDesktop.forEach(link => {
+            if (link.getAttribute('href').toLowerCase().includes(currentPage.toLowerCase()) || 
+                (currentPage === 'index.html' && link.dataset.page === 'index')) {
+                link.classList.add('active', 'text-white'); // Add 'active' and ensure text is white
+            } else {
+                link.classList.remove('active', 'text-white');
+                link.classList.add('text-gray-300'); // Default color
+            }
+        });
+         navLinksMobile.forEach(link => {
+            if (link.getAttribute('href').toLowerCase().includes(currentPage.toLowerCase()) ||
+                (currentPage === 'index.html' && link.dataset.page === 'index-mobile')) {
+                link.classList.add('active', 'text-white', 'bg-gray-700'); // Active style for mobile
+            } else {
+                link.classList.remove('active', 'text-white', 'bg-gray-700');
+            }
+        });
+
+
+        // --- MENU TOGGLE FUNCTIONALITY ---
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // Desktop Slideout Menu Toggle
+        const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
+        const desktopSlideoutMenu = document.getElementById('desktop-slideout-menu');
+        const slideoutCloseButton = document.getElementById('slideout-close-button');
+
+        if (desktopHamburgerButton && desktopSlideoutMenu) {
+            desktopHamburgerButton.addEventListener('click', function() {
+                desktopSlideoutMenu.classList.toggle('active'); 
+            });
+        }
+        if (slideoutCloseButton && desktopSlideoutMenu) {
+            slideoutCloseButton.addEventListener('click', function() {
+                desktopSlideoutMenu.classList.remove('active');
+            });
+        }
+    })();
+    </script>
+
+</body>
+</html>
