@@ -19,7 +19,7 @@
                         </div>
                     </a>
                     <div class="desktop-hamburger-menu">
-                        <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-white hover:text-gray-300 relative w-7 h-7 flex flex-col justify-around items-center">
+                        <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-black hover:text-gray-500 relative w-7 h-7 flex flex-col justify-around items-center">
                             <span class="hamburger-line hamburger-line-top"></span>
                             <span class="hamburger-line hamburger-line-middle"></span>
                             <span class="hamburger-line hamburger-line-bottom"></span>
@@ -66,36 +66,33 @@
 <style>
     /* --- Desktop Hamburger Menu Icon Animation --- */
     .desktop-hamburger-icon {
-        /* Using Tailwind classes for sizing and flex, but can be explicit CSS */
-        /* w-7 h-7 flex flex-col justify-around items-center */
         transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
     .hamburger-line {
         display: block;
-        width: 100%; /* Full width of button */
-        height: 2px; /* Thickness of the lines */
-        background-color: currentColor; /* Inherits text-white from button */
+        width: 100%; 
+        height: 2px; 
+        background-color: currentColor; /* Inherits text-black from button */
         border-radius: 1px;
         transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.3s ease-in-out;
         transform-origin: center;
     }
     
-    /* Adjust margin between lines if needed, default is justify-around from flex */
-    .hamburger-line-top { margin-bottom: 5px; } /* Example spacing */
-    .hamburger-line-bottom { margin-top: 5px; } /* Example spacing */
+    .hamburger-line-top { margin-bottom: 5px; } 
+    .hamburger-line-bottom { margin-top: 5px; } 
 
 
     /* Active state for X animation - JS adds '.is-active' to #desktop-hamburger-button */
     .desktop-hamburger-icon.is-active .hamburger-line-top {
-        transform: translateY(7px) rotate(45deg); /* Moves down and rotates */
+        transform: translateY(7px) rotate(45deg); 
     }
     .desktop-hamburger-icon.is-active .hamburger-line-middle {
-        opacity: 0; /* Fades out middle line */
+        opacity: 0; 
         transform: scaleX(0);
     }
     .desktop-hamburger-icon.is-active .hamburger-line-bottom {
-        transform: translateY(-7px) rotate(-45deg); /* Moves up and rotates */
+        transform: translateY(-7px) rotate(-45deg); 
     }
 
 
@@ -106,8 +103,8 @@
         right: 0;
         width: 300px;
         height: 100%;
-        background-color: #1f2937; /* Dark charcoal (Tailwind gray-800) */
-        color: #e2e8f0; /* Light gray text (Tailwind gray-200) */
+        background-color: #1f2937; 
+        color: #e2e8f0; 
         padding: 25px;
         box-sizing: border-box;
         transform: translateX(100%);
@@ -132,7 +129,7 @@
     .slide-out-panel-close-btn {
         background: none;
         border: none;
-        color: #cbd5e1; /* Tailwind gray-300 */
+        color: #cbd5e1; 
         font-size: 28px;
         font-weight: 300;
         cursor: pointer;
@@ -146,12 +143,12 @@
 
     .slide-out-panel-nav a {
         display: block;
-        /* Increased horizontal padding */
-        padding: 14px 15px; 
-        color: #cbd5e1; /* Tailwind gray-300 */
+        /* Increased horizontal padding further */
+        padding: 14px 20px; 
+        color: #cbd5e1; 
         text-decoration: none;
         font-size: 1rem;
-        border-bottom: 1px solid #374151; /* Tailwind gray-700 for subtle separation */
+        border-bottom: 1px solid #374151; 
         opacity: 0;
         transform: translateX(25px);
         animation: slideInFadeItem 0.4s ease-out forwards;
@@ -170,7 +167,7 @@
 
 
     .slide-out-panel-nav a:hover {
-        background-color: #374151; /* Tailwind gray-700 */
+        background-color: #374151; 
         color: #ffffff;
     }
 
