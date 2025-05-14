@@ -1,28 +1,28 @@
-<nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3 bg-gray-900"> 
+<nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
 
         <div class="hidden md:flex items-center space-x-5">
-            <a href="index.html" data-page="index" class="nav-link text-sm text-gray-300 hover:text-white">News</a>
-            <a href="community.html" class="nav-link text-sm text-gray-300 hover:text-white">Community</a>
-            <a href="markets.html" id="marketsLinkDesktop" class="nav-link text-sm text-gray-300 hover:text-white">Markets</a>
+            <a href="index.html" data-page="index" class="nav-link text-sm">News</a>
+            <a href="community.html" class="nav-link text-sm">Community</a>
+            <a href="markets.html" id="marketsLinkDesktop" class="nav-link text-sm">Markets</a>
 
             <div id="desktopAuthArea" class="flex items-center space-x-3">
-                <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button hidden text-gray-300 hover:text-white">Login</a> 
+                <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button">Login</a>
 
-                <div id="userActionsAndMenuDesktop" class="flex items-center space-x-4"> 
-                    <a href="profile.html" id="profileLinkDesktop" title="My Profile" class="hidden text-white hover:text-gray-300">
+                <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
+                    <a href="profile.html" id="profileLinkDesktop" title="My Profile">
                         <div class="profile-icon-placeholder">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-7 h-7"> 
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                 <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
                             </svg>
                         </div>
                     </a>
                     <div class="desktop-hamburger-menu">
-                        <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-black hover:text-gray-500 relative w-7 h-7 flex flex-col justify-around items-center">
-                            <span class="hamburger-line hamburger-line-top"></span>
-                            <span class="hamburger-line hamburger-line-middle"></span>
-                            <span class="hamburger-line hamburger-line-bottom"></span>
+                        <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
                         </button>
                     </div>
                 </div>
@@ -39,14 +39,17 @@
     </div>
 
     <div id="mobile-menu" class="md:hidden hidden bg-gray-900 bg-opacity-90 backdrop-blur-md">
-        <a href="index.html" data-page="index-mobile" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">News</a>
-        <a href="community.html" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Community</a>
-        <a href="markets.html" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Markets</a>
-        <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Login</a>
-        <a href="favorites.html" id="favoritesLinkMobile" class="hidden nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Bookmarks</a>
-        <a href="linqai.html" id="linqAiLinkMobile" class="hidden nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Linq AI</a>
-        <a href="earnings.html" id="earningsLinkMobile" class="hidden nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Earnings Calendar</a>
-        <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Logout</a>
+        <a href="index.html" data-page="index-mobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a>
+        <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Community</a>
+        <a href="markets.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Markets</a>
+        
+        <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Login</a>
+        
+        <a href="favorites.html" id="favoritesLinkMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Bookmarks</a>
+        <a href="linqai.html" id="linqAiLinkMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Linq AI</a>
+        <a href="earnings.html" id="earningsLinkMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Earnings Calendar</a>
+        
+        <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Logout</a>
     </div>
 </nav>
 
@@ -58,130 +61,6 @@
         <a href="linqai.html">Linq AI</a>
         <a href="earnings.html">Earnings Calendar</a>
         <a href="favorites.html">Favorites</a>
-        <a href="profile.html">My Profile Settings</a> 
-        <a href="#" id="logoutButtonSlideout">Logout</a>
+        <a href="profile.html">My Profile Settings</a> <a href="#" id="logoutButtonSlideout">Logout</a>
     </nav>
 </div>
-
-<style>
-    /* --- Desktop Hamburger Menu Icon Animation --- */
-    .desktop-hamburger-icon {
-        transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    }
-
-    .hamburger-line {
-        display: block;
-        width: 100%; 
-        height: 2px; 
-        background-color: currentColor; /* Inherits text-black from button */
-        border-radius: 1px;
-        transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.3s ease-in-out;
-        transform-origin: center;
-    }
-    
-    .hamburger-line-top { margin-bottom: 5px; } 
-    .hamburger-line-bottom { margin-top: 5px; } 
-
-
-    /* Active state for X animation - JS adds '.is-active' to #desktop-hamburger-button */
-    .desktop-hamburger-icon.is-active .hamburger-line-top {
-        transform: translateY(7px) rotate(45deg); 
-    }
-    .desktop-hamburger-icon.is-active .hamburger-line-middle {
-        opacity: 0; 
-        transform: scaleX(0);
-    }
-    .desktop-hamburger-icon.is-active .hamburger-line-bottom {
-        transform: translateY(-7px) rotate(-45deg); 
-    }
-
-
-    /* --- Styles for the slide-out panel with enhanced animations --- */
-    .slide-out-panel {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 300px;
-        height: 100%;
-        background-color: #1f2937; 
-        color: #e2e8f0; 
-        padding: 25px;
-        box-sizing: border-box;
-        transform: translateX(100%);
-        transition: transform 0.45s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        z-index: 1100;
-        box-shadow: -5px 0 20px rgba(0,0,0,0.25);
-        overflow-y: auto;
-    }
-
-    .slide-out-panel.open {
-        transform: translateX(0);
-    }
-
-    .slide-out-panel-header {
-        display: flex;
-        justify-content: flex-end;
-        margin-bottom: 25px;
-        opacity: 0;
-        animation: fadeInItem 0.5s ease-out 0.2s forwards; 
-    }
-
-    .slide-out-panel-close-btn {
-        background: none;
-        border: none;
-        color: #cbd5e1; 
-        font-size: 28px;
-        font-weight: 300;
-        cursor: pointer;
-        padding: 5px;
-        line-height: 1;
-        transition: color 0.2s ease-in-out;
-    }
-    .slide-out-panel-close-btn:hover {
-        color: #ffffff;
-    }
-
-    .slide-out-panel-nav a {
-        display: block;
-        /* Increased horizontal padding further */
-        padding: 14px 20px; 
-        color: #cbd5e1; 
-        text-decoration: none;
-        font-size: 1rem;
-        border-bottom: 1px solid #374151; 
-        opacity: 0;
-        transform: translateX(25px);
-        animation: slideInFadeItem 0.4s ease-out forwards;
-        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-    }
-    .slide-out-panel-nav a:last-child {
-        border-bottom: none;
-    }
-
-    /* Staggered animation delays for nav items */
-    .slide-out-panel.open .slide-out-panel-nav a:nth-child(1) { animation-delay: 0.25s; }
-    .slide-out-panel.open .slide-out-panel-nav a:nth-child(2) { animation-delay: 0.3s; }
-    .slide-out-panel.open .slide-out-panel-nav a:nth-child(3) { animation-delay: 0.35s; }
-    .slide-out-panel.open .slide-out-panel-nav a:nth-child(4) { animation-delay: 0.4s; }
-    .slide-out-panel.open .slide-out-panel-nav a:nth-child(5) { animation-delay: 0.45s; }
-
-
-    .slide-out-panel-nav a:hover {
-        background-color: #374151; 
-        color: #ffffff;
-    }
-
-    /* Keyframes for animations */
-    @keyframes fadeInItem {
-        to {
-            opacity: 1;
-        }
-    }
-
-    @keyframes slideInFadeItem {
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-</style>
