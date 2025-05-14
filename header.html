@@ -1,19 +1,18 @@
-<nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+<nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3 bg-gray-800"> <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
 
         <div class="hidden md:flex items-center space-x-5">
-            <a href="index.html" data-page="index" class="nav-link text-sm">News</a>
-            <a href="community.html" class="nav-link text-sm">Community</a>
-            <a href="markets.html" id="marketsLinkDesktop" class="nav-link text-sm">Markets</a>
+            <a href="index.html" data-page="index" class="nav-link text-sm text-gray-300 hover:text-white">News</a>
+            <a href="community.html" class="nav-link text-sm text-gray-300 hover:text-white">Community</a>
+            <a href="markets.html" id="marketsLinkDesktop" class="nav-link text-sm text-gray-300 hover:text-white">Markets</a>
 
             <div id="desktopAuthArea" class="flex items-center space-x-3">
-                <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button">Login</a>
+                <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button text-gray-300 hover:text-white hidden">Login</a>
 
-                <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
-                    <a href="profile.html" id="profileLinkDesktop" title="My Profile">
+                <div id="userActionsAndMenuDesktop" class="flex items-center space-x-4">
+                    <a href="profile.html" id="profileLinkDesktop" title="My Profile" class="hidden">
                         <div class="profile-icon-placeholder">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-7 h-7 text-white hover:text-gray-300">
                                 <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
                             </svg>
                         </div>
@@ -39,17 +38,17 @@
     </div>
 
     <div id="mobile-menu" class="md:hidden hidden bg-gray-900 bg-opacity-90 backdrop-blur-md">
-        <a href="index.html" data-page="index-mobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a>
-        <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Community</a>
-        <a href="markets.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Markets</a>
+        <a href="index.html" data-page="index-mobile" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">News</a>
+        <a href="community.html" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Community</a>
+        <a href="markets.html" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Markets</a>
         
-        <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Login</a>
+        <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Login</a>
         
-        <a href="favorites.html" id="favoritesLinkMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Bookmarks</a>
-        <a href="linqai.html" id="linqAiLinkMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Linq AI</a>
-        <a href="earnings.html" id="earningsLinkMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Earnings Calendar</a>
+        <a href="favorites.html" id="favoritesLinkMobile" class="hidden nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Bookmarks</a>
+        <a href="linqai.html" id="linqAiLinkMobile" class="hidden nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Linq AI</a>
+        <a href="earnings.html" id="earningsLinkMobile" class="hidden nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Earnings Calendar</a>
         
-        <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Logout</a>
+        <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Logout</a>
     </div>
 </nav>
 
@@ -61,6 +60,69 @@
         <a href="linqai.html">Linq AI</a>
         <a href="earnings.html">Earnings Calendar</a>
         <a href="favorites.html">Favorites</a>
-        <a href="profile.html">My Profile Settings</a> <a href="#" id="logoutButtonSlideout">Logout</a>
+        <a href="profile.html">My Profile Settings</a> 
+        <a href="#" id="logoutButtonSlideout">Logout</a>
     </nav>
 </div>
+
+<style>
+    .slide-out-panel {
+        /* Basic styles for visibility, actual styling might be more complex */
+        position: fixed;
+        top: 0;
+        right: -300px; /* Hidden by default */
+        width: 300px;
+        height: 100%;
+        background-color: #2d3748; /* Example: gray-800 */
+        color: white;
+        padding: 20px;
+        transition: right 0.3s ease-in-out;
+        z-index: 1100; /* Ensure it's above the navbar */
+        box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+    }
+    .slide-out-panel.open { /* JS would toggle this class */
+        right: 0;
+    }
+    .slide-out-panel-header {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+    }
+    .slide-out-panel-close-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+    }
+    .slide-out-panel-nav a {
+        display: block;
+        padding: 10px 0;
+        color: white;
+        text-decoration: none;
+        border-bottom: 1px solid #4a5568; /* Example: gray-700 */
+    }
+    .slide-out-panel-nav a:hover {
+        background-color: #4a5568; /* Example: gray-700 */
+    }
+    /* Added a default background for the nav for better visibility of white text elements */
+    nav.fixed {
+        background-color: #1f2937; /* Tailwind's gray-800, adjust as needed */
+    }
+    /* Ensure nav-links have a default color if not specified by Tailwind in context */
+    .nav-link {
+        color: #d1d5db; /* Tailwind's gray-300 */
+    }
+    .nav-link:hover {
+        color: #ffffff; /* White */
+    }
+    .nav-link-button { /* Style for login/logout buttons if they need to look like buttons */
+        padding: 0.5rem 1rem;
+        border: 1px solid #4b5563; /* gray-600 */
+        border-radius: 0.375rem; /* rounded-md */
+    }
+    .nav-link-button:hover {
+        background-color: #374151; /* gray-700 */
+    }
+
+</style>
