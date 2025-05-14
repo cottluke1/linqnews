@@ -1,4 +1,5 @@
-<nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3 bg-gray-900"> <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+<nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3 bg-gray-900"> 
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
 
         <div class="hidden md:flex items-center space-x-5">
@@ -12,12 +13,13 @@
                 <div id="userActionsAndMenuDesktop" class="flex items-center space-x-4"> 
                     <a href="profile.html" id="profileLinkDesktop" title="My Profile" class="hidden text-white hover:text-gray-300">
                         <div class="profile-icon-placeholder">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-7 h-7"> <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-7 h-7"> 
+                                <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
                             </svg>
                         </div>
                     </a>
                     <div class="desktop-hamburger-menu">
-                        <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
+                        <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-white hover:text-gray-300">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
@@ -40,13 +42,10 @@
         <a href="index.html" data-page="index-mobile" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">News</a>
         <a href="community.html" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Community</a>
         <a href="markets.html" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Markets</a>
-        
         <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Login</a>
-        
         <a href="favorites.html" id="favoritesLinkMobile" class="hidden nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Bookmarks</a>
         <a href="linqai.html" id="linqAiLinkMobile" class="hidden nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Linq AI</a>
         <a href="earnings.html" id="earningsLinkMobile" class="hidden nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Earnings Calendar</a>
-        
         <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">Logout</a>
     </div>
 </nav>
@@ -65,43 +64,94 @@
 </div>
 
 <style>
-    /* Styles for slide-out-panel (retained from previous) */
+    /* Styles for the slide-out panel with enhanced animations */
     .slide-out-panel {
         position: fixed;
         top: 0;
-        right: -300px; /* Hidden by default */
-        width: 300px;
+        right: 0; /* Aligned to the right edge */
+        width: 300px; /* Width of the panel */
         height: 100%;
-        background-color: #2d3748; /* Example: gray-800 */
-        color: white;
-        padding: 20px;
-        transition: right 0.3s ease-in-out;
-        z-index: 1100; 
-        box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+        background-color: #1f2937; /* Dark charcoal (Tailwind gray-800) */
+        color: #e2e8f0; /* Light gray text (Tailwind gray-200) */
+        padding: 25px; /* Increased padding */
+        box-sizing: border-box; /* Include padding in width/height */
+        /* Animation using transform for smoothness */
+        transform: translateX(100%); /* Initially off-screen to the right */
+        transition: transform 0.45s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* "Luxury" easing */
+        z-index: 1100; /* Ensure it's above other content like the navbar */
+        box-shadow: -5px 0 20px rgba(0,0,0,0.25); /* Softer, more pronounced shadow */
+        overflow-y: auto; /* Allow scrolling if content exceeds height */
     }
-    .slide-out-panel.open { /* JS would toggle this class */
-        right: 0;
+
+    .slide-out-panel.open {
+        transform: translateX(0); /* Slides panel into view */
     }
+
     .slide-out-panel-header {
         display: flex;
         justify-content: flex-end;
-        margin-bottom: 20px;
+        margin-bottom: 25px; /* Increased margin */
+        opacity: 0; /* Start transparent for animation */
+        /* Animation: name duration timing-function delay iteration-count direction fill-mode */
+        animation: fadeInItem 0.5s ease-out 0.2s forwards; 
     }
+
     .slide-out-panel-close-btn {
         background: none;
         border: none;
-        color: white;
-        font-size: 24px;
+        color: #cbd5e1; /* Tailwind gray-300 */
+        font-size: 28px; /* Larger close button */
+        font-weight: 300; /* Lighter font weight */
         cursor: pointer;
+        padding: 5px;
+        line-height: 1;
+        transition: color 0.2s ease-in-out;
     }
+    .slide-out-panel-close-btn:hover {
+        color: #ffffff; /* White on hover */
+    }
+
     .slide-out-panel-nav a {
         display: block;
-        padding: 10px 0;
-        color: white;
+        padding: 14px 5px; /* Adjusted padding */
+        color: #cbd5e1; /* Tailwind gray-300 */
         text-decoration: none;
-        border-bottom: 1px solid #4a5568; /* Example: gray-700 */
+        font-size: 1rem; /* Standard font size */
+        border-bottom: 1px solid #374151; /* Tailwind gray-700 for subtle separation */
+        opacity: 0; /* Start transparent for animation */
+        transform: translateX(25px); /* Start slightly to the right for entry animation */
+        /* Animation: name duration timing-function delay iteration-count direction fill-mode */
+        animation: slideInFadeItem 0.4s ease-out forwards;
+        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
     }
+    .slide-out-panel-nav a:last-child {
+        border-bottom: none; /* No border for the last item */
+    }
+
+    /* Staggered animation delays for nav items */
+    .slide-out-panel.open .slide-out-panel-nav a:nth-child(1) { animation-delay: 0.25s; }
+    .slide-out-panel.open .slide-out-panel-nav a:nth-child(2) { animation-delay: 0.3s; }
+    .slide-out-panel.open .slide-out-panel-nav a:nth-child(3) { animation-delay: 0.35s; }
+    .slide-out-panel.open .slide-out-panel-nav a:nth-child(4) { animation-delay: 0.4s; }
+    .slide-out-panel.open .slide-out-panel-nav a:nth-child(5) { animation-delay: 0.45s; } /* For logout or more items */
+
+
     .slide-out-panel-nav a:hover {
-        background-color: #4a5568; /* Example: gray-700 */
+        background-color: #374151; /* Tailwind gray-700 */
+        color: #ffffff; /* White text on hover */
+    }
+
+    /* Keyframes for animations */
+    @keyframes fadeInItem {
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideInFadeItem {
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
 </style>
