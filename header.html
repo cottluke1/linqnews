@@ -7,25 +7,20 @@
             <a href="community.html" class="nav-link text-sm">Community</a>
             <a href="markets.html" id="marketsLinkDesktop" class="nav-link text-sm">Markets</a>
 
-            <div id="desktopAuthArea" class="flex items-center space-x-3">
-                <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button">Login</a>
+            <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button">Login</a>
 
-                <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
-                    <a href="profile.html" id="profileLinkDesktop" title="My Profile">
-                        <div class="profile-icon-placeholder">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                    </a>
-                    <div class="desktop-hamburger-menu">
-                        <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                        </button>
-                    </div>
+            <a href="profile.html" id="profileLinkDesktop" title="My Profile" class="hidden">
+                <div class="profile-icon-placeholder"> <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6 text-white"> <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
+                    </svg>
                 </div>
+            </a>
+
+            <div class="desktop-hamburger-menu">
+                <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
             </div>
         </div>
 
@@ -60,7 +55,91 @@
     <nav class="slide-out-panel-nav">
         <a href="linqai.html">Linq AI</a>
         <a href="earnings.html">Earnings Calendar</a>
-        <a href="favorites.html">Favorites</a>
-        <a href="profile.html">My Profile Settings</a> <a href="#" id="logoutButtonSlideout">Logout</a>
+        <a href="favorites.html" id="favoritesLinkSlideout">Favorites</a> <a href="profile.html" id="profileLinkSlideout">My Profile Settings</a> <a href="#" id="logoutButtonSlideout">Logout</a>
     </nav>
 </div>
+
+<script>
+(function() {
+    // Replace this with your actual fast authentication check (e.g., from a cookie or localStorage)
+    // For demonstration, this simulates a logged-in user. Change to false to test logged-out state.
+    const isLoggedIn = document.cookie.includes('session_token=YOUR_TOKEN'); // Example: check for a session token
+
+    // Desktop Elements
+    const loginButtonDesktop = document.getElementById('authLinkDesktopLogin');
+    const profileLinkDesktop = document.getElementById('profileLinkDesktop');
+    // The desktop-hamburger-button is always visible in the new structure.
+
+    // Mobile Menu Elements
+    const loginLinkMobile = document.getElementById('authLinkMobile');
+    const logoutButtonMobile = document.getElementById('logoutButtonMobile');
+    const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
+    const linqAiLinkMobile = document.getElementById('linqAiLinkMobile'); // Assuming these appear on login
+    const earningsLinkMobile = document.getElementById('earningsLinkMobile'); // Assuming these appear on login
+
+    // Desktop Slideout Menu Elements
+    const logoutButtonSlideout = document.getElementById('logoutButtonSlideout');
+    const profileLinkSlideout = document.getElementById('profileLinkSlideout'); // My Profile Settings
+    const favoritesLinkSlideout = document.getElementById('favoritesLinkSlideout'); // Favorites
+
+    if (isLoggedIn) {
+        // Update Desktop Header
+        if (loginButtonDesktop) loginButtonDesktop.style.display = 'none';
+        if (profileLinkDesktop) profileLinkDesktop.classList.remove('hidden'); // Show profile icon
+
+        // Update Mobile Menu
+        if (loginLinkMobile) loginLinkMobile.style.display = 'none';
+        if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
+        if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
+        if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
+        if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
+
+        // Update Desktop Slideout Menu Links
+        if (logoutButtonSlideout) logoutButtonSlideout.style.display = 'block'; // Or 'inline', or its original display style
+        if (profileLinkSlideout) profileLinkSlideout.style.display = 'block';
+        if (favoritesLinkSlideout) favoritesLinkSlideout.style.display = 'block'; // Show favorites if auth-dependent
+
+    } else {
+        // Update Desktop Header
+        if (loginButtonDesktop) loginButtonDesktop.style.display = ''; // Revert to default display (e.g., 'inline-block' or 'flex' from CSS)
+        if (profileLinkDesktop) profileLinkDesktop.classList.add('hidden'); // Hide profile icon
+
+        // Update Mobile Menu
+        if (loginLinkMobile) loginLinkMobile.style.display = 'block'; // Or its original display style
+        if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+        if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
+        if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
+        if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
+
+        // Update Desktop Slideout Menu Links
+        if (logoutButtonSlideout) logoutButtonSlideout.style.display = 'none';
+        if (profileLinkSlideout) profileLinkSlideout.style.display = 'none';
+        if (favoritesLinkSlideout) favoritesLinkSlideout.style.display = 'none'; // Hide favorites if auth-dependent
+    }
+
+    // Initialize mobile menu toggle functionality (if not already handled elsewhere)
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+
+    // Initialize desktop slideout menu toggle functionality (if not already handled elsewhere)
+    const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
+    const desktopSlideoutMenu = document.getElementById('desktop-slideout-menu');
+    const slideoutCloseButton = document.getElementById('slideout-close-button');
+
+    if (desktopHamburgerButton && desktopSlideoutMenu) {
+        desktopHamburgerButton.addEventListener('click', function() {
+            desktopSlideoutMenu.classList.toggle('active'); // Assuming 'active' class shows the panel
+        });
+    }
+    if (slideoutCloseButton && desktopSlideoutMenu) {
+        slideoutCloseButton.addEventListener('click', function() {
+            desktopSlideoutMenu.classList.remove('active');
+        });
+    }
+})();
+</script>
