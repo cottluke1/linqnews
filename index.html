@@ -26,12 +26,11 @@
             backdrop-filter: blur(10px) saturate(150%);
             -webkit-backdrop-filter: blur(10px) saturate(150%);
             border-bottom: 1px solid #222222;
-            /* MODIFIED: Explicitly set position and z-index for header */
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            z-index: 1000; /* Ensure header is above ticker but below modals/slideouts */
+            z-index: 1000; 
         }
         .nav-link {
             transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
@@ -52,11 +51,11 @@
             opacity: 1;
             background-color: transparent; 
         }
-        #authLinkDesktopLogin.nav-link-button { /* Style for the Login button itself */
+        #authLinkDesktopLogin.nav-link-button { 
             background-color: #00BFFF; 
             color: #FFFFFF !important; 
             opacity: 1 !important; 
-            padding: 0.5rem 1rem; /* Ensure it looks like a button */
+            padding: 0.5rem 1rem; 
         }
         #authLinkDesktopLogin.nav-link-button:hover {
             background-color: #00A9E0; 
@@ -149,7 +148,7 @@
             position: fixed;
             inset: 0;
             background-color: rgba(0, 0, 0, 0.65); 
-            z-index: 1000; /* Same as header, or slightly less if header needs to be above overlay for some reason */
+            z-index: 1000; 
             opacity: 0;
             transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
@@ -162,15 +161,14 @@
             background-color: rgba(0, 191, 255, 0.1); 
             opacity: 1;
         }
-        /* End of User-provided Header Styles */
 
         /* Ticker Banner */
         .ticker-banner {
             background: #121212; color: #A0A0A0; padding: 0.625rem 0;
-            overflow: hidden; white-space: nowrap; position: relative; /* Relative is fine, margin-top will push it */
+            overflow: hidden; white-space: nowrap; position: relative; 
             width: 100%; z-index: 35; font-size: 0.8rem; line-height: 1.3;
             border-bottom: 1px solid #282828;
-            margin-top: 0; /* Default to 0, JS will push it down after header loads */
+            margin-top: 0; 
         }
         .ticker-content { display: inline-block; white-space: nowrap; animation: ticker-scroll 300s linear infinite; } 
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
@@ -189,7 +187,6 @@
         }
         .hero-title .accent-text { color: #00BFFF; }
 
-        /* Custom Hero Button Style based on user's .suggested-question-btn */
         .hero-custom-button {
             display: inline-block; 
             text-align: center;
@@ -215,13 +212,11 @@
             box-shadow: 0 4px 10px rgba(0, 191, 255, 0.2);
         }
       
-        /* Section Title */
         .section-title {
             font-size: 2rem; font-weight: 600; color: #F0F0F0; margin-bottom: 2rem;
             padding-bottom: 0.75rem; border-bottom: 1px solid #333333;
         }
 
-        /* News Card Styling */
         .news-card {
             background-color: #0A0A0A; border-radius: 0.75rem; border: 1px solid #2D2D2D;
             box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.6); overflow: hidden;
@@ -239,7 +234,7 @@
         }
         .news-source-logo { max-width: 100%; max-height: 100%; object-fit: contain; }
         .news-content-wrapper { flex-grow: 1; display: flex; justify-content: space-between; align-items: flex-start; }
-        .news-text-content { /* For title, meta, tags */ }
+        .news-text-content { }
         .news-title {
             font-size: 1.1rem; font-weight: 500; color: #FFFFFF;
             margin-bottom: 0.25rem; line-height: 1.3;
@@ -352,8 +347,9 @@
                 <a href="linqai.html" class="hero-custom-button w-full sm:w-auto">
                     Linq AI
                 </a>
-                <a href="earnings.html" class="hero-custom-button w-full sm:w-auto">
-                    Earnings Calendar </a>
+                <a href="Earnings.html" class="hero-custom-button w-full sm:w-auto">
+                    Earnings Calendar
+                </a>
             </div>
         </div>
     </header>
@@ -412,14 +408,12 @@
     </div>
 
     <script>
-        // Constants for API and symbols
-        const FINNHUB_API_KEY = 'd0d0dlpr01qm2sk76g3gd0d0dlpr01qm2sk76g40'; // Replace with your actual key
+        const FINNHUB_API_KEY = 'd0d0dlpr01qm2sk76g3gd0d0dlpr01qm2sk76g40'; 
         const DISPLAY_SYMBOLS = { 
-            'OANDA:JPY': 'JPY', 
-            'OANDA:CNY': 'CNY', 
-            'OANDA:EUR': 'EUR', 
-            'OANDA:GBP': 'GBP', 
-            'OANDA:USD': 'USD',
+            'OANDA:USD_JPY': 'JPY', 
+            'OANDA:USD_CNY': 'CNY', 
+            'OANDA:EUR_USD': 'EUR', 
+            'OANDA:GBP_USD': 'GBP', 
             'CL1:COM': 'WTI CRUDE',
             'CO1:COM': 'BRENT CRUDE',
             'RB1:COM': 'RBOB GASOLINE',
@@ -434,7 +428,7 @@
             'DXY': 'US DOLLAR IDX'
         };
          const TICKER_ITEMS_TO_SHOW = [ 
-            'EUR', 'USD', 'JPY', 'CNY','USD', 
+            'OANDA:EUR_USD', 'OANDA:GBP_USD', 'OANDA:USD_JPY', 'OANDA:USD_CNY', 
             'CO1:COM', 'CL1:COM', 'NG1:COM', 'RB1:COM', 'HO1:COM', 
             'TMUBMUSD02Y', 'TMUBMUSD05Y', 'TMUBMUSD10Y', 
             '^GSPC', '^DJI', '^IXIC', 
@@ -607,12 +601,15 @@
         function adjustTickerBannerMarginTop() {
             const tickerBanner = document.querySelector('.ticker-banner');
             const navElement = document.querySelector('nav.fixed'); 
-            let navHeight = 60; 
+            let navHeight = 0; // Start with 0
 
-            if (navElement && navElement.offsetHeight > 0) { 
-                navHeight = navElement.offsetHeight;
+            if (navElement) {
+                const navStyles = window.getComputedStyle(navElement);
+                if (navStyles.display !== 'none' && navStyles.visibility !== 'hidden') {
+                     navHeight = navElement.offsetHeight;
+                }
             }
-            // console.log("Calculated navHeight for ticker:", navHeight); // For debugging
+            // console.log("Final navHeight for ticker adjustment:", navHeight); // For debugging
             if (tickerBanner) {
                 tickerBanner.style.marginTop = `${navHeight}px`;
             }
@@ -659,8 +656,10 @@
                 if (navbarElement) {
                     navbarElement.innerHTML = data;
                     initializeHeaderAndAuth(); 
-                    requestAnimationFrame(() => { // Defer to next paint cycle
-                        adjustTickerBannerMarginTop();
+                    requestAnimationFrame(() => { 
+                        setTimeout(() => { // Added timeout
+                           adjustTickerBannerMarginTop();
+                        }, 0); 
                     });
                     populateInitialTickerContent(); 
                     updateTickerBanner(); 
@@ -689,7 +688,6 @@
                 const percent = data.dp !== undefined ? data.dp.toFixed(2) : 'N/A'; 
                 return { price, change, percent };
             } catch (err) {
-                // console.error(`Error fetching ${symbol} from Finnhub:`, err); // Keep for debugging if needed
                 return { price: 'N/A', change: 'N/A', percent: 'N/A' };
             }
         }
@@ -723,7 +721,7 @@
                     allItemsHTML += `<span class="ticker-item">${displayName}: <span class="text-white">${priceDisplay}</span>${valueContext} <span class="${changeClass}">${percentDisplay}</span></span>`;
                 }
                 
-                if (allItemsHTML === '') { // Only update if new data was actually fetched
+                if (allItemsHTML === '') { 
                     return; 
                 }
 
@@ -811,15 +809,15 @@
 
         let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || [];
         function toggleFavorite(articleId) { 
-            const idStr = String(articleId); // Ensure consistency
-            // console.log("Toggling favorite for ID:", idStr); // For debugging
+            const idStr = String(articleId); 
+            // console.log("Toggling favorite for ID:", idStr); 
             const index = favorites.indexOf(idStr);
             if (index > -1) {
                 favorites.splice(index, 1);
-                // console.log("Removed from favorites:", idStr, favorites); // For debugging
+                // console.log("Removed from favorites:", idStr, favorites); 
             } else {
                 favorites.push(idStr);
-                // console.log("Added to favorites:", idStr, favorites); // For debugging
+                // console.log("Added to favorites:", idStr, favorites); 
             }
             localStorage.setItem('linqFavoritesV2', JSON.stringify(favorites));
             updateFavoriteIcons();
@@ -831,21 +829,21 @@
         }
 
         function updateFavoriteIcons() { 
-            // console.log("Updating favorite icons. Current favorites:", favorites); // For debugging
+            // console.log("Updating favorite icons. Current favorites:", favorites); 
              document.querySelectorAll('.favorite-btn').forEach(button => {
-                const articleId = String(button.getAttribute('data-id')); // Ensure consistency
+                const articleId = String(button.getAttribute('data-id')); 
                 const svg = button.querySelector('svg');
                 if (!svg) {
-                    // console.error("SVG not found for button with ID:", articleId); // For debugging
+                    // console.error("SVG not found for button with ID:", articleId); 
                     return;
                 }
                 if (favorites.includes(articleId)) {
-                    // console.log("Favorited:", articleId); // For debugging
+                    // console.log("Favorited:", articleId); 
                     button.classList.add('favorited');
                     svg.setAttribute('fill', '#00BFFF'); 
                     svg.setAttribute('stroke', '#00BFFF');
                 } else {
-                    // console.log("Not favorited:", articleId); // For debugging
+                    // console.log("Not favorited:", articleId); 
                     button.classList.remove('favorited');
                     svg.setAttribute('fill', 'none'); 
                     svg.setAttribute('stroke', 'currentColor'); 
@@ -860,7 +858,7 @@
             });
         }
         function handleFavoriteClick(event) { 
-            // console.log("Favorite button clicked", event.currentTarget); // For debugging
+            // console.log("Favorite button clicked", event.currentTarget); 
             const button = event.currentTarget;
             const articleId = button.getAttribute('data-id');
             toggleFavorite(articleId);
