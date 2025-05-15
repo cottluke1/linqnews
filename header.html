@@ -1,28 +1,122 @@
-<nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linq Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+
+    <style>
+        /* Apply Lexend font to the body */
+        body {
+            font-family: 'Lexend', sans-serif;
+        }
+
+        .nav-link.active {
+            font-weight: bold; 
+        }
+        /* .nav-link-button class is kept for potential padding/structural styling */
+        .nav-link-button {
+            padding: 0.5rem 1rem; 
+            border-radius: 0.375rem; /* rounded-md */
+            text-align: center;
+        }
+        .profile-icon-placeholder svg {
+            width: 1.75rem; /* w-7 */
+            height: 1.75rem; /* h-7 */
+            color: white; 
+        }
+
+        /* Styles for the slide-out panel */
+        .slide-out-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px; 
+            height: 100%;
+            background-color: #111827; /* bg-gray-900 */
+            color: white;
+            transform: translateX(100%); 
+            transition: transform 0.3s ease-in-out;
+            z-index: 1050; 
+            padding: 1rem;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+        }
+        .slide-out-panel.is-open { 
+            transform: translateX(0);
+        }
+        .slide-out-panel-header {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1rem;
+        }
+        .slide-out-panel-close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+        }
+        .slide-out-panel-nav {
+            display: flex;
+            flex-direction: column;
+        }
+        .slide-out-panel-nav a {
+            padding: 0.75rem 0;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid #374151; /* border-gray-700 */
+        }
+        .slide-out-panel-nav a:hover {
+            background-color: #374151; /* bg-gray-700 */
+        }
+        .slide-out-panel-nav a:last-child {
+            border-bottom: none;
+        }
+
+        /* Nav link colors against black background (excluding the blue login button) */
+        .nav-link:not(#authLinkDesktopLogin):not(#authLinkMobile) { /* Exclude login buttons from this rule */
+            color: #D1D5DB; /* gray-300 */
+        }
+        .nav-link:not(#authLinkDesktopLogin):not(#authLinkMobile):hover {
+            color: white;
+        }
+        .nav-link.active {
+            color: white !important; /* Ensure active link is white */
+            font-weight: 600; /* semibold */
+        }
+    </style>
+</head>
+<body class="bg-gray-100"> 
+    <nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3 bg-black">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
             <div class="hidden md:flex items-center space-x-5">
                 <a href="index.html" class="nav-link text-sm">News</a>
                 <a href="community.html" class="nav-link text-sm active">Community</a> 
                 <a href="Markets.html" id="marketsLinkDesktop" class="nav-link text-sm">Markets</a> 
+                
                 <div id="desktopAuthArea" class="flex items-center space-x-3">
-                    <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button">Login</a> 
+                    <a href="login.html" id="authLinkDesktopLogin" class="text-sm nav-link-button bg-blue-500 hover:bg-blue-600 text-white">Login</a> 
                     <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
                         <a href="profile.html" id="profileLinkDesktop" title="My Profile">
-                            <div class="profile-icon-placeholder">
+                            <div class="profile-icon-placeholder"> 
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                     <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
                                 </svg>
                             </div>
                         </a>
-                        <div class="desktop-hamburger-menu">
-                            <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                                </svg>
-                            </button>
-                        </div>
                     </div>
+                </div>
+                <div class="desktop-hamburger-menu">
+                    <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
                 </div>
             </div>
             <div class="md:hidden">
@@ -34,7 +128,7 @@
             </div>
         </div>
         <div id="mobile-menu" class="md:hidden hidden bg-gray-900 bg-opacity-90 backdrop-blur-md">
-            <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Login</a>
+            <a href="login.html" id="authLinkMobile" class="block text-sm px-4 py-3 m-2 nav-link-button bg-blue-500 hover:bg-blue-600 text-white">Login</a>
             <a href="linqai.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Linq Ai</a>
             <a href="earnings.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Earnings Calendar</a>
             <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a> 
@@ -45,7 +139,7 @@
         </div>
     </nav>
     
-    <div id="desktop-slideout-menu" class="slide-out-panel">
+    <div id="desktop-slideout-menu" class="slide-out-panel"> 
         <div class="slide-out-panel-header">
             <button id="slideout-close-button" class="slide-out-panel-close-btn" aria-label="Close menu">&times;</button>
         </div>
@@ -57,3 +151,94 @@
             <a href="#" id="logoutButtonSlideout">Logout</a> 
         </nav>
     </div>
+
+    <div class="pt-20 h-screen bg-gray-200 p-8">
+        <h1 class="text-2xl font-bold">Page Content</h1>
+        <p>Scroll down to see the navbar stay fixed. The font should be Lexend. The 3-line menu icon should now change to an X when the slideout is open. Login button is blue.</p>
+        <div style="height: 1000px;"></div>
+        <p>End of content.</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Desktop slideout menu toggle and icon change
+            const desktopHamburgerButton = document.getElementById('desktop-hamburger-button'); 
+            const desktopSlideoutMenu = document.getElementById('desktop-slideout-menu');
+            const slideoutCloseButton = document.getElementById('slideout-close-button');
+
+            // SVG HTML for icons
+            const hamburgerIconSVG = `
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>`;
+            const xIconSVG = `
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>`;
+
+            if (desktopHamburgerButton && desktopSlideoutMenu) {
+                // Set initial icon
+                desktopHamburgerButton.innerHTML = hamburgerIconSVG;
+
+                desktopHamburgerButton.addEventListener('click', () => {
+                    const isOpen = desktopSlideoutMenu.classList.contains('is-open');
+                    if (isOpen) {
+                        desktopSlideoutMenu.classList.remove('is-open');
+                        desktopHamburgerButton.innerHTML = hamburgerIconSVG;
+                    } else {
+                        desktopSlideoutMenu.classList.add('is-open');
+                        desktopHamburgerButton.innerHTML = xIconSVG;
+                    }
+                });
+            }
+
+            if (slideoutCloseButton && desktopSlideoutMenu && desktopHamburgerButton) {
+                slideoutCloseButton.addEventListener('click', () => {
+                    desktopSlideoutMenu.classList.remove('is-open');
+                    desktopHamburgerButton.innerHTML = hamburgerIconSVG; // Reset icon
+                });
+            }
+
+            // --- Authentication State Simulation ---
+            const isLoggedIn = false; 
+
+            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
+            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop'); 
+            const authLinkMobile = document.getElementById('authLinkMobile');
+            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
+            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
+            
+            function updateAuthState(loggedIn) {
+                if (loggedIn) {
+                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
+                    if (profileAndMenuDesktop) profileAndMenuDesktop.classList.remove('hidden'); 
+                    
+                    if (authLinkMobile) authLinkMobile.classList.add('hidden'); 
+                    if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
+                } else {
+                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.remove('hidden'); 
+                    if (profileAndMenuDesktop) profileAndMenuDesktop.classList.add('hidden'); 
+
+                    if (authLinkMobile) authLinkMobile.classList.remove('hidden');
+                    if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
+                }
+            }
+            
+            updateAuthState(isLoggedIn); 
+            
+        });
+    </script>
+
+</body>
+</html>
