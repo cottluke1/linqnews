@@ -919,31 +919,4 @@
 
     </script>
 </body>
-    <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; // Example check
-
-    const authLink = document.getElementById('authLinkDesktopLogin');
-    const profileAndMenu = document.getElementById('profileAndMenuDesktop');
-    const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-    const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
-    const desktopAuthArea = document.getElementById('desktopAuthArea');
-    const mobileMenu = document.getElementById('mobile-menu');
-
-    // Always show the nav area once logic is complete
-    desktopAuthArea.classList.remove('invisible');
-
-    if (isLoggedIn) {
-        authLink.classList.add('hidden');
-        profileAndMenu.classList.remove('hidden');
-        logoutButtonMobile.classList.remove('hidden');
-        favoritesLinkMobile.classList.remove('hidden');
-    } else {
-        authLink.classList.remove('hidden');
-        profileAndMenu.classList.add('hidden');
-        logoutButtonMobile.classList.add('hidden');
-        favoritesLinkMobile.classList.add('hidden');
-    }
-});
-</script>
 </html>
