@@ -54,19 +54,30 @@
 
         /* Auth state handling */
         #loginElements {
-            display: none;
+            display: flex;  /* Show by default for non-logged in state */
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
         }
 
         #profileAndMenuDesktop {
             display: none;
-        }
-
-        #loginElements.visible {
-            display: flex;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
         }
 
         #profileAndMenuDesktop.visible {
             display: flex;
+            opacity: 1;
+        }
+
+        /* Navigation links */
+        .nav-link {
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            color: #e2e8f0;
         }
 
         /* Prevent login button flash */
@@ -87,7 +98,7 @@
             <a href="markets.html" id="marketsLinkDesktop" class="nav-link text-sm">Markets</a> 
             <div id="desktopAuthArea" class="flex items-center space-x-3">
                 <div id="loginElements" class="flex items-center space-x-3">
-                    <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button">Login</a>
+                    <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm">Login</a>
                     <div class="desktop-hamburger-menu">
                         <button id="desktop-hamburger-button-login" class="desktop-hamburger-icon text-white hover:text-gray-300">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -96,7 +107,7 @@
                         </button>
                     </div>
                 </div>
-                <div id="profileAndMenuDesktop" class="flex items-center space-x-5">
+                <div id="profileAndMenuDesktop" class="items-center space-x-5">
                     <a href="profile.html" id="profileLinkDesktop" title="My Profile">
                         <div class="profile-icon-placeholder">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
@@ -169,19 +180,15 @@
     function updateAuthUI(user) {
         const loginElements = document.getElementById('loginElements');
         const profileMenu = document.getElementById('profileAndMenuDesktop');
-        const loginButton = document.getElementById('authLinkDesktopLogin');
         
-        // First, remove all visible classes
-        loginElements.classList.remove('visible');
-        profileMenu.classList.remove('visible');
-        loginButton.classList.remove('visible');
-        
-        // Then apply the correct visibility based on auth state
         if (user) {
+            // User is logged in
+            loginElements.style.display = 'none';
             profileMenu.classList.add('visible');
         } else {
-            loginElements.classList.add('visible');
-            loginButton.classList.add('visible');
+            // User is not logged in
+            loginElements.style.display = 'flex';
+            profileMenu.classList.remove('visible');
         }
     }
 
