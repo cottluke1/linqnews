@@ -16,6 +16,7 @@
             width: 24px;
             height: 24px;
             margin-left: 16px;
+            cursor: pointer;
         }
         #profileAndMenuDesktop {
             display: flex;
@@ -26,6 +27,37 @@
         }
         body.logged-in #authLinkDesktopLogin {
             display: none;
+        }
+        #slideoutMenu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background: #1F2937;
+            transition: right 0.3s ease;
+            z-index: 1001;
+        }
+        #slideoutMenu.active {
+            right: 0;
+        }
+        .menu-item {
+            display: block;
+            padding: 15px 20px;
+            color: #9CA3AF;
+            text-decoration: none;
+        }
+        .menu-item:hover {
+            background: #374151;
+            color: white;
+        }
+        #closeMenu {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            color: #9CA3AF;
+            font-size: 24px;
+            cursor: pointer;
         }
     </style>
 
@@ -87,3 +119,26 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const menuButton = document.getElementById('menuButton');
+    const slideoutMenu = document.getElementById('slideoutMenu');
+    const closeMenu = document.getElementById('closeMenu');
+
+    menuButton.addEventListener('click', function() {
+        slideoutMenu.classList.add('active');
+    });
+
+    closeMenu.addEventListener('click', function() {
+        slideoutMenu.classList.remove('active');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!slideoutMenu.contains(event.target) && !menuButton.contains(event.target)) {
+            slideoutMenu.classList.remove('active');
+        }
+    });
+});
+</script>
