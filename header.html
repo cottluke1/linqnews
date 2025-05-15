@@ -3,21 +3,27 @@
         /* Prevent flash of content during auth state changes */
         .nav-link-button {
             opacity: 1;
-            transition: opacity 0.2s ease-in-out;
+            transition: opacity 0.3s ease-in-out;
         }
         
-        .nav-link-button.loading {
+        /* Hide elements initially until auth state is determined */
+        .auth-dependent {
             opacity: 0;
+            transition: opacity 0.3s ease-in-out;
         }
-
-        /* Smooth transition for auth state changes */
-        #desktopAuthArea > * {
-            transition: opacity 0.2s ease-in-out;
+        
+        .auth-dependent.visible {
+            opacity: 1;
         }
 
         /* Increased spacing between profile and menu */
         .space-x-5 > * + * {
             margin-left: 1.25rem;
+        }
+
+        /* Ensure smooth transitions for auth area */
+        #desktopAuthArea {
+            min-height: 2.5rem; /* Prevent height collapse during transitions */
         }
     </style>
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -27,8 +33,8 @@
             <a href="community.html" class="nav-link text-sm active">Community</a> 
             <a href="markets.html" id="marketsLinkDesktop" class="nav-link text-sm">Markets</a> 
             <div id="desktopAuthArea" class="flex items-center space-x-3">
-                <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button">Login</a> 
-                <div id="profileAndMenuDesktop" class="hidden items-center space-x-5">
+                <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button auth-dependent">Login</a> 
+                <div id="profileAndMenuDesktop" class="hidden items-center space-x-5 auth-dependent">
                     <a href="profile.html" id="profileLinkDesktop" title="My Profile">
                         <div class="profile-icon-placeholder">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
@@ -37,7 +43,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="desktop-hamburger-menu ml-3">
+                <div class="desktop-hamburger-menu ml-3 auth-dependent">
                     <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -79,3 +85,54 @@
     </nav>
 </div>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+<script>
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+        authDomain: "linq-b27a8.firebaseapp.com",
+        projectId: "linq-b27a8",
+        storageBucket: "linq-b27a8.firebasestorage.app",
+        messagingSenderId: "1067901051826",
+        appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Function to handle auth state changes
+    function updateAuthUI(user) {
+        const authElements = document.querySelectorAll('.auth-dependent');
+        const loginButton = document.getElementById('authLinkDesktopLogin');
+        const profileMenu = document.getElementById('profileAndMenuDesktop');
+        
+        // First make all auth-dependent elements visible
+        authElements.forEach(el => el.classList.add('visible'));
+        
+        if (user) {
+            loginButton.style.display = 'none';
+            profileMenu.style.display = 'flex';
+        } else {
+            loginButton.style.display = 'block';
+            profileMenu.style.display = 'none';
+        }
+    }
+
+    // Listen for auth state changes
+    firebase.auth().onAuthStateChanged((user) => {
+        updateAuthUI(user);
+    });
+
+    // Handle logout
+    document.getElementById('logoutButtonSlideout').addEventListener('click', (e) => {
+        e.preventDefault();
+        firebase.auth().signOut().then(() => {
+            window.location.href = 'index.html';
+        }).catch((error) => {
+            console.error('Error signing out:', error);
+        });
+    });
+</script>
