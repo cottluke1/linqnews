@@ -8,12 +8,14 @@
         
         /* Hide elements initially until auth state is determined */
         .auth-dependent {
+            display: none;
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
         }
         
         .auth-dependent.visible {
             opacity: 1;
+            display: flex;
         }
 
         /* Increased spacing between profile and menu */
@@ -24,6 +26,17 @@
         /* Ensure smooth transitions for auth area */
         #desktopAuthArea {
             min-height: 2.5rem; /* Prevent height collapse during transitions */
+            opacity: 1 !important;
+            display: flex !important;
+        }
+
+        /* Hide auth elements until Firebase is ready */
+        .auth-loading * {
+            visibility: hidden;
+        }
+
+        .auth-ready * {
+            visibility: visible;
         }
     </style>
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -32,9 +45,14 @@
             <a href="index.html" class="nav-link text-sm">News</a>
             <a href="community.html" class="nav-link text-sm active">Community</a> 
             <a href="markets.html" id="marketsLinkDesktop" class="nav-link text-sm">Markets</a> 
-            <div id="desktopAuthArea" class="flex items-center space-x-3">
-                <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button auth-dependent">Login</a> 
-                <div id="profileAndMenuDesktop" class="hidden items-center space-x-5 auth-dependent">
+            <div id="desktopAuthArea" class="flex items-center space-x-3 auth-loading">
+                <div id="loginElements" class="auth-dependent flex items-center space-x-3">
+                    <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button">Login</a>
+                    <button id="desktop-hamburger-login" class="desktop-hamburger-icon text-gray-300 hover:text-white">
+                        Login
+                    </button>
+                </div>
+                <div id="profileAndMenuDesktop" class="auth-dependent items-center space-x-5">
                     <a href="profile.html" id="profileLinkDesktop" title="My Profile">
                         <div class="profile-icon-placeholder">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
@@ -42,13 +60,13 @@
                             </svg>
                         </div>
                     </a>
-                </div>
-                <div class="desktop-hamburger-menu ml-3 auth-dependent">
-                    <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
+                    <div class="desktop-hamburger-menu">
+                        <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -105,24 +123,39 @@
 
     // Function to handle auth state changes
     function updateAuthUI(user) {
-        const authElements = document.querySelectorAll('.auth-dependent');
-        const loginButton = document.getElementById('authLinkDesktopLogin');
+        const authArea = document.getElementById('desktopAuthArea');
+        const loginElements = document.getElementById('loginElements');
         const profileMenu = document.getElementById('profileAndMenuDesktop');
         
-        // First make all auth-dependent elements visible
-        authElements.forEach(el => el.classList.add('visible'));
-        
+        // Remove loading state
+        authArea.classList.remove('auth-loading');
+        authArea.classList.add('auth-ready');
+
         if (user) {
-            loginButton.style.display = 'none';
-            profileMenu.style.display = 'flex';
+            loginElements.classList.remove('visible');
+            profileMenu.classList.add('visible');
+            
+            // Update mobile menu items for logged-in state
+            document.getElementById('favoritesLinkMobile').classList.remove('hidden');
+            document.getElementById('logoutButtonMobile').classList.remove('hidden');
+            document.getElementById('authLinkMobile').classList.add('hidden');
         } else {
-            loginButton.style.display = 'block';
-            profileMenu.style.display = 'none';
+            loginElements.classList.add('visible');
+            profileMenu.classList.remove('visible');
+            
+            // Update mobile menu items for logged-out state
+            document.getElementById('favoritesLinkMobile').classList.add('hidden');
+            document.getElementById('logoutButtonMobile').classList.add('hidden');
+            document.getElementById('authLinkMobile').classList.remove('hidden');
         }
     }
 
-    // Listen for auth state changes
+    // Wait for Firebase auth to be ready
+    let authInitialized = false;
     firebase.auth().onAuthStateChanged((user) => {
+        if (!authInitialized) {
+            authInitialized = true;
+        }
         updateAuthUI(user);
     });
 
@@ -135,4 +168,10 @@
             console.error('Error signing out:', error);
         });
     });
+
+    // Handle login button in dropdown
+    document.getElementById('desktop-hamburger-login').addEventListener('click', () => {
+        window.location.href = 'login.html';
+    });
 </script>
+
