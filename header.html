@@ -1,86 +1,46 @@
 <nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3">
     <style>
-        /* Prevent flash of content during auth state changes */
-        .nav-link-button {
-            opacity: 1;
-            transition: opacity 0.2s ease-in-out;
+        .nav-link {
+            color: #9CA3AF;
+            transition: color 0.2s;
         }
-        
-        .nav-link-button.loading {
-            opacity: 0;
+        .nav-link:hover {
+            color: white;
         }
-
-        /* Smooth transition for auth state changes */
-        #desktopAuthArea > * {
-            transition: opacity 0.2s ease-in-out;
+        .profile-icon {
+            width: 2rem;
+            height: 2rem;
+            color: #9CA3AF;
         }
-
-        /* Increased spacing between profile and menu */
-        .space-x-5 > * + * {
-            margin-left: 1.25rem;
-        }
-
-        /* Menu visibility states */
-        body.logged-in #logged-out-menu {
+        #profileAndMenuDesktop {
             display: none;
         }
-
         body.logged-in #profileAndMenuDesktop {
-            display: flex !important;
+            display: flex;
         }
-
         body.logged-in #authLinkDesktopLogin {
             display: none;
         }
-
-        body:not(.logged-in) #profileAndMenuDesktop {
-            display: none !important;
-        }
-
-        #logged-out-menu {
-            margin-left: 0.75rem;
-        }
-
-        .profile-icon-placeholder {
-            width: 2rem;
-            height: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #9CA3AF;
-        }
-
-        .profile-icon-placeholder svg {
-            width: 100%;
-            height: 100%;
-        }
     </style>
+
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
+        
         <div class="hidden md:flex items-center space-x-5">
             <a href="index.html" class="nav-link text-sm">News</a>
-            <a href="community.html" class="nav-link text-sm active">Community</a> 
-            <a href="markets.html" id="marketsLinkDesktop" class="nav-link text-sm">Markets</a> 
-            <div id="desktopAuthArea" class="flex items-center space-x-3">
-                <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button">Login</a> 
-                <div id="profileAndMenuDesktop" class="items-center space-x-5">
-                    <a href="profile.html" id="profileLinkDesktop" title="My Profile" class="block">
-                        <div class="profile-icon-placeholder">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
+            <a href="community.html" class="nav-link text-sm">Community</a> 
+            <a href="markets.html" class="nav-link text-sm">Markets</a> 
+            
+            <div class="flex items-center space-x-4">
+                <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm">Login</a>
+                
+                <div id="profileAndMenuDesktop" class="flex items-center space-x-4">
+                    <a href="profile.html" class="profile-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
+                        </svg>
                     </a>
-                    <div class="desktop-hamburger-menu">
-                        <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <div class="desktop-hamburger-menu" id="logged-out-menu">
-                    <button id="desktop-hamburger-button-logged-out" class="desktop-hamburger-icon text-gray-300 hover:text-white">
+                    <button id="menuButton" class="text-gray-300 hover:text-white">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
@@ -88,35 +48,36 @@
                 </div>
             </div>
         </div>
+
+        <!-- Mobile menu button -->
         <div class="md:hidden">
-            <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
+            <button id="mobileMenuButton" class="text-gray-300 hover:text-white">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
         </div>
     </div>
-    <div id="mobile-menu" class="md:hidden hidden bg-gray-900 bg-opacity-90 backdrop-blur-md">
-        <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Login</a>
-        <a href="linqai.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Linq Ai</a>
-        <a href="earnings.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Earnings Calendar</a>
-        <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a> 
-        <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 active">Community</a> 
-        <a href="Markets.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Markets</a>
-        <a href="favorites.html" id="favoritesLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden">Favorites</a>
-        <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Logout</a>
+
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-gray-900 bg-opacity-90">
+        <a href="login.html" class="block nav-link text-sm px-4 py-2">Login</a>
+        <a href="index.html" class="block nav-link text-sm px-4 py-2">News</a>
+        <a href="community.html" class="block nav-link text-sm px-4 py-2">Community</a>
+        <a href="markets.html" class="block nav-link text-sm px-4 py-2">Markets</a>
     </div>
 </nav>
 
-<div id="desktop-slideout-menu" class="slide-out-panel">
-    <div class="slide-out-panel-header">
-        <button id="slideout-close-button" class="slide-out-panel-close-btn" aria-label="Close menu">&times;</button>
+<!-- Slideout menu -->
+<div id="slideoutMenu" class="fixed top-0 right-0 w-64 h-full bg-gray-900 transform translate-x-full transition-transform duration-200 z-[1001]">
+    <div class="p-4">
+        <button id="closeMenu" class="text-gray-300 hover:text-white float-right">&times;</button>
+        <div class="clear-both pt-8">
+            <a href="linqai.html" class="block nav-link text-sm py-2">Linq AI</a>
+            <a href="earnings.html" class="block nav-link text-sm py-2">Earnings Calendar</a>
+            <a href="favorites.html" class="block nav-link text-sm py-2">Favorites</a>
+            <a href="profile.html" class="block nav-link text-sm py-2">My Profile</a>
+            <a href="#" id="logoutButton" class="block nav-link text-sm py-2">Logout</a>
+        </div>
     </div>
-    <nav class="slide-out-panel-nav">
-        <a href="linqai.html">Linq AI</a>
-        <a href="earnings.html">Earnings Calendar</a>
-        <a href="favorites.html">Favorites</a> 
-        <a href="profile.html">My Profile</a>
-        <a href="#" id="logoutButtonSlideout">Logout</a> 
-    </nav>
 </div>
