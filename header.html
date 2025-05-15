@@ -4,41 +4,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <script src="https://cdn.tailwindcss.com"></script>
-  <title>Navbar Fix</title>
+  <title>Navbar Fixed</title>
 </head>
 <body class="bg-gray-800 text-white">
 
-<!-- Simulate login toggle -->
+<!-- SIMULATE LOGIN -->
 <script>
-  const isLoggedIn = true; // Set false to simulate logged out
+  const isLoggedIn = true; // ← Toggle to false to simulate logout
 </script>
 
-<!-- Navigation -->
+<!-- ✅ NAVBAR -->
 <nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3 bg-gray-900">
   <div class="container mx-auto px-4 flex justify-between items-center">
     <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
 
+    <!-- Desktop Nav -->
     <div class="hidden md:flex items-center space-x-5">
-      <a href="index.html" class="nav-link text-sm">News</a>
-      <a href="community.html" class="nav-link text-sm active">Community</a>
-      <a href="markets.html" class="nav-link text-sm">Markets</a>
+      <a href="index.html" class="text-sm">News</a>
+      <a href="community.html" class="text-sm active">Community</a>
+      <a href="Markets.html" class="text-sm">Markets</a>
 
-      <!-- Hamburger menu always visible -->
-      <div class="ml-4" id="desktop-hamburger">
-        <button class="text-gray-300 hover:text-white">
+      <!-- Always visible hamburger -->
+      <div class="ml-4">
+        <button id="desktop-hamburger-button" class="text-gray-300 hover:text-white">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
       </div>
 
-      <!-- Auth Section -->
+      <!-- Auth Area -->
       <div id="desktopAuthArea" class="flex items-center space-x-3 hidden">
         <a href="login.html" id="authLinkDesktopLogin" class="text-sm">Login</a>
+
         <div id="profileAndMenuDesktop" class="hidden items-center space-x-2">
-          <a href="profile.html" class="text-sm">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-              <path fill-rule="evenodd" d="M18.685 19.097..." clip-rule="evenodd" />
+          <a href="profile.html" title="My Profile">
+            <!-- ✅ WORKING PROFILE SVG -->
+            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd"/>
             </svg>
           </a>
           <a href="#" id="logoutButtonSlideout" class="text-sm">Logout</a>
@@ -46,7 +49,7 @@
       </div>
     </div>
 
-    <!-- Mobile hamburger -->
+    <!-- Mobile Hamburger -->
     <div class="md:hidden pr-4">
       <button id="mobile-menu-button" class="text-gray-300 hover:text-white">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,8 +59,8 @@
     </div>
   </div>
 
-  <!-- Mobile menu -->
-  <div id="mobile-menu" class="md:hidden hidden bg-gray-900 p-4">
+  <!-- ✅ MOBILE MENU -->
+  <div id="mobile-menu" class="md:hidden hidden bg-gray-900 px-4 pb-4">
     <a href="login.html" id="authLinkMobile" class="block py-2">Login</a>
     <a href="linqai.html" class="block py-2">Linq AI</a>
     <a href="earnings.html" class="block py-2">Earnings</a>
@@ -66,28 +69,28 @@
   </div>
 </nav>
 
-<!-- Slideout dummy -->
+<!-- Dummy desktop slideout -->
 <div id="desktop-slideout-menu" class="hidden"></div>
 
-<!-- Fix JS -->
+<!-- ✅ JS TO HANDLE LOGIC -->
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    // Show header immediately
-    const authArea = document.getElementById("desktopAuthArea");
-    const profile = document.getElementById("profileAndMenuDesktop");
+    // Toggle visibility on load
+    const desktopAuth = document.getElementById("desktopAuthArea");
+    const profileBlock = document.getElementById("profileAndMenuDesktop");
     const loginLink = document.getElementById("authLinkDesktopLogin");
 
-    authArea.classList.remove("hidden");
+    desktopAuth.classList.remove("hidden");
 
     if (isLoggedIn) {
-      profile.classList.remove("hidden");
+      profileBlock.classList.remove("hidden");
       loginLink.classList.add("hidden");
 
       document.getElementById("favoritesLinkMobile").classList.remove("hidden");
       document.getElementById("logoutButtonMobile").classList.remove("hidden");
       document.getElementById("authLinkMobile").classList.add("hidden");
     } else {
-      profile.classList.add("hidden");
+      profileBlock.classList.add("hidden");
       loginLink.classList.remove("hidden");
 
       document.getElementById("favoritesLinkMobile").classList.add("hidden");
@@ -95,21 +98,29 @@
       document.getElementById("authLinkMobile").classList.remove("hidden");
     }
 
-    // Logout buttons
-    document.getElementById("logoutButtonSlideout")?.addEventListener("click", (e) => {
-      e.preventDefault();
+    // Handle logout
+    const logout = () => {
       alert("Logging out...");
+      // window.location.href = "login.html"; // Optional real redirect
+    };
+    document.getElementById("logoutButtonMobile")?.addEventListener("click", e => {
+      e.preventDefault();
+      logout();
+    });
+    document.getElementById("logoutButtonSlideout")?.addEventListener("click", e => {
+      e.preventDefault();
+      logout();
     });
 
-    document.getElementById("logoutButtonMobile")?.addEventListener("click", (e) => {
-      e.preventDefault();
-      alert("Logging out...");
-    });
-
-    // Toggle mobile menu
+    // Handle mobile menu toggle
     document.getElementById("mobile-menu-button")?.addEventListener("click", () => {
       const mobileMenu = document.getElementById("mobile-menu");
       mobileMenu.classList.toggle("hidden");
+    });
+
+    // OPTIONAL: handle desktop hamburger if needed
+    document.getElementById("desktop-hamburger-button")?.addEventListener("click", () => {
+      alert("Open desktop slideout here if needed.");
     });
   });
 </script>
