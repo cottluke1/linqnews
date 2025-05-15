@@ -1,4 +1,4 @@
-<nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3">
+<nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3 bg-gray-900">
     <style>
         /* Prevent flash of content during auth state changes */
         .nav-link-button {
@@ -38,6 +38,46 @@
         .auth-ready * {
             visibility: visible;
         }
+
+        /* Profile icon and hamburger menu colors */
+        .profile-icon-placeholder svg {
+            color: white;
+            width: 2rem;
+            height: 2rem;
+        }
+
+        .desktop-hamburger-icon svg {
+            color: white;
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        /* Auth state handling */
+        #loginElements {
+            display: none;
+        }
+
+        #profileAndMenuDesktop {
+            display: none;
+        }
+
+        #loginElements.visible {
+            display: flex;
+        }
+
+        #profileAndMenuDesktop.visible {
+            display: flex;
+        }
+
+        /* Prevent login button flash */
+        #authLinkDesktopLogin {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        #authLinkDesktopLogin.visible {
+            opacity: 1;
+        }
     </style>
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
@@ -45,14 +85,18 @@
             <a href="index.html" class="nav-link text-sm">News</a>
             <a href="community.html" class="nav-link text-sm active">Community</a> 
             <a href="markets.html" id="marketsLinkDesktop" class="nav-link text-sm">Markets</a> 
-            <div id="desktopAuthArea" class="flex items-center space-x-3 auth-loading">
-                <div id="loginElements" class="auth-dependent flex items-center space-x-3">
+            <div id="desktopAuthArea" class="flex items-center space-x-3">
+                <div id="loginElements" class="flex items-center space-x-3">
                     <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button">Login</a>
-                    <button id="desktop-hamburger-login" class="desktop-hamburger-icon text-gray-300 hover:text-white">
-                        Login
-                    </button>
+                    <div class="desktop-hamburger-menu">
+                        <button id="desktop-hamburger-button-login" class="desktop-hamburger-icon text-white hover:text-gray-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-                <div id="profileAndMenuDesktop" class="auth-dependent items-center space-x-5">
+                <div id="profileAndMenuDesktop" class="flex items-center space-x-5">
                     <a href="profile.html" id="profileLinkDesktop" title="My Profile">
                         <div class="profile-icon-placeholder">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
@@ -61,7 +105,7 @@
                         </div>
                     </a>
                     <div class="desktop-hamburger-menu">
-                        <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
+                        <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-white hover:text-gray-300">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
@@ -123,39 +167,26 @@
 
     // Function to handle auth state changes
     function updateAuthUI(user) {
-        const authArea = document.getElementById('desktopAuthArea');
         const loginElements = document.getElementById('loginElements');
         const profileMenu = document.getElementById('profileAndMenuDesktop');
+        const loginButton = document.getElementById('authLinkDesktopLogin');
         
-        // Remove loading state
-        authArea.classList.remove('auth-loading');
-        authArea.classList.add('auth-ready');
-
+        // First, remove all visible classes
+        loginElements.classList.remove('visible');
+        profileMenu.classList.remove('visible');
+        loginButton.classList.remove('visible');
+        
+        // Then apply the correct visibility based on auth state
         if (user) {
-            loginElements.classList.remove('visible');
             profileMenu.classList.add('visible');
-            
-            // Update mobile menu items for logged-in state
-            document.getElementById('favoritesLinkMobile').classList.remove('hidden');
-            document.getElementById('logoutButtonMobile').classList.remove('hidden');
-            document.getElementById('authLinkMobile').classList.add('hidden');
         } else {
             loginElements.classList.add('visible');
-            profileMenu.classList.remove('visible');
-            
-            // Update mobile menu items for logged-out state
-            document.getElementById('favoritesLinkMobile').classList.add('hidden');
-            document.getElementById('logoutButtonMobile').classList.add('hidden');
-            document.getElementById('authLinkMobile').classList.remove('hidden');
+            loginButton.classList.add('visible');
         }
     }
 
-    // Wait for Firebase auth to be ready
-    let authInitialized = false;
+    // Listen for auth state changes
     firebase.auth().onAuthStateChanged((user) => {
-        if (!authInitialized) {
-            authInitialized = true;
-        }
         updateAuthUI(user);
     });
 
@@ -170,8 +201,7 @@
     });
 
     // Handle login button in dropdown
-    document.getElementById('desktop-hamburger-login').addEventListener('click', () => {
+    document.getElementById('desktop-hamburger-button-login').addEventListener('click', () => {
         window.location.href = 'login.html';
     });
 </script>
-
