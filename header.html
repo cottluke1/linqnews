@@ -1,60 +1,50 @@
-<nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3 bg-gray-900">
+<nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
-
         <div class="hidden md:flex items-center space-x-5">
             <a href="index.html" class="nav-link text-sm">News</a>
-            <a href="community.html" class="nav-link text-sm active">Community</a> 
-            <a href="Markets.html" id="marketsLinkDesktop" class="nav-link text-sm">Markets</a> 
-
-            <!-- Hamburger visible at all times -->
-            <div class="desktop-hamburger-menu ml-2">
-                <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Auth area hidden initially to prevent flashing -->
+            <a href="community.html" class="nav-link text-sm active">Community</a>
+            <a href="Markets.html" id="marketsLinkDesktop" class="nav-link text-sm">Markets</a>
+            
             <div id="desktopAuthArea" class="flex items-center space-x-3" style="display:none;">
-                <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button">Login</a> 
-                <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
-                    <a href="profile.html" id="profileLinkDesktop" title="My Profile">
+                <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button">Login</a>
+                <div id="profileAndMenuDesktop" class="hidden items-center"> <a href="profile.html" id="profileLinkDesktop" title="My Profile">
                         <div class="profile-icon-placeholder">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                 <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
                             </svg>
                         </div>
                     </a>
+                    </div>
+                <div class="desktop-hamburger-menu ml-3">
+                    <button id="desktop-hamburger-button" class="desktop-hamburger-icon text-gray-300 hover:text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
-
-        <!-- Mobile Hamburger Menu (shifted slightly right) -->
-        <div class="md:hidden pr-3">
-            <button id="mobile-menu-button" class="ml-2 text-gray-300 hover:text-white focus:outline-none">
+        <div class="md:hidden">
+            <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
         </div>
     </div>
-
-    <!-- Mobile Menu -->
     <div id="mobile-menu" class="md:hidden hidden bg-gray-900 bg-opacity-90 backdrop-blur-md">
         <a href="login.html" id="authLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Login</a>
         <a href="linqai.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Linq Ai</a>
         <a href="earnings.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Earnings Calendar</a>
-        <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a> 
-        <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 active">Community</a> 
+        <a href="index.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">News</a>
+        <a href="community.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 active">Community</a>
         <a href="Markets.html" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700">Markets</a>
         <a href="favorites.html" id="favoritesLinkMobile" class="block nav-link text-sm px-4 py-3 hover:bg-gray-700 hidden">Favorites</a>
         <a href="#" id="logoutButtonMobile" class="hidden nav-link text-sm px-4 py-3 hover:bg-gray-700">Logout</a>
     </div>
 </nav>
 
-<!-- Slideout Desktop Menu -->
 <div id="desktop-slideout-menu" class="slide-out-panel">
     <div class="slide-out-panel-header">
         <button id="slideout-close-button" class="slide-out-panel-close-btn" aria-label="Close menu">&times;</button>
@@ -62,37 +52,100 @@
     <nav class="slide-out-panel-nav">
         <a href="linqai.html">Linq AI</a>
         <a href="earnings.html">Earnings Calendar</a>
-        <a href="favorites.html">Favorites</a> 
+        <a href="favorites.html">Favorites</a>
         <a href="profile.html">My Profile</a>
-        <a href="#" id="logoutButtonSlideout">Logout</a> 
+        <a href="#" id="logoutButtonSlideout">Logout</a>
     </nav>
 </div>
 
-<!-- JS Auth Visibility Control (Add this near your existing script block) -->
 <script>
-    // Example auth check function (replace with your logic)
+document.addEventListener('DOMContentLoaded', function() {
+    const desktopAuthArea = document.getElementById('desktopAuthArea');
+    const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
+    const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
+    // The desktop-hamburger-menu is within desktopAuthArea and will become visible
+    // when desktopAuthArea is shown. Its presence is no longer tied to login status here.
+
+    // This is a placeholder for your actual authentication check.
+    // It should return true if the user is logged in, and false otherwise.
     function checkAuthStatus() {
-        const isLoggedIn = true; // Replace with your actual auth logic
-
-        const authArea = document.getElementById('desktopAuthArea');
-        if (authArea) authArea.style.display = 'flex';
-
-        if (isLoggedIn) {
-            document.getElementById('profileAndMenuDesktop').classList.remove('hidden');
-            document.getElementById('authLinkDesktopLogin').classList.add('hidden');
-
-            document.getElementById('favoritesLinkMobile').classList.remove('hidden');
-            document.getElementById('logoutButtonMobile').classList.remove('hidden');
-            document.getElementById('authLinkMobile').classList.add('hidden');
-        } else {
-            document.getElementById('profileAndMenuDesktop').classList.add('hidden');
-            document.getElementById('authLinkDesktopLogin').classList.remove('hidden');
-
-            document.getElementById('favoritesLinkMobile').classList.add('hidden');
-            document.getElementById('logoutButtonMobile').classList.add('hidden');
-            document.getElementById('authLinkMobile').classList.remove('hidden');
-        }
+        // Example: check a cookie, localStorage, or make an API call.
+        // For this example, we'll simulate a logged-out state by default.
+        // To test logged-in state, you could:
+        // 1. return true;
+        // 2. or, use localStorage: localStorage.setItem('isUserLoggedIn', 'true'); 
+        //    then return localStorage.getItem('isUserLoggedIn') === 'true';
+        console.log("Checking auth status... (Replace with your actual check)");
+        return false; // Simulate logged-out state by default
     }
 
-    document.addEventListener('DOMContentLoaded', checkAuthStatus);
+    const isLoggedIn = checkAuthStatus();
+
+    if (desktopAuthArea) {
+        if (isLoggedIn) {
+            if (profileAndMenuDesktop) {
+                // profileAndMenuDesktop already has 'hidden' class by default, remove it to show
+                profileAndMenuDesktop.classList.remove('hidden');
+                // Ensure it's displayed as a flex container
+                profileAndMenuDesktop.style.display = 'flex';
+            }
+            if (authLinkDesktopLogin) {
+                // Hide the login link
+                authLinkDesktopLogin.style.display = 'none';
+            }
+        } else {
+            if (authLinkDesktopLogin) {
+                // Show the login link
+                authLinkDesktopLogin.style.display = 'block'; // Or 'inline-block' or 'inline-flex' as per your styling needs
+            }
+            if (profileAndMenuDesktop) {
+                // Ensure profile/menu section remains hidden (it has 'hidden' class and we ensure display is none)
+                profileAndMenuDesktop.style.display = 'none';
+            }
+        }
+        // Reveal the entire desktop authentication area (including the login/profile and hamburger menu)
+        desktopAuthArea.style.display = 'flex';
+    }
+
+    // Note: Your existing JavaScript for mobile menu toggling, 
+    // desktop slideout menu toggling, etc., should be preserved.
+    // The following is an example if you need to re-add or ensure it's present.
+    // If you already have this logic, you might not need to duplicate it.
+    
+    // Mobile menu toggle (example, if not already handled)
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+
+    // Desktop slideout menu toggle (example, if not already handled)
+    // This assumes your 'desktop-hamburger-button' is intended to open 'desktop-slideout-menu'
+    const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
+    const desktopSlideoutMenu = document.getElementById('desktop-slideout-menu');
+    const slideoutCloseButton = document.getElementById('slideout-close-button');
+
+    if (desktopHamburgerButton && desktopSlideoutMenu) {
+        desktopHamburgerButton.addEventListener('click', function() {
+            // You might have a specific class to show/hide the slideout, e.g., 'active' or 'open'
+            desktopSlideoutMenu.classList.toggle('active'); // Replace 'active' with your actual class
+            // Example: if your slide-out-panel is controlled by left/right position:
+            // if (desktopSlideoutMenu.style.right === '0px' || desktopSlideoutMenu.classList.contains('active')) {
+            //     desktopSlideoutMenu.style.right = '-300px'; // Or your hidden position
+            //     desktopSlideoutMenu.classList.remove('active');
+            // } else {
+            //     desktopSlideoutMenu.style.right = '0px';
+            //     desktopSlideoutMenu.classList.add('active');
+            // }
+        });
+    }
+    if (slideoutCloseButton && desktopSlideoutMenu) {
+        slideoutCloseButton.addEventListener('click', function() {
+            desktopSlideoutMenu.classList.remove('active'); // Replace 'active' with your actual class
+            // Example: desktopSlideoutMenu.style.right = '-300px';
+        });
+    }
+});
 </script>
