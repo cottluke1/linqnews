@@ -1,4 +1,16 @@
 <nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3">
+        <style>
+            /* Hide auth elements by default until Firebase is initialized */
+            .auth-init-hide {
+                display: none !important;
+            }
+            .auth-ready .auth-init-hide {
+                display: inherit !important;
+            }
+            .auth-ready .auth-init-hide.flex {
+                display: flex !important;
+            }
+        </style>
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
             <div class="hidden md:flex items-center space-x-5">
@@ -6,8 +18,8 @@
                 <a href="community.html" class="nav-link text-sm active">Community</a> 
                 <a href="markets.html" id="marketsLinkDesktop" class="nav-link text-sm">Markets</a> 
                 <div id="desktopAuthArea" class="flex items-center space-x-3">
-                    <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button hidden">Login</a> 
-                    <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
+                    <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button auth-init-hide">Login</a> 
+                    <div id="profileAndMenuDesktop" class="hidden items-center space-x-3 auth-init-hide">
                         <a href="profile.html" id="profileLinkDesktop" title="My Profile">
                             <div class="profile-icon-placeholder">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
@@ -66,6 +78,9 @@
             const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
             const favoritesLinkSlideout = document.getElementById('favoritesLinkSlideout');
             const profileLinkSlideout = document.getElementById('profileLinkSlideout');
+
+            // Mark the document as auth-ready to allow visibility
+            document.body.classList.add('auth-ready');
 
             if (user) {
                 loginButtonSlideout.classList.add('hidden');
