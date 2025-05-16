@@ -134,12 +134,13 @@
                 <input type="password" id="login-password" placeholder="Password" required class="auth-input">
                 <button onclick="handleLogin()" class="auth-button">Login</button>
                 <p class="text-center mt-6 text-sm">
+                    Don't have an account? <span class="toggle-link" onclick="showSignUp()">Sign Up</span>
+                </p>
+                
                 <button onclick="handleGoogleLogin()" class="auth-button mt-3 bg-white text-black flex items-center justify-center gap-3 hover:bg-gray-100 transition">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" class="h-5 w-5">
                 Continue with Google
                 </button>
-                    Don't have an account? <span class="toggle-link" onclick="showSignUp()">Sign Up</span>
-                </p>
             </div>
 
             <div id="signup-form" class="hidden">
