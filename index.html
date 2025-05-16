@@ -435,8 +435,9 @@
                         authLinkDesktopLogin.classList.add('invisible');
                     }
                     if (profileAndMenuDesktop) {
-                        // First set display to flex
+                        // First set display to flex and add transition class
                         profileAndMenuDesktop.style.display = 'flex';
+                        profileAndMenuDesktop.classList.add('auth-transition');
                         
                         // Use requestAnimationFrame to ensure the display change is processed
                         requestAnimationFrame(() => {
@@ -448,9 +449,16 @@
 
                         // Update profile picture if available
                         if (profilePicture && user.photoURL) {
+                            profilePicture.classList.add('auth-transition');
                             profilePicture.src = user.photoURL;
-                            profilePicture.classList.remove('invisible');
-                            profilePicture.classList.add('visible');
+                            
+                            // Use requestAnimationFrame for smooth transition
+                            requestAnimationFrame(() => {
+                                requestAnimationFrame(() => {
+                                    profilePicture.classList.remove('invisible');
+                                    profilePicture.classList.add('visible');
+                                });
+                            });
                         }
                     }
                 } else {
