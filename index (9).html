@@ -411,15 +411,6 @@
             if (desktopAuthArea) {
                 desktopAuthArea.classList.add('auth-loading');
             }
-            if (authLinkDesktopLogin) {
-                authLinkDesktopLogin.classList.add('invisible');
-                authLinkDesktopLogin.classList.add('auth-transition');
-            }
-            if (profileAndMenuDesktop) {
-                profileAndMenuDesktop.classList.add('invisible');
-                profileAndMenuDesktop.classList.add('auth-transition');
-                profileAndMenuDesktop.style.display = 'none';
-            }
 
             // Handle auth state changes
             firebase.auth().onAuthStateChanged(function(user) {
@@ -435,50 +426,19 @@
                         authLinkDesktopLogin.classList.add('invisible');
                     }
                     if (profileAndMenuDesktop) {
-                        // First set display to flex and add transition class
                         profileAndMenuDesktop.style.display = 'flex';
-                        profileAndMenuDesktop.classList.add('auth-transition');
-                        
-                        // Use requestAnimationFrame to ensure the display change is processed
-                        requestAnimationFrame(() => {
-                            requestAnimationFrame(() => {
-                                profileAndMenuDesktop.classList.remove('invisible');
-                                profileAndMenuDesktop.classList.add('visible');
-                            });
-                        });
-
-                        // Update profile picture if available
-                        if (profilePicture && user.photoURL) {
-                            profilePicture.classList.add('auth-transition');
-                            profilePicture.src = user.photoURL;
-                            
-                            // Use requestAnimationFrame for smooth transition
-                            requestAnimationFrame(() => {
-                                requestAnimationFrame(() => {
-                                    profilePicture.classList.remove('invisible');
-                                    profilePicture.classList.add('visible');
-                                });
-                            });
-                        }
+                        profileAndMenuDesktop.classList.remove('invisible');
                     }
                 } else {
                     // User is signed out
                     if (profileAndMenuDesktop) {
-                        profileAndMenuDesktop.classList.remove('visible');
                         profileAndMenuDesktop.classList.add('invisible');
-                        
-                        // Wait for transition to complete before hiding
                         setTimeout(() => {
                             profileAndMenuDesktop.style.display = 'none';
-                            if (profilePicture) {
-                                profilePicture.classList.remove('visible');
-                                profilePicture.classList.add('invisible');
-                            }
                         }, 300);
                     }
                     if (authLinkDesktopLogin) {
                         authLinkDesktopLogin.classList.remove('invisible');
-                        authLinkDesktopLogin.classList.add('visible');
                     }
                 }
             });
