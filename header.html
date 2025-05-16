@@ -58,8 +58,8 @@
     </div>
 
     <script>
-        // Firebase auth state observer
-        firebase.auth().onAuthStateChanged(function(user) {
+        // Initialize auth state immediately before the observer
+        function updateUIForUser(user) {
             const loginButtonSlideout = document.getElementById('loginButtonSlideout');
             const logoutButtonSlideout = document.getElementById('logoutButtonSlideout');
             const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
@@ -68,7 +68,6 @@
             const profileLinkSlideout = document.getElementById('profileLinkSlideout');
 
             if (user) {
-                // User is signed in
                 loginButtonSlideout.classList.add('hidden');
                 logoutButtonSlideout.classList.remove('hidden');
                 authLinkDesktopLogin.classList.add('hidden');
@@ -77,13 +76,11 @@
                 favoritesLinkSlideout.classList.remove('hidden');
                 profileLinkSlideout.classList.remove('hidden');
 
-                // Add logout functionality
                 logoutButtonSlideout.onclick = (e) => {
                     e.preventDefault();
                     firebase.auth().signOut();
                 };
             } else {
-                // User is signed out
                 loginButtonSlideout.classList.remove('hidden');
                 logoutButtonSlideout.classList.add('hidden');
                 authLinkDesktopLogin.classList.remove('hidden');
@@ -92,13 +89,12 @@
                 favoritesLinkSlideout.classList.add('hidden');
                 profileLinkSlideout.classList.add('hidden');
             }
-        });
-
-        // Initialize auth state immediately
-        if (firebase.auth().currentUser) {
-            document.getElementById('authLinkDesktopLogin').classList.add('hidden');
-            document.getElementById('profileAndMenuDesktop').classList.remove('hidden');
-            document.getElementById('profileAndMenuDesktop').classList.add('flex');
         }
+
+        // Initialize immediately with current user
+        updateUIForUser(firebase.auth().currentUser);
+
+        // Then set up the observer for future changes
+        firebase.auth().onAuthStateChanged(updateUIForUser);
     </script>
 </nav>
