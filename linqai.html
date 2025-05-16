@@ -525,7 +525,7 @@
         }
 
         // Fetch and Inject Header, then Initialize Header Logic
-            fetch('header.html') 
+        fetch('header.html') // Ensure header.html is in the correct path relative to linqai.html
             .then(response => {
                 if (!response.ok) throw new Error('Network response was not ok for header.html');
                 return response.text();
@@ -534,27 +534,12 @@
                 const headerPlaceholder = document.getElementById('header-placeholder');
                 if (headerPlaceholder) {
                     headerPlaceholder.innerHTML = data;
-        
-                    initializeHeaderAndAuth(); // This will call authInstance.onAuthStateChanged
-        
+                    initializeHeaderAndAuth(); // Initialize header JS AFTER it's loaded
+                    // Adjust main content padding after header is loaded and its height is known
                     const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
                     if (fixedHeader) {
-                        document.querySelector('main').style.paddingTop = (fixedHeader.offsetHeight + 20) + 'px';
+                        document.querySelector('.chat-container-wrapper').style.paddingTop = fixedHeader.offsetHeight + 20 + 'px'; // 20px buffer
                     }
-        
-                    // After the header is injected, set up avatar once user is available
-                    firebase.auth().onAuthStateChanged(user => {
-                        const avatarImg = document.getElementById('navProfilePic');
-                        if (avatarImg && user) {
-                            if (user.photoURL) {
-                                avatarImg.src = user.photoURL;
-                            } else if (user.displayName) {
-                                const initials = user.displayName.charAt(0).toUpperCase();
-                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-                            }
-                        }
-                    });
-        
                 } else {
                     console.error('Header placeholder element not found.');
                 }
@@ -562,11 +547,8 @@
             .catch(error => {
                 console.error('Error fetching header:', error);
                 const headerPlaceholder = document.getElementById('header-placeholder');
-                if (headerPlaceholder) {
-                    headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
-                }
+                if(headerPlaceholder) headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
             });
-
 
 
         // --- LinqAI Page Specific JavaScript ---
