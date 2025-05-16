@@ -52,8 +52,13 @@
         <nav class="slide-out-panel-nav">
             <a href="linqai.html">Linq AI</a>
             <a href="earnings.html">Earnings Calendar</a>
-            <a href="favorites.html">Favorites</a> 
-            <a href="profile.html">My Profile</a>
-            <a href="#" id="logoutButtonSlideout">Logout</a> 
+            <a href="favorites.html" id="favoritesLinkSlideout" class="auth-required hidden">Favorites</a> 
+            <a href="profile.html" id="profileLinkSlideout" class="auth-required hidden">My Profile</a>
+            <a href="login.html" id="loginButtonSlideout">Login</a>
+            <a href="#" id="logoutButtonSlideout" class="hidden">Logout</a> 
         </nav>
     </div>
+
+    <script type="module" src="auth.js"></script>
+</nav>
+
