@@ -6,7 +6,7 @@
                 <a href="community.html" class="nav-link text-sm active">Community</a> 
                 <a href="markets.html" id="marketsLinkDesktop" class="nav-link text-sm">Markets</a> 
                 <div id="desktopAuthArea" class="flex items-center space-x-3">
-                    <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button opacity-0">Login</a> 
+                    <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button hidden">Login</a> 
                     <div id="profileAndMenuDesktop" class="hidden items-center space-x-3">
                         <a href="profile.html" id="profileLinkDesktop" title="My Profile">
                             <div class="profile-icon-placeholder">
@@ -54,14 +54,16 @@
             <a href="earnings.html">Earnings Calendar</a>
             <a href="favorites.html" id="favoritesLinkSlideout" class="auth-required hidden">Favorites</a> 
             <a href="profile.html" id="profileLinkSlideout" class="auth-required hidden">My Profile</a>
-            <a href="#" id="authButtonSlideout" class="text-red-500">Login</a>
+            <a href="login.html" id="loginButtonSlideout" class="text-red-500 hidden">Login</a>
+            <a href="#" id="logoutButtonSlideout" class="text-red-500 hidden">Logout</a>
         </nav>
     </div>
 
     <script>
         // Firebase auth state observer
         firebase.auth().onAuthStateChanged(function(user) {
-            const authButtonSlideout = document.getElementById('authButtonSlideout');
+            const loginButtonSlideout = document.getElementById('loginButtonSlideout');
+            const logoutButtonSlideout = document.getElementById('logoutButtonSlideout');
             const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
             const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
             const favoritesLinkSlideout = document.getElementById('favoritesLinkSlideout');
@@ -69,24 +71,36 @@
 
             if (user) {
                 // User is signed in
-                authButtonSlideout.textContent = 'Logout';
-                authButtonSlideout.onclick = () => firebase.auth().signOut();
+                loginButtonSlideout.classList.add('hidden');
+                logoutButtonSlideout.classList.remove('hidden');
                 authLinkDesktopLogin.classList.add('hidden');
                 profileAndMenuDesktop.classList.remove('hidden');
                 profileAndMenuDesktop.classList.add('flex');
                 favoritesLinkSlideout.classList.remove('hidden');
                 profileLinkSlideout.classList.remove('hidden');
+
+                // Add logout functionality
+                logoutButtonSlideout.onclick = (e) => {
+                    e.preventDefault();
+                    firebase.auth().signOut();
+                };
             } else {
                 // User is signed out
-                authButtonSlideout.textContent = 'Login';
-                authButtonSlideout.onclick = null;
-                authButtonSlideout.href = 'login.html';
-                authLinkDesktopLogin.classList.remove('hidden', 'opacity-0');
+                loginButtonSlideout.classList.remove('hidden');
+                logoutButtonSlideout.classList.add('hidden');
+                authLinkDesktopLogin.classList.remove('hidden');
                 profileAndMenuDesktop.classList.add('hidden');
                 profileAndMenuDesktop.classList.remove('flex');
                 favoritesLinkSlideout.classList.add('hidden');
                 profileLinkSlideout.classList.add('hidden');
             }
         });
+
+        // Initialize auth state immediately
+        if (firebase.auth().currentUser) {
+            document.getElementById('authLinkDesktopLogin').classList.add('hidden');
+            document.getElementById('profileAndMenuDesktop').classList.remove('hidden');
+            document.getElementById('profileAndMenuDesktop').classList.add('flex');
+        }
     </script>
 </nav>
