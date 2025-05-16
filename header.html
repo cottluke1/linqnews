@@ -54,11 +54,39 @@
             <a href="earnings.html">Earnings Calendar</a>
             <a href="favorites.html" id="favoritesLinkSlideout" class="auth-required hidden">Favorites</a> 
             <a href="profile.html" id="profileLinkSlideout" class="auth-required hidden">My Profile</a>
-            <a href="login.html" id="loginButtonSlideout">Login</a>
-            <a href="#" id="logoutButtonSlideout" class="hidden">Logout</a> 
+            <a href="#" id="authButtonSlideout" class="text-red-500">Login</a>
         </nav>
     </div>
 
-    <script type="module" src="auth.js"></script>
-</nav>
+    <script>
+        // Firebase auth state observer
+        firebase.auth().onAuthStateChanged(function(user) {
+            const authButtonSlideout = document.getElementById('authButtonSlideout');
+            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
+            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
+            const favoritesLinkSlideout = document.getElementById('favoritesLinkSlideout');
+            const profileLinkSlideout = document.getElementById('profileLinkSlideout');
 
+            if (user) {
+                // User is signed in
+                authButtonSlideout.textContent = 'Logout';
+                authButtonSlideout.onclick = () => firebase.auth().signOut();
+                authLinkDesktopLogin.classList.add('hidden');
+                profileAndMenuDesktop.classList.remove('hidden');
+                profileAndMenuDesktop.classList.add('flex');
+                favoritesLinkSlideout.classList.remove('hidden');
+                profileLinkSlideout.classList.remove('hidden');
+            } else {
+                // User is signed out
+                authButtonSlideout.textContent = 'Login';
+                authButtonSlideout.onclick = null;
+                authButtonSlideout.href = 'login.html';
+                authLinkDesktopLogin.classList.remove('hidden', 'opacity-0');
+                profileAndMenuDesktop.classList.add('hidden');
+                profileAndMenuDesktop.classList.remove('flex');
+                favoritesLinkSlideout.classList.add('hidden');
+                profileLinkSlideout.classList.add('hidden');
+            }
+        });
+    </script>
+</nav>
