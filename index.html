@@ -354,17 +354,6 @@
 </head>
 <body class="antialiased">
     <div id="navbar"></div>
-    <nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3">
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-    <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
-    <div class="hidden md:flex items-center space-x-5">
-      <a href="index.html" class="nav-link text-sm active">News</a>
-      <a href="community.html" class="nav-link text-sm">Community</a>
-      <a href="Markets.html" class="nav-link text-sm">Markets</a>
-      <a href="login.html" class="nav-link text-sm nav-link-button" id="authLinkDesktopLogin">Login</a>
-    </div>
-  </div>
-</nav>
 
     <div class="ticker-banner">
       <div class="ticker-content" id="tickerContent">
@@ -740,38 +729,38 @@
         }
 
 
-                fetch('header.html')
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok for header.html');
-                        }
+        fetch('header.html') 
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok for header.html');
+                }
                 return response.text();
-                            })
-                            .then(data => {
-                                const navbarElement = document.getElementById('navbar');
-                                if (navbarElement) {
-                                    navbarElement.innerHTML = data;
-                                    initializeHeaderAndAuth(); 
-                                    requestAnimationFrame(() => { 
-                                        setTimeout(() => { 
-                                           adjustTickerBannerMarginTop();
-                                        }, 0); 
-                                    });
-                                    populateInitialTickerContent(); 
-                                    updateTickerBanner(); 
-                                } else {
-                                    console.error('Navbar element not found. Header cannot be loaded.');
-                                    populateInitialTickerContent(); 
-                                    updateTickerBanner();
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error fetching or loading header:', error);
-                                const navbarElement = document.getElementById('navbar');
-                                if(navbarElement) navbarElement.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
-                                populateInitialTickerContent(); 
-                                updateTickerBanner();
-                            });
+            })
+            .then(data => {
+                const navbarElement = document.getElementById('navbar');
+                if (navbarElement) {
+                    navbarElement.innerHTML = data;
+                    initializeHeaderAndAuth(); 
+                    requestAnimationFrame(() => { 
+                        setTimeout(() => { 
+                           adjustTickerBannerMarginTop();
+                        }, 0); 
+                    });
+                    populateInitialTickerContent(); 
+                    updateTickerBanner(); 
+                } else {
+                    console.error('Navbar element not found. Header cannot be loaded.');
+                    populateInitialTickerContent(); 
+                    updateTickerBanner();
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching or loading header:', error);
+                const navbarElement = document.getElementById('navbar');
+                if(navbarElement) navbarElement.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
+                populateInitialTickerContent(); 
+                updateTickerBanner();
+            });
 
         async function fetchFinnhubQuote(symbol) {
             const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
