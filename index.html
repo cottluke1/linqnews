@@ -741,29 +741,37 @@
 
 
                 fetch('header.html')
-            .then(response => {
-                if (!response.ok) throw new Error('Network response was not ok for header.html');
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok for header.html');
+                        }
                 return response.text();
-            })
-            .then(data => {
-                const navbarElement = document.getElementById('navbar');
-                if (navbarElement) {
-                    navbarElement.innerHTML = data;
-                    initializeHeaderAndAuth();
-                    requestAnimationFrame(() => { 
-                        setTimeout(() => { 
-                           adjustMainContentPadding();
-                        }, 0);
-                    });
-                } else {
-                    console.error('Navbar element not found.');
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching header:', error);
-                const navbarElement = document.getElementById('navbar');
-                if(navbarElement) navbarElement.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
-            });
+                            })
+                            .then(data => {
+                                const navbarElement = document.getElementById('navbar');
+                                if (navbarElement) {
+                                    navbarElement.innerHTML = data;
+                                    initializeHeaderAndAuth(); 
+                                    requestAnimationFrame(() => { 
+                                        setTimeout(() => { 
+                                           adjustTickerBannerMarginTop();
+                                        }, 0); 
+                                    });
+                                    populateInitialTickerContent(); 
+                                    updateTickerBanner(); 
+                                } else {
+                                    console.error('Navbar element not found. Header cannot be loaded.');
+                                    populateInitialTickerContent(); 
+                                    updateTickerBanner();
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error fetching or loading header:', error);
+                                const navbarElement = document.getElementById('navbar');
+                                if(navbarElement) navbarElement.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
+                                populateInitialTickerContent(); 
+                                updateTickerBanner();
+                            });
 
         async function fetchFinnhubQuote(symbol) {
             const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
