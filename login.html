@@ -129,28 +129,37 @@
             <h2 id="form-title" class="form-title">Login</h2>
             <p id="error-message" class="error-message"></p>
 
-            <div id="login-form">
-                <input type="email" id="login-email" placeholder="Email Address" required class="auth-input">
-                <input type="password" id="login-password" placeholder="Password" required class="auth-input">
-                <button onclick="handleLogin()" class="auth-button">Login</button>
-                <p class="text-center mt-6 text-sm">
-                    Don't have an account? <span class="toggle-link" onclick="showSignUp()">Sign Up</span>
-                </p>
-                
-                <button onclick="handleGoogleLogin()" class="auth-button mt-3 bg-white text-black flex items-center justify-center gap-3 hover:bg-gray-100 transition">
+        <div id="login-form">
+            <input type="email" id="login-email" placeholder="Email Address" required class="auth-input">
+            <input type="password" id="login-password" placeholder="Password" required class="auth-input">
+            <button onclick="handleLogin()" class="auth-button">Login</button>
+        
+            <p class="text-center mt-6 text-sm">
+                Don't have an account? <span class="toggle-link" onclick="showSignUp()">Sign Up</span>
+            </p>
+        
+            <!-- OR separator -->
+            <div class="flex items-center my-6">
+                <hr class="flex-grow border-gray-700">
+                <span class="px-3 text-gray-500 text-sm uppercase">or</span>
+                <hr class="flex-grow border-gray-700">
+            </div>
+        
+            <!-- Google Login -->
+            <button onclick="handleGoogleLogin()" class="auth-button bg-white text-black flex items-center justify-center gap-3 hover:bg-gray-100 transition mb-3">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" class="h-5 w-5">
                 Continue with Google
-                </button>
-            </div>
+            </button>
+        
+            <!-- Phone Login -->
+            <button onclick="handlePhoneLogin()" class="auth-button bg-white text-black flex items-center justify-center gap-3 hover:bg-gray-100 transition">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M3 5a2 2 0 012-2h3l1 5-2 2c1.333 2.667 3.333 4.667 6 6l2-2 5 1v3a2 2 0 01-2 2h-1c-7.732 0-14-6.268-14-14V5z"/>
+                </svg>
+                Continue with phone
+            </button>
+        </div>
 
-            <div id="signup-form" class="hidden">
-                <input type="email" id="signup-email" placeholder="Email Address" required class="auth-input">
-                <input type="password" id="signup-password" placeholder="Password" required class="auth-input">
-                <button onclick="handleSignUp()" class="auth-button">Sign Up</button>
-                <p class="text-center mt-6 text-sm">
-                    Already have an account? <span class="toggle-link" onclick="showLogin()">Login</span>
-                </p>
-            </div>
         </div>
     </main>
 
@@ -285,7 +294,10 @@
             console.error("Google Sign-In Error:", error);
         }
     };
-
+        window.handlePhoneLogin = () => {
+            alert("Phone login not yet implemented.");
+            // You can implement Firebase Phone Auth here using RecaptchaVerifier and signInWithPhoneNumber
+        };
 
         window.showSignUp = () => {
             document.getElementById("login-form").classList.add("hidden");
