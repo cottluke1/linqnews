@@ -354,10 +354,8 @@
                 </ul>
             </aside>
 
-            <div id="profile" class="content-section active-section">
-                <div id="profile-loading" class="text-center py-8">Loading profile...</div>
-            
-                <div id="profile-data" class="hidden">
+            <section class="content">
+                <div id="profile" class="content-section active-section">
                     <div class="card">
                         <div class="card-header">
                             <h3>Personal Information</h3>
@@ -367,23 +365,23 @@
                                 <div class="profile-info">
                                     <div class="info-item">
                                         <label>Full Name</label>
-                                        <p id="profileFullName"></p>
+                                        <p id="profileFullName">Alex Johnson</p>
                                     </div>
                                     <div class="info-item">
                                         <label>Email Address</label>
-                                        <p id="profileEmail"></p>
+                                        <p id="profileEmail">alex.johnson@example.com</p>
                                     </div>
                                     <div class="info-item">
                                         <label>Username</label>
-                                        <p id="profileUsername"></p>
+                                        <p id="profileUsername">alexj</p>
                                     </div>
                                     <div class="info-item">
                                         <label>Joined</label>
-                                        <p id="profileJoinedDate"></p>
+                                        <p id="profileJoinedDate">May 10, 2024</p>
                                     </div>
                                 </div>
                                 <div class="avatar-section">
-                                    <img src="" alt="User Avatar" class="avatar" id="profileAvatar">
+                                    <img src="https://placehold.co/120x120/1E1E1E/F5F5F5?text=User&font=roboto" alt="User Avatar" class="avatar" id="profileAvatar" onerror="this.onerror=null; this.src='https://placehold.co/120x120/2C2F33/EAEAEA?text=Error&font=roboto';">
                                     <input type="file" id="avatarInput" accept="image/*" style="display: none;">
                                     <button class="btn btn-secondary" id="changeAvatarButton">Change Avatar</button>
                                 </div>
@@ -391,8 +389,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
 
                 <div id="subscription" class="content-section">
                     <h1>Subscription Details</h1>
@@ -568,14 +564,13 @@
             toast.style.backgroundColor = bgColor;
             toast.style.color = textColor;
 
-        setTimeout(() => {
-            const profileDataEl = document.getElementById('profile-data');
-            const profileLoadingEl = document.getElementById('profile-loading');
-        
-            if (profileDataEl) profileDataEl.classList.remove('hidden');
-            if (profileLoadingEl) profileLoadingEl.remove();
-        }, 0);
-
+            // Hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                // Add classes for fade out if desired or simply hide
+                setTimeout(() => toast.classList.add('hidden'), 300); // Ensure it's hidden after transition
+            }, 3000);
+        }
 
 
         // --- Function to Initialize and Run All Header Related Logic ---
@@ -616,65 +611,54 @@
                 const profileAvatarEl = document.getElementById('profileAvatar');
 
                 if (user) {
-                // User is LOGGED IN
-                if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
-                if (profileAndMenuDesktop) {
-                    profileAndMenuDesktop.classList.remove('hidden');
-                    profileAndMenuDesktop.classList.add('flex');
-                }
-                if (authLinkMobile) {
-                    authLinkMobile.textContent = "My Profile";
-                    authLinkMobile.href = "profile.html";
-                }
-                if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
-                if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
-                if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
-                if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
-            
-                // Populate profile page with user data
-                if (profileFullNameEl) profileFullNameEl.textContent = user.displayName || 'N/A';
-                if (profileEmailEl) profileEmailEl.textContent = user.email || 'N/A';
-                if (profileUsernameEl) profileUsernameEl.textContent = user.email
-                    ? user.email.split('@')[0]
-                    : (user.displayName || 'user');
-                if (profileJoinedDateEl && user.metadata?.creationTime) {
-                    profileJoinedDateEl.textContent = new Date(user.metadata.creationTime).toLocaleDateString();
-                }
-                if (profileAvatarEl) {
-                    if (user.photoURL) {
-                        profileAvatarEl.src = user.photoURL;
-                    } else {
-                        const initials = user.displayName
-                            ? user.displayName.charAt(0).toUpperCase()
-                            : user.email.charAt(0).toUpperCase();
-                        profileAvatarEl.src = `https://placehold.co/120x120/1E1E1E/F5F5F5?text=${initials}&font=roboto`;
+                    // User is LOGGED IN
+                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
+                    if (profileAndMenuDesktop) {
+                        profileAndMenuDesktop.classList.remove('hidden');
+                        profileAndMenuDesktop.classList.add('flex');
                     }
-                }
-            
-                // ✅ Only now show profile and hide loading message
-                document.getElementById('profile-data')?.classList.remove('hidden');
-                document.getElementById('profile-loading')?.remove();
-            
-            } else {
-                // User is LOGGED OUT
-                if (authLinkDesktopLogin) {
-                    authLinkDesktopLogin.classList.remove('hidden');
-                    authLinkDesktopLogin.classList.add('nav-link-button');
-                }
-                if (profileAndMenuDesktop) profileAndMenuDesktop.classList.add('hidden');
-                if (authLinkMobile) {
-                    authLinkMobile.textContent = "Login";
-                    authLinkMobile.href = "login.html";
-                }
-                if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
-                if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
-                if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
-                if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
-                if (desktopSlideOutMenu?.classList.contains('open')) {
-                    closeDesktopMenu();
-                }
-            }
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "My Profile";
+                        authLinkMobile.href = "profile.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
 
+                    // Populate profile page with user data
+                    if (profileFullNameEl) profileFullNameEl.textContent = user.displayName || 'N/A';
+                    if (profileEmailEl) profileEmailEl.textContent = user.email || 'N/A';
+                    if (profileUsernameEl) profileUsernameEl.textContent = user.email ? user.email.split('@')[0] : (user.displayName || 'user');
+                    if (profileJoinedDateEl && user.metadata && user.metadata.creationTime) {
+                        profileJoinedDateEl.textContent = new Date(user.metadata.creationTime).toLocaleDateString();
+                    }
+                    if (profileAvatarEl) {
+                        if (user.photoURL) {
+                            profileAvatarEl.src = user.photoURL;
+                        } else {
+                            const initials = user.displayName ? user.displayName.charAt(0).toUpperCase() : (user.email ? user.email.charAt(0).toUpperCase() : 'U');
+                            profileAvatarEl.src = `https://placehold.co/120x120/1E1E1E/F5F5F5?text=${initials}&font=roboto`;
+                        }
+                    }
+                } else {
+                    // User is LOGGED OUT
+                    if (authLinkDesktopLogin) {
+                        authLinkDesktopLogin.classList.remove('hidden');
+                        authLinkDesktopLogin.classList.add('nav-link-button');
+                    }
+                    if (profileAndMenuDesktop) profileAndMenuDesktop.classList.add('hidden');
+                    if (authLinkMobile) {
+                        authLinkMobile.textContent = "Login";
+                        authLinkMobile.href = "login.html";
+                    }
+                    if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+                    if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
+                    if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
+                    if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
+                        closeDesktopMenu();
+                    }
                      // Optionally redirect if profile page is protected
                     // if (window.location.pathname.endsWith('profile.html') || window.location.pathname.endsWith('account.html')) {
                     //     showToast("Please log in to access your account.", "info");
