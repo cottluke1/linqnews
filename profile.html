@@ -568,13 +568,14 @@
             toast.style.backgroundColor = bgColor;
             toast.style.color = textColor;
 
-            // Hide after 3 seconds
-            setTimeout(() => {
-                toast.classList.remove('show');
-                // Add classes for fade out if desired or simply hide
-                setTimeout(() => toast.classList.add('hidden'), 300); // Ensure it's hidden after transition
-            }, 3000);
-        }
+        setTimeout(() => {
+            const profileDataEl = document.getElementById('profile-data');
+            const profileLoadingEl = document.getElementById('profile-loading');
+        
+            if (profileDataEl) profileDataEl.classList.remove('hidden');
+            if (profileLoadingEl) profileLoadingEl.remove();
+        }, 0);
+
 
 
         // --- Function to Initialize and Run All Header Related Logic ---
