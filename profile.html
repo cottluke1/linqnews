@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script> <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
     <style>
         /* --- Enhanced Color Scheme & Variables (from original profile.html) --- */
         :root {
@@ -353,8 +354,9 @@
                                         <label>Joined</label>
                                         <p id="profileJoinedDate">May 10, 2024</p> </div>
                                 </div>
-                                <div class="avatar-section">
+                                <div class="avatar-section">     
                                     <img src="https://placehold.co/120x120/1E1E1E/F5F5F5?text=User&font=roboto" alt="User Avatar" class="avatar" id="profileAvatar" onerror="this.onerror=null; this.src='https://placehold.co/120x120/2C2F33/EAEAEA?text=Error&font=roboto';">
+                                    <input type="file" id="avatarInput" accept="image/*" style="display: none;">
                                     <button class="btn btn-secondary">Change Avatar</button>
                                 </div>
                             </div>
@@ -691,7 +693,51 @@
                         }
                     }
                 });
-    
+                document.addEventListener("DOMContentLoaded", function () {
+                    const changeAvatarButton = document.getElementById("changeAvatarButton");
+                    const avatarInput = document.getElementById("avatarInput");
+                    const profileAvatar = document.getElementById("profileAvatar");
+                
+                    if (changeAvatarButton && avatarInput) {
+                        changeAvatarButton.addEventListener("click", () => {
+                            avatarInput.click();
+                        });
+                
+                        avatarInput.addEventListener("change", async () => {
+                            const file = avatarInput.files[0];
+                            if (!file) return;
+                
+                            const user = firebase.auth().currentUser;
+                            if (!user) {
+                                alert("You must be logged in to change your avatar.");
+                                return;
+                            }
+                
+                            const storageRef = firebase.storage().ref();
+                            const avatarRef = storageRef.child(`avatars/${user.uid}-${Date.now()}.jpg`);
+                
+                            try {
+                                const snapshot = await avatarRef.put(file);
+                                const downloadURL = await snapshot.ref.getDownloadURL();
+                
+                                await user.updateProfile({ photoURL: downloadURL });
+                
+                                // Update avatar on the profile page
+                                profileAvatar.src = downloadURL;
+                
+                                // Also update nav avatar if present
+                                const navAvatar = document.getElementById('navProfilePic');
+                                if (navAvatar) navAvatar.src = downloadURL;
+                
+                                alert("Avatar updated successfully!");
+                            } catch (error) {
+                                console.error("Error updating avatar:", error);
+                                alert("There was an error uploading your avatar.");
+                            }
+                        });
+                    }
+                });
+
             } else {
                 console.error('Header placeholder element not found.');
             }
