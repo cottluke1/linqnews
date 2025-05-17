@@ -664,135 +664,130 @@
         }
 
         // Fetch and Inject Header, then Initialize Header Logic
-        fetch('header.html') 
-        .then(response => {
-            if (!response.ok) throw new Error('Network response was not ok for header.html');
-            return response.text();
-        })
-        .then(data => {
-            const headerPlaceholder = document.getElementById('header-placeholder');
-            if (headerPlaceholder) {
-                headerPlaceholder.innerHTML = data;
-    
-                initializeHeaderAndAuth(); // This will call authInstance.onAuthStateChanged
-    
-                const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
-                if (fixedHeader) {
-                    document.querySelector('main').style.paddingTop = (fixedHeader.offsetHeight + 20) + 'px';
+            fetch('header.html') 
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok for header.html');
+                    return response.text();
+                })
+                .then(data => {
+                    const headerPlaceholder = document.getElementById('header-placeholder');
+                    if (headerPlaceholder) {
+                        headerPlaceholder.innerHTML = data;
+                        initializeHeaderAndAuth();
+        
+                        const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
+                        if (fixedHeader) {
+                            document.querySelector('main').style.paddingTop = (fixedHeader.offsetHeight + 20) + 'px';
+                        }
+        
+                        firebase.auth().onAuthStateChanged(user => {
+                            const avatarImg = document.getElementById('navProfilePic');
+                            if (avatarImg && user) {
+                                if (user.photoURL) {
+                                    avatarImg.src = user.photoURL;
+                                } else if (user.displayName) {
+                                    const initials = user.displayName.charAt(0).toUpperCase();
+                                    avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+                                }
+                            }
+                        });
+        
+                        // ✅ Avatar upload logic (inside fetch so it runs AFTER header/profile loads)
+                        const changeAvatarButton = document.getElementById("changeAvatarButton");
+                        const avatarInput = document.getElementById("avatarInput");
+                        const profileAvatar = document.getElementById("profileAvatar");
+        
+                        if (changeAvatarButton && avatarInput) {
+                            changeAvatarButton.addEventListener("click", () => {
+                                avatarInput.click();
+                            });
+        
+                            avatarInput.addEventListener("change", async () => {
+                                const file = avatarInput.files[0];
+                                if (!file) return;
+        
+                                const user = firebase.auth().currentUser;
+                                if (!user) {
+                                    alert("You must be logged in to change your avatar.");
+                                    return;
+                                }
+        
+                                const storageRef = firebase.storage().ref();
+                                const avatarRef = storageRef.child(`avatars/${user.uid}-${Date.now()}.jpg`);
+        
+                                try {
+                                    const snapshot = await avatarRef.put(file);
+                                    const downloadURL = await snapshot.ref.getDownloadURL();
+        
+                                    await user.updateProfile({ photoURL: downloadURL });
+                                    profileAvatar.src = downloadURL;
+        
+                                    const navAvatar = document.getElementById('navProfilePic');
+                                    if (navAvatar) navAvatar.src = downloadURL;
+        
+                                    alert("Avatar updated successfully!");
+                                } catch (error) {
+                                    console.error("Error updating avatar:", error);
+                                    alert("There was an error uploading your avatar.");
+                                }
+                            });
+                        }
+        
+                    } else {
+                        console.error('Header placeholder element not found.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching header:', error);
+                    const headerPlaceholder = document.getElementById('header-placeholder');
+                    if (headerPlaceholder) {
+                        headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
+                    }
+                });
+        
+            // --- Profile Section Switching ---
+            document.addEventListener('DOMContentLoaded', function () {
+                const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
+                const contentSections = document.querySelectorAll('.content-section');
+        
+                function showSection(sectionId) {
+                    contentSections.forEach(section => section.classList.remove('active-section'));
+                    const targetSection = document.getElementById(sectionId);
+                    if (targetSection) targetSection.classList.add('active-section');
+        
+                    sidebarLinks.forEach(link => {
+                        link.classList.remove('active-link');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active-link');
+                        }
+                    });
                 }
-    
-                // After the header is injected, set up avatar once user is available
-                firebase.auth().onAuthStateChanged(user => {
-                    const avatarImg = document.getElementById('navProfilePic');
-                    if (avatarImg && user) {
-                        if (user.photoURL) {
-                            avatarImg.src = user.photoURL;
-                        } else if (user.displayName) {
-                            const initials = user.displayName.charAt(0).toUpperCase();
-                            avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-                        }
-                    }
-                });
-                document.addEventListener("DOMContentLoaded", function () {
-                    const changeAvatarButton = document.getElementById("changeAvatarButton");
-                    const avatarInput = document.getElementById("avatarInput");
-                    const profileAvatar = document.getElementById("profileAvatar");
-                
-                    if (changeAvatarButton && avatarInput) {
-                        changeAvatarButton.addEventListener("click", () => {
-                            avatarInput.click();
-                        });
-                
-                        avatarInput.addEventListener("change", async () => {
-                            const file = avatarInput.files[0];
-                            if (!file) return;
-                
-                            const user = firebase.auth().currentUser;
-                            if (!user) {
-                                alert("You must be logged in to change your avatar.");
-                                return;
-                            }
-                
-                            const storageRef = firebase.storage().ref();
-                            const avatarRef = storageRef.child(`avatars/${user.uid}-${Date.now()}.jpg`);
-                
-                            try {
-                                const snapshot = await avatarRef.put(file);
-                                const downloadURL = await snapshot.ref.getDownloadURL();
-                
-                                await user.updateProfile({ photoURL: downloadURL });
-                
-                                // Update avatar on the profile page
-                                profileAvatar.src = downloadURL;
-                
-                                // Also update nav avatar if present
-                                const navAvatar = document.getElementById('navProfilePic');
-                                if (navAvatar) navAvatar.src = downloadURL;
-                
-                                alert("Avatar updated successfully!");
-                            } catch (error) {
-                                console.error("Error updating avatar:", error);
-                                alert("There was an error uploading your avatar.");
-                            }
-                        });
-                    }
-                });
-
-            } else {
-                console.error('Header placeholder element not found.');
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching header:', error);
-            const headerPlaceholder = document.getElementById('header-placeholder');
-            if (headerPlaceholder) {
-                headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
-            }
-        });
-
-        // --- Profile Page Specific JavaScript (from original profile.html) ---
-        // This runs after the main DOM is loaded, and header logic runs after header fetch.
-        document.addEventListener('DOMContentLoaded', function () {
-            const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
-            const contentSections = document.querySelectorAll('.content-section');
-            
-            function showSection(sectionId) {
-                contentSections.forEach(section => section.classList.remove('active-section'));
-                const targetSection = document.getElementById(sectionId);
-                if (targetSection) targetSection.classList.add('active-section');
-                
+        
                 sidebarLinks.forEach(link => {
-                    link.classList.remove('active-link');
-                    if (link.getAttribute('href') === `#${sectionId}`) {
-                        link.classList.add('active-link');
-                    }
-                });
-            }
-
-            sidebarLinks.forEach(link => {
-                link.addEventListener('click', function (e) {
-                    const targetSectionId = this.getAttribute('href').substring(1);
-                    if (targetSectionId !== 'logout') { // Logout is handled by global handler now
-                         e.preventDefault();
-                        showSection(targetSectionId);
-                        window.location.hash = targetSectionId;
-                        const mobileNav = document.getElementById('mobile-menu'); // From loaded header
-                        if (mobileNav && !mobileNav.classList.contains('hidden')) {
-                            mobileNav.classList.add('hidden');
+                    link.addEventListener('click', function (e) {
+                        const targetSectionId = this.getAttribute('href').substring(1);
+                        if (targetSectionId !== 'logout') {
+                            e.preventDefault();
+                            showSection(targetSectionId);
+                            window.location.hash = targetSectionId;
+        
+                            const mobileNav = document.getElementById('mobile-menu');
+                            if (mobileNav && !mobileNav.classList.contains('hidden')) {
+                                mobileNav.classList.add('hidden');
+                            }
                         }
-                    }
-                    // For the logout link with id="sidebar-logout-link", the event listener is set up in initializeHeaderAndAuth
+                    });
                 });
+        
+                function activateSectionFromHash() {
+                    let hash = window.location.hash.substring(1) || 'profile';
+                    const sectionExists = Array.from(contentSections).some(section => section.id === hash);
+                    showSection(sectionExists ? hash : 'profile');
+                }
+        
+                activateSectionFromHash();
+                window.addEventListener('hashchange', activateSectionFromHash);
             });
-
-            function activateSectionFromHash() {
-                let hash = window.location.hash.substring(1) || 'profile';
-                const sectionExists = Array.from(contentSections).some(section => section.id === hash);
-                showSection(sectionExists ? hash : 'profile');
-            }
-            activateSectionFromHash();
-            window.addEventListener('hashchange', activateSectionFromHash);
-        });
-    </script>
+        </script>
 </body>
 </html>
