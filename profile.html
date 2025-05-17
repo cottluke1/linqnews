@@ -680,45 +680,51 @@
                             document.querySelector('main').style.paddingTop = (fixedHeader.offsetHeight + 20) + 'px';
                         }
         
-                    firebase.auth().onAuthStateChanged(user => {
-                        const avatarImg = document.getElementById('navProfilePic');
-                        if (avatarImg && user) {
-                            if (user.photoURL) {
-                                avatarImg.src = user.photoURL;
-                            } else if (user.displayName) {
-                                const initials = user.displayName.charAt(0).toUpperCase();
-                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+                        firebase.auth().onAuthStateChanged(user => {
+                            const avatarImg = document.getElementById('navProfilePic');
+                            if (avatarImg && user) {
+                                if (user.photoURL) {
+                                    avatarImg.src = user.photoURL;
+                                } else if (user.displayName) {
+                                    const initials = user.displayName.charAt(0).toUpperCase();
+                                    avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+                                }
                             }
-                        }
-                    
-                        // ✅ Avatar Upload Logic (runs only after user is confirmed and DOM is ready)
+                        });
+        
+                        // ✅ Avatar upload logic (inside fetch so it runs AFTER header/profile loads)
                         const changeAvatarButton = document.getElementById("changeAvatarButton");
                         const avatarInput = document.getElementById("avatarInput");
                         const profileAvatar = document.getElementById("profileAvatar");
-                    
-                        if (changeAvatarButton && avatarInput && profileAvatar) {
+        
+                        if (changeAvatarButton && avatarInput) {
                             changeAvatarButton.addEventListener("click", () => {
                                 avatarInput.click();
                             });
-                    
+        
                             avatarInput.addEventListener("change", async () => {
                                 const file = avatarInput.files[0];
                                 if (!file) return;
-                    
+        
+                                const user = firebase.auth().currentUser;
+                                if (!user) {
+                                    alert("You must be logged in to change your avatar.");
+                                    return;
+                                }
+        
                                 const storageRef = firebase.storage().ref();
                                 const avatarRef = storageRef.child(`avatars/${user.uid}-${Date.now()}.jpg`);
-                    
+        
                                 try {
                                     const snapshot = await avatarRef.put(file);
                                     const downloadURL = await snapshot.ref.getDownloadURL();
-                    
+        
                                     await user.updateProfile({ photoURL: downloadURL });
-                    
                                     profileAvatar.src = downloadURL;
-                    
+        
                                     const navAvatar = document.getElementById('navProfilePic');
                                     if (navAvatar) navAvatar.src = downloadURL;
-                    
+        
                                     alert("Avatar updated successfully!");
                                 } catch (error) {
                                     console.error("Error updating avatar:", error);
@@ -726,7 +732,18 @@
                                 }
                             });
                         }
-                    });
+        
+                    } else {
+                        console.error('Header placeholder element not found.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching header:', error);
+                    const headerPlaceholder = document.getElementById('header-placeholder');
+                    if (headerPlaceholder) {
+                        headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
+                    }
+                });
         
             // --- Profile Section Switching ---
             document.addEventListener('DOMContentLoaded', function () {
