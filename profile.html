@@ -664,90 +664,79 @@
         }
 
         // Fetch and Inject Header, then Initialize Header Logic
-            fetch('header.html')
+            fetch('header.html') 
                 .then(response => {
-                    if (!response.ok) throw new Error('Failed to load header.html');
+                    if (!response.ok) throw new Error('Network response was not ok for header.html');
                     return response.text();
                 })
-                .then(html => {
+                .then(data => {
                     const headerPlaceholder = document.getElementById('header-placeholder');
-                    headerPlaceholder.innerHTML = html;
+                    if (headerPlaceholder) {
+                        headerPlaceholder.innerHTML = data;
+                        initializeHeaderAndAuth();
         
-                    // Recalculate padding after header loads
-                    const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
-                    if (fixedHeader) {
-                        document.querySelector('main').style.paddingTop = (fixedHeader.offsetHeight + 20) + 'px';
-                    }
+                        const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
+                        if (fixedHeader) {
+                            document.querySelector('main').style.paddingTop = (fixedHeader.offsetHeight + 20) + 'px';
+                        }
         
-                    // Initialize auth and header logic AFTER header loads
-                    initializeHeaderAndAuth();
-                })
-                .catch(err => {
-                    console.error("Header load error:", err);
-                    document.getElementById('header-placeholder').innerHTML = "<p class='text-red-500 text-center py-3'>Error loading header.</p>";
-                });
-        
-            // 2. Run this AFTER the whole DOM and header have loaded
-            window.addEventListener("load", () => {
-                const auth = firebase.auth();
-        
-                auth.onAuthStateChanged(user => {
-                    if (!user) return;
-        
-                    // Avatar image in navbar (after header loaded)
-                    const navProfilePic = document.getElementById("navProfilePic");
-                    if (navProfilePic) {
-                        navProfilePic.src = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${(user.displayName || 'U')[0].toUpperCase()}`;
-                    }
-        
-                    // Avatar image on profile page
-                    const profileAvatar = document.getElementById("profileAvatar");
-                    if (profileAvatar) {
-                        profileAvatar.src = user.photoURL || `https://placehold.co/120x120/1E1E1E/F5F5F5?text=${(user.displayName || 'U')[0].toUpperCase()}&font=roboto`;
-                    }
-        
-                    // Avatar upload logic
-                    const changeAvatarButton = document.getElementById("changeAvatarButton");
-                    const avatarInput = document.getElementById("avatarInput");
-        
-                    if (changeAvatarButton && avatarInput && profileAvatar) {
-                        changeAvatarButton.addEventListener("click", () => {
-                            avatarInput.click();
-                        });
-        
-                        avatarInput.addEventListener("change", async () => {
-                            const file = avatarInput.files[0];
-                            if (!file) return;
-        
-                            const storageRef = firebase.storage().ref();
-                            const avatarRef = storageRef.child(`avatars/${user.uid}-${Date.now()}.jpg`);
-        
-                            try {
-                                const snapshot = await avatarRef.put(file);
-                                const downloadURL = await snapshot.ref.getDownloadURL();
-        
-                                await user.updateProfile({ photoURL: downloadURL });
-        
-                                profileAvatar.src = downloadURL;
-                                if (navProfilePic) navProfilePic.src = downloadURL;
-        
-                                alert("Avatar updated successfully!");
-                            } catch (err) {
-                                console.error("Avatar upload error:", err);
-                                alert("Error uploading avatar.");
+                    firebase.auth().onAuthStateChanged(user => {
+                        const avatarImg = document.getElementById('navProfilePic');
+                        if (avatarImg && user) {
+                            if (user.photoURL) {
+                                avatarImg.src = user.photoURL;
+                            } else if (user.displayName) {
+                                const initials = user.displayName.charAt(0).toUpperCase();
+                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
                             }
-                        });
-                    }
-                });
+                        }
+                    
+                        // ✅ Avatar Upload Logic (runs only after user is confirmed and DOM is ready)
+                        const changeAvatarButton = document.getElementById("changeAvatarButton");
+                        const avatarInput = document.getElementById("avatarInput");
+                        const profileAvatar = document.getElementById("profileAvatar");
+                    
+                        if (changeAvatarButton && avatarInput && profileAvatar) {
+                            changeAvatarButton.addEventListener("click", () => {
+                                avatarInput.click();
+                            });
+                    
+                            avatarInput.addEventListener("change", async () => {
+                                const file = avatarInput.files[0];
+                                if (!file) return;
+                    
+                                const storageRef = firebase.storage().ref();
+                                const avatarRef = storageRef.child(`avatars/${user.uid}-${Date.now()}.jpg`);
+                    
+                                try {
+                                    const snapshot = await avatarRef.put(file);
+                                    const downloadURL = await snapshot.ref.getDownloadURL();
+                    
+                                    await user.updateProfile({ photoURL: downloadURL });
+                    
+                                    profileAvatar.src = downloadURL;
+                    
+                                    const navAvatar = document.getElementById('navProfilePic');
+                                    if (navAvatar) navAvatar.src = downloadURL;
+                    
+                                    alert("Avatar updated successfully!");
+                                } catch (error) {
+                                    console.error("Error updating avatar:", error);
+                                    alert("There was an error uploading your avatar.");
+                                }
+                            });
+                        }
+                    });
         
-                // Sidebar section switching
+            // --- Profile Section Switching ---
+            document.addEventListener('DOMContentLoaded', function () {
                 const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
                 const contentSections = document.querySelectorAll('.content-section');
         
                 function showSection(sectionId) {
                     contentSections.forEach(section => section.classList.remove('active-section'));
-                    const target = document.getElementById(sectionId);
-                    if (target) target.classList.add('active-section');
+                    const targetSection = document.getElementById(sectionId);
+                    if (targetSection) targetSection.classList.add('active-section');
         
                     sidebarLinks.forEach(link => {
                         link.classList.remove('active-link');
@@ -758,29 +747,29 @@
                 }
         
                 sidebarLinks.forEach(link => {
-                    link.addEventListener("click", e => {
-                        const id = link.getAttribute("href").substring(1);
-                        if (id !== "logout") {
+                    link.addEventListener('click', function (e) {
+                        const targetSectionId = this.getAttribute('href').substring(1);
+                        if (targetSectionId !== 'logout') {
                             e.preventDefault();
-                            showSection(id);
-                            window.location.hash = id;
+                            showSection(targetSectionId);
+                            window.location.hash = targetSectionId;
         
-                            const mobileMenu = document.getElementById("mobile-menu");
-                            if (mobileMenu && !mobileMenu.classList.contains("hidden")) {
-                                mobileMenu.classList.add("hidden");
+                            const mobileNav = document.getElementById('mobile-menu');
+                            if (mobileNav && !mobileNav.classList.contains('hidden')) {
+                                mobileNav.classList.add('hidden');
                             }
                         }
                     });
                 });
         
-                function activateInitialSection() {
-                    const hash = window.location.hash.substring(1) || "profile";
-                    const exists = Array.from(contentSections).some(s => s.id === hash);
-                    showSection(exists ? hash : "profile");
+                function activateSectionFromHash() {
+                    let hash = window.location.hash.substring(1) || 'profile';
+                    const sectionExists = Array.from(contentSections).some(section => section.id === hash);
+                    showSection(sectionExists ? hash : 'profile');
                 }
         
-                activateInitialSection();
-                window.addEventListener("hashchange", activateInitialSection);
+                activateSectionFromHash();
+                window.addEventListener('hashchange', activateSectionFromHash);
             });
         </script>
 </body>
