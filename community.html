@@ -517,12 +517,30 @@
                 const navbarElement = document.getElementById('navbar');
                 if (navbarElement) {
                     navbarElement.innerHTML = data;
+        
+                    // Initialize header logic
                     initializeHeaderAndAuth();
+        
+                    // Adjust main layout
                     requestAnimationFrame(() => { 
                         setTimeout(() => { 
-                           adjustMainContentPadding();
+                            adjustMainContentPadding();
                         }, 0);
                     });
+        
+                    // ✅ Set user avatar in header
+                    firebase.auth().onAuthStateChanged(user => {
+                        const avatarImg = document.getElementById('navProfilePic');
+                        if (avatarImg && user) {
+                            if (user.photoURL) {
+                                avatarImg.src = user.photoURL;
+                            } else if (user.displayName) {
+                                const initials = user.displayName.charAt(0).toUpperCase();
+                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+                            }
+                        }
+                    });
+        
                 } else {
                     console.error('Navbar element not found.');
                 }
@@ -530,7 +548,9 @@
             .catch(error => {
                 console.error('Error fetching header:', error);
                 const navbarElement = document.getElementById('navbar');
-                if(navbarElement) navbarElement.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
+                if (navbarElement) {
+                    navbarElement.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
+                }
             });
 
         document.getElementById('current-year-community').textContent = new Date().getFullYear();
