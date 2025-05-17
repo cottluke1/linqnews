@@ -438,28 +438,46 @@
         }
 
         fetch('header.html')
-            .then(response => {
-                if (!response.ok) throw new Error('Network response was not ok for header.html');
-                return response.text();
-            })
-            .then(data => {
-                const headerPlaceholder = document.getElementById('header-placeholder');
-                if (headerPlaceholder) {
-                    headerPlaceholder.innerHTML = data;
-                    initializeHeaderAndAuth();
-                    const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
-                    if (fixedHeader) {
-                        document.querySelector('.page-content-wrapper').style.paddingTop = (fixedHeader.offsetHeight + 20) + 'px';
-                    }
-                } else {
-                    console.error('Header placeholder element not found.');
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok for header.html');
+            return response.text();
+        })
+        .then(data => {
+            const headerPlaceholder = document.getElementById('header-placeholder');
+            if (headerPlaceholder) {
+                headerPlaceholder.innerHTML = data;
+    
+                initializeHeaderAndAuth();
+    
+                const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
+                if (fixedHeader) {
+                    document.querySelector('.page-content-wrapper').style.paddingTop = (fixedHeader.offsetHeight + 20) + 'px';
                 }
-            })
-            .catch(error => {
-                console.error('Error fetching header:', error);
-                const headerPlaceholder = document.getElementById('header-placeholder');
-                if(headerPlaceholder) headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
-            });
+    
+                // ✅ Set user avatar in header
+                firebase.auth().onAuthStateChanged(user => {
+                    const avatarImg = document.getElementById('navProfilePic');
+                    if (avatarImg && user) {
+                        if (user.photoURL) {
+                            avatarImg.src = user.photoURL;
+                        } else if (user.displayName) {
+                            const initials = user.displayName.charAt(0).toUpperCase();
+                            avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+                        }
+                    }
+                });
+    
+            } else {
+                console.error('Header placeholder element not found.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching header:', error);
+            const headerPlaceholder = document.getElementById('header-placeholder');
+            if (headerPlaceholder) {
+                headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
+            }
+        });
 
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
