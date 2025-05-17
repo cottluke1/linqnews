@@ -611,6 +611,20 @@
                 if (headerPlaceholder) {
                     headerPlaceholder.innerHTML = data;
                     initializeHeaderAndAuth(); // Initialize header JS AFTER it's loaded
+        
+                    // ✅ Set user avatar in header
+                    firebase.auth().onAuthStateChanged(user => {
+                        const avatarImg = document.getElementById('navProfilePic');
+                        if (avatarImg && user) {
+                            if (user.photoURL) {
+                                avatarImg.src = user.photoURL;
+                            } else if (user.displayName) {
+                                const initials = user.displayName.charAt(0).toUpperCase();
+                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+                            }
+                        }
+                    });
+        
                 } else {
                     console.error('Header placeholder element not found.');
                 }
@@ -618,8 +632,11 @@
             .catch(error => {
                 console.error('Error fetching header:', error);
                 const headerPlaceholder = document.getElementById('header-placeholder');
-                if(headerPlaceholder) headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
+                if (headerPlaceholder) {
+                    headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
+                }
             });
+
 
 
         // --- Markets Page Specific JavaScript ---
