@@ -956,17 +956,21 @@
             });
         }
 
-        function addFavoriteButtonListeners() { 
-            document.querySelectorAll('.favorite-btn').forEach(button => {
-                button.removeEventListener('click', handleFavoriteClick); 
-                button.addEventListener('click', handleFavoriteClick);
-            });
-        }
-        function handleFavoriteClick(event) { 
-            // console.log("Favorite button clicked", event.currentTarget); 
-            const button = event.currentTarget;
-            const articleId = button.getAttribute('data-id');
-            toggleFavorite(articleId);
+        let newsGridClickHandler;
+        function addFavoriteButtonListeners() {
+            const newsGrid = document.getElementById('newsGrid');
+            if (!newsGrid) return;
+            if (newsGridClickHandler) {
+                newsGrid.removeEventListener('click', newsGridClickHandler);
+            }
+            newsGridClickHandler = function(event) {
+                const button = event.target.closest('.favorite-btn');
+                if (button) {
+                    const articleId = button.getAttribute('data-id');
+                    toggleFavorite(articleId);
+                }
+            };
+            newsGrid.addEventListener('click', newsGridClickHandler);
         }
 
         function showTermsModal(event) { if(event) event.preventDefault(); document.getElementById('termsContent').style.display = 'block'; }
