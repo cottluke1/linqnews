@@ -109,7 +109,7 @@
             padding-top: 80px; /* Default, will be adjusted by JS */
         }
         .page-main-title { /* Changed from .page-title to avoid conflict if header.html has .page-title */
-            font-size: 2.5rem; font-weight: 700; color: #FFFFFF; margin: 2rem 0 1rem; text-align: center;
+            font-size: 2.5rem; font-weight: 700; color: #FFFFFF; margin-bottom: 1rem; text-align: center;
             text-shadow: 0px 2px 8px rgba(0, 191, 255, 0.25);
         }
         .page-main-title .accent-text { color: #00BFFF; }
@@ -222,11 +222,14 @@
         .action-btn:hover { background-color: #1A1A1A; color: #00BFFF; border-color: #00BFFF; }
         .action-btn i { font-size: 1rem; /* Icon size */ }
 
-        /* Community Post Favorite Button (Bookmark Icon) */
+        /* Community Post Favorite Button (Star Icon Only) */
         .post-card .favorite-btn { /* Inherits .action-btn, then .favorite-btn, then these specifics */
             padding: 0.5rem; /* Adjust padding for icon-only button if needed */
         }
-        .post-card .favorite-btn.favorited {
+        .post-card .favorite-btn i.fas { display: none; } /* Hide filled star by default */
+        .post-card .favorite-btn i.far { display: inline-block; } /* Show empty star by default */
+        .post-card .favorite-btn.favorited i.fas { display: inline-block; color: #00BFFF;} /* Show filled star when favorited */
+        .post-card .favorite-btn.favorited i.far { display: none; } /* Hide empty star when favorited */
         .post-card .favorite-btn.favorited { /* Style for the button itself when favorited */
              color: #00BFFF;
              border-color: #00BFFF; /* Optional: match border color */
@@ -607,10 +610,7 @@
                     </div>
                     <div class="post-actions">
                         <button class="action-btn favorite-btn favorited" data-id="${post.id}" data-type="community" aria-label="Toggle Favorite">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" />
-                            </svg>
+                            <i class="far fa-star"></i><i class="fas fa-star"></i>
                         </button>
                         <button class="action-btn share-btn" data-url="${post.url || '#'}" data-title="${post.title || 'Untitled Post'}">
                             <i class="fas fa-share-alt"></i> Share
