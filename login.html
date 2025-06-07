@@ -111,25 +111,12 @@
         }
         .close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
 
-        /* Custom for signup first/last row */
+        /* Remove all custom first/last row overrides so all .auth-input fields look the same */
         #signup-form .flex input {
-            background-color: unset !important;
-            color: unset !important;
-            font-weight: unset !important;
-            border: unset !important;
-            border-radius: unset !important;
-            box-shadow: unset !important;
-            font-size: unset !important;
-            margin-bottom: 0 !important;
-            height: unset !important;
+            all: unset;
         }
-        #signup-form .flex input:focus {
-            border-color: unset !important;
-            box-shadow: unset !important;
-            background: unset !important;
-        }
-        #signup-form .flex {
-            margin-bottom: 1.25rem;
+        #signup-form .flex input {
+            all: revert;
         }
     </style>
 </head>
@@ -179,8 +166,8 @@
         
     <div id="signup-form" class="hidden">
             <div class="flex gap-4 mb-5">
-                <input type="text" id="signup-first-name" placeholder="First Name" required class="auth-input flex-1 min-w-0" style="width: 50%; margin-bottom: 0;" />
-                <input type="text" id="signup-last-name" placeholder="Last Name" required class="auth-input flex-1 min-w-0" style="width: 50%; margin-bottom: 0;" />
+                <input type="text" id="signup-first-name" placeholder="First Name" required class="auth-input flex-1 min-w-0" />
+                <input type="text" id="signup-last-name" placeholder="Last Name" required class="auth-input flex-1 min-w-0" />
             </div>
             <input type="email" id="signup-email" placeholder="Email Address" required class="auth-input">
             <input type="password" id="signup-password" placeholder="Password" required class="auth-input">
@@ -303,12 +290,17 @@
                 errorMessage.textContent = "Password must be at least 6 characters.";
                 return;
             }
+            if (!firstName || !lastName) {
+                errorMessage.style.display = "block";
+                errorMessage.textContent = "Please enter your first and last name.";
+                return;
+            }
         
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
         
-                // ✅ Update user's displayName to full name
+                // ✅ Update user's displayName to full name (first + last)
                 await user.updateProfile({
                     displayName: `${firstName} ${lastName}`
                 });
