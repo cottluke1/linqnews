@@ -113,20 +113,20 @@
 
         /* Custom for signup first/last row */
         #signup-form .flex input {
-            background-color: #dbeafe !important;
-            color: #111 !important;
-            font-weight: 700;
-            border: 2px solid #111;
-            border-radius: 16px;
-            box-shadow: 0 1px 4px 0 rgba(0,0,0,0.10);
-            font-size: 1.5rem;
+            background-color: unset !important;
+            color: unset !important;
+            font-weight: unset !important;
+            border: unset !important;
+            border-radius: unset !important;
+            box-shadow: unset !important;
+            font-size: unset !important;
             margin-bottom: 0 !important;
-            height: 56px;
+            height: unset !important;
         }
         #signup-form .flex input:focus {
-            border-color: #60a5fa;
-            box-shadow: 0 0 0 2px #bae6fd;
-            background: #e0edfa;
+            border-color: unset !important;
+            box-shadow: unset !important;
+            background: unset !important;
         }
         #signup-form .flex {
             margin-bottom: 1.25rem;
@@ -179,8 +179,8 @@
         
     <div id="signup-form" class="hidden">
             <div class="flex gap-4 mb-5">
-                <input type="text" id="signup-first-name" placeholder="First Name" required class="auth-input flex-1 min-w-0 bg-blue-100 text-black font-bold border border-black rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" style="width: 50%; margin-bottom: 0;" />
-                <input type="text" id="signup-last-name" placeholder="Last Name" required class="auth-input flex-1 min-w-0 bg-blue-100 text-black font-bold border border-black rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300" style="width: 50%; margin-bottom: 0;" />
+                <input type="text" id="signup-first-name" placeholder="First Name" required class="auth-input flex-1 min-w-0" style="width: 50%; margin-bottom: 0;" />
+                <input type="text" id="signup-last-name" placeholder="Last Name" required class="auth-input flex-1 min-w-0" style="width: 50%; margin-bottom: 0;" />
             </div>
             <input type="email" id="signup-email" placeholder="Email Address" required class="auth-input">
             <input type="password" id="signup-password" placeholder="Password" required class="auth-input">
