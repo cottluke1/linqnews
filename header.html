@@ -28,7 +28,6 @@
 </nav>
 <script>
 const loginBtn = document.getElementById('authLinkDesktopLogin');
-const profileAndMenu = document.getElementById('profileAndMenuDesktop');
 const profileLink = document.getElementById('profileLinkDesktop');
 const profilePic = document.getElementById('navProfilePic');
 const PRELOADED_PROFILE_PHOTO = "https://randomuser.me/api/portraits/men/1.jpg";
@@ -45,7 +44,6 @@ function showCorrectNav(isLoggedIn) {
   }
 }
 
-// Firebase Auth usage
 if (window.firebase && firebase.auth) {
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
