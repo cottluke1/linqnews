@@ -25,31 +25,34 @@
   </div>
 </nav>
 <script>
-const loginBtn = document.getElementById('authLinkDesktopLogin');
-const profileLink = document.getElementById('profileLinkDesktop');
-const profilePic = document.getElementById('navProfilePic');
+  const loginBtn = document.getElementById('authLinkDesktopLogin');
+  const profileLink = document.getElementById('profileLinkDesktop');
+  const profilePic = document.getElementById('navProfilePic');
 
-function showCorrectNav(isLoggedIn, profilePicUrl) {
-  if (isLoggedIn) {
-    loginBtn.classList.add('hidden');
-    profileLink.classList.remove('hidden');
-    if (profilePicUrl) profilePic.src = profilePicUrl;
-  } else {
-    loginBtn.classList.remove('hidden');
-    profileLink.classList.add('hidden');
-    profilePic.src = "https://placehold.co/40x40/2C2F33/EAEAEA?text=U";
-  }
-}
-
-if (window.firebase && firebase.auth) {
-  firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      showCorrectNav(true, user.photoURL || "https://placehold.co/40x40/2C2F33/EAEAEA?text=U");
+  function showCorrectNav(isLoggedIn, profilePicUrl) {
+    if (isLoggedIn) {
+      loginBtn.classList.add('hidden');
+      profileLink.classList.remove('hidden');
+      profilePic.src = profilePicUrl || "https://placehold.co/40x40/2C2F33/EAEAEA?text=U";
     } else {
-      showCorrectNav(false);
+      loginBtn.classList.remove('hidden');
+      profileLink.classList.add('hidden');
+      profilePic.src = "https://placehold.co/40x40/2C2F33/EAEAEA?text=U";
     }
-  });
-} else {
-  showCorrectNav(false);
-}
+  }
+
+  // === UI FORCE TEST: UNCOMMENT THE NEXT LINE TO TEST THE PROFILE UI ===
+  // showCorrectNav(true, "https://randomuser.me/api/portraits/men/1.jpg");
+
+  if (window.firebase && firebase.auth) {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        showCorrectNav(true, user.photoURL || "https://placehold.co/40x40/2C2F33/EAEAEA?text=U");
+      } else {
+        showCorrectNav(false);
+      }
+    });
+  } else {
+    showCorrectNav(false);
+  }
 </script>
