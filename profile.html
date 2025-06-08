@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linq - Account</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Cal Sans font from Fontshare -->
     <link href="https://api.fontshare.com/v2/css?f[]=cal-sans@1,2,3,4,5,6,7&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
@@ -26,7 +27,7 @@
             --border-color-light: #4D4D4D;
             --success-green: #34C759;
             --error-red: #FF3B30;
-            --font-family: 'Cal Sans', sans-serif;
+            --font-family: Arial, sans-serif;
             --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
             --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
@@ -334,6 +335,12 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Cal Sans for Headings */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Cal Sans', sans-serif !important;
+            letter-spacing: -0.02em;
+        }
     </style>
 </head>
 <body>
@@ -381,7 +388,7 @@
                                     </div>
                                 </div>
                                 <div class="avatar-section">
-                                    <img src="https://placehold.co/120x120/1E1E1E/F5F5F5?text=User&font=calsans"alt="User Avatar"class="avatar"id="profileAvatar"onerror="this.onerror=null; this.src='https://placehold.co/120x120/2C2F33/EAEAEA?text=Error&font=calsans';">
+                                    <img src="https://placehold.co/120x120/1E1E1E/F5F5F5?text=User&font=roboto" alt="User Avatar" class="avatar" id="profileAvatar" onerror="this.onerror=null; this.src='https://placehold.co/120x120/2C2F33/EAEAEA?text=Error&font=roboto';">
                                     <input type="file" id="avatarInput" accept="image/*" style="display: none;">
                                     <button class="btn btn-secondary" id="changeAvatarButton">Change Avatar</button>
                                 </div>
@@ -637,8 +644,13 @@
                         if (user.photoURL) {
                             profileAvatarEl.src = user.photoURL;
                         } else {
-                            const initials = user.displayName ? user.displayName.charAt(0).toUpperCase() : (user.email ? user.email.charAt(0).toUpperCase() : 'U');
-                            profileAvatarEl.src = `https://placehold.co/120x120/1E1E1E/F5F5F5?text=${initials}&font=calsans`;
+                            let initials = 'U';
+                            if (user.displayName) {
+                                initials = user.displayName.split(' ')[0].charAt(0).toUpperCase();
+                            } else if (user.email) {
+                                initials = user.email.charAt(0).toUpperCase();
+                            }
+                            profileAvatarEl.src = `https://placehold.co/120x120/1E1E1E/F5F5F5?text=${initials}&font=roboto`;
                         }
                     }
                 } else {
@@ -759,13 +771,13 @@
                             if (user.photoURL) {
                                 avatarImg.src = user.photoURL;
                             } else if (user.displayName) {
-                                const initials = user.displayName.charAt(0).toUpperCase();
-                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}&font=calsans`;
+                                const initials = user.displayName.split(' ')[0].charAt(0).toUpperCase();
+                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}&font=roboto`;
                             } else if (user.email) {
                                 const initials = user.email.charAt(0).toUpperCase();
-                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}&font=calsans`;
+                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}&font=roboto`;
                             } else {
-                                avatarImg.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U&font=calsans';
+                                avatarImg.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U&font=roboto';
                             }
                         }
                     });
