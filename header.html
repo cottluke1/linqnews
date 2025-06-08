@@ -2,28 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Test Profile Centered</title>
+  <title>Linq Header Fixed</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Your Firebase scripts here (replace with your actual config/scripts) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+  <script>
+    // Initialize Firebase (replace with your config)
+    const firebaseConfig = {
+      apiKey: "YOUR_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      appId: "YOUR_APP_ID"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  </script>
 </head>
 <body>
   <nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3 bg-black">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
       <!-- Logo -->
-      <a href="#" class="text-3xl font-bold text-white">Linq</a>
+      <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
       <!-- Centered Nav Links -->
       <div class="hidden md:flex flex-1 justify-center space-x-8">
-        <a href="#" class="nav-link text-sm text-white hover:text-cyan-400 transition">News</a>
-        <a href="#" class="nav-link text-sm text-white hover:text-cyan-400 transition">Community</a>
-        <a href="#" class="nav-link text-sm text-white hover:text-cyan-400 transition">Markets</a>
-        <a href="#" class="nav-link text-sm text-white hover:text-cyan-400 transition">Linq AI</a>
-        <a href="#" class="nav-link text-sm text-white hover:text-cyan-400 transition">Earnings</a>
-        <a href="#" class="nav-link text-sm text-white hover:text-cyan-400 transition">Bookmarks</a>
+        <a href="index.html" class="nav-link text-sm text-white hover:text-cyan-400 transition">News</a>
+        <a href="community.html" class="nav-link text-sm text-white hover:text-cyan-400 transition">Community</a>
+        <a href="markets.html" class="nav-link text-sm text-white hover:text-cyan-400 transition">Markets</a>
+        <a href="linqai.html" class="nav-link text-sm text-white hover:text-cyan-400 transition">Linq AI</a>
+        <a href="earnings.html" class="nav-link text-sm text-white hover:text-cyan-400 transition">Earnings</a>
+        <a href="favorites.html" class="nav-link text-sm text-white hover:text-cyan-400 transition">Bookmarks</a>
       </div>
       <!-- Right: Login/Profile -->
       <div class="flex items-center space-x-3">
-        <a href="#" id="authLinkDesktopLogin"
+        <a href="login.html" id="authLinkDesktopLogin"
           class="hidden nav-link text-sm nav-link-button text-white bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded transition">Login</a>
-        <a href="#" id="profileLinkDesktop" class="hidden" title="My Profile">
+        <a href="profile.html" id="profileLinkDesktop" class="hidden" title="My Profile">
           <img id="navProfilePic"
             src="https://placehold.co/40x40/2C2F33/EAEAEA?text=U"
             alt="User"
@@ -34,7 +47,7 @@
     </div>
   </nav>
   <script>
-    // Hardcode "logged in" for test
+    // Reference buttons/links
     const loginBtn = document.getElementById('authLinkDesktopLogin');
     const profileLink = document.getElementById('profileLinkDesktop');
     const profilePic = document.getElementById('navProfilePic');
@@ -53,10 +66,14 @@
       }
     }
 
-    // Call with "true" to show profile (simulate logged in)
-    window.onload = function() {
-      showCorrectNav(true); // change to false to show login
-    };
+    // Firebase Auth - wait for real user
+    if (window.firebase && firebase.auth) {
+      firebase.auth().onAuthStateChanged(function(user) {
+        showCorrectNav(!!user);
+      });
+    } else {
+      showCorrectNav(false);
+    }
   </script>
 </body>
 </html>
