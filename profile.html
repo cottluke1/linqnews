@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linq - Account</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Cal Sans font from Fontshare -->
-    <link href="https://api.fontshare.com/v2/css?f[]=cal-sans@1,2,3,4,5,6,7&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
@@ -27,7 +26,7 @@
             --border-color-light: #4D4D4D;
             --success-green: #34C759;
             --error-red: #FF3B30;
-            --font-family: 'Cal Sans', sans-serif;
+            --font-family: 'Roboto', sans-serif;
             --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
             --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
@@ -638,12 +637,7 @@
                         if (user.photoURL) {
                             profileAvatarEl.src = user.photoURL;
                         } else {
-                            let initials = 'U';
-                            if (user.displayName) {
-                                initials = user.displayName.split(' ')[0].charAt(0).toUpperCase();
-                            } else if (user.email) {
-                                initials = user.email.charAt(0).toUpperCase();
-                            }
+                            const initials = user.displayName ? user.displayName.charAt(0).toUpperCase() : (user.email ? user.email.charAt(0).toUpperCase() : 'U');
                             profileAvatarEl.src = `https://placehold.co/120x120/1E1E1E/F5F5F5?text=${initials}&font=roboto`;
                         }
                     }
@@ -765,7 +759,7 @@
                             if (user.photoURL) {
                                 avatarImg.src = user.photoURL;
                             } else if (user.displayName) {
-                                const initials = user.displayName.split(' ')[0].charAt(0).toUpperCase();
+                                const initials = user.displayName.charAt(0).toUpperCase();
                                 avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}&font=roboto`;
                             } else if (user.email) {
                                 const initials = user.email.charAt(0).toUpperCase();
