@@ -628,9 +628,12 @@
                         <blockquote class="twitter-tweet" data-theme="dark" data-cards="hidden" data-conversation="none">${tweetContentHTML}</blockquote>
                     </div>
                     <div class="post-actions">
-                        <button class="action-btn favorite-btn favorited" data-id="${post.id}" data-type="community" aria-label="Toggle Favorite">
-                            <i class="far fa-star"></i><i class="fas fa-star"></i>
-                        </button>
+                    <button class="action-btn favorite-btn favorited" data-id="${post.id}" data-type="community" aria-label="Toggle Favorite">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" />
+                        </svg>
+                    </button>
                         <button class="action-btn share-btn" data-url="${post.url || '#'}" data-title="${post.title || 'Untitled Post'}">
                             <i class="fas fa-share-alt"></i> Share
                         </button>
