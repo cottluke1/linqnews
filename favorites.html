@@ -532,13 +532,14 @@
 
             if (favoritedArticlesDetails.length === 0) {
             newsFavoritesGrid.innerHTML = `
-              <div class="no-favorites-message-wrapper">
+              <div class="news-card">
                 <p class="no-favorites-message">
                   You haven't bookmarked any news articles yet.
                 </p>
                 <a href="index.html" class="text-cyan-400 hover:underline block mt-2">Explore News</a>
               </div>
             `;
+
 
                             return;
             }
@@ -602,13 +603,14 @@
 
             if (favoritedCommunityPosts.length === 0) {
                 communityFavoritesGrid.innerHTML = `
-                  <div class="no-favorites-message-wrapper">
+                  <div class="post-card">
                     <p class="no-favorites-message">
                       You haven't favorited any community posts yet.
                     </p>
                     <a href="community.html" class="text-cyan-400 hover:underline block mt-2">Explore Community</a>
                   </div>
                 `;
+
 
                 return;
             }
