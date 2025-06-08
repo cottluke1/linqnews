@@ -531,8 +531,15 @@
             const favoritedArticlesDetails = articlesData.filter(article => newsFavorites.includes(String(article.id)));
 
             if (favoritedArticlesDetails.length === 0) {
-                newsFavoritesGrid.innerHTML = '<p class="no-favorites-message col-span-full">You haven\'t favorited any news articles yet. <a href="index.html" class="text-cyan-400 hover:underline">Explore News</a></p>';
-                return;
+            newsFavoritesGrid.innerHTML = `
+                <p class="no-favorites-message col-span-full">
+                    You haven't bookmarked any news articles yet.
+                </p>
+                <div>
+                    <a href="index.html" class="text-cyan-400 hover:underline">Explore News</a>
+                </div>
+            `;
+                            return;
             }
             favoritedArticlesDetails.forEach((article, index) => {
                 const articleElement = document.createElement('div');
@@ -593,7 +600,14 @@
             const favoritedCommunityPosts = communityPostsDataPage.filter(post => communityFavorites.includes(String(post.id)));
 
             if (favoritedCommunityPosts.length === 0) {
-                communityFavoritesGrid.innerHTML = '<p class="no-favorites-message col-span-full">You haven\'t favorited any community posts yet. <a href="community.html" class="text-cyan-400 hover:underline">Explore Community</a></p>';
+                communityFavoritesGrid.innerHTML = `
+                    <p class="no-favorites-message col-span-full">
+                        You haven't favorited any community posts yet.
+                    </p>
+                    <div>
+                        <a href="community.html" class="text-cyan-400 hover:underline">Explore Community</a>
+                    </div>
+                `;
                 return;
             }
             favoritedCommunityPosts.forEach(post => {
