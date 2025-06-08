@@ -18,9 +18,10 @@
          class="nav-link text-sm nav-link-button text-white bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded transition hidden">Login</a>
       <a href="profile.html" id="profileLinkDesktop" class="hidden" title="My Profile">
         <img id="navProfilePic"
-             src="https://placehold.co/40x40/000000/EAEAEA?text=U"
+             src="https://placehold.co/40x40/2C2F33/EAEAEA?text=U"
              alt="User"
-             class="rounded-full w-9 h-9 object-cover border-2 border-cyan-400">
+             class="rounded-full w-9 h-9 object-cover border-2 border-cyan-400"
+             onerror="this.src='https://placehold.co/40x40/2C2F33/EAEAEA?text=U';">
       </a>
     </div>
     <!-- Mobile Menu Button -->
@@ -43,9 +44,10 @@
          class="nav-link text-base text-white bg-cyan-500 hover:bg-cyan-600 px-6 py-2 rounded mt-6 hidden">Login</a>
       <a href="profile.html" id="profileLinkMobile" class="hidden mt-4">
         <img id="navProfilePicMobile"
-             src="https://placehold.co/40x40/000000/EAEAEA?text=U"
+             src="https://placehold.co/40x40/2C2F33/EAEAEA?text=U"
              alt="User"
-             class="rounded-full w-10 h-10 object-cover border-2 border-cyan-400">
+             class="rounded-full w-10 h-10 object-cover border-2 border-cyan-400"
+             onerror="this.src='https://placehold.co/40x40/2C2F33/EAEAEA?text=U';">
       </a>
     </div>
   </div>
@@ -57,7 +59,7 @@
     m.classList.toggle('hidden');
   };
 
-  // Utility function to show login/profile
+  // Login/Profile toggle logic
   function showCorrectNav(isLoggedIn, profilePicUrl) {
     // Desktop
     const loginBtn = document.getElementById('authLinkDesktopLogin');
@@ -82,24 +84,22 @@
       loginBtnMobile.classList.remove('hidden');
       profileLink.classList.add('hidden');
       profileLinkMobile.classList.add('hidden');
-      // Reset to default avatar if logged out
-      profilePic.src = "https://placehold.co/40x40/000000/EAEAEA?text=U";
-      profilePicMobile.src = "https://placehold.co/40x40/000000/EAEAEA?text=U";
+      profilePic.src = "https://placehold.co/40x40/2C2F33/EAEAEA?text=U";
+      profilePicMobile.src = "https://placehold.co/40x40/2C2F33/EAEAEA?text=U";
     }
   }
 
-  // Example: Replace this with your actual Firebase Auth logic
   // Firebase Auth listener
   if (window.firebase && firebase.auth) {
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        showCorrectNav(true, user.photoURL || "https://placehold.co/40x40/000000/EAEAEA?text=U");
+        showCorrectNav(true, user.photoURL || "https://placehold.co/40x40/2C2F33/EAEAEA?text=U");
       } else {
         showCorrectNav(false);
       }
     });
   } else {
-    // Fallback for when firebase is not loaded (prevents errors)
+    // Fallback if firebase is not loaded
     showCorrectNav(false);
   }
 </script>
