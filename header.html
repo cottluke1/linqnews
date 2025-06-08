@@ -33,7 +33,19 @@
       </div>
     </div>
   </nav>
+  <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth.js"></script>
   <script>
+    // Initialize Firebase (replace with your config)
+    const firebaseConfig = {
+      // Your Firebase config here
+    };
+    
+    // Initialize Firebase if config exists
+    if (firebaseConfig && Object.keys(firebaseConfig).length > 0) {
+      firebase.initializeApp(firebaseConfig);
+    }
+
     // Simulate "logged in" with a static image for test
     const loginBtn = document.getElementById('authLinkDesktopLogin');
     const profileLink = document.getElementById('profileLinkDesktop');
@@ -44,16 +56,25 @@
       // Always hide both first
       loginBtn.classList.add('hidden');
       profileLink.classList.add('hidden');
+      
       if (isLoggedIn) {
         profileLink.classList.remove('hidden');
+        // Set profile picture with error handling
         profilePic.src = PRELOADED_PROFILE_PHOTO;
+        profilePic.onerror = function() {
+          this.src = "https://placehold.co/40x40/2C2F33/EAEAEA?text=U";
+        };
       } else {
         loginBtn.classList.remove('hidden');
         profilePic.src = "https://placehold.co/40x40/2C2F33/EAEAEA?text=U";
       }
     }
     
-    // Call this with Firebase as before:
+    // For testing purposes, let's show the profile picture by default
+    // Remove this line when Firebase is properly configured
+    showCorrectNav(true);
+    
+    // Firebase auth state change listener
     if (window.firebase && firebase.auth) {
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
@@ -62,9 +83,6 @@
           showCorrectNav(false);
         }
       });
-    } else {
-      // Optional: show login by default if Firebase fails
-      showCorrectNav(false);
     }
   </script>
 </body>
