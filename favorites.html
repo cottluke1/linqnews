@@ -539,7 +539,7 @@
             const favoritedArticlesDetails = articlesData.filter(article => newsFavorites.includes(String(article.id)));
 
             if (favoritedArticlesDetails.length === 0) {
-                newsFavoritesGrid.innerHTML = '<p class="no-favorites-message col-span-full">You haven\'t favorited any news articles yet. <a href="index.html" class="text-cyan-400 hover:underline">Explore News</a></p>';
+                newsFavoritesGrid.innerHTML = '<div class="no-favorites-message">You haven\'t favorited any news articles yet. <a href="index.html" class="text-cyan-400 hover:underline">Explore News</a></div>';
                 return;
             }
             favoritedArticlesDetails.forEach((article, index) => {
@@ -601,7 +601,7 @@
             const favoritedCommunityPosts = communityPostsDataPage.filter(post => communityFavorites.includes(String(post.id)));
 
             if (favoritedCommunityPosts.length === 0) {
-                communityFavoritesGrid.innerHTML = '<p class="no-favorites-message col-span-full">You haven\'t favorited any community posts yet. <a href="community.html" class="text-cyan-400 hover:underline">Explore Community</a></p>';
+                communityFavoritesGrid.innerHTML = '<div class="no-favorites-message">You haven\'t favorited any community posts yet. <a href="community.html" class="text-cyan-400 hover:underline">Explore Community</a></div>';
                 return;
             }
             favoritedCommunityPosts.forEach(post => {
@@ -654,9 +654,20 @@
 
         function addFavoriteButtonListeners() {
             document.querySelectorAll('#newsFavoritesGrid .favorite-btn, #communityFavoritesGrid .favorite-btn').forEach(button => {
-                button.removeEventListener('click', handleUnfavoriteClick); // Prevent multiple listeners
-                button.addEventListener('click', handleUnfavoriteClick);
+                button.removeEventListener('click', handleBookmarkClick); // Remove old listener
+                button.addEventListener('click', handleBookmarkClick); // Add new listener
             });
+        }
+
+        function handleBookmarkClick(event) {
+            const user = firebase.auth().currentUser;
+            if (!user) {
+                event.preventDefault();
+                showLoginRequiredModal();
+                return;
+            }
+            // If user is logged in, proceed with normal bookmark functionality
+            handleUnfavoriteClick(event);
         }
 
         function handleUnfavoriteClick(event) {
