@@ -79,6 +79,7 @@
         profilePic.src = profilePicUrl;
         profilePicMobile.src = profilePicUrl;
       }
+      console.log("Profile shown with photoURL:", profilePicUrl);
     } else {
       loginBtn.classList.remove('hidden');
       loginBtnMobile.classList.remove('hidden');
@@ -86,20 +87,28 @@
       profileLinkMobile.classList.add('hidden');
       profilePic.src = "https://placehold.co/40x40/2C2F33/EAEAEA?text=U";
       profilePicMobile.src = "https://placehold.co/40x40/2C2F33/EAEAEA?text=U";
+      console.log("Login button shown, no user signed in.");
     }
   }
 
-  // Firebase Auth listener
+  // --- Debug block below ---
+
+  // Uncomment this line to FORCE a test profile image. If this works, your UI is 100% correct!
+  // showCorrectNav(true, "https://randomuser.me/api/portraits/men/1.jpg");
+
   if (window.firebase && firebase.auth) {
     firebase.auth().onAuthStateChanged(function(user) {
+      console.log("Auth state changed:", user);
       if (user) {
+        console.log("User is logged in. PhotoURL:", user.photoURL);
         showCorrectNav(true, user.photoURL || "https://placehold.co/40x40/2C2F33/EAEAEA?text=U");
       } else {
+        console.log("User is logged out");
         showCorrectNav(false);
       }
     });
   } else {
-    // Fallback if firebase is not loaded
+    console.log("Firebase not loaded");
     showCorrectNav(false);
   }
 </script>
