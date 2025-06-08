@@ -1,4 +1,5 @@
-<nav class="fixed top-0 left-0 w-full z-[1000] bg-gray-900 shadow-md py-3">
+<!-- header.html -->
+<nav class="fixed top-0 left-0 w-full z-[1000] bg-black shadow-md py-3">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
     <!-- Logo -->
     <a href="index.html" class="text-3xl font-bold text-white flex-shrink-0">Linq</a>
@@ -11,14 +12,14 @@
       <a href="earnings.html" class="nav-link text-sm text-white hover:text-cyan-400 transition">Earnings</a>
       <a href="favorites.html" class="nav-link text-sm text-white hover:text-cyan-400 transition">Bookmarks</a>
     </div>
-    <!-- Login/Profile on Right -->
+    <!-- Login/Profile (right) -->
     <div class="flex items-center space-x-3">
-      <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button text-white bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded-lg transition">Login</a>
+      <a href="login.html" id="authLinkDesktopLogin" class="nav-link text-sm nav-link-button text-white bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded-lg transition hidden">Login</a>
       <a href="profile.html" id="profileLinkDesktop" class="hidden" title="My Profile">
-        <img id="navProfilePic" src="https://placehold.co/40x40/2C2F33/EAEAEA?text=U" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-cyan-400">
+        <img id="navProfilePic" src="https://placehold.co/40x40/000000/EAEAEA?text=U" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-cyan-400">
       </a>
     </div>
-    <!-- Mobile Menu Button (optional) -->
+    <!-- Mobile Menu Button -->
     <button id="mobile-menu-button" class="md:hidden text-gray-300 hover:text-white focus:outline-none ml-4">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -26,7 +27,7 @@
     </button>
   </div>
   <!-- Mobile Menu -->
-  <div id="mobile-menu" class="md:hidden hidden bg-gray-900 bg-opacity-95 backdrop-blur-lg mt-3 px-4 py-6 rounded-b-2xl">
+  <div id="mobile-menu" class="md:hidden hidden bg-black bg-opacity-95 backdrop-blur-lg mt-3 px-4 py-6 rounded-b-2xl">
     <div class="flex flex-col space-y-5 items-center">
       <a href="index.html" class="nav-link text-base text-white hover:text-cyan-400">News</a>
       <a href="community.html" class="nav-link text-base text-white hover:text-cyan-400">Community</a>
@@ -34,32 +35,61 @@
       <a href="linqai.html" class="nav-link text-base text-white hover:text-cyan-400">Linq AI</a>
       <a href="earnings.html" class="nav-link text-base text-white hover:text-cyan-400">Earnings</a>
       <a href="favorites.html" class="nav-link text-base text-white hover:text-cyan-400">Bookmarks</a>
-      <a href="login.html" id="authLinkMobile" class="nav-link text-base text-white bg-cyan-500 hover:bg-cyan-600 px-6 py-2 rounded-lg mt-6">Login</a>
+      <a href="login.html" id="authLinkMobile" class="nav-link text-base text-white bg-cyan-500 hover:bg-cyan-600 px-6 py-2 rounded-lg mt-6 hidden">Login</a>
       <a href="profile.html" id="profileLinkMobile" class="hidden mt-4">
-        <img id="navProfilePicMobile" src="https://placehold.co/40x40/2C2F33/EAEAEA?text=U" alt="User" class="rounded-full w-10 h-10 object-cover border-2 border-cyan-400">
+        <img id="navProfilePicMobile" src="https://placehold.co/40x40/000000/EAEAEA?text=U" alt="User" class="rounded-full w-10 h-10 object-cover border-2 border-cyan-400">
       </a>
     </div>
   </div>
 </nav>
 <script>
-  // Simple mobile toggle
+  // Mobile menu toggle
   document.getElementById('mobile-menu-button').onclick = () => {
     const m = document.getElementById('mobile-menu');
     m.classList.toggle('hidden');
   };
+
+  // Example: Replace with your actual Firebase Auth logic
+  function showCorrectNav(isLoggedIn, profilePicUrl) {
+    // Desktop
+    const loginBtn = document.getElementById('authLinkDesktopLogin');
+    const profileLink = document.getElementById('profileLinkDesktop');
+    const profilePic = document.getElementById('navProfilePic');
+
+    // Mobile
+    const loginBtnMobile = document.getElementById('authLinkMobile');
+    const profileLinkMobile = document.getElementById('profileLinkMobile');
+    const profilePicMobile = document.getElementById('navProfilePicMobile');
+
+    if (isLoggedIn) {
+      loginBtn.classList.add('hidden');
+      loginBtnMobile.classList.add('hidden');
+      profileLink.classList.remove('hidden');
+      profileLinkMobile.classList.remove('hidden');
+      if (profilePicUrl) {
+        profilePic.src = profilePicUrl;
+        profilePicMobile.src = profilePicUrl;
+      }
+    } else {
+      loginBtn.classList.remove('hidden');
+      loginBtnMobile.classList.remove('hidden');
+      profileLink.classList.add('hidden');
+      profileLinkMobile.classList.add('hidden');
+      // Reset to default avatar if logged out
+      profilePic.src = "https://placehold.co/40x40/000000/EAEAEA?text=U";
+      profilePicMobile.src = "https://placehold.co/40x40/000000/EAEAEA?text=U";
+    }
+  }
+
+  // Replace this with your real auth logic!
+  // Example for Firebase Auth:
+  /*
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      showCorrectNav(true, user.photoURL || "https://placehold.co/40x40/000000/EAEAEA?text=U");
+    } else {
+      showCorrectNav(false);
+    }
+  });
+  */
 </script>
-    
-    <div id="desktop-slideout-menu" class="slide-out-panel">
-        <div class="slide-out-panel-header">
-            <button id="slideout-close-button" class="slide-out-panel-close-btn" aria-label="Close menu">&times;</button>
-        </div>
-        <nav class="slide-out-panel-nav">
-            <a href="index.html">News</a>
-            <a href="community.html">Community</a>
-            <a href="markets.html">Markets</a>
-            <a href="linqai.html">Linq AI</a>
-            <a href="earnings.html">Earnings Calendar</a>
-            <a href="favorites.html">Bookmarks</a> 
-            <a href="#" id="logoutButtonSlideout">Logout</a> 
-        </nav>
-    </div>
