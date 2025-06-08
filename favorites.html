@@ -532,13 +532,14 @@
 
             if (favoritedArticlesDetails.length === 0) {
             newsFavoritesGrid.innerHTML = `
-                <p class="no-favorites-message col-span-full">
-                    You haven't bookmarked any news articles yet.
+              <div class="no-favorites-message-wrapper">
+                <p class="no-favorites-message">
+                  You haven't bookmarked any news articles yet.
                 </p>
-                <div>
-                    <a href="index.html" class="text-cyan-400 hover:underline">Explore News</a>
-                </div>
+                <a href="index.html" class="text-cyan-400 hover:underline block mt-2">Explore News</a>
+              </div>
             `;
+
                             return;
             }
             favoritedArticlesDetails.forEach((article, index) => {
@@ -601,13 +602,14 @@
 
             if (favoritedCommunityPosts.length === 0) {
                 communityFavoritesGrid.innerHTML = `
-                    <p class="no-favorites-message col-span-full">
-                        You haven't favorited any community posts yet.
+                  <div class="no-favorites-message-wrapper">
+                    <p class="no-favorites-message">
+                      You haven't favorited any community posts yet.
                     </p>
-                    <div>
-                        <a href="community.html" class="text-cyan-400 hover:underline">Explore Community</a>
-                    </div>
+                    <a href="community.html" class="text-cyan-400 hover:underline block mt-2">Explore Community</a>
+                  </div>
                 `;
+
                 return;
             }
             favoritedCommunityPosts.forEach(post => {
