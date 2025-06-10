@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Premium - Dark Theme</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* General Styles & Resets */
+        :root {
+            --brand-blue: #3B82F6; /* Lighter blue (like Tailwind blue-500) */
+            --glow-color: rgba(59, 130, 246, 0.75);
+            --bg-color: #000000; /* Pure Black */
+            --card-bg: #1f1f1f; /* Dark Gray for cards */
+            --dark-text: #f9fafb; /* Off-white */
+            --light-text: #9ca3af; /* Mid-gray */
+            --border-color: #374151;
+            --success-color: #22c55e; /* Green */
+            --danger-color: #ef4444; /* Red */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--dark-text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        main {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--dark-text);
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        
+        .page-subtitle {
+            text-align: center;
+            font-size: 1.125rem;
+            color: var(--light-text);
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.5s ease forwards 0.1s;
+        }
+
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                box-shadow: 0 0 15px 0px var(--glow-color), 0 0 25px 0px var(--glow-color);
+            }
+            50% {
+                box-shadow: 0 0 25px 5px var(--glow-color), 0 0 40px 10px var(--glow-color);
+            }
+            100% {
+                box-shadow: 0 0 15px 0px var(--glow-color), 0 0 25px 0px var(--glow-color);
+            }
+        }
+        
+        /* Layout Container */
+        .pricing-container {
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            gap: 2rem;
+            padding: 0 2rem;
+            width: 100%;
+            max-width: 1100px;
+            margin: auto;
+            box-sizing: border-box;
+        }
+
+        /* Plan Card Base Styles */
+        .plan-card {
+            background: var(--card-bg);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-8px);
+        }
+        
+        .plan-card:nth-child(1) {
+            animation-delay: 0.3s;
+        }
+        .plan-card:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .plan-header {
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .plan-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin: 0;
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--dark-text);
+            margin-top: 0.5rem;
+        }
+
+        .plan-price .period {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--light-text);
+        }
+
+        /* Features List */
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 2rem 0;
+            flex-grow: 1;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        .feature-item.included {
+            color: var(--light-text);
+        }
+
+        .feature-item.excluded {
+            color: var(--light-text);
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .feature-item svg {
+            width: 24px;
+            height: 24px;
+            margin-right: 0.75rem;
+        }
+        
+        .feature-item .check { color: var(--success-color); }
+        .feature-item .cross { color: var(--danger-color); }
+
+
+        /* Premium Card Specific Styles */
+        .plan-card.premium {
+            border: 2px solid var(--brand-blue);
+            transform: scale(1.02);
+            animation: fadeInUp 0.6s ease forwards, pulse-glow 3s infinite ease-in-out;
+            animation-delay: 0.5s, 1.2s;
+        }
+
+        .plan-card.premium:hover {
+            transform: scale(1.02) translateY(-8px);
+        }
+
+
+        /* Action Button */
+        .cta-button {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .cta-button.free-cta {
+            background-color: var(--border-color);
+            color: var(--dark-text);
+            border: 1px solid var(--border-color);
+        }
+        
+        .cta-button.free-cta:hover {
+            background-color: #4b5563;
+        }
+
+        .cta-button.premium-cta {
+            background-color: var(--brand-blue);
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);
+        }
+
+        .cta-button.premium-cta:hover {
+            background-color: #2563eb; /* Darker shade of the new blue */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(59, 130, 246, 0.5);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .pricing-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 2.5rem;
+                padding: 0 1.5rem;
+            }
+            .plan-card, .plan-card.premium {
+                transform: scale(1);
+            }
+            .plan-card:hover, .plan-card.premium:hover {
+                transform: translateY(-8px);
+            }
+             .page-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- This is where your existing header would be included -->
+    <header style="padding: 1rem; background: #1f1f1f; border-bottom: 1px solid var(--border-color); text-align: center; font-weight: 600;">
+        Placeholder for header.html
+    </header>
+
+    <main>
+        <h1 class="page-title">Go Premium</h1>
+        <p class="page-subtitle">Choose the plan that's right for you.</p>
+        
+        <div class="pricing-container">
+            <!-- Free Plan Card -->
+            <article class="plan-card">
+                <div class="plan-header">
+                    <h2 class="plan-title">Free</h2>
+                    <p class="plan-price">$0</p>
+                </div>
+                <ul class="features-list">
+                    <li class="feature-item included">
+                        <svg class="check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                        News
+                    </li>
+                    <li class="feature-item included">
+                        <svg class="check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                        Community
+                    </li>
+                    <li class="feature-item included">
+                        <svg class="check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                        Bookmarks
+                    </li>
+                    <li class="feature-item excluded">
+                        <svg class="cross" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                        Markets
+                    </li>
+                    <li class="feature-item excluded">
+                        <svg class="cross" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                        Earnings
+                    </li>
+                    <li class="feature-item excluded">
+                        <svg class="cross" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                        Linq AI
+                    </li>
+                </ul>
+                <button class="cta-button free-cta">Current Plan</button>
+            </article>
+
+            <!-- Premium Plan Card -->
+            <article class="plan-card premium">
+                <div class="plan-header">
+                    <h2 class="plan-title">Premium</h2>
+                    <p class="plan-price">
+                        $2.99<span class="period">/month</span>
+                    </p>
+                </div>
+                <ul class="features-list">
+                    <li class="feature-item included">
+                        <svg class="check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                        News
+                    </li>
+                    <li class="feature-item included">
+                        <svg class="check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                        Community
+                    </li>
+                    <li class="feature-item included">
+                        <svg class="check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                        Bookmarks
+                    </li>
+                    <li class="feature-item included">
+                        <svg class="check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                        Markets
+                    </li>
+                    <li class="feature-item included">
+                        <svg class="check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                        Earnings
+                    </li>
+                    <li class="feature-item included">
+                        <svg class="check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                        Linq AI
+                    </li>
+                </ul>
+                <button class="cta-button premium-cta">Get Premium</button>
+            </article>
+        </div>
+    </main>
+</body>
+</html>
