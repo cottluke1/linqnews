@@ -19,7 +19,7 @@
             --success-green: #34C759;
             --error-red: #FF3B30;
             --border-radius-md: 8px;
-            --border-radius-lg: 12px;
+            --border-radius-lg: 16px; /* Increased for modern look */
         }
 
         /* --- Global Styles --- */
@@ -38,8 +38,8 @@
         body.overflow-hidden { overflow: hidden; }
 
         .container {
-            width: 92%;
-            max-width: 1280px;
+            width: 90%;
+            max-width: 960px; /* Centered content */
             margin: 0 auto;
         }
         
@@ -49,97 +49,119 @@
             flex-grow: 1;
         }
         main .container {
-            display: flex;
             padding-top: 40px;
             padding-bottom: 40px;
-            gap: 40px;
         }
 
         /* --- Glassy Styles --- */
         .glass-ui {
-            /* UPDATED: Enhanced glassy effect */
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(24px) saturate(150%);
-            -webkit-backdrop-filter: blur(24px) saturate(150%);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.12);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        /* --- Sidebar --- */
-        .sidebar {
-            flex: 0 0 260px;
-            padding: 30px;
+        /* --- Tab Navigation --- */
+        .profile-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 40px;
+            padding: 8px;
             border-radius: var(--border-radius-lg);
-            height: fit-content;
         }
-        .sidebar h2 { font-size: 1.6em; margin-bottom: 25px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 15px; }
-        .sidebar ul { list-style: none; padding:0; margin:0; }
-        .sidebar ul li a {
-            display: block; padding: 14px 18px; color: #A0A0A0;
-            border-radius: var(--border-radius-md); margin-bottom: 8px;
-            font-weight: 500;
+        .nav-tab {
+            padding: 12px 24px;
+            font-weight: 600;
+            color: #A0A0A0;
+            cursor: pointer;
+            border-radius: var(--border-radius-md);
             transition: all 0.2s ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid transparent;
         }
-        .sidebar ul li a:hover { background-color: rgba(255,255,255,0.05); color: #FFFFFF; transform: translateX(3px); }
-        .sidebar ul li a.active-link {
-            background-color: var(--accent-blue); color: white; font-weight: 700;
+        .nav-tab:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #FFFFFF;
         }
-        .sidebar ul li a.logout-link { color: var(--error-red); }
-        .sidebar ul li a.logout-link:hover { background-color: rgba(255, 59, 48, 0.1); }
+        .nav-tab.active-link {
+            color: #FFFFFF;
+            background-color: rgba(0, 123, 255, 0.2);
+            border: 2px solid var(--accent-blue);
+        }
 
-        /* --- Content Area --- */
-        .content { flex: 1; }
-        .content-section { display: none; animation: fadeIn 0.4s ease-in-out; }
+        /* --- Content Sections --- */
+        .content-section { display: none; animation: fadeIn 0.5s ease-in-out; }
         .content-section.active-section { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        
         .card {
-            margin-bottom: 35px;
-            overflow: hidden;
             border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            margin-bottom: 0; /* Only one card shown at a time */
         }
         .card-header {
-            padding: 25px 30px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex; justify-content: space-between; align-items: center;
-            /* UPDATED: More transparent header to match glass effect */
-            background-color: rgba(255, 255, 255, 0.07);
+            padding: 25px 30px;
+            background: rgba(255, 255, 255, 0.07);
         }
-        .card-header h3 { margin-bottom: 0; font-size: 1.3em; }
+        .card-header h3 { margin-bottom: 0; font-size: 1.5em; font-weight: 700; }
         .card-body { padding: 30px; }
-        .profile-info-container { display: flex; align-items: flex-start; gap: 30px; }
-        .profile-info { flex-grow: 1; }
-        .info-item { margin-bottom: 18px; }
+
+        /* --- Profile Section Specifics --- */
+        .profile-info-container { display: flex; align-items: center; gap: 30px; flex-wrap: wrap; }
+        .avatar-section { 
+            position: relative;
+            cursor: pointer;
+        }
+        .avatar {
+            width: 140px; height: 140px; border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            object-fit: cover;
+            transition: filter 0.2s ease;
+        }
+        .avatar-section:hover .avatar {
+            filter: brightness(0.7);
+        }
+        .avatar-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .avatar-section:hover .avatar-overlay {
+            opacity: 1;
+        }
+        .profile-info { flex-grow: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
         .info-item label {
             display: block; color: #A0A0A0; font-size: 0.9em;
             margin-bottom: 6px; font-weight: 500;
             text-transform: uppercase; letter-spacing: 0.5px;
         }
-        .info-item p { color: #F5F5F5; font-size: 1.05em; margin: 0; }
-        .avatar-section { text-align: center; flex-shrink: 0; }
-        .avatar {
-            width: 120px; height: 120px; border-radius: 50%;
-            border: 4px solid rgba(255, 255, 255, 0.1); margin-bottom: 15px;
-            object-fit: cover;
-        }
+        .info-item p { color: #F5F5F5; font-size: 1.1em; margin: 0; font-weight: 500;}
 
         /* --- Forms --- */
         .form-group { margin-bottom: 25px; }
-        .form-group label { display: block; color: #A0A0A0; margin-bottom: 10px; font-weight: 500; font-size: 0.95em; }
-        .form-group input[type="text"], .form-group input[type="email"], .form-group input[type="password"] {
+        .form-group label { display: block; color: #A0A0A0; margin-bottom: 10px; font-weight: 500; }
+        .form-input {
             width: 100%; padding: 14px 18px; 
-            /* UPDATED: Transparent inputs for glass effect */
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.15); 
             border-radius: var(--border-radius-md);
             color: #F5F5F5; font-size: 1em;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            transition: all 0.2s ease;
         }
-        .form-group input::placeholder { color: #666666; }
-        .form-group input[type="text"]:focus, .form-group input[type="email"]:focus, .form-group input[type="password"]:focus {
+        .form-input::placeholder { color: #888; }
+        .form-input:focus {
             outline: none; border-color: var(--accent-blue);
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
         }
-        .form-group input[type="checkbox"] { margin-right: 12px; vertical-align: middle; accent-color: var(--accent-blue); width: 18px; height: 18px; cursor: pointer; }
-        .form-group input[type="checkbox"] + label { color: #A0A0A0; font-weight: normal; cursor: pointer; user-select: none; }
 
         /* --- Buttons --- */
         .btn {
@@ -147,19 +169,20 @@
             cursor: pointer; font-size: 1em; font-weight: 600;
             transition: all 0.2s ease;
             text-align: center; letter-spacing: 0.3px;
-            text-decoration: none; display: inline-block;
+            text-decoration: none; display: inline-flex; justify-content: center; align-items: center; gap: 8px;
         }
-        .btn:active { transform: translateY(1px); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .btn:active { transform: translateY(0); }
         .btn-primary {
-            background-image: linear-gradient(to right, var(--accent-blue) 0%, var(--accent-blue-darker) 100%);
+            background-image: linear-gradient(to right, #007aff, #0051ff);
             color: #fff;
         }
-        .btn-primary:hover { background-image: linear-gradient(to right, var(--accent-blue-hover) 0%, var(--accent-blue) 100%); }
-        .btn-secondary { background-color: rgba(40,40,40,0.8); color: #F5F5F5; border: 1px solid rgba(255,255,255,0.1); }
-        .btn-secondary:hover { background-color: rgba(50,50,50,0.8); border-color: rgba(255,255,255,0.2); }
+        .btn-primary:hover { box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4); }
+        .btn-secondary { background-color: rgba(255,255,255,0.1); color: #F5F5F5; }
+        .btn-secondary:hover { background-color: rgba(255,255,255,0.15); }
         .btn-danger { background-color: var(--error-red); color: white; }
-        .btn-danger:hover { background-color: #d92d23; }
-        .btn-danger:disabled { background-color: #7f1d1d; cursor: not-allowed; }
+        .btn-danger:hover { background-color: #d92d23; box-shadow: 0 6px 20px rgba(255, 59, 48, 0.4);}
+        .btn-danger:disabled { background-color: #7f1d1d; cursor: not-allowed; opacity: 0.6; }
 
         /* --- Modal Styles --- */
         .modal-overlay {
@@ -172,11 +195,6 @@
             width: 90%; max-width: 500px;
         }
         
-        /* Other specific styles */
-        .subscription-info p { margin-bottom: 10px; color: #F5F5F5; font-size: 1.05em; }
-        .subscription-info p strong { color: #A0A0A0; min-width: 120px; display: inline-block; font-weight: 500; }
-        .status-active { color: var(--success-green); font-weight: bold; }
-        
         /* Footer */
         footer {
             background-color: transparent; color: #A0A0A0;
@@ -186,10 +204,10 @@
         }
 
         /* Responsive Design */
-        @media (max-width: 992px) {
-            main .container { flex-direction: column; }
-            .sidebar { flex: 0 0 auto; width: 100%; margin-bottom: 30px; height: auto; }
-            .profile-info-container { flex-direction: column; align-items: center; }
+        @media (max-width: 768px) {
+            .profile-info-container { flex-direction: column; align-items: stretch; }
+            .profile-info { grid-template-columns: 1fr; }
+            .profile-nav { flex-direction: column; }
         }
     </style>
 </head>
@@ -198,48 +216,56 @@
 
     <main>
         <div class="container">
-            <aside class="sidebar glass-ui">
-                <h2>Account Settings</h2>
-                <ul>
-                    <li><a href="#profile" class="active-link">Profile</a></li>
-                    <li><a href="#subscription">Subscription</a></li>
-                    <li><a href="#security">Security</a></li>
-                    <li><a href="#newsletter">Newsletter</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li><a href="#" id="sidebar-logout-link" class="logout-link">Logout</a></li>
-                </ul>
-            </aside>
+            <div>
+                <nav class="profile-nav glass-ui">
+                    <a href="#profile" class="nav-tab active-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        Profile
+                    </a>
+                    <a href="#subscription" class="nav-tab">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5L5 19"></path><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
+                        Subscription
+                    </a>
+                    <a href="#security" class="nav-tab">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        Security
+                    </a>
+                    <a href="#newsletter" class="nav-tab">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17.5H2a2 2 0 0 1-2-2V7.5a2 2 0 0 1 2-2h2.8a2 2 0 0 1 1.7.9L8 8a2 2 0 0 0 1.7.9h4.6a2 2 0 0 0 1.7-.9l1.5-1.6a2 2 0 0 1 1.7-.9H22a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2zM12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path></svg>
+                        Newsletter
+                    </a>
+                    <a href="#contact" class="nav-tab">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        Contact
+                    </a>
+                </nav>
 
-            <section class="content">
                 <div id="profile" class="content-section active-section">
                     <div class="card glass-ui">
-                        <div class="card-header">
-                            <h3>Personal Information</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="profile-info-container">
-                                <div class="profile-info">
-                                    <div class="info-item">
-                                        <label>Full Name</label>
-                                        <p id="profileFullName">Alex Johnson</p>
-                                    </div>
-                                    <div class="info-item">
-                                        <label>Email Address</label>
-                                        <p id="profileEmail">alex.johnson@example.com</p>
-                                    </div>
-                                    <div class="info-item">
-                                        <label>Username</label>
-                                        <p id="profileUsername">alexj</p>
-                                    </div>
-                                    <div class="info-item">
-                                        <label>Joined</label>
-                                        <p id="profileJoinedDate">May 10, 2024</p>
-                                    </div>
+                        <div class="card-body profile-info-container">
+                            <div id="changeAvatarButton" class="avatar-section">
+                                <img src="https://placehold.co/140x140/1A1A1A/FFFFFF?text=User&font=inter" alt="User Avatar" class="avatar" id="profileAvatar">
+                                <div class="avatar-overlay">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                                 </div>
-                                <div class="avatar-section">
-                                    <img src="https://placehold.co/120x120/1E1E1E/F5F5F5?text=User&font=inter" alt="User Avatar" class="avatar" id="profileAvatar" onerror="this.onerror=null; this.src='https://placehold.co/120x120/2C2F33/EAEAEA?text=Error&font=inter';">
-                                    <input type="file" id="avatarInput" accept="image/*" style="display: none;">
-                                    <button class="btn btn-secondary" id="changeAvatarButton">Change Avatar</button>
+                                <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                            </div>
+                            <div class="profile-info">
+                                <div class="info-item">
+                                    <label>Full Name</label>
+                                    <p id="profileFullName">Alex Johnson</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Username</label>
+                                    <p id="profileUsername">@alexj</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Email Address</label>
+                                    <p id="profileEmail">alex.johnson@example.com</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Joined</label>
+                                    <p id="profileJoinedDate">May 10, 2024</p>
                                 </div>
                             </div>
                         </div>
@@ -247,16 +273,16 @@
                 </div>
 
                 <div id="subscription" class="content-section">
-                    <div class="card glass-ui">
+                     <div class="card glass-ui">
                         <div class="card-header">
-                            <h3>Current Plan</h3>
+                            <h3>Subscription Plan</h3>
                         </div>
                         <div class="card-body">
                             <div class="subscription-info">
-                                <p><strong>Plan:</strong> Premium Annual</p>
-                                <p><strong>Status:</strong> <span id="subscriptionStatus" class="status-active">Active</span></p>
+                                <p><strong>Plan:</strong> <span class="text-cyan-400 font-bold">Premium Annual</span></p>
+                                <p><strong>Status:</strong> <span class="status-active">Active</span></p>
                                 <p><strong>Renews on:</strong> <span id="subscriptionRenewsOn">May 10, 2026</span></p>
-                                <p><strong>Price:</strong> <span id="subscriptionPrice">$99.00/year</span></p>
+                                <p><strong>Price:</strong> <span id="subscriptionPrice">$99.00 / year</span></p>
                             </div>
                         </div>
                     </div>
@@ -271,33 +297,36 @@
                             <form id="changePasswordForm">
                                 <div class="form-group">
                                     <label for="current-password">Current Password:</label>
-                                    <input type="password" id="current-password" name="current-password" placeholder="Enter current password" required>
+                                    <input type="password" id="current-password" name="current-password" placeholder="Enter current password" class="form-input" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="new-password">New Password:</label>
-                                    <input type="password" id="new-password" name="new-password" placeholder="Enter new password (min. 6 characters)" required minlength="6">
+                                    <input type="password" id="new-password" name="new-password" placeholder="Enter new password (min. 8 characters)" class="form-input" required minlength="8">
                                 </div>
                                 <div class="form-group">
                                     <label for="confirm-password">Confirm New Password:</label>
-                                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm new password" required minlength="6">
+                                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm new password" class="form-input" required minlength="8">
                                 </div>
-                                <button type="submit" class="btn btn-primary">Update Password</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Update Password
+                                </button>
                             </form>
                         </div>
                     </div>
-                     <div class="card glass-ui">
+                    <div class="card glass-ui mt-8">
                         <div class="card-header">
                             <h3>Delete Account</h3>
                         </div>
                         <div class="card-body">
-                            <p class="text-gray-300 mb-4">Permanently delete your account and all of your content. This action is not reversible.</p>
+                            <p class="text-gray-300 mb-4">Permanently delete your account and all of your content. This action is not reversible and cannot be undone.</p>
                             <button id="deleteAccountBtn" class="btn btn-danger">Delete Account</button>
                         </div>
                     </div>
                 </div>
 
                 <div id="newsletter" class="content-section">
-                    <div class="card glass-ui">
+                     <div class="card glass-ui">
                         <div class="card-header">
                             <h3>Weekly Newsletter</h3>
                         </div>
@@ -316,7 +345,7 @@
                 </div>
                 
                 <div id="contact" class="content-section">
-                     <div class="card glass-ui">
+                    <div class="card glass-ui">
                         <div class="card-header">
                             <h3>Get In Touch</h3>
                         </div>
@@ -326,16 +355,16 @@
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
         </div>
     </main>
 
     <div id="deleteAccountModal" class="modal-overlay">
         <div class="modal-box glass-ui">
-            <h3 class="text-xl font-bold mb-4 text-red-400">Are you sure?</h3>
-            <p class="text-gray-300 mb-4">This action cannot be undone. All your data will be permanently deleted. To confirm, please type "DELETE" in the box below.</p>
+            <h3 class="text-xl font-bold mb-4 text-red-400">Are you absolutely sure?</h3>
+            <p class="text-gray-300 mb-4">This action cannot be undone. To confirm, please type "DELETE" in the box below.</p>
             <div class="form-group">
-                <input type="text" id="deleteConfirmInput" placeholder="DELETE">
+                <input type="text" id="deleteConfirmInput" placeholder="DELETE" class="form-input">
             </div>
             <div class="flex justify-end gap-4">
                 <button id="cancelDeleteBtn" class="btn btn-secondary">Cancel</button>
@@ -352,9 +381,7 @@
     </footer>
 
     <script>
-        // Function to run after header is loaded
         function onHeaderLoaded() {
-            // Get all necessary elements from the DOM
             const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
             const profileLinkDesktop = document.getElementById('profileLinkDesktop');
             const navProfilePic = document.getElementById('navProfilePic');
@@ -381,7 +408,6 @@
                 const profileAvatarEl = document.getElementById('profileAvatar');
 
                 if (user) {
-                    // --- User is LOGGED IN ---
                     if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
                     if (profileLinkDesktop) profileLinkDesktop.classList.remove('hidden');
 
@@ -397,12 +423,11 @@
                         }
                     }
 
-                    // Populate profile page with user data
                     if (profileFullNameEl) profileFullNameEl.textContent = user.displayName || 'N/A';
                     if (profileEmailEl) profileEmailEl.textContent = user.email || 'N/A';
-                    if (profileUsernameEl) profileUsernameEl.textContent = user.email ? user.email.split('@')[0] : (user.displayName || 'user');
-                    if (profileJoinedDateEl && user.metadata && user.metadata.creationTime) {
-                        profileJoinedDateEl.textContent = new Date(user.metadata.creationTime).toLocaleDateString();
+                    if (profileUsernameEl) profileUsernameEl.textContent = `@${user.email ? user.email.split('@')[0] : (user.displayName?.replace(/\s+/g, '').toLowerCase() || 'user')}`;
+                    if (profileJoinedDateEl && user.metadata.creationTime) {
+                        profileJoinedDateEl.textContent = new Date(user.metadata.creationTime).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
                     }
                     if (profileAvatarEl) {
                         if (user.photoURL) {
@@ -414,7 +439,7 @@
                             } else if (user.email) {
                                 initials = user.email.charAt(0).toUpperCase();
                             }
-                            profileAvatarEl.src = `https://placehold.co/120x120/1E1E1E/F5F5F5?text=${initials}&font=inter`;
+                            profileAvatarEl.src = `https://placehold.co/140x140/1A1A1A/FFFFFF?text=${initials}&font=inter`;
                         }
                     }
 
@@ -470,10 +495,9 @@
             .catch(error => console.error('Error fetching header:', error));
 
         document.addEventListener('DOMContentLoaded', function () {
-            const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
+            const navTabs = document.querySelectorAll('.nav-tab');
             const contentSections = document.querySelectorAll('.content-section');
             
-            // Delete account modal elements
             const deleteAccountBtn = document.getElementById('deleteAccountBtn');
             const deleteAccountModal = document.getElementById('deleteAccountModal');
             const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
@@ -489,7 +513,7 @@
                     document.getElementById('profile')?.classList.add('active-section');
                 }
 
-                sidebarLinks.forEach(link => {
+                navTabs.forEach(link => {
                     link.classList.remove('active-link');
                     if (link.getAttribute('href') === `#${sectionId}`) {
                         link.classList.add('active-link');
@@ -497,22 +521,22 @@
                 });
             }
 
-            sidebarLinks.forEach(link => {
+            navTabs.forEach(link => {
                 link.addEventListener('click', function (e) {
+                    e.preventDefault();
                     const targetSectionId = this.getAttribute('href')?.substring(1);
-                    if (targetSectionId && !this.classList.contains('logout-link')) {
-                        e.preventDefault();
+                    if (targetSectionId) {
                         showSection(targetSectionId);
-                        window.location.hash = targetSectionId;
+                        window.history.pushState(null, '', `#${targetSectionId}`);
                     }
                 });
             });
 
             function activateSectionFromHash() {
                 let hash = window.location.hash.substring(1);
-                if (!hash) { 
+                const validHashes = Array.from(contentSections).map(s => s.id);
+                if (!hash || !validHashes.includes(hash)) { 
                     hash = 'profile';
-                    window.location.hash = hash; 
                 }
                 showSection(hash);
             }
@@ -520,7 +544,6 @@
             activateSectionFromHash();
             window.addEventListener('hashchange', activateSectionFromHash);
             
-            // Delete Account Logic
             if(deleteAccountBtn) {
                 deleteAccountBtn.addEventListener('click', () => {
                     if(deleteAccountModal) deleteAccountModal.style.display = 'flex';
