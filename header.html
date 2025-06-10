@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Linq Header Fixed</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Firebase scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
   <script>
@@ -22,7 +23,9 @@
 <body>
   <nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3 bg-black">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      <!-- Logo -->
       <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
+      <!-- Centered Nav Links -->
       <div class="hidden md:flex flex-1 justify-center space-x-8">
         <a href="index.html" class="nav-link text-sm text-white hover:text-cyan-400 transition">News</a>
         <a href="community.html" class="nav-link text-sm text-white hover:text-cyan-400 transition">Community</a>
@@ -32,11 +35,14 @@
         <a href="favorites.html" class="nav-link text-sm text-white hover:text-cyan-400 transition">Bookmarks</a>
         <a href="linqplus.html" class="nav-link text-sm text-white hover:text-cyan-400 transition">Linq +</a>
       </div>
+      <!-- Right: Login/Profile -->
       <div class="flex items-center space-x-3">
+        <!-- The login button is now visible by default and will be hidden by the main page's script if the user is logged in -->
         <a href="login.html" id="authLinkDesktopLogin"
-          class="hidden nav-link text-sm nav-link-button text-white bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded transition">
+          class="nav-link text-sm nav-link-button text-white bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded transition">
           Login
         </a>
+        <!-- The profile link is hidden by default and will be shown by the main page's script -->
         <a href="profile.html" id="profileLinkDesktop" class="hidden" title="My Profile">
           <img id="navProfilePic"
             src="https://placehold.co/40x40/2C2F33/EAEAEA?text=U"
@@ -47,50 +53,6 @@
       </div>
     </div>
   </nav>
-  <script>
-    // This script block should execute after the DOM is loaded.
-    // Putting it at the end of the body is standard practice for this.
-    const loginBtn = document.getElementById('authLinkDesktopLogin');
-    const profileLink = document.getElementById('profileLinkDesktop');
-    const profilePic = document.getElementById('navProfilePic');
-
-    // Function to update the UI based on authentication state
-    function updateNav(user) {
-      if (user) {
-        // User is signed in
-        profileLink.classList.remove('hidden');
-        loginBtn.classList.add('hidden');
-
-        // Update profile picture based on user info
-        if (user.photoURL) {
-          profilePic.src = user.photoURL;
-        } else if (user.displayName) {
-          const initials = user.displayName.charAt(0).toUpperCase();
-          profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-        } else if (user.email) {
-          const initials = user.email.charAt(0).toUpperCase();
-          profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-        } else {
-          // Fallback to a generic user icon
-          profilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
-        }
-      } else {
-        // User is signed out
-        profileLink.classList.add('hidden');
-        loginBtn.classList.remove('hidden');
-      }
-    }
-
-    // Set up the listener for authentication state changes
-    if (window.firebase && firebase.auth) {
-      firebase.auth().onAuthStateChanged(function(user) {
-        updateNav(user);
-      });
-    } else {
-      // If Firebase isn't available, default to the signed-out view.
-      console.error("Firebase Auth not found. Defaulting to logged-out view.");
-      updateNav(null);
-    }
-  </script>
+  <!-- REMOVED the script block that was causing the flicker -->
 </body>
 </html>
