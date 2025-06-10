@@ -376,31 +376,72 @@
         </div>
     </main>
 
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
     <script>
-        // This script fetches the content of header.html and injects it into the placeholder div.
-        // For this to work, you must have a file named "header.html" in the same directory.
-        document.addEventListener("DOMContentLoaded", function() {
-            fetch("header.html")
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Network response was not ok " + response.statusText);
-                    }
-                    return response.text();
-                })
-                .then(data => {
-                    const headerPlaceholder = document.getElementById("header-placeholder");
-                    if (headerPlaceholder) {
-                        headerPlaceholder.innerHTML = data;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error loading header:', error);
-                    const headerPlaceholder = document.getElementById("header-placeholder");
-                    if (headerPlaceholder) {
-                        headerPlaceholder.innerHTML = "<p style='color:red; text-align:center;'>Could not load header.html</p>";
-                    }
-                });
-        });
+    const firebaseConfig = {
+        apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+        authDomain: "linq-b27a8.firebaseapp.com",
+        projectId: "linq-b27a8",
+        storageBucket: "linq-b27a8.firebasestorage.app",
+        messagingSenderId: "1067901051826",
+        appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+    // This function will be called after header is loaded into the DOM
+    function initializeHeaderNav() {
+        const loginBtn = document.getElementById('authLinkDesktopLogin');
+        const profileLink = document.getElementById('profileLinkDesktop');
+        const profilePic = document.getElementById('navProfilePic');
+
+        // Always hide both first to avoid flicker
+        if (loginBtn) loginBtn.classList.add('hidden');
+        if (profileLink) profileLink.classList.add('hidden');
+
+        function showCorrectNav(isLoggedIn) {
+            if (loginBtn) loginBtn.classList.add('hidden');
+            if (profileLink) profileLink.classList.add('hidden');
+            if (isLoggedIn) {
+                if (profileLink) profileLink.classList.remove('hidden');
+                if (profilePic) profilePic.src = "https://placehold.co/40x40/2C2F33/EAEAEA?text=U";
+            } else {
+                if (loginBtn) loginBtn.classList.remove('hidden');
+            }
+        }
+
+        if (window.firebase && firebase.auth) {
+            firebase.auth().onAuthStateChanged(function(user) {
+                showCorrectNav(!!user);
+            });
+        } else {
+            showCorrectNav(false);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        fetch("header.html")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok " + response.statusText);
+                }
+                return response.text();
+            })
+            .then(data => {
+                const headerPlaceholder = document.getElementById("header-placeholder");
+                if (headerPlaceholder) {
+                    headerPlaceholder.innerHTML = data;
+                    initializeHeaderNav(); // <<< Call this AFTER inserting the header!
+                }
+            })
+            .catch(error => {
+                console.error('Error loading header:', error);
+                const headerPlaceholder = document.getElementById("header-placeholder");
+                if (headerPlaceholder) {
+                    headerPlaceholder.innerHTML = "<p style='color:red; text-align:center;'>Could not load header.html</p>";
+                }
+            });
+    });
     </script>
 </body>
 </html>
