@@ -13,11 +13,12 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <style>
-        /* Custom base styles from linqplus.html */
+        /* Custom base styles */
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-            background-color: #0B0C10;
-            background-image: radial-gradient(at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(11, 12, 16, 0) 50%); /* Changed blue tint to white tint */
+            /* UPDATED: Changed to black background with a smaller, more subtle white spotlight */
+            background-color: #000000;
+            background-image: radial-gradient(ellipse 40% 20% at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
             color: #E7E9EA;
             font-weight: 400;
         }
@@ -25,12 +26,12 @@
             overflow: hidden;
         }
 
-        /* Header Styles */
+        /* Header Styles from header.html for reference */
         nav.fixed {
             background-color: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(10px) saturate(150%);
             -webkit-backdrop-filter: blur(10px) saturate(150%);
-            border-bottom: 1px solid #2F3336; /* Adjusted border color */
+            border-bottom: 1px solid #2F3336;
             position: fixed;
             top: 0;
             left: 0;
@@ -66,107 +67,7 @@
             background-color: #00A9E0;
             opacity: 1;
         }
-        .profile-icon-placeholder {
-            width: 2.25rem;
-            height: 2.25rem;
-            background-color: #333;
-            border-radius: 50%;
-            display: inline-flex; align-items: center; justify-content: center;
-            cursor: pointer;
-            border: 2px solid #4A4A4A;
-        }
-        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; }
-        .profile-icon-placeholder:hover { border-color: #00BFFF; }
-        .desktop-hamburger-menu { position: relative; display: inline-block; }
-        .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;}
-        .desktop-hamburger-icon:hover { color: #FFFFFF; background-color: rgba(255,255,255,0.1); }
-        .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; }
-        .slide-out-panel {
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 320px;
-            height: 100vh;
-            background-color: #18181B;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.4);
-            z-index: 1001;
-            transform: translateX(100%);
-            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            padding: 1.5rem;
-            overflow-y: auto;
-            border-left: 1px solid #3F3F46;
-        }
-        .slide-out-panel.open {
-            transform: translateX(0);
-        }
-        .slide-out-panel-header {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            padding-bottom: 1.25rem;
-            margin-bottom: 1.25rem;
-            border-bottom: 1px solid #3F3F46;
-        }
-        .slide-out-panel-close-btn {
-            background: none; border: none; color: #A0A0A0; font-size: 1.875rem;
-            cursor: pointer; padding: 0.25rem; line-height: 1;
-            transition: color 0.2s ease, transform 0.2s ease;
-        }
-        .slide-out-panel-close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
-        .slide-out-panel-nav {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        .slide-out-panel a {
-            color: #D4D4D8;
-            padding: 1rem 1.25rem;
-            text-decoration: none;
-            display: block;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease;
-            border-left: 4px solid transparent;
-            margin: 0.375rem 0;
-            border-radius: 0.375rem;
-        }
-        .slide-out-panel a:hover {
-            background-color: #27272A;
-            color: #FFFFFF;
-            border-left-color: #00BFFF;
-        }
-        .slide-out-panel #logoutButtonSlideout {
-            color: #F87171 !important;
-            margin-top: auto;
-            padding-top: 1rem;
-            border-top: 1px solid #3F3F46;
-        }
-        .slide-out-panel #logoutButtonSlideout:hover {
-            background-color: rgba(248, 113, 113, 0.1);
-            color: #FECACA !important;
-            border-left-color: #F87171;
-        }
-        #menu-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.65);
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        #menu-overlay.active {
-            display: block;
-            opacity: 1;
-        }
-        #mobile-menu .nav-link.active {
-            color: #FFFFFF;
-            background-color: rgba(0, 191, 255, 0.1);
-            opacity: 1;
-        }
-
+        
         /* Ticker Banner */
         .ticker-banner {
             background: #121212; color: #A0A0A0; padding: 0.625rem 0;
@@ -184,6 +85,7 @@
         /* Hero Section */
         .hero-section { background: transparent; padding: 5rem 1rem; text-align: center; }
         .hero-title {
+             /* UPDATED: Matched community page title size */
             font-size: 2.5rem;
             font-weight: 800;
             color: #E7E9EA;
@@ -191,39 +93,15 @@
             text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3);
         }
         .hero-title .accent-text { color: #00BFFF; }
-        .page-subtitle {
-             font-size: 1.125rem;
+        .hero-subtitle {
+             /* UPDATED: Added subtitle styles like community page */
+            font-size: 1.125rem;
             color: #6E767D;
-            max-width: 500px;
+            max-width: 600px;
             margin: 0 auto;
             line-height: 1.6;
         }
-
-        .hero-custom-button {
-            display: inline-block;
-            text-align: center;
-            background-color: rgba(30, 30, 30, 0.7);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border: 1px solid #333333;
-            color: #E0E0E0;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            text-decoration: none;
-        }
-        .hero-custom-button:hover {
-            background-color: rgba(0, 191, 255, 0.15);
-            color: #00BFFF;
-            border-color: rgba(0, 191, 255, 0.4);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 191, 255, 0.2);
-        }
-
+        
         .section-title {
             font-size: 1.75rem; font-weight: 700; color: #E7E9EA; margin-bottom: 2rem;
             padding-bottom: 0.75rem; border-bottom: 1px solid #2F3336;
@@ -303,16 +181,15 @@
             width: 1.1rem; height: 1.1rem; color: #A0A0A0; pointer-events: none;
         }
 
-        /* MODIFIED: Favorite button styles for SVG Bookmark on News Page */
         .favorite-btn {
-            width: 2rem; /* Increased size for news page */
-            height: 2rem; /* Increased size for news page */
-            color: #888888; /* Default color for SVG stroke */
+            width: 2rem; 
+            height: 2rem; 
+            color: #888888; 
             cursor: pointer;
             transition: color 0.2s ease, transform 0.2s ease;
             background: none;
             border: none;
-            padding: 0.25rem; /* Added some padding around the SVG */
+            padding: 0.25rem; 
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -374,6 +251,8 @@
     <header class="hero-section">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <h1 class="hero-title">Your <span class="accent-text">Linq</span> to Energy News</h1>
+            <!-- UPDATED: Added hero-subtitle -->
+            <p class="hero-subtitle">Your daily source for curated energy news and market intelligence.</p>
         </div>
     </header>
 
@@ -492,76 +371,15 @@
             { id: 19, category: 'Earnings', title: 'Google Reports Record Earnings', date: 'May 3, 2025', source: 'Financial Times', link: 'https://example.com/article-19', image: 'data:image/png;base64,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' },
             { id: 20, category: 'Earnings', title: 'Microsoft Beats Earnings Expectations', date: 'May 3, 2025', source: 'BBC', link: 'https://example.com/article-20', image: 'https://www.chrisevansmp.com/wp-content/uploads/2023/08/BBC_News_2019.svg.png' },
             { id: 21, category: 'Earnings', title: 'ExxonMobil Posts Strong Q1 Results', date: 'May 3, 2025', source: 'Reuters', link: 'https://example.com/article-21', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTb6lvykJKGImtGYCRe-6TY7ElBaV452dtP7GXx-zo9ltbKKRXWE-u7lATyYO-b4Dv7iz8&usqp=CAU' }
-        ];    
+        ];        
 
-        // Initialize Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-            authDomain: "linq-b27a8.firebaseapp.com",
-            projectId: "linq-b27a8",
-            storageBucket: "linq-b27a8.firebasestorage.app",
-            messagingSenderId: "1067901051826",
-            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-
-        // Elements that need to be toggled based on auth state
-        const authElements = {
-            loginButtons: document.querySelectorAll('#authLinkDesktopLogin, #authLinkMobile, #loginButtonSlideout'),
-            logoutButtons: document.querySelectorAll('#logoutButtonMobile, #logoutButtonSlideout'),
-            authRequired: document.querySelectorAll('.auth-required'),
-            profileMenu: document.querySelector('#profileAndMenuDesktop'),
-            hamburgerMenu: document.querySelector('.desktop-hamburger-menu')
-        };
-
-        // Function to update UI based on auth state
-        function updateUIForAuthState(user) {
-            if (user) {
-                // User is signed in
-                authElements.loginButtons.forEach(el => el.classList.add('hidden'));
-                authElements.logoutButtons.forEach(el => el.classList.remove('hidden'));
-                authElements.authRequired.forEach(el => el.classList.remove('hidden'));
-                authElements.profileMenu.classList.remove('hidden');
-                if (authElements.hamburgerMenu) {
-                    authElements.hamburgerMenu.classList.remove('hidden');
-                }
-            } else {
-                // User is signed out
-                authElements.loginButtons.forEach(el => {
-                    el.classList.remove('hidden', 'opacity-0');
-                });
-                authElements.logoutButtons.forEach(el => el.classList.add('hidden'));
-                authElements.authRequired.forEach(el => el.classList.add('hidden'));
-                authElements.profileMenu.classList.add('hidden');
-                if (authElements.hamburgerMenu) {
-                    authElements.hamburgerMenu.classList.remove('hidden'); // Always show hamburger menu
-                }
-            }
-        }
-
-        // Wait for DOM to be ready
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize all elements as hidden to prevent flash
-            authElements.loginButtons.forEach(el => el.classList.add('opacity-0'));
-
-            // Listen for auth state changes
-            firebase.auth().onAuthStateChanged(function(user) {
-                updateUIForAuthState(user);
-            });
-
-            // Handle logout clicks
-            authElements.logoutButtons.forEach(button => {
-                button.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    firebase.auth().signOut();
-                });
-            });
-        });
-
-        function initializeHeaderAndAuth() {
+        // Function to run after header is loaded
+        function onHeaderLoaded() {
+            // Get all necessary elements from the DOM
             const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
-            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
+            const profileLinkDesktop = document.getElementById('profileLinkDesktop');
+            const navProfilePic = document.getElementById('navProfilePic');
+            // Mobile and other elements...
             const authLinkMobile = document.getElementById('authLinkMobile');
             const logoutButtonMobile = document.getElementById('logoutButtonMobile');
             const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
@@ -575,6 +393,7 @@
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
 
+            // Firebase Config
             const firebaseConfig = {
                 apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
                 authDomain: "linq-b27a8.firebaseapp.com",
@@ -589,38 +408,44 @@
             }
             const auth = firebase.auth();
 
+            // Auth state listener
             auth.onAuthStateChanged(user => {
                 if (user) {
+                    // --- User is LOGGED IN ---
                     if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
-                    if (profileAndMenuDesktop) {
-                        profileAndMenuDesktop.classList.remove('hidden');
-                        profileAndMenuDesktop.classList.add('flex');
+                    if (profileLinkDesktop) profileLinkDesktop.classList.remove('hidden');
+
+                    if(navProfilePic) {
+                        if (user.photoURL) {
+                            navProfilePic.src = user.photoURL;
+                        } else if (user.displayName) {
+                            navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
+                        } else if (user.email) {
+                            navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
+                        } else {
+                            navProfilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
+                        }
                     }
-                    if (authLinkMobile) {
-                        authLinkMobile.textContent = "My Profile";
-                        authLinkMobile.href = "profile.html";
-                    }
+
+                    // Mobile menu updates
+                    if (authLinkMobile) { authLinkMobile.textContent = "My Profile"; authLinkMobile.href = "profile.html"; }
                     if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
                     if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
                     if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
                     if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
+
                 } else {
-                    if (authLinkDesktopLogin) {
-                        authLinkDesktopLogin.classList.remove('hidden');
-                        authLinkDesktopLogin.classList.add('nav-link-button');
-                    }
-                    if (profileAndMenuDesktop) profileAndMenuDesktop.classList.add('hidden');
-                    if (authLinkMobile) {
-                        authLinkMobile.textContent = "Login";
-                        authLinkMobile.href = "login.html";
-                    }
+                    // --- User is LOGGED OUT ---
+                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.remove('hidden');
+                    if (profileLinkDesktop) profileLinkDesktop.classList.add('hidden');
+                    
+                    // Mobile menu updates
+                    if (authLinkMobile) { authLinkMobile.textContent = "Login"; authLinkMobile.href = "login.html"; }
                     if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
                     if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
                     if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
                     if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
-                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
-                        closeDesktopMenu();
-                    }
+                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
                 }
                 setActiveNavLink();
             });
@@ -629,8 +454,7 @@
                 e.preventDefault();
                 if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
                 if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
-                auth.signOut().then(() => console.log("User signed out"))
-                                .catch(error => console.error("Sign out error", error));
+                auth.signOut().catch(error => console.error("Sign out error", error));
             }
 
             if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
@@ -638,22 +462,14 @@
 
             function setActiveNavLink() {
                 const currentPath = window.location.pathname.split("/").pop() || "index.html";
-                const navLinks = document.querySelectorAll('nav.fixed a.nav-link, #mobile-menu a.nav-link');
+                const navLinks = document.querySelectorAll('#navbar nav.fixed a.nav-link, #navbar #mobile-menu a.nav-link');
                 navLinks.forEach(link => {
                     link.classList.remove('active');
                     const linkHref = link.getAttribute('href');
-                    const linkDataPage = link.dataset.page;
-                    if (linkHref === currentPath || ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html" || linkDataPage === "index" || linkDataPage === "index-mobile"))) {
+                    if (linkHref === currentPath || ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html"))) {
                         link.classList.add('active');
                     }
                 });
-                 const otherPages = ["community.html", "linqai.html", "Earnings.html", "favorites.html", "profile.html"];
-                 otherPages.forEach(page => {
-                    if (currentPath === page) {
-                        document.querySelector(`nav.fixed a.nav-link[href="${page}"]`)?.classList.add('active');
-                        document.querySelector(`#mobile-menu a.nav-link[href="${page}"]`)?.classList.add('active');
-                    }
-                 });
             }
 
             if (mobileMenuButton && mobileMenu) {
@@ -673,14 +489,14 @@
             if (desktopHamburgerButton) {
                 desktopHamburgerButton.addEventListener('click', (event) => {
                     event.stopPropagation();
-                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                    if (desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
                     else openDesktopMenu();
                 });
             }
             if (menuOverlay) menuOverlay.addEventListener('click', closeDesktopMenu);
             if (slideoutCloseButton) slideoutCloseButton.addEventListener('click', closeDesktopMenu);
             document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                if (event.key === 'Escape' && desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
             });
 
             setActiveNavLink();
@@ -689,103 +505,37 @@
         function adjustTickerBannerMarginTop() {
             const tickerBanner = document.querySelector('.ticker-banner');
             const navElement = document.querySelector('nav.fixed');
-            let navHeight = 0;
-
-            if (navElement) {
-                const navStyles = window.getComputedStyle(navElement);
-                if (navStyles.display !== 'none' && navStyles.visibility !== 'hidden') {
-                     navHeight = navElement.offsetHeight;
-                }
-            }
-            // console.log("Final navHeight for ticker adjustment:", navHeight);
-            if (tickerBanner) {
-                tickerBanner.style.marginTop = `${navHeight}px`;
+            if (tickerBanner && navElement) {
+                 tickerBanner.style.marginTop = `${navElement.offsetHeight}px`;
             }
         }
 
         function populateInitialTickerContent() {
             const tickerContent = document.getElementById('tickerContent');
-            if (tickerContent) {
-                let initialHTML = '';
-                for (const symbol of TICKER_ITEMS_TO_SHOW) {
-                    const displayName = DISPLAY_SYMBOLS[symbol] || symbol;
-                    let valueDisplay = `<span class="text-white">N/A</span> <span class="">N/A</span>`;
-                    if (symbol.startsWith('OANDA:')) {
-                        valueDisplay = `<span class="text-white">N/A</span> <span class="">(vs USD) N/A</span>`;
-                         if (symbol === 'OANDA:USD_JPY' || symbol === 'OANDA:USD_CNY') {
-                             valueDisplay = `<span class="text-white">N/A</span> <span class="">(USD vs ${displayName}) N/A</span>`;
-                         }
-                    }
-                    initialHTML += `<span class="ticker-item">${displayName}: ${valueDisplay}</span>`;
-                }
-
-                if (initialHTML === '') {
-                    tickerContent.innerHTML = '<span class="ticker-item">Market data unavailable.</span>';
-                } else {
-                    const avgItemWidth = 180;
-                    const numItems = TICKER_ITEMS_TO_SHOW.length;
-                    const totalContentWidth = numItems * avgItemWidth;
-                    const repeatCount = Math.max(2, Math.ceil((window.innerWidth * 2) / totalContentWidth) + 1);
-                    tickerContent.innerHTML = initialHTML.repeat(repeatCount);
-                }
-            }
+            if (!tickerContent) return;
+            let initialHTML = TICKER_ITEMS_TO_SHOW.map(symbol => {
+                const displayName = DISPLAY_SYMBOLS[symbol] || symbol;
+                return `<span class="ticker-item">${displayName}: <span class="text-white">...</span> <span class="">...</span></span>`;
+            }).join('');
+            
+            const repeatCount = Math.ceil((window.innerWidth * 2) / (TICKER_ITEMS_TO_SHOW.length * 180)) + 1;
+            tickerContent.innerHTML = initialHTML.repeat(Math.max(2, repeatCount));
         }
 
-
         fetch('header.html')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok for header.html');
-                }
-                return response.text();
-            })
+            .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
             .then(data => {
                 const navbarElement = document.getElementById('navbar');
                 if (navbarElement) {
                     navbarElement.innerHTML = data;
-
-                    // Initialize all header logic
-                    initializeHeaderAndAuth();
-
-                    // Adjust layout/ticker
-                    requestAnimationFrame(() => {
-                        setTimeout(() => {
-                            adjustTickerBannerMarginTop();
-                        }, 0);
-                    });
-                    populateInitialTickerContent();
-                    updateTickerBanner();
-
-                    // ✅ Set profile picture after header is loaded
-                    firebase.auth().onAuthStateChanged(user => {
-                        const avatarImg = document.getElementById('navProfilePic');
-                        if (avatarImg && user) {
-                            if (user.photoURL) {
-                                avatarImg.src = user.photoURL;
-                            } else if (user.displayName) {
-                                const initials = user.displayName.charAt(0).toUpperCase();
-                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-                            } else if (user.email) {
-                                const initials = user.email.charAt(0).toUpperCase();
-                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-                            } else {
-                                avatarImg.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
-                            }
-                        }
-                    });
-
-                } else {
-                    console.error('Navbar element not found. Header cannot be loaded.');
-                    populateInitialTickerContent();
-                    updateTickerBanner();
+                    onHeaderLoaded(); 
+                    requestAnimationFrame(() => setTimeout(adjustTickerBannerMarginTop, 0));
                 }
+                populateInitialTickerContent();
+                updateTickerBanner();
             })
             .catch(error => {
                 console.error('Error fetching header:', error);
-                const navbarElement = document.getElementById('navbar');
-                if (navbarElement) {
-                    navbarElement.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
-                }
                 populateInitialTickerContent();
                 updateTickerBanner();
             });
@@ -796,10 +546,11 @@
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`Finnhub API error for ${symbol}: ${response.status}`);
                 const data = await response.json();
-                const price = data.c !== undefined ? data.c.toFixed(2) : 'N/A';
-                const change = data.d !== undefined ? data.d.toFixed(2) : 'N/A';
-                const percent = data.dp !== undefined ? data.dp.toFixed(2) : 'N/A';
-                return { price, change, percent };
+                return { 
+                    price: data.c?.toFixed(2) || 'N/A', 
+                    change: data.d?.toFixed(2) || 'N/A', 
+                    percent: data.dp?.toFixed(2) || 'N/A' 
+                };
             } catch (err) {
                 return { price: 'N/A', change: 'N/A', percent: 'N/A' };
             }
@@ -807,43 +558,23 @@
 
         async function updateTickerBanner() {
             const tickerContent = document.getElementById('tickerContent');
+            if (!tickerContent) return;
 
-            if (tickerContent) {
-                let allItemsHTML = '';
-                for (const symbol of TICKER_ITEMS_TO_SHOW) {
-                    const data = await fetchFinnhubQuote(symbol);
-                    const changeClass = data.percent !== 'N/A' ? (parseFloat(data.percent) >= 0 ? 'positive' : 'negative') : '';
-                    const percentDisplay = data.percent !== 'N/A' ? `${parseFloat(data.percent) >= 0 ? '+' : ''}${data.percent}%` : 'N/A';
-                    const displayName = DISPLAY_SYMBOLS[symbol] || symbol;
+            const promises = TICKER_ITEMS_TO_SHOW.map(fetchFinnhubQuote);
+            const results = await Promise.all(promises);
 
-                    let priceDisplay = data.price;
-                    let valueContext = "";
+            let allItemsHTML = results.map((data, index) => {
+                const symbol = TICKER_ITEMS_TO_SHOW[index];
+                const changeClass = data.percent !== 'N/A' ? (parseFloat(data.percent) >= 0 ? 'positive' : 'negative') : '';
+                const percentDisplay = data.percent !== 'N/A' ? `${parseFloat(data.percent) >= 0 ? '+' : ''}${data.percent}%` : 'N/A';
+                const displayName = DISPLAY_SYMBOLS[symbol] || symbol;
 
-                    if (symbol.includes('YIELD') || symbol.includes('TMUBMUSD')) {
-                        priceDisplay = `${data.price}%`;
-                    } else if (symbol.startsWith('OANDA:')) {
-                         priceDisplay = data.price;
-                         if (symbol === 'OANDA:EUR_USD' || symbol === 'OANDA:GBP_USD') valueContext = " (vs USD)";
-                         else if (symbol === 'OANDA:USD_JPY') valueContext = ` (USD vs ${displayName})`;
-                         else if (symbol === 'OANDA:USD_CNY') valueContext = ` (USD vs ${displayName})`;
-                    } else if (symbol === 'DXY') {
-                        priceDisplay = data.price;
-                    } else {
-                        priceDisplay = `$${data.price}`;
-                    }
-                    allItemsHTML += `<span class="ticker-item">${displayName}: <span class="text-white">${priceDisplay}</span>${valueContext} <span class="${changeClass}">${percentDisplay}</span></span>`;
-                }
-
-                if (allItemsHTML === '') {
-                    return;
-                }
-
-                const avgItemWidth = 180;
-                const numItems = TICKER_ITEMS_TO_SHOW.length;
-                const totalContentWidth = numItems * avgItemWidth;
-                const repeatCount = Math.max(2, Math.ceil((window.innerWidth * 2) / totalContentWidth) + 1);
-                tickerContent.innerHTML = allItemsHTML.repeat(repeatCount);
-            }
+                let priceDisplay = symbol.includes('YIELD') || symbol.includes('TMUBMUSD') ? `${data.price}%` : `$${data.price}`;
+                return `<span class="ticker-item">${displayName}: <span class="text-white">${priceDisplay}</span> <span class="${changeClass}">${percentDisplay}</span></span>`;
+            }).join('');
+            
+            const repeatCount = Math.ceil((window.innerWidth * 2) / (TICKER_ITEMS_TO_SHOW.length * 180)) + 1;
+            tickerContent.innerHTML = allItemsHTML.repeat(Math.max(2, repeatCount));
         }
 
         function displayArticles(articlesToDisplay) {
@@ -855,155 +586,89 @@
                 articleElement.className = 'news-card';
                 articleElement.setAttribute('data-category', article.category);
 
-                let imageUrl = article.image;
-                if (!imageUrl || imageUrl.trim() === '') {
-                    const specificPlaceholder = sourcePlaceholders[article.source];
-                    if (specificPlaceholder) {
-                        imageUrl = `https://placehold.co/50x50/${specificPlaceholder.bgColor}/${specificPlaceholder.textColor}?text=${specificPlaceholder.text}&font=Inter`;
-                    } else {
-                        const colorIndex = index % genericPlaceholderColors.length;
-                        const bgColor = genericPlaceholderColors[colorIndex];
-                        const textColor = 'FFFFFF';
-                        imageUrl = `https://placehold.co/50x50/${bgColor}/${textColor}?text=${article.source ? article.source.charAt(0).toUpperCase() : 'N'}&font=Inter`;
-                    }
-                }
+                const specificPlaceholder = sourcePlaceholders[article.source] || {};
+                const imageUrl = article.image && article.image !== '...' ? article.image : 
+                    `https://placehold.co/50x50/${specificPlaceholder.bgColor || genericPlaceholderColors[index % genericPlaceholderColors.length]}/${specificPlaceholder.textColor || 'FFFFFF'}?text=${encodeURIComponent(specificPlaceholder.text || article.source?.charAt(0) || 'N')}&font=Inter`;
 
                 articleElement.innerHTML = `
                     <div class="news-source-logo-container">
-                    <img src="${imageUrl}" alt="${article.source || 'Source'} Logo" class="news-source-logo"onerror="this.src='https://placehold.co/50x50/cccccc/333333?text=Error&font=Inter'; this.alt='Image error'">
+                    <img src="${imageUrl}" alt="${article.source || 'Source'} Logo" class="news-source-logo" onerror="this.src='https://placehold.co/50x50/cccccc/333333?text=Error&font=Inter';">
                     </div>
                     <div class="news-content-wrapper">
                         <div class="news-text-content">
-                            <h3 class="news-title">
-                                <a href="${article.link || '#'}" target="_blank" rel="noopener noreferrer">${article.title || 'Untitled Article'}</a>
-                            </h3>
+                            <h3 class="news-title"><a href="${article.link || '#'}" target="_blank" rel="noopener noreferrer">${article.title || 'Untitled'}</a></h3>
                             <div class="news-meta-tags">
-                                <p class="news-meta">${article.date || 'N/A Date'} &bull; ${article.source || 'N/A Source'}</p>
+                                <p class="news-meta">${article.date || 'N/A'} &bull; ${article.source || 'N/A'}</p>
                                 <span class="news-tag">${article.category || 'General'}</span>
                             </div>
                         </div>
                         <div class="favorite-btn-area">
                             <button class="favorite-btn" data-id="${article.id}" aria-label="Toggle Favorite">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                    <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" />
-                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" /></svg>
                             </button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
                 newsGrid.appendChild(articleElement);
             });
-
-            requestAnimationFrame(() => {
-                updateFavoriteIcons();
-                addFavoriteButtonListeners();
-            });
+            updateFavoriteIcons();
         }
 
         function filterArticles() {
-            const searchInput = document.getElementById('searchInput');
-            const searchQuery = searchInput ? searchInput.value.toLowerCase() : "";
-            const activeCategoryButtons = document.querySelectorAll('#categoryList .filter-button.active');
-            const selectedCategories = Array.from(activeCategoryButtons).map(btn => btn.getAttribute('data-category'));
-
-            let filteredArticles = articlesData;
-
-            if (selectedCategories.length > 0) {
-                filteredArticles = articlesData.filter(article => selectedCategories.includes(article.category));
-            }
-
-            if (searchQuery) {
-                filteredArticles = filteredArticles.filter(article =>
-                    (article.title && article.title.toLowerCase().includes(searchQuery)) ||
-                    (article.source && article.source.toLowerCase().includes(searchQuery)) ||
-                    (article.category && article.category.toLowerCase().includes(searchQuery))
-                );
-            }
-            displayArticles(filteredArticles);
+            const searchQuery = document.getElementById('searchInput')?.value.toLowerCase() || "";
+            const activeCategories = [...document.querySelectorAll('#categoryList .filter-button.active')].map(btn => btn.dataset.category);
+            
+            let filtered = articlesData.filter(article => 
+                (activeCategories.length === 0 || activeCategories.includes(article.category)) &&
+                (!searchQuery || Object.values(article).some(val => String(val).toLowerCase().includes(searchQuery)))
+            );
+            displayArticles(filtered);
         }
 
         let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || [];
         function toggleFavorite(articleId) {
             const idStr = String(articleId);
             const index = favorites.indexOf(idStr);
-            if (index > -1) {
-                favorites.splice(index, 1);
-            } else {
-                favorites.push(idStr);
-            }
+            if (index > -1) favorites.splice(index, 1);
+            else favorites.push(idStr);
             localStorage.setItem('linqFavoritesV2', JSON.stringify(favorites));
             updateFavoriteIcons();
-            if (document.getElementById('favoritesGrid')) {
-                if (typeof displayFavoriteArticles === 'function') {
-                    displayFavoriteArticles();
-                }
-            }
         }
 
         function updateFavoriteIcons() {
              document.querySelectorAll('.favorite-btn').forEach(button => {
-                const articleId = String(button.getAttribute('data-id'));
-                const svgIcon = button.querySelector('svg');
-
-                if (!svgIcon) return;
-
-                if (favorites.includes(articleId)) {
-                    button.classList.add('favorited');
-                } else {
-                    button.classList.remove('favorited');
-                }
+                button.classList.toggle('favorited', favorites.includes(String(button.dataset.id)));
             });
         }
 
-        let newsGridClickHandler;
-        function addFavoriteButtonListeners() {
-            const newsGrid = document.getElementById('newsGrid');
-            if (!newsGrid) return;
-            if (newsGridClickHandler) {
-                newsGrid.removeEventListener('click', newsGridClickHandler);
-            }
-            newsGridClickHandler = function(event) {
-                const button = event.target.closest('.favorite-btn');
-                if (button) {
-                    const articleId = button.getAttribute('data-id');
-                    toggleFavorite(articleId);
-                }
-            };
-            newsGrid.addEventListener('click', newsGridClickHandler);
-        }
-
-        function showTermsModal(event) { if(event) event.preventDefault(); document.getElementById('termsContent').style.display = 'block'; }
+        function showTermsModal(event) { event.preventDefault(); document.getElementById('termsContent').style.display = 'block'; }
         function closeTermsModal() { document.getElementById('termsContent').style.display = 'none'; }
-        function showPrivacyModal(event) { if(event) event.preventDefault(); document.getElementById('privacyContent').style.display = 'block'; }
+        function showPrivacyModal(event) { event.preventDefault(); document.getElementById('privacyContent').style.display = 'block'; }
         function closePrivacyModal() { document.getElementById('privacyContent').style.display = 'none'; }
-
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('termsContent')) closeTermsModal();
-            if (event.target == document.getElementById('privacyContent')) closePrivacyModal();
-        };
 
         document.addEventListener('DOMContentLoaded', () => {
             displayArticles(articlesData);
-            filterArticles();
 
-            const categoryButtons = document.querySelectorAll('#categoryList .filter-button');
-            categoryButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    this.classList.toggle('active');
+            document.getElementById('categoryList')?.addEventListener('click', e => {
+                if (e.target.classList.contains('filter-button')) {
+                    e.target.classList.toggle('active');
                     filterArticles();
-                });
+                }
             });
 
-            const searchInputElement = document.getElementById('searchInput');
-            if (searchInputElement) {
-                searchInputElement.addEventListener('input', filterArticles);
-            }
+            document.getElementById('searchInput')?.addEventListener('input', filterArticles);
+            
+            document.getElementById('newsGrid')?.addEventListener('click', e => {
+                const favButton = e.target.closest('.favorite-btn');
+                if (favButton) toggleFavorite(favButton.dataset.id);
+            });
 
-            const termsLink = document.querySelector('a[href="#terms"]');
-            const privacyLink = document.querySelector('a[href="#privacy"]');
-            if(termsLink) termsLink.addEventListener('click', showTermsModal);
-            if(privacyLink) privacyLink.addEventListener('click', showPrivacyModal);
+            document.querySelector('a[href="#terms"]')?.addEventListener('click', showTermsModal);
+            document.querySelector('a[href="#privacy"]')?.addEventListener('click', showPrivacyModal);
+            
+            window.addEventListener('click', e => {
+                if (e.target.id === 'termsContent') closeTermsModal();
+                if (e.target.id === 'privacyContent') closePrivacyModal();
+            });
         });
 
     </script>
