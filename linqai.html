@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linq AI - Your Energy Questions Answered</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
@@ -13,7 +15,8 @@
         /* Base styles */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0A0A0A;
+            background-color: #000000;
+            background-image: radial-gradient(ellipse 50% 35% at 50% 0%, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
             color: #E0E0E0;
             display: flex;
             flex-direction: column;
@@ -31,7 +34,6 @@
         ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
 
         /* Styles for the dynamically loaded header (nav.fixed, .nav-link etc.) */
-        /* These should ideally be in header.html or a shared CSS file linked by header.html */
         nav.fixed {
             background-color: rgba(10, 10, 10, 0.85) !important;
             backdrop-filter: blur(10px) saturate(150%) !important;
@@ -46,60 +48,60 @@
         }
         .nav-link {
             transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
-            font-weight: 500; color: #B0B0B0; opacity: 0.8;   
-            padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; 
+            font-weight: 500; color: #B0B0B0; opacity: 0.8;
+            padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem;
         }
         .nav-link:hover { color: #FFFFFF; opacity: 1; background-color: rgba(255,255,255,0.05); }
         .nav-link.active { color: #FFFFFF; opacity: 1; background-color: transparent; }
         #authLinkDesktopLogin.nav-link-button {
-            background-color: #00BFFF; color: #FFFFFF !important; opacity: 1 !important; padding: 0.5rem 1rem; 
+            background-color: #00BFFF; color: #FFFFFF !important; opacity: 1 !important; padding: 0.5rem 1rem;
         }
         #authLinkDesktopLogin.nav-link-button:hover { background-color: #00A9E0; opacity: 1; }
-        .profile-icon-placeholder { 
-            width: 2.25rem; height: 2.25rem; background-color: #333; border-radius: 50%; 
-            display: inline-flex; align-items: center; justify-content: center; 
-            cursor: pointer; border: 2px solid #4A4A4A; 
+        .profile-icon-placeholder {
+            width: 2.25rem; height: 2.25rem; background-color: #333; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            cursor: pointer; border: 2px solid #4A4A4A;
         }
-        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; } 
-        .profile-icon-placeholder:hover { border-color: #00BFFF; } 
-        .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;} 
+        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; }
+        .profile-icon-placeholder:hover { border-color: #00BFFF; }
+        .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;}
         .desktop-hamburger-icon:hover { color: #FFFFFF; background-color: rgba(255,255,255,0.1); }
-        .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; } 
-        .slide-out-panel { 
-            display: flex; flex-direction: column; position: fixed; top: 0; right: 0; 
-            width: 320px; height: 100vh; background-color: #18181B; 
-            box-shadow: -10px 0 30px rgba(0,0,0,0.4); z-index: 1001; 
-            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
-            padding: 1.5rem; overflow-y: auto; border-left: 1px solid #3F3F46; 
+        .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; }
+        .slide-out-panel {
+            display: flex; flex-direction: column; position: fixed; top: 0; right: 0;
+            width: 320px; height: 100vh; background-color: #18181B;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.4); z-index: 1001;
+            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            padding: 1.5rem; overflow-y: auto; border-left: 1px solid #3F3F46;
         }
         .slide-out-panel.open { transform: translateX(0); }
         .slide-out-panel-header {
             display: flex; justify-content: flex-end; align-items: center;
-            padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #3F3F46; 
+            padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #3F3F46;
         }
         .slide-out-panel-close-btn {
-            background: none; border: none; color: #A0A0A0; font-size: 1.875rem; 
+            background: none; border: none; color: #A0A0A0; font-size: 1.875rem;
             cursor: pointer; padding: 0.25rem; line-height: 1;
             transition: color 0.2s ease, transform 0.2s ease;
         }
         .slide-out-panel-close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
         .slide-out-panel-nav { flex-grow: 1; display: flex; flex-direction: column; }
         .slide-out-panel a {
-            color: #D4D4D8; padding: 1rem 1.25rem; text-decoration: none; display: block; 
-            font-size: 0.95rem; font-weight: 500; 
-            transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease; 
-            border-left: 4px solid transparent; margin: 0.375rem 0; border-radius: 0.375rem; 
+            color: #D4D4D8; padding: 1rem 1.25rem; text-decoration: none; display: block;
+            font-size: 0.95rem; font-weight: 500;
+            transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease;
+            border-left: 4px solid transparent; margin: 0.375rem 0; border-radius: 0.375rem;
         }
         .slide-out-panel a:hover { background-color: #27272A; color: #FFFFFF; border-left-color: #00BFFF; }
-        .slide-out-panel #logoutButtonSlideout { 
-            color: #F87171 !important; margin-top: auto; padding-top: 1rem; border-top: 1px solid #3F3F46; 
+        .slide-out-panel #logoutButtonSlideout {
+            color: #F87171 !important; margin-top: auto; padding-top: 1rem; border-top: 1px solid #3F3F46;
         }
-        .slide-out-panel #logoutButtonSlideout:hover { 
+        .slide-out-panel #logoutButtonSlideout:hover {
             background-color: rgba(248, 113, 113, 0.1); color: #FECACA !important; border-left-color: #F87171;
-        } 
+        }
         #menu-overlay {
             display: none; position: fixed; inset: 0;
-            background-color: rgba(0, 0, 0, 0.65); z-index: 1000; 
+            background-color: rgba(0, 0, 0, 0.65); z-index: 1000;
             opacity: 0; transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         #menu-overlay.active { display: block; opacity: 1; }
@@ -120,7 +122,7 @@
         /* Chat Page Title & Subtitle */
         .page-heading-container {
             text-align: center;
-            margin-bottom: 2rem; 
+            margin-bottom: 2rem;
             padding: 0 1rem; /* Horizontal padding for smaller screens */
         }
         .chat-page-title {
@@ -130,9 +132,9 @@
         }
         .chat-page-title .accent-text { color: #00BFFF; }
         .chat-page-subtitle {
-            font-size: 1.125rem; 
-            color: #9CA3AF; 
-            margin-top: 0.5rem; 
+            font-size: 1.125rem;
+            color: #9CA3AF;
+            margin-top: 0.5rem;
             font-weight: 400;
         }
 
@@ -398,10 +400,10 @@
             const authLinkMobile = document.getElementById('authLinkMobile');
             const logoutButtonMobile = document.getElementById('logoutButtonMobile');
             const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
-            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile'); 
-            const earningsLinkMobile = document.getElementById('earningsLinkMobile'); 
+            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile');
+            const earningsLinkMobile = document.getElementById('earningsLinkMobile');
             const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
-            const menuOverlay = document.getElementById('menu-overlay'); 
+            const menuOverlay = document.getElementById('menu-overlay');
             const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
             const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
             const slideoutCloseButton = document.getElementById('slideout-close-button');
@@ -409,7 +411,7 @@
             const mobileMenu = document.getElementById('mobile-menu');
 
             // Firebase configuration
-            const firebaseConfig = { 
+            const firebaseConfig = {
                 apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // Store securely
                 authDomain: "linq-b27a8.firebaseapp.com",
                 projectId: "linq-b27a8",
@@ -417,7 +419,7 @@
                 messagingSenderId: "1067901051826",
                 appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
             };
-            if (!firebase.apps.length) { 
+            if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
             }
             const authInstance = firebase.auth();
@@ -464,7 +466,7 @@
                 if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
                 authInstance.signOut().then(() => {
                     console.log("User signed out");
-                    window.location.href = 'index.html'; 
+                    window.location.href = 'index.html';
                 }).catch(error => console.error("Sign out error", error));
             }
 
@@ -475,11 +477,11 @@
                 const currentPath = window.location.pathname.split("/").pop() || "index.html";
                 // Query for links within the loaded header
                 const navLinks = document.querySelectorAll('#header-placeholder nav.fixed a.nav-link, #header-placeholder #mobile-menu a.nav-link');
-                
+
                 navLinks.forEach(link => {
                     link.classList.remove('active');
                     const linkHref = link.getAttribute('href');
-                    
+
                     if (linkHref === currentPath) {
                         link.classList.add('active');
                     }
@@ -535,13 +537,13 @@
                 if (headerPlaceholder) {
                     headerPlaceholder.innerHTML = data;
                     initializeHeaderAndAuth(); // Initialize header JS AFTER it's loaded
-        
+
                     // Adjust main content padding after header is loaded and its height is known
                     const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
                     if (fixedHeader) {
                         document.querySelector('.chat-container-wrapper').style.paddingTop = fixedHeader.offsetHeight + 20 + 'px'; // 20px buffer
                     }
-        
+
                     // ✅ Set user avatar in header
                     firebase.auth().onAuthStateChanged(user => {
                         const avatarImg = document.getElementById('navProfilePic');
@@ -551,15 +553,10 @@
                             } else if (user.displayName) {
                                 const initials = user.displayName.charAt(0).toUpperCase();
                                 avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-                            } else if (user.email) {
-                                const initials = user.email.charAt(0).toUpperCase();
-                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-                            } else {
-                                avatarImg.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
                             }
                         }
                     });
-        
+
                 } else {
                     console.error('Header placeholder element not found.');
                 }
