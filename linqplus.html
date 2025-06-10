@@ -61,6 +61,7 @@
             padding: 0.5rem;
             line-height: 1;
             transition: color 0.2s ease;
+            text-decoration: none;
         }
         .close-button:hover {
             color: var(--text-secondary);
@@ -198,6 +199,36 @@
              color: var(--danger-color);
         }
 
+        /* --- Buttons --- */
+        .btn {
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: block;
+            width: 100%;
+            text-decoration: none;
+            margin-top: auto; /* Pushes button to the bottom */
+        }
+        .btn-upgrade {
+            background-color: #FFFFFF;
+            color: #0B0C10;
+        }
+        .btn-upgrade:hover {
+            background-color: #E0E0E0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255,255,255,0.1);
+        }
+        .btn-current {
+            background-color: #FFFFFF;
+            color: #A0A0A0;
+            cursor: default;
+        }
+
+
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -224,7 +255,7 @@
 </head>
 <body>
     <div class="close-button-wrapper">
-         <button class="close-button" aria-label="Close">&times;</button>
+         <a href="index.html" class="close-button" aria-label="Close">&times;</a>
     </div>
     <div class="content-container">
         <header class="page-header">
@@ -269,6 +300,7 @@
                             Linq AI Assistant
                         </li>
                     </ul>
+                    <button class="btn btn-current">Current Plan</button>
                 </div>
 
                 <!-- Premium Plan Card -->
@@ -306,6 +338,7 @@
                             Linq AI Assistant
                         </li>
                     </ul>
+                    <a href="profile.html#subscription" class="btn btn-upgrade">Upgrade to Premium</a>
                 </div>
             </div>
         </main>
@@ -315,8 +348,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             const freePlan = document.getElementById('free-plan');
             const premiumPlan = document.getElementById('premium-plan');
-            const closeButton = document.querySelector('.close-button');
-            const contentContainer = document.querySelector('.content-container');
             
             // Function to handle plan selection
             const selectPlan = (selectedPlan) => {
@@ -329,19 +360,9 @@
                 }
             };
 
-            // Function to close the view
-            const closeView = () => {
-                contentContainer.style.opacity = '0';
-                setTimeout(() => {
-                    // You can add further actions here, like redirecting or hiding it permanently
-                    contentContainer.style.display = 'none'; 
-                }, 300); // Matches the CSS transition duration
-            };
-
             // Add event listeners
             freePlan.addEventListener('click', () => selectPlan(freePlan));
             premiumPlan.addEventListener('click', () => selectPlan(premiumPlan));
-            closeButton.addEventListener('click', closeView);
         });
     </script>
 </body>
