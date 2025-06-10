@@ -38,6 +38,36 @@
             min-height: 100vh;
         }
         
+        /* This style is for the header that will be loaded from header.html */
+        /* You can move these styles into your header.html or keep them here */
+        .main-header {
+            padding: 1rem 2rem;
+            background: #1f1f1f;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--dark-text);
+            text-decoration: none;
+        }
+        
+        .main-nav a {
+            color: var(--light-text);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .main-nav a:hover {
+            color: var(--dark-text);
+        }
+
         main {
             padding-top: 3rem;
             padding-bottom: 3rem;
@@ -253,14 +283,19 @@
                 font-size: 2rem;
             }
         }
+        
+        @media (max-width: 600px) {
+            .main-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- This is where your existing header would be included -->
-    <header style="padding: 1rem; background: #1f1f1f; border-bottom: 1px solid var(--border-color); text-align: center; font-weight: 600;">
-        Placeholder for header.html
-    </header>
+    <!-- This div will be populated with the content from header.html -->
+    <div id="header-placeholder"></div>
 
     <main>
         <h1 class="page-title">Go Premium</h1>
@@ -324,7 +359,7 @@
                         Bookmarks
                     </li>
                     <li class="feature-item included">
-                        <svg class="check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                        <svg class="check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
                         Markets
                     </li>
                     <li class="feature-item included">
@@ -340,5 +375,32 @@
             </article>
         </div>
     </main>
+
+    <script>
+        // This script fetches the content of header.html and injects it into the placeholder div.
+        // For this to work, you must have a file named "header.html" in the same directory.
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch("header.html")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok " + response.statusText);
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    const headerPlaceholder = document.getElementById("header-placeholder");
+                    if (headerPlaceholder) {
+                        headerPlaceholder.innerHTML = data;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading header:', error);
+                    const headerPlaceholder = document.getElementById("header-placeholder");
+                    if (headerPlaceholder) {
+                        headerPlaceholder.innerHTML = "<p style='color:red; text-align:center;'>Could not load header.html</p>";
+                    }
+                });
+        });
+    </script>
 </body>
 </html>
