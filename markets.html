@@ -32,7 +32,6 @@
         ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
 
         /* Header Styles (Copied from community.html for consistency if header_styles.css is not used or is incomplete) */
-        /* It's better if header.html is self-contained or header_styles.css is comprehensive */
         nav.fixed {
             background-color: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(10px) saturate(150%);
@@ -478,17 +477,20 @@
 
     <script>
         // --- Function to Initialize and Run All Header Related Logic ---
-        // This function will be called AFTER header.html is fetched and injected.
         function initializeHeaderAndAuth() {
+            // Get all necessary elements from the DOM *after* the header is loaded
             const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
-            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
+            const profileLinkDesktop = document.getElementById('profileLinkDesktop');
+            const navProfilePic = document.getElementById('navProfilePic');
+
+            // Mobile and slide-out menu elements (assuming they exist in header.html)
             const authLinkMobile = document.getElementById('authLinkMobile');
             const logoutButtonMobile = document.getElementById('logoutButtonMobile');
             const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
             const linqAiLinkMobile = document.getElementById('linqAiLinkMobile');
             const earningsLinkMobile = document.getElementById('earningsLinkMobile');
             const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
-            const menuOverlay = document.getElementById('menu-overlay'); // Ensure this ID exists in your header.html
+            const menuOverlay = document.getElementById('menu-overlay');
             const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
             const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
             const slideoutCloseButton = document.getElementById('slideout-close-button');
@@ -496,8 +498,8 @@
             const mobileMenu = document.getElementById('mobile-menu');
 
             // Firebase configuration
-            const firebaseConfig = { // Use a consistent config name
-                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // Store securely
+            const firebaseConfig = { 
+                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
                 authDomain: "linq-b27a8.firebaseapp.com",
                 projectId: "linq-b27a8",
                 storageBucket: "linq-b27a8.appspot.com",
@@ -511,46 +513,50 @@
 
             authInstance.onAuthStateChanged(user => {
                 if (user) {
+                    // --- User is LOGGED IN ---
                     if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
-                    if (profileAndMenuDesktop) {
-                        profileAndMenuDesktop.classList.remove('hidden');
-                        profileAndMenuDesktop.classList.add('flex');
+                    if (profileLinkDesktop) profileLinkDesktop.classList.remove('hidden');
+
+                    if(navProfilePic) {
+                        if (user.photoURL) {
+                            navProfilePic.src = user.photoURL;
+                        } else if (user.displayName) {
+                             navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
+                        } else if (user.email) {
+                            navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
+                        } else {
+                            navProfilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
+                        }
                     }
-                    if (authLinkMobile) {
-                        authLinkMobile.textContent = "My Profile";
-                        authLinkMobile.href = "profile.html";
-                    }
+                    
+                    // Mobile menu updates
+                    if (authLinkMobile) { authLinkMobile.textContent = "My Profile"; authLinkMobile.href = "profile.html"; }
                     if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
                     if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
                     if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
                     if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
+
                 } else {
-                    if (authLinkDesktopLogin) {
-                        authLinkDesktopLogin.classList.remove('hidden');
-                        authLinkDesktopLogin.classList.add('nav-link-button');
-                    }
-                    if (profileAndMenuDesktop) profileAndMenuDesktop.classList.add('hidden');
-                    if (authLinkMobile) {
-                        authLinkMobile.textContent = "Login";
-                        authLinkMobile.href = "login.html";
-                    }
+                    // --- User is LOGGED OUT ---
+                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.remove('hidden');
+                    if (profileLinkDesktop) profileLinkDesktop.classList.add('hidden');
+                    
+                    // Mobile menu updates
+                    if (authLinkMobile) { authLinkMobile.textContent = "Login"; authLinkMobile.href = "login.html"; }
                     if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
                     if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
                     if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
                     if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
-                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
-                        closeDesktopMenu();
-                    }
+                    if (desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
                 }
                 setActiveNavLink();
             });
 
             function handleLogout(e) {
                 e.preventDefault();
-                if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                if (desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
                 if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
-                authInstance.signOut().then(() => console.log("User signed out"))
-                              .catch(error => console.error("Sign out error", error));
+                authInstance.signOut().catch(error => console.error("Sign out error", error));
             }
 
             if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
@@ -562,13 +568,8 @@
                 navLinks.forEach(link => {
                     link.classList.remove('active');
                     const linkHref = link.getAttribute('href');
-                    const linkDataPage = link.dataset.page;
-                    if (linkHref === currentPath || ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html" || linkDataPage === "index" || linkDataPage === "index-mobile"))) {
+                    if (linkHref === currentPath || ((currentPath === "index.html" || currentPath === "") && linkHref === "index.html")) {
                         link.classList.add('active');
-                    }
-                     // Explicitly activate Markets.html link
-                    if (currentPath === "Markets.html" && linkHref === "Markets.html") {
-                         link.classList.add('active');
                     }
                 });
             }
@@ -590,21 +591,21 @@
             if (desktopHamburgerButton) {
                 desktopHamburgerButton.addEventListener('click', (event) => {
                     event.stopPropagation();
-                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                    if (desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
                     else openDesktopMenu();
                 });
             }
             if (menuOverlay) menuOverlay.addEventListener('click', closeDesktopMenu);
             if (slideoutCloseButton) slideoutCloseButton.addEventListener('click', closeDesktopMenu);
             document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                if (event.key === 'Escape' && desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
             });
 
             setActiveNavLink(); // Initial call
         }
 
         // Fetch and Inject Header, then Initialize Header Logic
-        fetch('header.html') // Ensure header.html is in the correct path
+        fetch('header.html')
             .then(response => {
                 if (!response.ok) throw new Error('Network response was not ok for header.html');
                 return response.text();
@@ -613,26 +614,7 @@
                 const headerPlaceholder = document.getElementById('header-placeholder');
                 if (headerPlaceholder) {
                     headerPlaceholder.innerHTML = data;
-                    initializeHeaderAndAuth(); // Initialize header JS AFTER it's loaded
-
-                    // ✅ Set user avatar in header
-                    firebase.auth().onAuthStateChanged(user => {
-                        const avatarImg = document.getElementById('navProfilePic');
-                        if (avatarImg && user) {
-                            if (user.photoURL) {
-                                avatarImg.src = user.photoURL;
-                            } else if (user.displayName) {
-                                const initials = user.displayName.charAt(0).toUpperCase();
-                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-                            } else if (user.email) {
-                                const initials = user.email.charAt(0).toUpperCase();
-                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-                            } else {
-                                avatarImg.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
-                            }
-                        }
-                    });
-
+                    initializeHeaderAndAuth();
                 } else {
                     console.error('Header placeholder element not found.');
                 }
