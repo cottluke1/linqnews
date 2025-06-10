@@ -5,15 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linq - Community Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <style>
         body {
-            font-family: 'Lexend', sans-serif;
-            background-color: #0A0A0A;
-            color: #E0E0E0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+            background-color: #0B0C10;
+            background-image: radial-gradient(at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(11, 12, 16, 0) 50%);
+            color: #E7E9EA;
             font-weight: 400;
             display: flex;
             flex-direction: column;
@@ -33,7 +36,7 @@
             background-color: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(10px) saturate(150%);
             -webkit-backdrop-filter: blur(10px) saturate(150%);
-            border-bottom: 1px solid #222222;
+            border-bottom: 1px solid #2F3336;
             position: fixed; /* Ensure header is fixed */
             top: 0;
             left: 0;
@@ -137,11 +140,20 @@
         /* Page Specific Styles */
         .page-header { text-align: left; margin-bottom: 2.5rem; }
         .page-title {
-            font-size: 2.8rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #E7E9EA;
+            margin: 0 0 1rem 0;
             text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3);
         }
         .page-title .accent-text { color: #00BFFF; }
-        .page-subtitle { font-size: 1.1rem; color: #A0A0A0; max-width: none; margin: 0; line-height: 1.6; }
+        .page-subtitle {
+            font-size: 1.125rem;
+            color: #6E767D;
+            max-width: none;
+            margin: 0;
+            line-height: 1.6;
+        }
 
         .search-container {
              margin-bottom: 2rem;
@@ -188,21 +200,21 @@
         }
 
         .post-card {
-            background-color: #121212; border: 1px solid #282828; border-radius: 0.75rem;
+            background-color: #121212; border: 1px solid #2F3336; border-radius: 0.75rem;
             padding: 1.75rem; margin-bottom: 2rem;
             transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
             box-shadow: 0 4px 15px -5px rgba(0,0,0,0.4); display: flex; flex-direction: column;
         }
         .post-card:hover {
             transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(0, 191, 255, 0.2);
-            border-color: #00BFFF;
+            border-color: #5a6268;
         }
         .post-title {
-            font-size: 1.375rem; font-weight: 600; color: #FFFFFF;
+            font-size: 1.375rem; font-weight: 600; color: #E7E9EA;
             margin: 0 0 0.75rem; line-height: 1.4;
         }
         .post-meta {
-            font-size: 0.875rem; color: #A0A0A0; margin: 0 0 1rem; font-weight: 400;
+            font-size: 0.875rem; color: #6E767D; margin: 0 0 1rem; font-weight: 400;
             display: flex; align-items: center; flex-wrap: wrap;
         }
         .post-category-tag {
@@ -226,7 +238,7 @@
             margin-top: 1.5rem;
             gap: 0.75rem;
             padding-top: 1rem;
-            border-top: 1px solid #282828;
+            border-top: 1px solid #2F3336;
         }
         .action-btn {
             background-color: transparent; border: 1px solid #333333; color: #A0A0A0;
@@ -241,32 +253,32 @@
         .favorite-btn {
             width: 2.25rem; /* MODIFIED: Increased size */
             height: 2.25rem; /* MODIFIED: Increased size */
-            color: #888888; 
+            color: #888888;
             cursor: pointer;
-            transition: color 0.2s ease, transform 0.2s ease; 
+            transition: color 0.2s ease, transform 0.2s ease;
             background: none;
-            border: none; 
-            padding: 0; 
+            border: none;
+            padding: 0;
             display: inline-flex;
-            align-items: center; 
+            align-items: center;
             justify-content: center;
         }
-        .favorite-btn:hover { 
-            color: #00BFFF; 
-            transform: scale(1.15); 
+        .favorite-btn:hover {
+            color: #00BFFF;
+            transform: scale(1.15);
         }
         .favorite-btn svg {
             width: 100%;
             height: 100%;
-            stroke-width: 1.5; 
-            stroke: currentColor; 
-            fill: none; 
+            stroke-width: 1.5;
+            stroke: currentColor;
+            fill: none;
         }
         .favorite-btn.favorited svg {
-            fill: #00BFFF; 
-            stroke: #00BFFF; 
+            fill: #00BFFF;
+            stroke: #00BFFF;
         }
-        .post-actions .favorite-btn { 
+        .post-actions .favorite-btn {
              padding: 0.4rem; /* MODIFIED: Adjusted padding for larger icon */
         }
 
@@ -275,7 +287,7 @@
             display: none;
             font-size: 0.75rem;
             color: #00BFFF;
-            margin-right: auto; 
+            margin-right: auto;
             padding-left: 0;
         }
 
@@ -433,7 +445,7 @@
                     link.classList.remove('active');
                     const linkHref = link.getAttribute('href');
                     const linkDataPage = link.dataset.page;
-                    
+
                     let isCurrentPage = linkHref === currentPath;
                     if ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html" || linkDataPage === "index" || linkDataPage === "index-mobile")) {
                         isCurrentPage = true;
@@ -477,29 +489,29 @@
                 if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
             });
 
-            setActiveNavLink(); 
+            setActiveNavLink();
         }
-        
+
         function adjustMainContentPadding() {
             const header = document.querySelector('nav.fixed');
             const pageContentWrapper = document.querySelector('.page-content-wrapper');
-            const filterSectionWrapper = document.querySelector('.filter-section-wrapper'); 
+            const filterSectionWrapper = document.querySelector('.filter-section-wrapper');
 
             if (header && pageContentWrapper) {
                 const headerHeight = header.offsetHeight;
-                pageContentWrapper.style.paddingTop = `${headerHeight + 20}px`; 
-                
-                if (filterSectionWrapper && window.innerWidth >= 1024) { 
+                pageContentWrapper.style.paddingTop = `${headerHeight + 20}px`;
+
+                if (filterSectionWrapper && window.innerWidth >= 1024) {
                     const filterPanel = filterSectionWrapper.querySelector('.filter-panel');
                     if (filterPanel) {
-                        filterPanel.style.top = `${headerHeight + 20}px`; 
+                        filterPanel.style.top = `${headerHeight + 20}px`;
                     }
                     const searchContainer = document.querySelector('.posts-section .search-container');
                     if (searchContainer) {
                          const searchHeight = searchContainer.offsetHeight;
                          const pageHeader = document.querySelector('.posts-section .page-header');
                          const pageHeaderHeight = pageHeader ? pageHeader.offsetHeight : 0;
-                         filterSectionWrapper.style.paddingTop = `${pageHeaderHeight + searchHeight + 20}px`; 
+                         filterSectionWrapper.style.paddingTop = `${pageHeaderHeight + searchHeight + 20}px`;
                     } else {
                          filterSectionWrapper.style.paddingTop = `${headerHeight + 20}px`;
                     }
@@ -517,17 +529,17 @@
                 const navbarElement = document.getElementById('navbar');
                 if (navbarElement) {
                     navbarElement.innerHTML = data;
-        
+
                     // Initialize header logic
                     initializeHeaderAndAuth();
-        
+
                     // Adjust main layout
-                    requestAnimationFrame(() => { 
-                        setTimeout(() => { 
+                    requestAnimationFrame(() => {
+                        setTimeout(() => {
                             adjustMainContentPadding();
                         }, 0);
                     });
-        
+
                     // ✅ Set user avatar in header
                     firebase.auth().onAuthStateChanged(user => {
                         const avatarImg = document.getElementById('navProfilePic');
@@ -540,7 +552,7 @@
                             }
                         }
                     });
-        
+
                 } else {
                     console.error('Navbar element not found.');
                 }
@@ -659,9 +671,9 @@
                 const postId = button.getAttribute('data-id');
                 const isFavorited = communityFavoritesPage.includes(postId);
                 if (isFavorited) {
-                    button.classList.add('favorited'); 
+                    button.classList.add('favorited');
                 } else {
-                    button.classList.remove('favorited'); 
+                    button.classList.remove('favorited');
                 }
             });
         }
@@ -684,14 +696,14 @@
 
         function handleShareClickPage(event) {
             const button = event.currentTarget;
-            const postId = button.getAttribute('data-id'); 
+            const postId = button.getAttribute('data-id');
             const title = button.getAttribute('data-title');
             const sharePageRelativeUrl = `share.html?postId=${postId}`;
             const currentPath = window.location.pathname;
-            const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1); 
+            const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
             const fullLinqPostUrl = new URL(sharePageRelativeUrl, window.location.origin + basePath).href;
 
-            console.log("Attempting to copy share link:", fullLinqPostUrl); 
+            console.log("Attempting to copy share link:", fullLinqPostUrl);
 
             const confirmation = button.closest('.post-actions')?.querySelector('.share-confirmation');
 
@@ -736,7 +748,7 @@
             if (searchInputElementPage) {
                 searchInputElementPage.addEventListener('input', filterCommunityPostsPage);
             }
-            
+
             requestAnimationFrame(() => {
                 setTimeout(() => {
                     adjustMainContentPadding();
