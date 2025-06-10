@@ -61,13 +61,22 @@
     loginBtn.classList.add('hidden');
     profileLink.classList.add('hidden');
 
-    function showCorrectNav(isLoggedIn) {
-      // Hide both first (no flicker)
+    function showCorrectNav(user) {
       loginBtn.classList.add('hidden');
       profileLink.classList.add('hidden');
-      if (isLoggedIn) {
+      if (user) {
         profileLink.classList.remove('hidden');
-        profilePic.src = "https://placehold.co/40x40/2C2F33/EAEAEA?text=U";
+        if (user.photoURL) {
+          profilePic.src = user.photoURL;
+        } else if (user.displayName) {
+          const initials = user.displayName.charAt(0).toUpperCase();
+          profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+        } else if (user.email) {
+          const initials = user.email.charAt(0).toUpperCase();
+          profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+        } else {
+          profilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
+        }
       } else {
         loginBtn.classList.remove('hidden');
       }
@@ -76,7 +85,7 @@
     // Firebase Auth State Listener
     if (window.firebase && firebase.auth) {
       firebase.auth().onAuthStateChanged(function(user) {
-        showCorrectNav(!!user);
+        showCorrectNav(user);
       });
     } else {
       showCorrectNav(false);
