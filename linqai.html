@@ -395,8 +395,13 @@
     <script>
         // --- Function to Initialize and Run All Header Related Logic ---
         function initializeHeaderAndAuth() {
+            // Get all necessary elements from the DOM *after* the header is loaded
             const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
-            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
+            // *** FIX: Use the correct ID for the profile link from header.html ***
+            const profileLinkDesktop = document.getElementById('profileLinkDesktop'); 
+            const navProfilePic = document.getElementById('navProfilePic');
+            
+            // Mobile and slide-out menu elements (assuming they exist in header.html)
             const authLinkMobile = document.getElementById('authLinkMobile');
             const logoutButtonMobile = document.getElementById('logoutButtonMobile');
             const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
@@ -426,11 +431,27 @@
 
             authInstance.onAuthStateChanged(user => {
                 if (user) {
+                    // --- User is LOGGED IN ---
                     if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
-                    if (profileAndMenuDesktop) {
-                        profileAndMenuDesktop.classList.remove('hidden');
-                        profileAndMenuDesktop.classList.add('flex');
+                    // *** FIX: Show the correct profile link element ***
+                    if (profileLinkDesktop) profileLinkDesktop.classList.remove('hidden');
+
+                    // Update profile picture
+                    if(navProfilePic) {
+                        if (user.photoURL) {
+                            navProfilePic.src = user.photoURL;
+                        } else if (user.displayName) {
+                            const initials = user.displayName.charAt(0).toUpperCase();
+                            navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+                        } else if (user.email) {
+                            const initials = user.email.charAt(0).toUpperCase();
+                            navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+                        } else {
+                            navProfilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
+                        }
                     }
+
+                    // Mobile menu updates
                     if (authLinkMobile) {
                         authLinkMobile.textContent = "My Profile";
                         authLinkMobile.href = "profile.html";
@@ -439,12 +460,14 @@
                     if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
                     if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
                     if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
+
                 } else {
-                    if (authLinkDesktopLogin) {
-                        authLinkDesktopLogin.classList.remove('hidden');
-                        authLinkDesktopLogin.classList.add('nav-link-button');
-                    }
-                    if (profileAndMenuDesktop) profileAndMenuDesktop.classList.add('hidden');
+                    // --- User is LOGGED OUT ---
+                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.remove('hidden');
+                     // *** FIX: Hide the correct profile link element ***
+                    if (profileLinkDesktop) profileLinkDesktop.classList.add('hidden');
+                    
+                    // Mobile menu updates
                     if (authLinkMobile) {
                         authLinkMobile.textContent = "Login";
                         authLinkMobile.href = "login.html";
@@ -475,7 +498,6 @@
 
             function setActiveNavLink() {
                 const currentPath = window.location.pathname.split("/").pop() || "index.html";
-                // Query for links within the loaded header
                 const navLinks = document.querySelectorAll('#header-placeholder nav.fixed a.nav-link, #header-placeholder #mobile-menu a.nav-link');
 
                 navLinks.forEach(link => {
@@ -485,11 +507,9 @@
                     if (linkHref === currentPath) {
                         link.classList.add('active');
                     }
-                    // Special handling for index.html and its "News" link
                     else if ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html" || link.dataset.page === "index" || link.dataset.page === "index-mobile")) {
                         link.classList.add('active');
                     }
-                     // Explicitly activate LinqAI link if on linqai.html
                     else if (currentPath === "linqai.html" && linkHref === "linqai.html") {
                          link.classList.add('active');
                     }
@@ -527,7 +547,7 @@
         }
 
         // Fetch and Inject Header, then Initialize Header Logic
-        fetch('header.html') // Ensure header.html is in the correct path relative to linqai.html
+        fetch('header.html') 
             .then(response => {
                 if (!response.ok) throw new Error('Network response was not ok for header.html');
                 return response.text();
@@ -536,27 +556,13 @@
                 const headerPlaceholder = document.getElementById('header-placeholder');
                 if (headerPlaceholder) {
                     headerPlaceholder.innerHTML = data;
-                    initializeHeaderAndAuth(); // Initialize header JS AFTER it's loaded
+                    // *** FIX: Call initializeHeaderAndAuth AFTER the header HTML is injected ***
+                    initializeHeaderAndAuth(); 
 
-                    // Adjust main content padding after header is loaded and its height is known
                     const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
                     if (fixedHeader) {
                         document.querySelector('.chat-container-wrapper').style.paddingTop = fixedHeader.offsetHeight + 20 + 'px'; // 20px buffer
                     }
-
-                    // ✅ Set user avatar in header
-                    firebase.auth().onAuthStateChanged(user => {
-                        const avatarImg = document.getElementById('navProfilePic');
-                        if (avatarImg && user) {
-                            if (user.photoURL) {
-                                avatarImg.src = user.photoURL;
-                            } else if (user.displayName) {
-                                const initials = user.displayName.charAt(0).toUpperCase();
-                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-                            }
-                        }
-                    });
-
                 } else {
                     console.error('Header placeholder element not found.');
                 }
@@ -587,7 +593,6 @@
             if (type === 'ai') {
                 contentHTML += `<div class="ai-icon"><i class="fas fa-brain fa-lg"></i></div>`;
             }
-            // Sanitize message to prevent XSS if displaying user input directly as HTML
             const sanitizedMessage = message.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
             contentHTML += `<div class="message-content">${sanitizedMessage}<span class="message-timestamp">${timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span></div>`;
