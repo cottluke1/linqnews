@@ -19,7 +19,7 @@
             --success-green: #34C759;
             --error-red: #FF3B30;
             --border-radius-md: 8px;
-            --border-radius-lg: 16px; /* Increased for modern look */
+            --border-radius-lg: 16px; 
         }
 
         /* --- Global Styles --- */
@@ -39,7 +39,7 @@
 
         .container {
             width: 90%;
-            max-width: 960px; /* Centered content */
+            max-width: 960px;
             margin: 0 auto;
         }
         
@@ -63,10 +63,14 @@
         }
 
         /* --- Tab Navigation --- */
+        .profile-nav-container {
+             display: flex;
+             justify-content: center;
+             margin-bottom: 40px;
+        }
         .profile-nav {
-            display: flex;
+            display: inline-flex;
             gap: 8px;
-            margin-bottom: 40px;
             padding: 8px;
             border-radius: var(--border-radius-lg);
         }
@@ -100,7 +104,7 @@
         .card {
             border-radius: var(--border-radius-lg);
             overflow: hidden;
-            margin-bottom: 0; /* Only one card shown at a time */
+            margin-bottom: 0; 
         }
         .card-header {
             padding: 25px 30px;
@@ -207,6 +211,7 @@
         @media (max-width: 768px) {
             .profile-info-container { flex-direction: column; align-items: stretch; }
             .profile-info { grid-template-columns: 1fr; }
+            .profile-nav-container { justify-content: flex-start; }
             .profile-nav { flex-direction: column; }
         }
     </style>
@@ -217,34 +222,21 @@
     <main>
         <div class="container">
             <div>
-                <nav class="profile-nav glass-ui">
-                    <a href="#profile" class="nav-tab active-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        Profile
-                    </a>
-                    <a href="#subscription" class="nav-tab">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5L5 19"></path><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
-                        Subscription
-                    </a>
-                    <a href="#security" class="nav-tab">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        Security
-                    </a>
-                    <a href="#newsletter" class="nav-tab">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17.5H2a2 2 0 0 1-2-2V7.5a2 2 0 0 1 2-2h2.8a2 2 0 0 1 1.7.9L8 8a2 2 0 0 0 1.7.9h4.6a2 2 0 0 0 1.7-.9l1.5-1.6a2 2 0 0 1 1.7-.9H22a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2zM12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path></svg>
-                        Newsletter
-                    </a>
-                    <a href="#contact" class="nav-tab">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                        Contact
-                    </a>
-                </nav>
+                <div class="profile-nav-container">
+                    <nav class="profile-nav glass-ui">
+                        <a href="#profile" class="nav-tab active-link">Profile</a>
+                        <a href="#subscription" class="nav-tab">Subscription</a>
+                        <a href="#security" class="nav-tab">Security</a>
+                        <a href="#newsletter" class="nav-tab">Newsletter</a>
+                        <a href="#contact" class="nav-tab">Contact</a>
+                    </nav>
+                </div>
 
                 <div id="profile" class="content-section active-section">
                     <div class="card glass-ui">
                         <div class="card-body profile-info-container">
                             <div id="changeAvatarButton" class="avatar-section">
-                                <img src="https://placehold.co/140x140/1A1A1A/FFFFFF?text=User&font=inter" alt="User Avatar" class="avatar" id="profileAvatar">
+                                <img src="https://placehold.co/140x140/1A1A1A/FFFFFF?text=U&font=inter" alt="User Avatar" class="avatar" id="profileAvatar">
                                 <div class="avatar-overlay">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                                 </div>
@@ -253,19 +245,19 @@
                             <div class="profile-info">
                                 <div class="info-item">
                                     <label>Full Name</label>
-                                    <p id="profileFullName">Alex Johnson</p>
+                                    <p id="profileFullName">N/A</p>
                                 </div>
                                 <div class="info-item">
                                     <label>Username</label>
-                                    <p id="profileUsername">@alexj</p>
+                                    <p id="profileUsername">N/A</p>
                                 </div>
                                 <div class="info-item">
                                     <label>Email Address</label>
-                                    <p id="profileEmail">alex.johnson@example.com</p>
+                                    <p id="profileEmail">N/A</p>
                                 </div>
                                 <div class="info-item">
                                     <label>Joined</label>
-                                    <p id="profileJoinedDate">May 10, 2024</p>
+                                    <p id="profileJoinedDate">N/A</p>
                                 </div>
                             </div>
                         </div>
@@ -275,15 +267,12 @@
                 <div id="subscription" class="content-section">
                      <div class="card glass-ui">
                         <div class="card-header">
-                            <h3>Subscription Plan</h3>
+                            <h3>My Subscription</h3>
                         </div>
                         <div class="card-body">
-                            <div class="subscription-info">
-                                <p><strong>Plan:</strong> <span class="text-cyan-400 font-bold">Premium Annual</span></p>
-                                <p><strong>Status:</strong> <span class="status-active">Active</span></p>
-                                <p><strong>Renews on:</strong> <span id="subscriptionRenewsOn">May 10, 2026</span></p>
-                                <p><strong>Price:</strong> <span id="subscriptionPrice">$99.00 / year</span></p>
-                            </div>
+                            <p class="text-lg">Your current plan: <span id="current-plan-name" class="font-bold text-cyan-400">Free Plan</span></p>
+                            <p class="text-gray-400" id="subscription-status-text">You have access to basic news and community features.</p>
+                            <a href="linqplus.html" class="btn btn-primary mt-6">See Plans</a>
                         </div>
                     </div>
                 </div>
@@ -307,10 +296,7 @@
                                     <label for="confirm-password">Confirm New Password:</label>
                                     <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm new password" class="form-input" required minlength="8">
                                 </div>
-                                <button type="submit" class="btn btn-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                    Update Password
-                                </button>
+                                <button type="submit" class="btn btn-primary">Update Password</button>
                             </form>
                         </div>
                     </div>
@@ -324,7 +310,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div id="newsletter" class="content-section">
                      <div class="card glass-ui">
                         <div class="card-header">
@@ -332,14 +318,8 @@
                         </div>
                         <div class="card-body">
                             <p class="text-gray-300 mb-4">Receive a weekly digest of top energy news and market analysis, exclusively for Linq+ subscribers.</p>
-                            <p class="text-gray-400 text-sm mb-6">If you are a premium member, you can manage your subscription below.</p>
-                            <form id="newsletterSettingsForm">
-                                <div class="form-group">
-                                    <input type="checkbox" id="newsletter-subscribe" name="newsletter-subscribe" checked>
-                                    <label for="newsletter-subscribe">Subscribed to Weekly Newsletter</label>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Update Preferences</button>
-                            </form>
+                            <p class="text-gray-400 text-sm mb-6">Upgrade to Linq+ to receive our premium newsletter.</p>
+                            <a href="linqplus.html" class="btn btn-primary">Upgrade to Premium</a>
                         </div>
                     </div>
                 </div>
@@ -406,21 +386,16 @@
                 const profileUsernameEl = document.getElementById('profileUsername');
                 const profileJoinedDateEl = document.getElementById('profileJoinedDate');
                 const profileAvatarEl = document.getElementById('profileAvatar');
-
+                
                 if (user) {
                     if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
                     if (profileLinkDesktop) profileLinkDesktop.classList.remove('hidden');
 
                     if(navProfilePic) {
-                        if (user.photoURL) {
-                            navProfilePic.src = user.photoURL;
-                        } else if (user.displayName) {
-                            navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}&font=inter`;
-                        } else if (user.email) {
-                             navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}&font=inter`;
-                        } else {
-                            navProfilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U&font=inter';
-                        }
+                        if (user.photoURL) navProfilePic.src = user.photoURL;
+                        else if (user.displayName) navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}&font=inter`;
+                        else if (user.email) navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}&font=inter`;
+                        else navProfilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U&font=inter';
                     }
 
                     if (profileFullNameEl) profileFullNameEl.textContent = user.displayName || 'N/A';
@@ -444,19 +419,19 @@
                     }
 
                 } else {
+                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.remove('hidden');
+                    if (profileLinkDesktop) profileLinkDesktop.classList.add('hidden');
+                    // Set placeholders to N/A if user is not logged in, before redirecting
+                    if(profileFullNameEl) profileFullNameEl.textContent = 'N/A';
+                    if(profileEmailEl) profileEmailEl.textContent = 'N/A';
+                    if(profileUsernameEl) profileUsernameEl.textContent = 'N/A';
+                    if(profileJoinedDateEl) profileJoinedDateEl.textContent = 'N/A';
+                    
+                    // Redirect to login page if trying to access profile while logged out
                     window.location.href = 'login.html';
                 }
             });
 
-            window.handleGlobalLogout = function(e) {
-                if(e) e.preventDefault();
-                authInstance.signOut().then(() => {
-                    window.location.href = 'index.html';
-                }).catch(error => console.error("Sign out error", error));
-            }
-            const sidebarLogout = document.getElementById('sidebar-logout-link');
-            if(sidebarLogout) sidebarLogout.addEventListener('click', window.handleGlobalLogout);
-            
             const changeAvatarButton = document.getElementById("changeAvatarButton");
             const avatarInput = document.getElementById("avatarInput");
             if (changeAvatarButton && avatarInput) {
@@ -534,7 +509,7 @@
 
             function activateSectionFromHash() {
                 let hash = window.location.hash.substring(1);
-                const validHashes = Array.from(contentSections).map(s => s.id);
+                const validHashes = Array.from(navTabs).map(t => t.getAttribute('href').substring(1));
                 if (!hash || !validHashes.includes(hash)) { 
                     hash = 'profile';
                 }
