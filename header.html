@@ -4,19 +4,19 @@
   <meta charset="UTF-8">
   <title>Linq Header Fixed</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Your Firebase scripts here (replace with your actual config/scripts) -->
+  <!-- Firebase scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
   <script>
-    // Initialize Firebase (replace with your config)
+    // Initialize Firebase
     const firebaseConfig = {
-  apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-  authDomain: "linq-b27a8.firebaseapp.com",
-  projectId: "linq-b27a8",
-  storageBucket: "linq-b27a8.firebasestorage.app",
-  messagingSenderId: "1067901051826",
-  appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-};
+      apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+      authDomain: "linq-b27a8.firebaseapp.com",
+      projectId: "linq-b27a8",
+      storageBucket: "linq-b27a8.firebasestorage.app",
+      messagingSenderId: "1067901051826",
+      appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+    };
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
   </script>
 </head>
@@ -36,16 +36,20 @@
       </div>
       <!-- Right: Login/Profile -->
       <div class="flex items-center space-x-3">
-      <a href="login.html" id="authLinkDesktopLogin"
-        class="hidden nav-link text-sm nav-link-button text-white bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded transition">Login</a>
-      <a href="profile.html" id="profileLinkDesktop" class="hidden" title="My Profile">
-        <img id="navProfilePic"
-          src="https://placehold.co/40x40/2C2F33/EAEAEA?text=U"
-          alt="User"
-          class="rounded-full w-9 h-9 object-cover"
-          onerror="this.src='https://placehold.co/40x40/2C2F33/EAEAEA?text=U';">
-      </a>
-    </div>
+        <!-- Login button: visible by default -->
+        <a href="login.html" id="authLinkDesktopLogin"
+          class="nav-link text-sm nav-link-button text-white bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded transition">
+          Login
+        </a>
+        <!-- Profile link: hidden by default -->
+        <a href="profile.html" id="profileLinkDesktop" class="hidden" title="My Profile">
+          <img id="navProfilePic"
+            src="https://placehold.co/40x40/2C2F33/EAEAEA?text=U"
+            alt="User"
+            class="rounded-full w-9 h-9 object-cover"
+            onerror="this.src='https://placehold.co/40x40/2C2F33/EAEAEA?text=U';">
+        </a>
+      </div>
     </div>
   </nav>
   <script>
@@ -53,18 +57,19 @@
     const loginBtn = document.getElementById('authLinkDesktopLogin');
     const profileLink = document.getElementById('profileLinkDesktop');
     const profilePic = document.getElementById('navProfilePic');
-    
+
     function showCorrectNav(isLoggedIn) {
       loginBtn.classList.add('hidden');
       profileLink.classList.add('hidden');
       if (isLoggedIn) {
         profileLink.classList.remove('hidden');
+        // Always use the same default image, never the user's real photo
         profilePic.src = "https://placehold.co/40x40/2C2F33/EAEAEA?text=U";
       } else {
         loginBtn.classList.remove('hidden');
       }
     }
-    
+
     // Firebase Auth State Listener
     if (window.firebase && firebase.auth) {
       firebase.auth().onAuthStateChanged(function(user) {
