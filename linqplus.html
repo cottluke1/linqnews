@@ -17,6 +17,7 @@
             --text-secondary: #6E767D;
             --border-color: #2F3336;
             --border-highlight: #CFD9DE;
+            --danger-color: #ef4444;
         }
 
         html {
@@ -42,6 +43,7 @@
             width: 100%;
             max-width: 900px;
             animation: fadeIn 0.5s ease-out;
+            transition: opacity 0.3s ease-out;
         }
 
         /* Close Button */
@@ -179,12 +181,21 @@
             font-size: 1rem;
             color: var(--text-primary);
         }
+
+        .feature-item.excluded {
+            color: var(--text-secondary);
+            text-decoration: line-through;
+        }
         
         .feature-item svg.icon {
             width: 20px;
             height: 20px;
             margin-right: 0.75rem;
             color: var(--text-primary);
+        }
+        
+        .feature-item.excluded svg.icon {
+             color: var(--danger-color);
         }
 
         /* Animations */
@@ -245,6 +256,18 @@
                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
                             Bookmarks
                         </li>
+                        <li class="feature-item excluded">
+                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                            Markets Access
+                        </li>
+                        <li class="feature-item excluded">
+                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                            Earnings Reports
+                        </li>
+                        <li class="feature-item excluded">
+                           <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                            Linq AI Assistant
+                        </li>
                     </ul>
                 </div>
 
@@ -292,7 +315,10 @@
         document.addEventListener('DOMContentLoaded', () => {
             const freePlan = document.getElementById('free-plan');
             const premiumPlan = document.getElementById('premium-plan');
+            const closeButton = document.querySelector('.close-button');
+            const contentContainer = document.querySelector('.content-container');
             
+            // Function to handle plan selection
             const selectPlan = (selectedPlan) => {
                 if (selectedPlan === freePlan) {
                     freePlan.classList.add('selected');
@@ -303,8 +329,19 @@
                 }
             };
 
+            // Function to close the view
+            const closeView = () => {
+                contentContainer.style.opacity = '0';
+                setTimeout(() => {
+                    // You can add further actions here, like redirecting or hiding it permanently
+                    contentContainer.style.display = 'none'; 
+                }, 300); // Matches the CSS transition duration
+            };
+
+            // Add event listeners
             freePlan.addEventListener('click', () => selectPlan(freePlan));
             premiumPlan.addEventListener('click', () => selectPlan(premiumPlan));
+            closeButton.addEventListener('click', closeView);
         });
     </script>
 </body>
