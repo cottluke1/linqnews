@@ -27,6 +27,12 @@
             overflow: hidden;
         }
 
+        /* FIX: Placeholder style to prevent header flash */
+        #header-placeholder {
+            min-height: 68px; /* Approximate height of the fixed header */
+            background-color: #000; /* Matches the header's background */
+        }
+
         /* Scrollbar styling */
         ::-webkit-scrollbar { width: 10px; height: 10px; }
         ::-webkit-scrollbar-track { background: #1A1A1A; border-radius: 10px; }
@@ -397,7 +403,6 @@
         function initializeHeaderAndAuth() {
             // Get all necessary elements from the DOM *after* the header is loaded
             const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
-            // *** FIX: Use the correct ID for the profile link from header.html ***
             const profileLinkDesktop = document.getElementById('profileLinkDesktop'); 
             const navProfilePic = document.getElementById('navProfilePic');
             
@@ -417,7 +422,7 @@
 
             // Firebase configuration
             const firebaseConfig = {
-                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // Store securely
+                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
                 authDomain: "linq-b27a8.firebaseapp.com",
                 projectId: "linq-b27a8",
                 storageBucket: "linq-b27a8.appspot.com",
@@ -433,7 +438,6 @@
                 if (user) {
                     // --- User is LOGGED IN ---
                     if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
-                    // *** FIX: Show the correct profile link element ***
                     if (profileLinkDesktop) profileLinkDesktop.classList.remove('hidden');
 
                     // Update profile picture
@@ -464,7 +468,6 @@
                 } else {
                     // --- User is LOGGED OUT ---
                     if (authLinkDesktopLogin) authLinkDesktopLogin.classList.remove('hidden');
-                     // *** FIX: Hide the correct profile link element ***
                     if (profileLinkDesktop) profileLinkDesktop.classList.add('hidden');
                     
                     // Mobile menu updates
@@ -488,7 +491,6 @@
                 if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
                 if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
                 authInstance.signOut().then(() => {
-                    console.log("User signed out");
                     window.location.href = 'index.html';
                 }).catch(error => console.error("Sign out error", error));
             }
@@ -507,11 +509,8 @@
                     if (linkHref === currentPath) {
                         link.classList.add('active');
                     }
-                    else if ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html" || link.dataset.page === "index" || link.dataset.page === "index-mobile")) {
+                    else if ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html")) {
                         link.classList.add('active');
-                    }
-                    else if (currentPath === "linqai.html" && linkHref === "linqai.html") {
-                         link.classList.add('active');
                     }
                 });
             }
@@ -556,7 +555,6 @@
                 const headerPlaceholder = document.getElementById('header-placeholder');
                 if (headerPlaceholder) {
                     headerPlaceholder.innerHTML = data;
-                    // *** FIX: Call initializeHeaderAndAuth AFTER the header HTML is injected ***
                     initializeHeaderAndAuth(); 
 
                     const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
@@ -569,10 +567,6 @@
             })
             .catch(error => {
                 console.error('Error fetching header:', error);
-                const headerPlaceholder = document.getElementById('header-placeholder');
-                if (headerPlaceholder) {
-                    headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
-                }
             });
 
 
