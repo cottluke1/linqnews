@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linq - Energy Earnings Calendar</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- UPDATED: Font changed to Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
@@ -13,7 +16,9 @@
         /* Base styles */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0A0A0A;
+            /* UPDATED: Black background with spotlight gradient */
+            background-color: #000000;
+            background-image: radial-gradient(ellipse 50% 35% at 50% 0%, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
             color: #E0E0E0;
             display: flex;
             flex-direction: column;
@@ -65,56 +70,7 @@
             background-color: #00BFFF; color: #FFFFFF !important; opacity: 1 !important; padding: 0.5rem 1rem; 
         }
         #authLinkDesktopLogin.nav-link-button:hover { background-color: #00A9E0; opacity: 1; }
-        .profile-icon-placeholder { 
-            width: 2.25rem; height: 2.25rem; background-color: #333; border-radius: 50%; 
-            display: inline-flex; align-items: center; justify-content: center; 
-            cursor: pointer; border: 2px solid #4A4A4A; 
-        }
-        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; } 
-        .profile-icon-placeholder:hover { border-color: #00BFFF; } 
-        .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;} 
-        .desktop-hamburger-icon:hover { color: #FFFFFF; background-color: rgba(255,255,255,0.1); }
-        .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; } 
-        .slide-out-panel { 
-            display: flex; flex-direction: column; position: fixed; top: 0; right: 0; 
-            width: 320px; height: 100vh; background-color: #18181B; 
-            box-shadow: -10px 0 30px rgba(0,0,0,0.4); z-index: 1001; 
-            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
-            padding: 1.5rem; overflow-y: auto; border-left: 1px solid #3F3F46; 
-        }
-        .slide-out-panel.open { transform: translateX(0); }
-        .slide-out-panel-header {
-            display: flex; justify-content: flex-end; align-items: center;
-            padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #3F3F46; 
-        }
-        .slide-out-panel-close-btn {
-            background: none; border: none; color: #A0A0A0; font-size: 1.875rem; 
-            cursor: pointer; padding: 0.25rem; line-height: 1;
-            transition: color 0.2s ease, transform 0.2s ease;
-        }
-        .slide-out-panel-close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
-        .slide-out-panel-nav { flex-grow: 1; display: flex; flex-direction: column; }
-        .slide-out-panel a {
-            color: #D4D4D8; padding: 1rem 1.25rem; text-decoration: none; display: block; 
-            font-size: 0.95rem; font-weight: 500; 
-            transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease; 
-            border-left: 4px solid transparent; margin: 0.375rem 0; border-radius: 0.375rem; 
-        }
-        .slide-out-panel a:hover { background-color: #27272A; color: #FFFFFF; border-left-color: #00BFFF; }
-        .slide-out-panel #logoutButtonSlideout { 
-            color: #F87171 !important; margin-top: auto; padding-top: 1rem; border-top: 1px solid #3F3F46; 
-        }
-        .slide-out-panel #logoutButtonSlideout:hover { 
-            background-color: rgba(248, 113, 113, 0.1); color: #FECACA !important; border-left-color: #F87171;
-        } 
-        #menu-overlay {
-            display: none; position: fixed; inset: 0;
-            background-color: rgba(0, 0, 0, 0.65); z-index: 1000; 
-            opacity: 0; transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        #menu-overlay.active { display: block; opacity: 1; }
-        /* End of Header specific styles */
-
+        
         /* Page Content Wrapper */
         .page-content-wrapper {
             flex-grow: 1;
@@ -528,7 +484,10 @@
         // --- Function to Initialize and Run All Header Related Logic ---
         function initializeHeaderAndAuth() {
             const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
-            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
+            const profileLinkDesktop = document.getElementById('profileLinkDesktop');
+            const navProfilePic = document.getElementById('navProfilePic');
+
+            // Mobile and other elements
             const authLinkMobile = document.getElementById('authLinkMobile');
             const logoutButtonMobile = document.getElementById('logoutButtonMobile');
             const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
@@ -543,7 +502,7 @@
             const mobileMenu = document.getElementById('mobile-menu');
 
             const firebaseConfig = { 
-                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", // IMPORTANT: Store securely
+                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
                 authDomain: "linq-b27a8.firebaseapp.com",
                 projectId: "linq-b27a8",
                 storageBucket: "linq-b27a8.appspot.com",
@@ -558,45 +517,44 @@
             authInstance.onAuthStateChanged(user => {
                 if (user) {
                     if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
-                    if (profileAndMenuDesktop) {
-                        profileAndMenuDesktop.classList.remove('hidden');
-                        profileAndMenuDesktop.classList.add('flex');
+                    if (profileLinkDesktop) profileLinkDesktop.classList.remove('hidden');
+
+                    if(navProfilePic) {
+                        if (user.photoURL) {
+                            navProfilePic.src = user.photoURL;
+                        } else if (user.displayName) {
+                             navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
+                        } else if (user.email) {
+                             navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
+                        } else {
+                            navProfilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
+                        }
                     }
-                    if (authLinkMobile) {
-                        authLinkMobile.textContent = "My Profile";
-                        authLinkMobile.href = "profile.html";
-                    }
+                    
+                    if (authLinkMobile) { authLinkMobile.textContent = "My Profile"; authLinkMobile.href = "profile.html"; }
                     if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
                     if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
                     if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
                     if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
                 } else {
-                    if (authLinkDesktopLogin) {
-                        authLinkDesktopLogin.classList.remove('hidden');
-                        authLinkDesktopLogin.classList.add('nav-link-button');
-                    }
-                    if (profileAndMenuDesktop) profileAndMenuDesktop.classList.add('hidden');
-                    if (authLinkMobile) {
-                        authLinkMobile.textContent = "Login";
-                        authLinkMobile.href = "login.html";
-                    }
+                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.remove('hidden');
+                    if (profileLinkDesktop) profileLinkDesktop.classList.add('hidden');
+                    
+                    if (authLinkMobile) { authLinkMobile.textContent = "Login"; authLinkMobile.href = "login.html"; }
                     if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
                     if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
                     if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
                     if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
-                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
-                        closeDesktopMenu();
-                    }
+                    if (desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
                 }
                 setActiveNavLink();
             });
 
             function handleLogout(e) {
                 e.preventDefault();
-                if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                if (desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
                 if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
                 authInstance.signOut().then(() => {
-                    console.log("User signed out");
                     window.location.href = 'index.html'; 
                 }).catch(error => console.error("Sign out error", error));
             }
@@ -614,10 +572,8 @@
                     
                     if (linkHref === currentPath) {
                         link.classList.add('active');
-                    } else if ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html" || link.dataset.page === "index" || link.dataset.page === "index-mobile")) {
+                    } else if ((currentPath === "index.html" || currentPath === "") && (linkHref === "index.html")) {
                         link.classList.add('active');
-                    } else if (currentPath === "earnings.html" && linkHref === "earnings.html") { 
-                         link.classList.add('active');
                     }
                 });
             }
@@ -639,17 +595,17 @@
             if (desktopHamburgerButton) {
                 desktopHamburgerButton.addEventListener('click', (event) => {
                     event.stopPropagation();
-                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                    if (desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
                     else openDesktopMenu();
                 });
             }
             if (menuOverlay) menuOverlay.addEventListener('click', closeDesktopMenu);
             if (slideoutCloseButton) slideoutCloseButton.addEventListener('click', closeDesktopMenu);
             document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
+                if (event.key === 'Escape' && desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
             });
 
-            setActiveNavLink(); // Initial call
+            setActiveNavLink();
         }
 
         // Fetch and Inject Header, then Initialize Header Logic
@@ -662,32 +618,12 @@
                 const headerPlaceholder = document.getElementById('header-placeholder');
                 if (headerPlaceholder) {
                     headerPlaceholder.innerHTML = data;
-        
                     initializeHeaderAndAuth(); 
         
                     const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
                     if (fixedHeader) {
-                        document.querySelector('.page-content-wrapper').style.paddingTop = (fixedHeader.offsetHeight + 20) + 'px'; // 20px buffer
+                        document.querySelector('.page-content-wrapper').style.paddingTop = (fixedHeader.offsetHeight + 20) + 'px';
                     }
-        
-                    // ✅ Set profile picture in header
-                    firebase.auth().onAuthStateChanged(user => {
-                        const avatarImg = document.getElementById('navProfilePic');
-                        if (avatarImg && user) {
-                            if (user.photoURL) {
-                                avatarImg.src = user.photoURL;
-                            } else if (user.displayName) {
-                                const initials = user.displayName.charAt(0).toUpperCase();
-                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-                            } else if (user.email) {
-                                const initials = user.email.charAt(0).toUpperCase();
-                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-                            } else {
-                                avatarImg.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
-                            }
-                        }
-                    });
-        
                 } else {
                     console.error('Header placeholder element not found.');
                 }
@@ -717,19 +653,12 @@
                 let utcDay = day;
                 let utcHour = hour;
 
-                // Basic timezone adjustment 
                 if (timezone === "ET") { 
-                    // Assuming Eastern Time is UTC-4 (e.g., EDT). 
-                    // For May, EDT (UTC-4) is typically active.
-                    // A more robust solution would use a library for timezone conversions.
                     utcHour = hour + 4; 
-                } else if (timezone === "GMT") {
-                    // GMT is UTC
                 }
-                // Add more timezone conversions if needed for other zones (CT, MT, PT etc.)
 
                 const startDateUtc = new Date(Date.UTC(utcYear, utcMonth, utcDay, utcHour, minute, 0));
-                const endDateUtc = new Date(startDateUtc.getTime() + (60 * 60 * 1000)); // Assume 1 hour duration
+                const endDateUtc = new Date(startDateUtc.getTime() + (60 * 60 * 1000)); 
 
                 const formatDateToICS = (dateObj) => {
                     return dateObj.getUTCFullYear() +
@@ -775,17 +704,17 @@
             }
 
             const notification = document.createElement('div');
-            notification.className = 'linq-notification'; // Add a class for potential removal
+            notification.className = 'linq-notification';
             notification.textContent = message;
             notification.style.position = 'fixed';
             notification.style.bottom = '20px';
             notification.style.left = '50%';
             notification.style.transform = 'translateX(-50%)';
-            notification.style.backgroundColor = '#00BFFF'; // Linq accent color
+            notification.style.backgroundColor = '#00BFFF';
             notification.style.color = 'white';
             notification.style.padding = '12px 25px';
             notification.style.borderRadius = '6px';
-            notification.style.zIndex = '10001'; // Ensure it's on top
+            notification.style.zIndex = '10001';
             notification.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
             notification.style.fontSize = '0.9rem';
             notification.style.textAlign = 'center';
