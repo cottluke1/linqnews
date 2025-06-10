@@ -765,6 +765,11 @@
                             } else if (user.displayName) {
                                 const initials = user.displayName.charAt(0).toUpperCase();
                                 avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+                            } else if (user.email) {
+                                const initials = user.email.charAt(0).toUpperCase();
+                                avatarImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+                            } else {
+                                avatarImg.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
                             }
                         }
                     });
