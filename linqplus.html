@@ -8,6 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     
     <style>
         /* General Styles & Resets from Reference */
@@ -110,10 +113,6 @@
             border-color: #5a6268;
         }
         
-        .plan-card.selected {
-            border-color: var(--border-highlight);
-        }
-
         .plan-card-header {
             display: flex;
             justify-content: space-between;
@@ -137,36 +136,6 @@
             color: var(--text-secondary);
         }
         
-        /* Custom Radio Button */
-        .radio-checkmark {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: 2px solid var(--border-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.2s ease;
-        }
-        
-        .plan-card.selected .radio-checkmark {
-            border-color: var(--border-highlight);
-        }
-
-        .radio-checkmark svg {
-            width: 16px;
-            height: 16px;
-            color: var(--border-highlight);
-            opacity: 0;
-            transform: scale(0.5);
-            transition: all 0.2s ease;
-        }
-
-        .plan-card.selected .radio-checkmark svg {
-            opacity: 1;
-            transform: scale(1);
-        }
-
         /* Features List */
         .features-list {
             list-style: none;
@@ -208,14 +177,13 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.2s ease;
-            display: block;
-            width: 100%;
             text-decoration: none;
             margin-top: auto; /* Pushes button to the bottom */
+            width: 100%; /* UPDATED: Make button fill width */
         }
         .btn-upgrade {
             background-color: #FFFFFF;
-            color: #0B0C10;
+            color: #0B0C10; 
         }
         .btn-upgrade:hover {
             background-color: #E0E0E0;
@@ -224,15 +192,15 @@
         }
         .btn-current {
             background-color: #FFFFFF;
-            color: #A0A0A0;
+            color: #0B0C10; /* UPDATED: Changed text to black */
             cursor: default;
         }
 
 
         /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
         }
 
         /* Responsive Design */
@@ -269,9 +237,6 @@
                 <div id="free-plan" class="plan-card">
                     <div class="plan-card-header">
                         <h2 class="plan-title">Free</h2>
-                        <div class="radio-checkmark">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                        </div>
                     </div>
                     <p class="plan-price">$0</p>
                     <ul class="features-list">
@@ -304,12 +269,9 @@
                 </div>
 
                 <!-- Premium Plan Card -->
-                <div id="premium-plan" class="plan-card selected">
+                <div id="premium-plan" class="plan-card">
                     <div class="plan-card-header">
                         <h2 class="plan-title">Premium</h2>
-                        <div class="radio-checkmark">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                        </div>
                     </div>
                     <p class="plan-price">$2.99<span class="period">/month</span></p>
                      <ul class="features-list">
@@ -338,7 +300,7 @@
                             Linq AI Assistant
                         </li>
                     </ul>
-                    <a href="profile.html#subscription" class="btn btn-upgrade">Upgrade to Premium</a>
+                    <a href="payment.html" id="upgrade-button" class="btn btn-upgrade">Upgrade</a>
                 </div>
             </div>
         </main>
@@ -346,23 +308,40 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const freePlan = document.getElementById('free-plan');
-            const premiumPlan = document.getElementById('premium-plan');
+            const closeButton = document.querySelector('.close-button');
+            const contentContainer = document.querySelector('.content-container');
+            const upgradeButton = document.getElementById('upgrade-button');
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+                authDomain: "linq-b27a8.firebaseapp.com",
+                projectId: "linq-b27a8",
+                storageBucket: "linq-b27a8.appspot.com",
+                messagingSenderId: "1067901051826",
+                appId: "1:1067901_LATEST_e2af07aab"
+            };
+
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
             
-            // Function to handle plan selection
-            const selectPlan = (selectedPlan) => {
-                if (selectedPlan === freePlan) {
-                    freePlan.classList.add('selected');
-                    premiumPlan.classList.remove('selected');
-                } else {
-                    premiumPlan.classList.add('selected');
-                    freePlan.classList.remove('selected');
+            firebase.auth().onAuthStateChanged(user => {
+                if (!user) {
+                    upgradeButton.href = 'login.html';
                 }
+            });
+
+            // Function to close the view with fade out
+            const closeView = (event) => {
+                event.preventDefault(); // Prevent default link behavior
+                contentContainer.style.animation = 'fadeOut 0.3s ease-out forwards';
+                setTimeout(() => {
+                    window.location.href = closeButton.href; 
+                }, 300); // Matches the animation duration
             };
 
             // Add event listeners
-            freePlan.addEventListener('click', () => selectPlan(freePlan));
-            premiumPlan.addEventListener('click', () => selectPlan(premiumPlan));
+            closeButton.addEventListener('click', closeView);
         });
     </script>
 </body>
