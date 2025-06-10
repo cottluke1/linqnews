@@ -36,12 +36,10 @@
       </div>
       <!-- Right: Login/Profile -->
       <div class="flex items-center space-x-3">
-        <!-- Login button: visible by default -->
         <a href="login.html" id="authLinkDesktopLogin"
-          class="nav-link text-sm nav-link-button text-white bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded transition">
+          class="hidden nav-link text-sm nav-link-button text-white bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded transition">
           Login
         </a>
-        <!-- Profile link: hidden by default -->
         <a href="profile.html" id="profileLinkDesktop" class="hidden" title="My Profile">
           <img id="navProfilePic"
             src="https://placehold.co/40x40/2C2F33/EAEAEA?text=U"
@@ -58,12 +56,16 @@
     const profileLink = document.getElementById('profileLinkDesktop');
     const profilePic = document.getElementById('navProfilePic');
 
+    // Hide both on load, show correct after auth check
+    loginBtn.classList.add('hidden');
+    profileLink.classList.add('hidden');
+
     function showCorrectNav(isLoggedIn) {
+      // Hide both first (no flicker)
       loginBtn.classList.add('hidden');
       profileLink.classList.add('hidden');
       if (isLoggedIn) {
         profileLink.classList.remove('hidden');
-        // Always use the same default image, never the user's real photo
         profilePic.src = "https://placehold.co/40x40/2C2F33/EAEAEA?text=U";
       } else {
         loginBtn.classList.remove('hidden');
