@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Linq+ Subscription</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Square Web Payments SDK -->
+    <script type="text/javascript" src="https://web.squarecdn.com/v1/square.js"></script>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0B0C10; 
+            background-image: radial-gradient(at 50% 0%, rgba(67, 56, 202, 0.1) 0%, rgba(8, 0, 20, 0) 50%);
+            color: #E7E9EA;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .payment-container {
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+        }
+        .glass-form {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 2.5rem;
+        }
+        #card-container {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        .pay-button {
+            background-image: linear-gradient(to right, #007aff, #0051ff);
+            color: #fff;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        .pay-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+        }
+        .pay-button:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+        #payment-status {
+            text-align: center;
+            margin-top: 1rem;
+            min-height: 24px;
+        }
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 4px solid #fff;
+            width: 32px;
+            height: 32px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none; /* Hidden by default */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="glass-form">
+            <h1 class="text-2xl font-bold text-center mb-2">Linq+ Subscription</h1>
+            <p class="text-center text-gray-400 mb-6" id="plan-details-text">Loading plan details...</p>
+
+            <form id="payment-form">
+                <div id="card-container"></div>
+                <button class="pay-button mt-6" id="card-button" type="button">Pay Now</button>
+            </form>
+            <div id="spinner" class="spinner"></div>
+            <div id="payment-status"></div>
+            <p class="text-xs text-gray-500 text-center mt-4">Powered by Square. Your payment info is secure.</p>
+        </div>
+    </div>
+
+    <script type="module">
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+            authDomain: "linq-b27a8.firebaseapp.com",
+            projectId: "linq-b27a8",
+            storageBucket: "linq-b27a8.appspot.com",
+            messagingSenderId: "1067901051826",
+            appId: "1:1067901_LATEST_e2af07aab"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        const planDetailsText = document.getElementById('plan-details-text');
+        const urlParams = new URLSearchParams(window.location.search);
+        const plan = urlParams.get('plan');
+        let selectedPlanId = '';
+        
+        // **IMPORTANT**: Replace these with your actual Square Subscription Plan IDs
+        const monthlyPlanId = "YOUR_MONTHLY_PLAN_ID_HERE";
+        const annualPlanId = "YOUR_ANNUAL_PLAN_ID_HERE";
+
+        if (plan === 'annual') {
+            planDetailsText.textContent = 'You are subscribing to the Annual Plan for $35.88.';
+            selectedPlanId = annualPlanId;
+        } else if (plan === 'monthly') {
+            planDetailsText.textContent = 'You are subscribing to the Monthly Plan for $9.99.';
+            selectedPlanId = monthlyPlanId;
+        } else {
+            planDetailsText.textContent = 'No plan selected. Please go back and choose a plan.';
+            document.getElementById('payment-form').style.display = 'none';
+        }
+
+        async function initializeCard(payments) {
+            const card = await payments.card();
+            await card.attach('#card-container');
+            return card;
+        }
+
+        async function handlePaymentMethodSubmission(event, card) {
+            event.preventDefault();
+
+            try {
+                const cardButton = document.getElementById('card-button');
+                const spinner = document.getElementById('spinner');
+                const paymentStatus = document.getElementById('payment-status');
+
+                cardButton.disabled = true;
+                spinner.style.display = 'block';
+                paymentStatus.textContent = '';
+
+                // Tokenize the card payment method
+                const tokenResult = await card.tokenize();
+                if (tokenResult.status === 'OK') {
+                    console.log('Payment Token:', tokenResult.token);
+                    
+                    // --- BACKEND LOGIC SIMULATION ---
+                    // In a real application, you would send `tokenResult.token` and `selectedPlanId`
+                    // to your backend server here.
+                    //
+                    // Your server would then:
+                    // 1. Create a Square Customer for the logged-in user.
+                    // 2. Create a Card on File for that customer using the token.
+                    // 3. Create a Subscription using the Customer ID, Card ID, and the `selectedPlanId`.
+                    // 4. Update the user's record in Firebase to mark them as a premium user.
+                    // 5. Return a success or failure message to the client.
+
+                    // Simulate a successful payment after a short delay
+                    setTimeout(() => {
+                        spinner.style.display = 'none';
+                        paymentStatus.textContent = 'Success! Your subscription is active.';
+                        paymentStatus.style.color = '#34C759'; // success green
+                        
+                        // Redirect to the profile page after another delay
+                        setTimeout(() => {
+                            window.location.href = 'profile.html#subscription';
+                        }, 2000);
+
+                    }, 2000);
+
+
+                } else {
+                    throw new Error(`Tokenization failed with status: ${tokenResult.status}`);
+                }
+            } catch (e) {
+                console.error(e);
+                const cardButton = document.getElementById('card-button');
+                const spinner = document.getElementById('spinner');
+                const paymentStatus = document.getElementById('payment-status');
+                spinner.style.display = 'none';
+                paymentStatus.textContent = 'Payment failed. Please check your card details and try again.';
+                paymentStatus.style.color = '#FF3B30'; // error red
+                cardButton.disabled = false;
+            }
+        }
+        
+        firebase.auth().onAuthStateChanged(async (user) => {
+            if (user) {
+                // User is logged in, initialize Square
+                if (!window.Square) {
+                    throw new Error('Square.js failed to load');
+                }
+                
+                // **IMPORTANT**: Use sandbox ID for testing. Replace with production ID for live payments.
+                const appId = 'sandbox-sq0idb-K5XMOK8L_6bzeB-32idGkg'; 
+                const payments = window.Square.payments(appId);
+                const card = await initializeCard(payments);
+                
+                const cardButton = document.getElementById('card-button');
+                cardButton.addEventListener('click', (event) => handlePaymentMethodSubmission(event, card));
+
+            } else {
+                // User is not logged in, redirect them.
+                console.log("User not logged in. Redirecting...");
+                window.location.href = `login.html?redirect=payment.html?plan=${plan}`;
+            }
+        });
+
+    </script>
+</body>
+</html>
