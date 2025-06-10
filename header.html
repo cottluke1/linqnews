@@ -37,9 +37,9 @@
       </div>
       <!-- Right: Login/Profile -->
       <div class="flex items-center space-x-3">
-        <!-- The login button is now visible by default and will be hidden by the main page's script if the user is logged in -->
+        <!-- The login button is now hidden by default to prevent flashing -->
         <a href="login.html" id="authLinkDesktopLogin"
-          class="nav-link text-sm nav-link-button text-white bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded transition">
+          class="hidden nav-link text-sm nav-link-button text-white bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded transition">
           Login
         </a>
         <!-- The profile link is hidden by default and will be shown by the main page's script -->
@@ -53,6 +53,6 @@
       </div>
     </div>
   </nav>
-  <!-- REMOVED the script block that was causing the flicker -->
+  <!-- No script is needed in this file anymore -->
 </body>
 </html>
