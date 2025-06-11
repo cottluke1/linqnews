@@ -374,7 +374,7 @@
             </button>
         </form>
     </div>
-
+    
     <script>
         // --- Function to Initialize and Run All Header Related Logic ---
         function initializeHeaderAndAuth() {
@@ -391,7 +391,7 @@
             const earningsLinkMobile = document.getElementById('earningsLinkMobile');
             const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
             const menuOverlay = document.getElementById('menu-overlay');
-            const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
+            const logoutButtonDesktopSlideout = document.getElementById('logoutButtonDesktopSlideout');
             const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
             const slideoutCloseButton = document.getElementById('slideout-close-button');
             const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -610,7 +610,10 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(conversationHistory)
+                    // **FIX:** Send an object containing the history array
+                    body: JSON.stringify({
+                        conversationHistory: conversationHistory
+                    })
                 });
         
                 const data = await response.json();
