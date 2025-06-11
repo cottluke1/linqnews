@@ -314,19 +314,6 @@
             box-shadow: 0 4px 10px rgba(0, 191, 255, 0.2);
         }
 
-        /* Footer */
-        .footer {
-            background-color: #080808; /* Very dark */
-            color: #A0A0A0;
-            padding: 2.5rem 1rem;
-            border-top: 1px solid #1A1A1A;
-            text-align: center;
-            font-size: 0.875rem;
-            margin-top: auto; /* Pushes footer to bottom in flex column */
-        }
-        .footer a { color: #B0B0B0; transition: color 0.2s ease; }
-        .footer a:hover { color: #00BFFF; }
-
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .chat-page-title { font-size: 2.25rem; }
@@ -387,16 +374,6 @@
             </button>
         </form>
     </div>
-
-    <footer class="footer">
-        <p>&copy; <span id="current-year"></span> Linq Energy Intelligence. Advanced AI for a Brighter Future.</p>
-        <nav class="text-xs space-x-3 mt-2">
-            <a href="#">Privacy Policy</a> |
-            <a href="#">Terms of Service</a> |
-            <a href="#">Contact Us</a> |
-            <a href="#">API Status</a>
-        </nav>
-    </footer>
 
     <script>
         // --- Function to Initialize and Run All Header Related Logic ---
@@ -627,7 +604,7 @@
                 content: userMessage
             });
         
-            // **IMPORTANT**: Replace this placeholder with the actual URL from your Firebase deployment.
+            // This is your unique, deployed Firebase Function URL.
             const functionUrl = 'https://us-central1-linq-b27a8.cloudfunctions.net/openAIProxy';
         
             try {
@@ -636,10 +613,8 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    // Send the conversation history to our secure function
-                    body: JSON.stringify({
-                        conversationHistory: conversationHistory
-                    })
+                    // Send the conversation history array directly as the body.
+                    body: JSON.stringify(conversationHistory)
                 });
         
                 const data = await response.json();
