@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linq AI - Your Energy Questions Answered</title>
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
-    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
-    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap)" rel="stylesheet">
-    <link href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)" rel="stylesheet">
-    <script src="[https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js](https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js)"></script>
-    <script src="[https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js](https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js)"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <style>
         /* Base styles */
         body {
@@ -451,7 +451,7 @@
                             const initials = user.email.charAt(0).toUpperCase();
                             navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
                         } else {
-                            navProfilePic.src = '[https://placehold.co/40x40/2C2F33/EAEAEA?text=U](https://placehold.co/40x40/2C2F33/EAEAEA?text=U)';
+                            navProfilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
                         }
                     }
 
@@ -575,7 +575,10 @@
         const chatForm = document.getElementById('chat-form');
         const chatInput = document.getElementById('chat-input');
         const suggestedQuestionsContainer = document.getElementById('suggested-questions');
+        
+        // ** INSECURE - FOR TESTING ONLY **
         const openAIKey = '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';
+
         let conversationHistory = [{
              role: 'system',
              content: 'You are Linq AI, a helpful and knowledgeable energy analyst. Provide concise, informative answers related to the energy sector, including oil, gas, renewables, and market trends. Keep responses to a few sentences unless asked for more detail.'
@@ -627,7 +630,7 @@
                  content: userMessage
              });
         
-            const apiUrl = '[https://api.openai.com/v1/chat/completions](https://api.openai.com/v1/chat/completions)';
+            const apiUrl = 'https://api.openai.com/v1/chat/completions';
         
             try {
                 const response = await fetch(apiUrl, {
