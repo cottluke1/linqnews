@@ -3,345 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go Premium</title>
-    <!-- Google Fonts: Inter -->
+    <title>Upgrade to Linq+</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    
     <style>
-        /* General Styles & Resets from Reference */
-        :root {
-            --bg-color: #0B0C10;
-            --text-primary: #E7E9EA;
-            --text-secondary: #6E767D;
-            --border-color: #2F3336;
-            --border-highlight: #CFD9DE;
-            --danger-color: #ef4444;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-            background-color: var(--bg-color);
-            background-image: radial-gradient(at 50% 0%, rgba(67, 56, 202, 0.15) 0%, rgba(8, 0, 20, 0) 50%);
-            color: var(--text-primary);
-            margin: 0;
-            padding: 2rem 1rem;
+            font-family: 'Inter', sans-serif;
+            background-color: #0B0C10; 
+            background-image: radial-gradient(at 50% 0%, rgba(67, 56, 202, 0.1) 0%, rgba(8, 0, 20, 0) 50%);
+            color: #E7E9EA;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
-        
-        /* Main Content Container */
-        .content-container {
-            width: 100%;
-            max-width: 900px;
-            animation: fadeIn 0.5s ease-out;
-            transition: opacity 0.3s ease-out;
-        }
-
-        /* Close Button */
-        .close-button-wrapper {
-            position: absolute;
-            top: 1.5rem;
-            left: 1.5rem;
-        }
-        .close-button {
-            background: transparent;
-            border: none;
-            color: var(--text-primary);
-            font-size: 1.75rem;
-            cursor: pointer;
-            padding: 0.5rem;
-            line-height: 1;
-            transition: color 0.2s ease;
-            text-decoration: none;
-        }
-        .close-button:hover {
-            color: var(--text-secondary);
-        }
-
-        /* Header Content */
-        .page-header {
-            text-align: center;
-            padding: 3rem 0;
-        }
-
-        .page-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin: 0 0 1rem 0;
-        }
-        
-        .page-subtitle {
-            font-size: 1.125rem;
-            color: var(--text-secondary);
-            max-width: 500px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-        
-        /* Pricing Cards Container */
-        .pricing-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        /* Plan Card Styles */
-        .plan-card {
-            background-color: transparent;
-            border: 2px solid var(--border-color);
-            border-radius: 1.25rem;
-            padding: 1.5rem 2rem;
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            transition: border-color 0.2s ease-in-out;
-        }
-
-        .plan-card:hover {
-            border-color: #5a6268;
-        }
-        
-        .plan-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.5rem;
-        }
-        
-        .plan-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-        }
-
-        .plan-price {
-            font-size: 1.75rem;
-            font-weight: 800;
-        }
-        
-        .plan-price .period {
-            font-size: 1rem;
-            font-weight: 400;
-            color: var(--text-secondary);
-        }
-        
-        /* Features List */
-        .features-list {
-            list-style: none;
-            padding: 0;
-            margin: 1.5rem 0;
-            flex-grow: 1;
-        }
-
-        .feature-item {
-            display: flex;
             align-items: center;
-            margin-bottom: 1rem;
-            font-size: 1rem;
-            color: var(--text-primary);
-        }
-
-        .feature-item.excluded {
-            color: var(--text-secondary);
-            text-decoration: line-through;
-        }
-        
-        .feature-item svg.icon {
-            width: 20px;
-            height: 20px;
-            margin-right: 0.75rem;
-            color: var(--text-primary);
-        }
-        
-        .feature-item.excluded svg.icon {
-             color: var(--danger-color);
-        }
-
-        /* --- Buttons --- */
-        .btn {
-            padding: 14px 28px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            margin-top: auto; /* Pushes button to the bottom */
-            width: 100%; /* UPDATED: Make button fill width */
-        }
-        .btn-upgrade {
-            background-color: #FFFFFF;
-            color: #0B0C10; 
-        }
-        .btn-upgrade:hover {
-            background-color: #E0E0E0;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255,255,255,0.1);
-        }
-        .btn-current {
-            background-color: #FFFFFF;
-            color: #0B0C10; /* UPDATED: Changed text to black */
-            cursor: default;
-        }
-
-
-        /* Animations */
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-                align-items: flex-start;
-            }
-            .pricing-container {
-                grid-template-columns: 1fr;
-            }
-             .page-header {
-                padding: 4rem 0 2rem 0;
-            }
-            .page-title {
-                font-size: 2rem;
-            }
+            height: 100vh;
+            overflow: hidden; /* Prevents scrolling */
         }
     </style>
 </head>
 <body>
-    <div class="close-button-wrapper">
-         <a href="index.html" class="close-button" aria-label="Close">&times;</a>
-    </div>
-    <div class="content-container">
-        <header class="page-header">
-            <h1 class="page-title">Upgrade to Premium</h1>
-            <p class="page-subtitle">Enjoy an enhanced experience, exclusive creator tools, top-tier verification and security.</p>
-        </header>
-        
-        <main>
-            <div class="pricing-container">
-                <!-- Free Plan Card -->
-                <div id="free-plan" class="plan-card">
-                    <div class="plan-card-header">
-                        <h2 class="plan-title">Free</h2>
-                    </div>
-                    <p class="plan-price">$0</p>
-                    <ul class="features-list">
-                        <li class="feature-item">
-                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                            News
-                        </li>
-                        <li class="feature-item">
-                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                            Community
-                        </li>
-                        <li class="feature-item">
-                           <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                            Bookmarks
-                        </li>
-                        <li class="feature-item excluded">
-                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                            Markets Access
-                        </li>
-                        <li class="feature-item excluded">
-                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                            Earnings Reports
-                        </li>
-                        <li class="feature-item excluded">
-                           <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                            Linq AI Assistant
-                        </li>
-                    </ul>
-                    <button class="btn btn-current">Current Plan</button>
-                </div>
+    <a href="index.html" class="absolute top-6 left-6 text-gray-400 hover:text-white transition-colors text-2xl font-bold" aria-label="Close">
+        &times;
+    </a>
 
-                <!-- Premium Plan Card -->
-                <div id="premium-plan" class="plan-card">
-                    <div class="plan-card-header">
-                        <h2 class="plan-title">Premium</h2>
-                    </div>
-                    <p class="plan-price">$2.99<span class="period">/month</span></p>
-                     <ul class="features-list">
-                         <li class="feature-item">
-                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                            News
-                        </li>
-                        <li class="feature-item">
-                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                            Community
-                        </li>
-                        <li class="feature-item">
-                           <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                            Bookmarks
-                        </li>
-                         <li class="feature-item">
-                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                            Markets Access
-                        </li>
-                        <li class="feature-item">
-                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                            Earnings Reports
-                        </li>
-                        <li class="feature-item">
-                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                            Linq AI Assistant
-                        </li>
-                    </ul>
-                    <a href="payment.html" id="upgrade-button" class="btn btn-upgrade">Upgrade</a>
+    <div class="container mx-auto p-4">
+        <div class="text-center mb-12">
+            <h1 class="text-3xl lg:text-4xl font-extrabold text-white mb-2">Upgrade to Linq+</h1>
+            <p class="text-md lg:text-lg text-gray-400">Unlock premium features and gain a competitive edge</p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row justify-center items-stretch gap-6">
+
+            <!-- Free Plan -->
+            <div class="w-full max-w-xs p-6 bg-slate-900/50 border border-slate-700 rounded-2xl shadow-lg flex flex-col">
+                <h2 class="text-xl font-bold text-white text-center">Linq Free</h2>
+                <p class="text-center text-gray-400 mt-1 text-sm">Basic access</p>
+                <div class="text-center my-6">
+                    <span class="text-4xl font-extrabold text-white">Free</span>
+                </div>
+                <ul class="space-y-3 text-gray-300 text-sm flex-grow">
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>News</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Community</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Bookmarks</li>
+                    <li class="flex items-center text-gray-500"><svg class="w-4 h-4 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Markets Access</li>
+                    <li class="flex items-center text-gray-500"><svg class="w-4 h-4 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Earnings Reports</li>
+                    <li class="flex items-center text-gray-500"><svg class="w-4 h-4 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Linq AI Assistant</li>
+                    <li class="flex items-center text-gray-500"><svg class="w-4 h-4 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>Weekly News Letter</li>
+                </ul>
+                <div class="mt-8 flex justify-center">
+                     <button disabled style="display: inline-block; font-size: 16px; line-height: 44px; height: 44px; color: #9ca3af; min-width: 190px; background-color: #374151; text-align: center; border-radius: 50px; font-weight: 500; cursor: not-allowed;">
+                       Current Plan
+                     </button>
                 </div>
             </div>
-        </main>
+
+            <!-- Premium Plan -->
+            <div class="w-full max-w-xs p-6 bg-slate-800/70 border-2 border-white rounded-2xl shadow-2xl shadow-cyan-500/10 transform hover:scale-105 transition-transform duration-300 flex flex-col">
+                <div class="flex justify-center items-center gap-4">
+                    <h2 class="text-xl font-bold text-white text-center">Linq+</h2>
+                </div>
+                <p class="text-center text-gray-400 mt-1 text-sm">Full access</p>
+                <div class="text-center my-6">
+                    <span class="text-4xl font-extrabold text-white">$2.99</span>
+                    <span class="text-gray-400">/month</span>
+                </div>
+                <ul class="space-y-3 text-gray-300 text-sm flex-grow">
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>News</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Community</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Bookmarks</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Markets Access</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Earnings Reports</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Linq AI Assistant</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Weekly News Letter</li>
+                </ul>
+            </div>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const closeButton = document.querySelector('.close-button');
-            const contentContainer = document.querySelector('.content-container');
-            const upgradeButton = document.getElementById('upgrade-button');
-
             const firebaseConfig = {
                 apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
                 authDomain: "linq-b27a8.firebaseapp.com",
                 projectId: "linq-b27a8",
                 storageBucket: "linq-b27a8.appspot.com",
                 messagingSenderId: "1067901051826",
-                appId: "1:1067901_LATEST_e2af07aab"
+                appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
             };
 
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
             }
-            
-            firebase.auth().onAuthStateChanged(user => {
-                if (!user) {
-                    upgradeButton.href = 'login.html';
-                }
-            });
-
-            // Function to close the view with fade out
-            const closeView = (event) => {
-                event.preventDefault(); // Prevent default link behavior
-                contentContainer.style.animation = 'fadeOut 0.3s ease-out forwards';
-                setTimeout(() => {
-                    window.location.href = closeButton.href; 
-                }, 300); // Matches the animation duration
-            };
-
-            // Add event listeners
-            closeButton.addEventListener('click', closeView);
         });
     </script>
 </body>
