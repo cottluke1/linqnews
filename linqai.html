@@ -212,62 +212,73 @@
         .typing-indicator .message-content span:nth-child(2) { animation-delay: -0.16s; }
         @keyframes bounceTyping { 0%, 80%, 100% { transform: scale(0.5); opacity: 0.5; } 40% { transform: scale(1.0); opacity: 1;} }
 
-        /* Chat Input Area - Enhanced */
+        /* ===== MODERN CHAT INPUT STYLES START ===== */
         .chat-input-area {
             flex-shrink: 0;
-            padding: 1rem 1.5rem;
-            background-color: rgba(18, 18, 18, 0.9); /* Slightly transparent dark bg */
-            backdrop-filter: blur(10px) saturate(150%);
-            -webkit-backdrop-filter: blur(10px) saturate(150%);
-            border-top: 1px solid #282828;
+            padding: 1rem 1.5rem 1.5rem 1.5rem; /* Added bottom padding */
+            background-color: transparent; /* Changed from semi-transparent */
+            border-top: none; /* Removed top border */
             z-index: 950;
         }
         .chat-input-form {
+            position: relative;
             display: flex;
+            align-items: center;
             width: 100%;
             max-width: 900px;
             margin: 0 auto;
-            gap: 1rem;
+            background-color: #18181B; /* Darker background */
+            border-radius: 9999px; /* Pill shape */
+            border: 1px solid #2A2A2A;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .chat-input-form:focus-within {
+            border-color: #00BFFF;
+            box-shadow: 0 0 0 4px rgba(0, 191, 255, 0.2), 0 5px 25px rgba(0,0,0,0.3);
         }
         .chat-input {
             flex-grow: 1;
+            width: 100%;
             padding: 1rem 1.5rem;
-            background-color: #1A1A1A; /* Darker input field */
-            border: 1px solid #333333;
-            border-radius: 0.75rem; /* Slightly more rounded */
-            font-size: 1rem;
+            background-color: transparent;
+            border: none;
             color: #E0E0E0;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            font-size: 1rem;
         }
-        .chat-input::placeholder { color: #777777; }
         .chat-input:focus {
             outline: none;
-            border-color: #00BFFF; /* Linq Blue */
-            background-color: #222222; /* Slightly lighter on focus */
-            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.25), 0 0 10px rgba(0, 191, 255, 0.15) inset;
         }
+        .chat-input::placeholder { color: #555; }
         .send-button {
-            padding: 1rem;
-            background: linear-gradient(135deg, #00BFFF, #0095CC); /* Linq Blue gradient */
+            width: 2.75rem; /* 44px */
+            height: 2.75rem; /* 44px */
+            margin: 0.375rem; /* 6px margin */
+            padding: 0;
+            background: linear-gradient(135deg, #00BFFF, #007ACC);
             color: #FFFFFF;
             border: none;
-            border-radius: 0.75rem;
+            border-radius: 50%; /* Circular */
             cursor: pointer;
             font-weight: 600;
-            transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 6px 20px -6px rgba(0, 191, 255, 0.4);
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0, 150, 255, 0.3);
         }
-        .send-button svg, .send-button i { width: 1.5rem; height: 1.5rem; }
+        .send-button svg, .send-button i { width: 1.25rem; height: 1.25rem; }
         .send-button:hover {
-            background: linear-gradient(135deg, #00AADD, #00BFFF);
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 10px 25px -8px rgba(0, 191, 255, 0.6);
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 150, 255, 0.4);
         }
-        .send-button:active { transform: translateY(0px) scale(1); }
-
+        .send-button:active { 
+            transform: scale(1.05);
+            transition-duration: 0.1s;
+        }
+        /* ===== MODERN CHAT INPUT STYLES END ===== */
+        
         /* Suggested Questions - Enhanced */
         .suggested-questions {
             flex-shrink: 0;
@@ -308,8 +319,8 @@
             .ai-icon { width: 2rem; height: 2rem; margin-right: 0.75rem;}
             .ai-icon svg, .ai-icon i { width: 1rem; height: 1rem;}
             .chat-input { padding: 0.875rem 1.25rem; font-size: 0.95rem; }
-            .send-button { padding: 0.875rem; }
-            .send-button svg, .send-button i { width: 1.25rem; height: 1.25rem; }
+            .send-button { width: 2.5rem; height: 2.5rem; }
+            .send-button svg, .send-button i { width: 1.1rem; height: 1.1rem; }
             .page-heading-container { margin-bottom: 1.5rem; }
             .suggested-questions { padding: 0.75rem 0.5rem 1rem 0.5rem; gap: 0.5rem;}
             .suggested-question-btn { font-size: 0.75rem; padding: 0.5rem 1rem; }
