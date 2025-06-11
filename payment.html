@@ -19,78 +19,78 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
             overflow: hidden; /* Prevents scrolling */
         }
     </style>
 </head>
 <body>
+    <a href="index.html" class="absolute top-6 left-6 text-gray-400 hover:text-white transition-colors text-2xl font-bold" aria-label="Close">
+        &times;
+    </a>
 
     <div class="container mx-auto p-4">
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-extrabold text-white mb-2">Choose Your Plan</h1>
-            <p class="text-lg text-gray-400">Unlock premium features with Linq+</p>
+        <div class="text-center mb-12">
+            <h1 class="text-3xl lg:text-4xl font-extrabold text-white mb-2">Choose Your Plan</h1>
+            <p class="text-md lg:text-lg text-gray-400">Unlock premium features with Linq+</p>
         </div>
 
-        <div class="flex flex-col lg:flex-row justify-center items-stretch gap-8">
+        <div class="flex flex-col lg:flex-row justify-center items-stretch gap-6">
 
             <!-- Monthly Plan -->
-            <div class="w-full max-w-sm p-8 bg-slate-900/50 border border-slate-700 rounded-2xl shadow-lg transform hover:scale-105 transition-transform duration-300 flex flex-col">
-                <h2 class="text-2xl font-bold text-white text-center">Linq+ Monthly</h2>
-                <p class="text-center text-gray-400 mt-2">Flexibility first</p>
-                <div class="text-center my-8">
-                    <span class="text-5xl font-extrabold text-white">$9.99</span>
+            <div class="w-full max-w-xs p-6 bg-slate-900/50 border border-slate-700 rounded-2xl shadow-lg transform hover:scale-105 transition-transform duration-300 flex flex-col">
+                <h2 class="text-xl font-bold text-white text-center">Linq+ Monthly</h2>
+                <p class="text-center text-gray-400 mt-1 text-sm">Flexibility first</p>
+                <div class="text-center my-6">
+                    <span class="text-4xl font-extrabold text-white">$9.99</span>
                     <span class="text-gray-400">/month</span>
                 </div>
-                <ul class="space-y-4 text-gray-300 flex-grow">
-                    <li class="flex items-center"><svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>News</li>
-                    <li class="flex items-center"><svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Community</li>
-                    <li class="flex items-center"><svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Bookmarks</li>
-                    <li class="flex items-center"><svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Markets Access</li>
-                    <li class="flex items-center"><svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Earnings Reports</li>
-                    <li class="flex items-center"><svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Linq AI Assistant</li>
-                    <li class="flex items-center"><svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Weekly News Letter</li>
+                <ul class="space-y-3 text-gray-300 text-sm flex-grow">
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>News</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Community</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Bookmarks</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Markets Access</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Earnings Reports</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Linq AI Assistant</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Weekly News Letter</li>
                 </ul>
                 <div class="mt-8 flex justify-center">
                      <a target="_blank" href="https://checkout.square.site/merchant/MLAKHM1GPC8DV/checkout/FIT4LGRUVIOBFX3DYMWV44QM?src=embed" 
-                       style="display: inline-block; font-size: 18px; line-height: 48px; height: 48px; color: #000000; min-width: 212px; background-color: #ffffff; text-align: center; box-shadow: 0 0 0 1px rgba(0,0,0,.1) inset; border-radius: 50px; text-decoration: none;">
+                       style="display: inline-block; font-size: 16px; line-height: 44px; height: 44px; color: #000000; min-width: 190px; background-color: #ffffff; text-align: center; box-shadow: 0 0 0 1px rgba(0,0,0,.1) inset; border-radius: 50px; text-decoration: none; font-weight: 500;">
                        Checkout
                      </a>
                 </div>
             </div>
 
             <!-- Annual Plan -->
-            <div class="w-full max-w-sm p-8 bg-slate-800/70 border-2 border-white rounded-2xl shadow-2xl shadow-cyan-500/10 transform hover:scale-105 transition-transform duration-300 flex flex-col">
+            <div class="w-full max-w-xs p-6 bg-slate-800/70 border-2 border-white rounded-2xl shadow-2xl shadow-cyan-500/10 transform hover:scale-105 transition-transform duration-300 flex flex-col">
                 <div class="flex justify-center items-center gap-4">
-                    <h2 class="text-2xl font-bold text-white text-center">Linq+ Annual</h2>
+                    <h2 class="text-xl font-bold text-white text-center">Linq+ Annual</h2>
                     <span class="bg-white text-black text-xs font-bold px-3 py-1 rounded-full">BEST VALUE</span>
                 </div>
-                <p class="text-center text-gray-400 mt-2">Save over 60%</p>
-                <div class="text-center my-8">
-                    <span class="text-5xl font-extrabold text-white">$2.99</span>
+                <p class="text-center text-gray-400 mt-1 text-sm">Save over 60%</p>
+                <div class="text-center my-6">
+                    <span class="text-4xl font-extrabold text-white">$2.99</span>
                     <span class="text-gray-400">/month</span>
                 </div>
-                <p class="text-center text-gray-400 -mt-4 mb-8">Billed as $35.88 annually</p>
-                <ul class="space-y-4 text-gray-300 flex-grow">
-                    <li class="flex items-center"><svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>News</li>
-                    <li class="flex items-center"><svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Community</li>
-                    <li class="flex items-center"><svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Bookmarks</li>
-                    <li class="flex items-center"><svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Markets Access</li>
-                    <li class="flex items-center"><svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Earnings Reports</li>
-                    <li class="flex items-center"><svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Linq AI Assistant</li>
-                    <li class="flex items-center"><svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Weekly News Letter</li>
+                <p class="text-center text-gray-400 text-sm -mt-4 mb-6">Billed as $35.88 annually</p>
+                <ul class="space-y-3 text-gray-300 text-sm flex-grow">
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>News</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Community</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Bookmarks</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Markets Access</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Earnings Reports</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Linq AI Assistant</li>
+                    <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Weekly News Letter</li>
                 </ul>
                 <div class="mt-8 flex justify-center">
                     <a target="_blank" href="https://checkout.square.site/merchant/MLAKHM1GPC8DV/checkout/FF2TR25Z266UDWTPMFYO3KF3?src=embed" 
-                       style="display: inline-block; font-size: 18px; line-height: 48px; height: 48px; color: #000000; min-width: 212px; background-color: #ffffff; text-align: center; box-shadow: 0 0 0 1px rgba(0,0,0,.1) inset; border-radius: 50px; text-decoration: none;">
+                       style="display: inline-block; font-size: 16px; line-height: 44px; height: 44px; color: #000000; min-width: 190px; background-color: #ffffff; text-align: center; box-shadow: 0 0 0 1px rgba(0,0,0,.1) inset; border-radius: 50px; text-decoration: none; font-weight: 500;">
                        Checkout
                     </a>
                 </div>
             </div>
 
-        </div>
-        <div class="text-center mt-10">
-            <a href="index.html" class="text-gray-400 hover:text-white transition-colors">← Back to home</a>
         </div>
     </div>
 
