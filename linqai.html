@@ -610,7 +610,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    // **FIX:** Send an object containing the history array
+                    // **FIX:** Send an object containing the history array, which the backend expects.
                     body: JSON.stringify({
                         conversationHistory: conversationHistory
                     })
@@ -637,37 +637,45 @@
             }
         }
 
+        // Add event listeners after the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', (event) => {
+            if(chatForm) {
+                 chatForm.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    const userMessage = chatInput.value.trim();
+                    if (userMessage) {
+                        if (suggestedQuestionsContainer.style.display !== 'none') {
+                            suggestedQuestionsContainer.style.display = 'none';
+                        }
 
-        chatForm.addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const userMessage = chatInput.value.trim();
-            if (userMessage) {
-                if (suggestedQuestionsContainer.style.display !== 'none') {
-                    suggestedQuestionsContainer.style.display = 'none';
-                }
+                        addMessageToChat(userMessage, 'user');
+                        chatInput.value = '';
+                        chatInput.focus();
+                        showTypingIndicator();
 
-                addMessageToChat(userMessage, 'user');
-                chatInput.value = '';
+                        const aiResponse = await getOpenAIResponse(userMessage);
+
+                        removeTypingIndicator();
+                        addMessageToChat(aiResponse, 'ai');
+                    }
+                });
+            }
+
+            if(suggestedQuestionsContainer) {
+                suggestedQuestionsContainer.addEventListener('click', function(event) {
+                    if (event.target.classList.contains('suggested-question-btn')) {
+                        const question = event.target.textContent;
+                        chatInput.value = question;
+                        chatInput.focus();
+                        chatForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+                    }
+                });
+            }
+            
+            if(chatInput) {
                 chatInput.focus();
-                showTypingIndicator();
-
-                const aiResponse = await getOpenAIResponse(userMessage);
-
-                removeTypingIndicator();
-                addMessageToChat(aiResponse, 'ai');
             }
         });
-
-        suggestedQuestionsContainer.addEventListener('click', function(event) {
-            if (event.target.classList.contains('suggested-question-btn')) {
-                const question = event.target.textContent;
-                chatInput.value = question;
-                chatInput.focus();
-                chatForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-            }
-        });
-
-        if(chatInput) chatInput.focus();
     </script>
 </body>
 </html>
