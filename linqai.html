@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linq AI - Your Energy Questions Answered</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
+    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap)" rel="stylesheet">
+    <link href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)" rel="stylesheet">
+    <script src="[https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js](https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js)"></script>
+    <script src="[https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js](https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js)"></script>
     <style>
         /* Base styles */
         body {
@@ -451,7 +451,7 @@
                             const initials = user.email.charAt(0).toUpperCase();
                             navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
                         } else {
-                            navProfilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
+                            navProfilePic.src = '[https://placehold.co/40x40/2C2F33/EAEAEA?text=U](https://placehold.co/40x40/2C2F33/EAEAEA?text=U)';
                         }
                     }
 
@@ -575,6 +575,11 @@
         const chatForm = document.getElementById('chat-form');
         const chatInput = document.getElementById('chat-input');
         const suggestedQuestionsContainer = document.getElementById('suggested-questions');
+        const openAIKey = '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';
+        let conversationHistory = [{
+             role: 'system',
+             content: 'You are Linq AI, a helpful and knowledgeable energy analyst. Provide concise, informative answers related to the energy sector, including oil, gas, renewables, and market trends. Keep responses to a few sentences unless asked for more detail.'
+         }];
 
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
@@ -587,9 +592,12 @@
             if (type === 'ai') {
                 contentHTML += `<div class="ai-icon"><i class="fas fa-brain fa-lg"></i></div>`;
             }
+            // Sanitize message to prevent HTML injection
             const sanitizedMessage = message.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            // Basic markdown for bolding text **text** -> <strong>text</strong>
+            const formattedMessage = sanitizedMessage.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
-            contentHTML += `<div class="message-content">${sanitizedMessage}<span class="message-timestamp">${timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span></div>`;
+            contentHTML += `<div class="message-content">${formattedMessage}<span class="message-timestamp">${timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span></div>`;
             messageBubble.innerHTML = contentHTML;
 
             chatWindow.appendChild(messageBubble);
@@ -611,31 +619,73 @@
                 chatWindow.removeChild(indicatorElement);
             }
         }
+        
+        async function getOpenAIResponse(userMessage) {
+            // Add user message to history
+             conversationHistory.push({
+                 role: 'user',
+                 content: userMessage
+             });
+        
+            const apiUrl = '[https://api.openai.com/v1/chat/completions](https://api.openai.com/v1/chat/completions)';
+        
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${openAIKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o-mini',
+                        messages: conversationHistory,
+                        max_tokens: 150,
+                        temperature: 0.7
+                    })
+                });
+        
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('OpenAI API Error:', errorData);
+                    return `Sorry, I encountered an error: ${errorData.error.message}`;
+                }
+        
+                const data = await response.json();
+                const aiResponse = data.choices[0].message.content.trim();
+                
+                // Add AI response to history
+                conversationHistory.push({
+                    role: 'assistant',
+                    content: aiResponse
+                });
+
+                return aiResponse;
+        
+            } catch (error) {
+                console.error('Network or other error:', error);
+                return 'Sorry, I am unable to connect to my knowledge base right now.';
+            }
+        }
+
 
         chatForm.addEventListener('submit', async function(event) {
             event.preventDefault();
             const userMessage = chatInput.value.trim();
             if (userMessage) {
+                // Hide suggested questions after first message
+                if (suggestedQuestionsContainer.style.display !== 'none') {
+                    suggestedQuestionsContainer.style.display = 'none';
+                }
+
                 addMessageToChat(userMessage, 'user');
                 chatInput.value = '';
                 chatInput.focus();
                 showTypingIndicator();
-                setTimeout(() => {
-                    removeTypingIndicator();
-                    let aiResponse = "Thinking about: '" + userMessage.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "'. ";
-                    if (userMessage.toLowerCase().includes("solar")) {
-                        aiResponse += "Solar technology is advancing rapidly! Perovskite solar cells are showing incredible promise, potentially offering higher efficiencies and lower manufacturing costs compared to traditional silicon-based panels. We're also seeing bifacial panels, which capture light from both sides, becoming more common.";
-                    } else if (userMessage.toLowerCase().includes("oil") || userMessage.toLowerCase().includes("wti")) {
-                        aiResponse += "Global oil markets are currently navigating a complex landscape of demand recovery post-pandemic, geopolitical tensions affecting supply chains (like events in Eastern Europe or the Middle East), and the ongoing strategic decisions by OPEC+. Inventory levels and economic growth forecasts in major economies like the US and China also play a crucial role.";
-                    } else if (userMessage.toLowerCase().includes("hydrogen")) {
-                        aiResponse += "Green hydrogen is a key focus for decarbonization. The main challenges are reducing the cost of electrolysis (splitting water using renewable energy) and building out the necessary infrastructure for storage and transport. Significant investments and policy support are driving innovation in these areas.";
-                    } else if (userMessage.toLowerCase().includes("carbon capture") || userMessage.toLowerCase().includes("ccus")) {
-                        aiResponse += "Carbon Capture, Utilization, and Storage (CCUS) technologies are critical for industries that are hard to decarbonize. Innovations are focused on more efficient capture solvents, direct air capture (DAC) advancements, and finding viable, long-term storage solutions or utilization pathways like converting CO2 into fuels or building materials.";
-                    } else {
-                        aiResponse += "That's an insightful question! My knowledge base covers a vast array of energy topics, from renewable innovations to market dynamics and policy impacts. Feel free to ask more specifics!";
-                    }
-                    addMessageToChat(aiResponse, 'ai');
-                }, 1200 + Math.random() * 1300);
+
+                const aiResponse = await getOpenAIResponse(userMessage);
+
+                removeTypingIndicator();
+                addMessageToChat(aiResponse, 'ai');
             }
         });
 
@@ -644,6 +694,7 @@
                 const question = event.target.textContent;
                 chatInput.value = question;
                 chatInput.focus();
+                // Trigger the form submission
                 chatForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
             }
         });
