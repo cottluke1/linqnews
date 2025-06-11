@@ -79,12 +79,20 @@
                     <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Linq AI Assistant</li>
                     <li class="flex items-center"><svg class="w-4 h-4 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Weekly News Letter</li>
                 </ul>
+                <div class="mt-8 flex justify-center">
+                    <a id="upgrade-button" href="payment.html" 
+                       style="display: inline-block; font-size: 16px; line-height: 44px; height: 44px; color: #000000; min-width: 190px; background-color: #ffffff; text-align: center; box-shadow: 0 0 0 1px rgba(0,0,0,.1) inset; border-radius: 50px; text-decoration: none; font-weight: 500;">
+                       Upgrade
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const upgradeButton = document.getElementById('upgrade-button');
+
             const firebaseConfig = {
                 apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
                 authDomain: "linq-b27a8.firebaseapp.com",
@@ -97,6 +105,18 @@
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
             }
+
+            firebase.auth().onAuthStateChanged(user => {
+                if (user) {
+                    // User is logged in, the button's default href is correct.
+                    upgradeButton.href = 'payment.html';
+                } else {
+                    // User is not logged in, change the button's href to the login page.
+                    // Pass the intended destination as a URL parameter so we can come back here.
+                    const paymentPageUrl = 'payment.html'; // Define the intended destination
+                    upgradeButton.href = `login.html?redirect=${encodeURIComponent(paymentPageUrl)}`;
+                }
+            });
         });
     </script>
 </body>
