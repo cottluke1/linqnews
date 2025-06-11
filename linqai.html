@@ -576,9 +576,6 @@
         const chatInput = document.getElementById('chat-input');
         const suggestedQuestionsContainer = document.getElementById('suggested-questions');
         
-        // ** INSECURE - FOR TESTING ONLY **
-        const openAIKey = 'example';
-
         let conversationHistory = [{
              role: 'system',
              content: 'You are Linq AI, a helpful and knowledgeable energy analyst. Provide concise, informative answers related to the energy sector, including oil, gas, renewables, and market trends. Keep responses to a few sentences unless asked for more detail.'
@@ -625,36 +622,33 @@
         
         async function getOpenAIResponse(userMessage) {
             // Add user message to history
-             conversationHistory.push({
-                 role: 'user',
-                 content: userMessage
-             });
+            conversationHistory.push({
+                role: 'user',
+                content: userMessage
+            });
         
-            const apiUrl = 'https://api.openai.com/v1/chat/completions';
+            // **IMPORTANT**: Replace this placeholder with the actual URL from your Firebase deployment.
+            const functionUrl = 'https://us-central1-linq-b27a8.cloudfunctions.net/openAIProxy';
         
             try {
-                const response = await fetch(apiUrl, {
+                const response = await fetch(functionUrl, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${openAIKey}`
+                        'Content-Type': 'application/json'
                     },
+                    // Send the conversation history to our secure function
                     body: JSON.stringify({
-                        model: 'gpt-4o-mini',
-                        messages: conversationHistory,
-                        max_tokens: 150,
-                        temperature: 0.7
+                        conversationHistory: conversationHistory
                     })
                 });
         
+                const data = await response.json();
+
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('OpenAI API Error:', errorData);
-                    return `Sorry, I encountered an error: ${errorData.error.message}`;
+                    throw new Error(data.error || 'Unknown error from proxy function.');
                 }
         
-                const data = await response.json();
-                const aiResponse = data.choices[0].message.content.trim();
+                const aiResponse = data.response;
                 
                 // Add AI response to history
                 conversationHistory.push({
@@ -665,8 +659,8 @@
                 return aiResponse;
         
             } catch (error) {
-                console.error('Network or other error:', error);
-                return 'Sorry, I am unable to connect to my knowledge base right now.';
+                console.error('Error calling proxy function:', error);
+                return `Sorry, there was a problem reaching the AI service: ${error.message}`;
             }
         }
 
