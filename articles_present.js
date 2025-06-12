@@ -1,5 +1,5 @@
 // Energy news articles for June 11, 2025
-const presentDayArticles = [
+window.presentDayArticles = [
     {
         id: "p1",
         category: 'Crude Oil',
