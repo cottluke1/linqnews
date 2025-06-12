@@ -14,100 +14,46 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
     <style>
-        /* Original Styles Restored */
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
             background-color: #000000;
             background-image: radial-gradient(ellipse 40% 20% at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
             color: #E7E9EA;
         }
-        body.overflow-hidden {
-            overflow: hidden;
-        }
-        .nav-link.active {
-            color: #FFFFFF;
-            opacity: 1;
-        }
-        .ticker-banner {
-            background: #121212; color: #A0A0A0;
-            border-bottom: 1px solid #282828;
-        }
-        .ticker-content {
-            animation: ticker-scroll 300s linear infinite;
-        }
+        .nav-link.active { color: #FFFFFF !important; opacity: 1 !important; }
+        .ticker-banner { background: #121212; color: #A0A0A0; border-bottom: 1px solid #282828; }
+        .ticker-content { animation: ticker-scroll 300s linear infinite; }
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
         .ticker-item .positive { color: #22C55E; }
         .ticker-item .negative { color: #EF4444; }
         .hero-title .accent-text { color: #00BFFF; }
-        
-        .news-card {
-            background-color: transparent; border: 1px solid #2F3336;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-        }
-        .news-card:hover {
-            transform: translateY(-4px); box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.2);
-            border-color: #5a6268;
-        }
+        .news-card { background-color: transparent; border: 1px solid #2F3336; transition: all 0.3s ease; }
+        .news-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.2); border-color: #5a6268; }
         .news-title a:hover { color: #00BFFF; }
-        .news-tag {
-            background-color: rgba(0, 191, 255, 0.15); color: #00BFFF;
-            border: 1px solid rgba(0, 191, 255, 0.3);
-        }
-        .favorite-btn:hover {
-            color: #00BFFF;
-            transform: scale(1.15);
-        }
+        .news-tag { background-color: rgba(0, 191, 255, 0.15); color: #00BFFF; border: 1px solid rgba(0, 191, 255, 0.3); }
+        .favorite-btn:hover { color: #00BFFF; transform: scale(1.15); }
         .favorite-btn.favorited { color: #00BFFF; }
         .favorite-btn.favorited svg { fill: #00BFFF; }
-        .filter-panel {
-            background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px);
-            border: 1px solid #2a2a2a;
-        }
-        .filter-button {
-            background-color: #1A1A1A; border: 1px solid #333333;
-            color: #B0B0B0; transition: all 0.2s ease;
-        }
-        .filter-button:hover {
-            background-color: rgba(0, 191, 255, 0.1); color: #FFFFFF; border-color: #00BFFF;
-        }
-        .filter-button.active {
-            background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; font-weight: 600; border-color: #00BFFF;
-        }
-        .search-input {
-            background-color: #1A1A1A; border: 1px solid #333333;
-        }
-        .search-input:focus {
-            outline: none; border-color: #00BFFF;
-            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3);
-        }
-        .pagination-btn {
-            background-color: #1A1A1A; border: 1px solid #333333;
-            color: #A0A0A0; transition: all 0.2s ease;
-        }
+        .filter-panel { background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px); border: 1px solid #2a2a2a; }
+        .filter-button { background-color: #1A1A1A; border: 1px solid #333333; color: #B0B0B0; transition: all 0.2s ease; }
+        .filter-button:hover { background-color: rgba(0, 191, 255, 0.1); color: #FFFFFF; border-color: #00BFFF; }
+        .filter-button.active { background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; font-weight: 600; border-color: #00BFFF; }
+        .search-input { background-color: #1A1A1A; border: 1px solid #333333; }
+        .search-input:focus { outline: none; border-color: #00BFFF; box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3); }
+        .pagination-btn { background-color: #1A1A1A; border: 1px solid #333333; color: #A0A0A0; transition: all 0.2s ease; }
         .pagination-btn:hover { background-color: #2A2A2A; color: #FFFFFF; }
-        .pagination-btn.active {
-            background-color: #00BFFF; color: #FFFFFF; border-color: #00BFFF; font-weight: 600;
-        }
+        .pagination-btn.active { background-color: #00BFFF; color: #FFFFFF; border-color: #00BFFF; font-weight: 600; }
         .locked-article { position: relative; overflow: hidden; }
-        .locked-article .locked-content {
-            filter: blur(4px); pointer-events: none; user-select: none;
-        }
-        .locked-overlay {
-            position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5);
-            display: flex; align-items: center; justify-content: center; z-index: 10;
-        }
-        .locked-icon {
-            color: white; background: rgba(0,0,0,0.6);
-            padding: 1rem; border-radius: 50%; border: 2px solid rgba(255,255,255,0.5);
-        }
+        .locked-article .locked-content { filter: blur(4px); pointer-events: none; user-select: none; }
+        .locked-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 10; }
+        .locked-icon { color: white; background: rgba(0,0,0,0.6); padding: 1rem; border-radius: 50%; border: 2px solid rgba(255,255,255,0.5); }
     </style>
 </head>
 <body class="antialiased">
     <div id="navbar"></div>
 
     <div class="ticker-banner whitespace-nowrap overflow-hidden py-2.5 text-xs relative z-30">
-      <div id="tickerContent" class="ticker-content inline-block">
-        </div>
+      <div id="tickerContent" class="ticker-content inline-block"></div>
     </div>
 
     <header class="hero-section text-center py-12 px-4">
@@ -117,7 +63,6 @@
 
     <main class="container mx-auto p-4 sm:p-6 lg:p-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-10">
-            
             <section class="lg:col-span-9">
                 <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-8">
                     <h2 class="text-2xl font-bold mb-3 sm:mb-0">Latest News</h2>
@@ -129,13 +74,12 @@
                     </div>
                 </div>
                 <div id="newsGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    <!-- News articles will be injected here -->
+                    <!-- Articles will be loaded here -->
                 </div>
                 <div id="pagination-controls" class="flex justify-center items-center mt-12 space-x-2">
-                    <!-- Pagination buttons will be injected here -->
+                    <!-- Pagination buttons will be loaded here -->
                 </div>
             </section>
-
             <aside class="lg:col-span-3 space-y-8">
                 <div class="filter-panel p-6 rounded-lg sticky top-24">
                     <h3 class="text-lg font-semibold mb-4">Filter by Category</h3>
@@ -150,7 +94,6 @@
                     </div>
                 </div>
             </aside>
-
         </div>
     </main>
 
@@ -158,158 +101,158 @@
         <p>&copy; <span id="current-year">2025</span> Linq. All rights reserved.</p>
     </footer>
 
+    <!-- Scripts at the end of the body -->
     <script src="source_images.js"></script>
     <script src="articles_present.js"></script>
     <script src="articles_premium.js"></script>
     <script src="articles_past.js"></script>
     
     <script>
-        // --- State Variables ---
-        let isSubscribed = false; 
-        let currentDay = 1;
-        let activeCategories = [];
-        let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || [];
+        window.onload = function() {
+            // --- State Variables ---
+            let isSubscribed = false; 
+            let currentDay = 1;
+            let activeCategories = [];
+            let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || [];
 
-        // --- Core Functions ---
-        function displayArticles() {
-            const newsGrid = document.getElementById('newsGrid');
-            if (!newsGrid) return;
-
-            // This check ensures article data is loaded.
-            if (typeof presentDayArticles === 'undefined' || typeof premiumArticles === 'undefined' || typeof pastDaysArticles === 'undefined') {
-                 console.error("Article data is not available yet.");
-                 return;
-            }
-
-            let articlesToDisplay = [];
-            if (currentDay === 1) {
-                articlesToDisplay = [...presentDayArticles, ...premiumArticles];
-            } else {
-                articlesToDisplay = pastDaysArticles[currentDay - 2] || [];
-            }
-            
-            const searchQuery = document.getElementById('searchInput')?.value.toLowerCase() || "";
-            
-            const filteredArticles = articlesToDisplay.filter(article => {
-                const matchesCategory = activeCategories.length === 0 || activeCategories.includes(article.category);
-                const matchesSearch = !searchQuery || 
-                                      article.title.toLowerCase().includes(searchQuery) ||
-                                      article.source.toLowerCase().includes(searchQuery) ||
-                                      article.category.toLowerCase().includes(searchQuery);
-                return matchesCategory && matchesSearch;
-            });
-
-            newsGrid.innerHTML = '';
-            if (filteredArticles.length === 0) {
-                newsGrid.innerHTML = `<p class="text-gray-400 col-span-full text-center py-10">No articles found for the selected criteria.</p>`;
-                return;
-            }
-
-            filteredArticles.forEach(article => {
-                const isLocked = article.premium && !isSubscribed;
-                const articleElement = document.createElement('article');
-                articleElement.className = `news-card rounded-lg shadow-md flex flex-col ${isLocked ? 'locked-article' : ''}`;
+            // --- Core Functions ---
+            function displayArticles() {
+                const newsGrid = document.getElementById('newsGrid');
+                if (!newsGrid) return;
                 
-                let imageUrl = (typeof sourceImageMap !== 'undefined' && sourceImageMap[article.source]) || `https://placehold.co/80x80/1A1A1A/FFFFFF?text=${encodeURIComponent(article.source?.charAt(0) || 'N')}&font=Inter`;
+                if (typeof presentDayArticles === 'undefined' || typeof premiumArticles === 'undefined' || typeof pastDaysArticles === 'undefined') {
+                    newsGrid.innerHTML = `<p class="text-red-500 col-span-full text-center py-10">Error: Could not load article data.</p>`;
+                    return;
+                }
+
+                let articlesToDisplay = [];
+                if (currentDay === 1) {
+                    articlesToDisplay = [...presentDayArticles, ...premiumArticles];
+                } else {
+                    articlesToDisplay = pastDaysArticles[currentDay - 2] || [];
+                }
                 
-                articleElement.innerHTML = `
-                    <div class="locked-content">
-                        <div class="p-5 flex-grow">
-                            <div class="flex items-center mb-3">
-                                <img src="${imageUrl}" alt="${article.source}" class="w-8 h-8 mr-3 object-contain" onerror="this.style.display='none'; this.onerror=null;">
-                                <div>
-                                    <p class="text-sm font-semibold text-white">${article.source}</p>
-                                    <p class="text-xs text-gray-400">${article.date}</p>
+                const searchQuery = document.getElementById('searchInput')?.value.toLowerCase() || "";
+                
+                const filteredArticles = articlesToDisplay.filter(article => {
+                    const matchesCategory = activeCategories.length === 0 || activeCategories.includes(article.category);
+                    const matchesSearch = !searchQuery || 
+                                          article.title.toLowerCase().includes(searchQuery) ||
+                                          article.source.toLowerCase().includes(searchQuery) ||
+                                          article.category.toLowerCase().includes(searchQuery);
+                    return matchesCategory && matchesSearch;
+                });
+
+                newsGrid.innerHTML = '';
+                if (filteredArticles.length === 0) {
+                    newsGrid.innerHTML = `<p class="text-gray-400 col-span-full text-center py-10">No articles found for the selected criteria.</p>`;
+                    return;
+                }
+
+                filteredArticles.forEach(article => {
+                    const isLocked = article.premium && !isSubscribed;
+                    const articleElement = document.createElement('article');
+                    articleElement.className = `news-card rounded-lg shadow-md flex flex-col ${isLocked ? 'locked-article' : ''}`;
+                    
+                    let imageUrl = (typeof sourceImageMap !== 'undefined' && sourceImageMap[article.source]) || `https://placehold.co/80x80/1A1A1A/FFFFFF?text=${encodeURIComponent(article.source?.charAt(0) || 'N')}&font=Inter`;
+                    
+                    articleElement.innerHTML = `
+                        <div class="locked-content">
+                            <div class="p-5 flex-grow">
+                                <div class="flex items-center mb-3">
+                                    <img src="${imageUrl}" alt="${article.source}" class="w-8 h-8 mr-3 object-contain" onerror="this.style.display='none'; this.onerror=null;">
+                                    <div>
+                                        <p class="text-sm font-semibold text-white">${article.source}</p>
+                                        <p class="text-xs text-gray-400">${article.date}</p>
+                                    </div>
                                 </div>
+                                <h3 class="text-lg font-bold mb-2 text-white">
+                                    <a href="${isLocked ? '#' : article.link}" target="_blank" class="hover:text-cyan-400 transition-colors duration-200">${article.title}</a>
+                                </h3>
                             </div>
-                            <h3 class="text-lg font-bold mb-2 text-white">
-                                <a href="${isLocked ? '#' : article.link}" target="_blank" class="hover:text-cyan-400 transition-colors duration-200">${article.title}</a>
-                            </h3>
-                        </div>
-                        <div class="p-5 pt-0 flex justify-between items-center">
-                            <span class="news-tag text-xs font-semibold rounded-full px-3 py-1">${article.category}</span>
-                            <button class="favorite-btn text-gray-500" data-id="${article.id}" aria-label="Toggle Favorite">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                    ${isLocked ? `
-                        <a href="linqplus.html" class="locked-overlay">
-                            <div class="locked-icon">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"></path></svg>
+                            <div class="p-5 pt-0 flex justify-between items-center">
+                                <span class="news-tag text-xs font-semibold rounded-full px-3 py-1">${article.category}</span>
+                                <button class="favorite-btn text-gray-500" data-id="${article.id}" aria-label="Toggle Favorite">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
+                                </button>
                             </div>
-                        </a>
-                    ` : ''}
-                `;
-                newsGrid.appendChild(articleElement);
-            });
-            updateFavoriteIcons();
-        }
-        
-        function handleCategoryClick(event) {
-            const button = event.target.closest('.filter-button');
-            if (!button) return;
+                        </div>
+                        ${isLocked ? `
+                            <a href="linqplus.html" class="locked-overlay">
+                                <div class="locked-icon">
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"></path></svg>
+                                </div>
+                            </a>
+                        ` : ''}
+                    `;
+                    newsGrid.appendChild(articleElement);
+                });
+                updateFavoriteIcons();
+            }
             
-            const category = button.dataset.category;
-            
-            button.classList.toggle('active');
+            function handleCategoryClick(event) {
+                const button = event.target.closest('.filter-button');
+                if (!button) return;
+                
+                const category = button.dataset.category;
+                
+                button.classList.toggle('active');
 
-            if (button.classList.contains('active')) {
-                activeCategories.push(category);
-            } else {
-                const index = activeCategories.indexOf(category);
+                if (button.classList.contains('active')) {
+                    activeCategories.push(category);
+                } else {
+                    const index = activeCategories.indexOf(category);
+                    if (index > -1) {
+                        activeCategories.splice(index, 1);
+                    }
+                }
+                displayArticles();
+            }
+
+            function setupPagination() {
+                const paginationContainer = document.getElementById('pagination-controls');
+                if(!paginationContainer) return;
+                paginationContainer.innerHTML = '';
+                for(let i = 1; i <= 5; i++) {
+                    const btn = document.createElement('button');
+                    btn.className = 'pagination-btn w-10 h-10 rounded-md text-sm';
+                    btn.textContent = i;
+                    btn.dataset.day = i;
+                    if (i === currentDay) {
+                        btn.classList.add('active');
+                    }
+                    btn.addEventListener('click', handleDayClick);
+                    paginationContainer.appendChild(btn);
+                }
+            }
+
+            function handleDayClick(event) {
+                currentDay = parseInt(event.target.dataset.day);
+                document.querySelectorAll('.pagination-btn').forEach(btn => btn.classList.remove('active'));
+                event.target.classList.add('active');
+                displayArticles();
+            }
+
+            function toggleFavorite(articleId) {
+                const idStr = String(articleId);
+                const index = favorites.indexOf(idStr);
                 if (index > -1) {
-                    activeCategories.splice(index, 1);
+                    favorites.splice(index, 1);
+                } else {
+                    favorites.push(idStr);
                 }
+                localStorage.setItem('linqFavoritesV2', JSON.stringify(favorites));
+                updateFavoriteIcons();
             }
-            displayArticles();
-        }
 
-        function setupPagination() {
-            const paginationContainer = document.getElementById('pagination-controls');
-            if(!paginationContainer) return;
-            paginationContainer.innerHTML = '';
-            for(let i = 1; i <= 5; i++) {
-                const btn = document.createElement('button');
-                btn.className = 'pagination-btn w-10 h-10 rounded-md text-sm';
-                btn.textContent = i;
-                btn.dataset.day = i;
-                if (i === currentDay) {
-                    btn.classList.add('active');
-                }
-                btn.addEventListener('click', handleDayClick);
-                paginationContainer.appendChild(btn);
+            function updateFavoriteIcons() {
+                 document.querySelectorAll('.favorite-btn').forEach(button => {
+                    const isFavorited = favorites.includes(String(button.dataset.id));
+                    button.classList.toggle('favorited', isFavorited);
+                });
             }
-        }
-
-        function handleDayClick(event) {
-            currentDay = parseInt(event.target.dataset.day);
-            document.querySelectorAll('.pagination-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            displayArticles();
-        }
-
-        function toggleFavorite(articleId) {
-            const idStr = String(articleId);
-            const index = favorites.indexOf(idStr);
-            if (index > -1) {
-                favorites.splice(index, 1);
-            } else {
-                favorites.push(idStr);
-            }
-            localStorage.setItem('linqFavoritesV2', JSON.stringify(favorites));
-            updateFavoriteIcons();
-        }
-
-        function updateFavoriteIcons() {
-             document.querySelectorAll('.favorite-btn').forEach(button => {
-                const isFavorited = favorites.includes(String(button.dataset.id));
-                button.classList.toggle('favorited', isFavorited);
-            });
-        }
-        
-        // --- Initialization ---
-        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- Initialization ---
             fetch('header.html')
                 .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
                 .then(data => {
@@ -362,7 +305,7 @@
             });
             
             setupPagination();
-        });
+        };
     </script>
 </body>
 </html>
