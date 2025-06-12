@@ -1,6 +1,6 @@
 // Premium articles for June 11, 2025
 // Data is assigned to the global 'window' object.
-window.premiumArticles = [
+export const premiumArticles = [
     {
         id: "prem1",
         category: 'Market Analysis',
