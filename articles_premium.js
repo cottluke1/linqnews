@@ -1,6 +1,6 @@
-// Premium articles for June 11, 2025
-// Data is assigned to the global 'window' object.
-export const premiumArticles = [
+// /js/articles_premium.js
+// Data is assigned to the global 'window' object to be accessible by other scripts.
+window.premiumArticles = [
     {
         id: "prem1",
         category: 'Market Analysis',
