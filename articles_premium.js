@@ -1,5 +1,6 @@
 // /js/articles_premium.js
 
+// Premium articles for June 11, 2025
 window.premiumArticles = [
     {
         id: "prem1",
