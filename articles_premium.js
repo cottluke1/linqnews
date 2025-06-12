@@ -1,6 +1,6 @@
 // /js/articles_premium.js
 
-window.premiumArticles = [
+const premiumArticles = [
     {
         id: "prem1",
         category: 'Market Analysis',
@@ -40,7 +40,7 @@ window.premiumArticles = [
     {
         id: "prem5",
         category: 'Crude Oil',
-        title: 'Behind the Volatility: What’s Really Moving Oil Markets in 2025?',
+        title: 'Behind the Volatility: What's Really Moving Oil Markets in 2025?',
         date: 'June 11, 2025',
         source: 'Bloomberg',
         link: 'https://www.bloomberg.com/news/articles/2025-06-11/oil-market-volatility-behind-the-moves',
@@ -67,7 +67,7 @@ window.premiumArticles = [
     {
         id: "prem8",
         category: 'Company News',
-        title: 'Chevron’s Strategic Pivot: M&A and Asset Realignment',
+        title: 'Chevron's Strategic Pivot: M&A and Asset Realignment',
         date: 'June 11, 2025',
         source: 'Forbes',
         link: 'https://www.forbes.com/sites/forbesbusinesscouncil/2025/06/11/chevron-strategic-pivot-ma-asset-realignment/',
@@ -76,7 +76,7 @@ window.premiumArticles = [
     {
         id: "prem9",
         category: 'Renewables',
-        title: 'Europe’s Hydrogen Race: Leading Projects & Policy Impacts',
+        title: 'Europe's Hydrogen Race: Leading Projects & Policy Impacts',
         date: 'June 11, 2025',
         source: 'BBC News',
         link: 'https://www.bbc.com/news/business-61860100',
@@ -148,7 +148,7 @@ window.premiumArticles = [
     {
         id: "prem17",
         category: 'Power',
-        title: 'Europe’s Nuclear Renaissance: Policy, Projects, and Risks',
+        title: 'Europe's Nuclear Renaissance: Policy, Projects, and Risks',
         date: 'June 11, 2025',
         source: 'CNBC',
         link: 'https://www.cnbc.com/2025/06/11/europe-nuclear-renaissance-policy-projects-risks.html',
@@ -183,4 +183,5 @@ window.premiumArticles = [
     }
 ];
 
+window.premiumArticles = premiumArticles;
 export default premiumArticles;
