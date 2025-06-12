@@ -304,6 +304,8 @@
     </div>
 
     <script>
+        console.log("DEBUG: HTML parsing started.");
+
         // --- CONFIGURATION ---
         const isSubscribed = false; // <-- CHANGE THIS TO 'true' TO SIMULATE A SUBSCRIBED USER
         const FINNHUB_API_KEY = 'cprdj2pr01qjjs4st2e0cprdj2pr01qjjs4st2eg'; 
@@ -325,12 +327,35 @@
         const paginationContainer = document.getElementById('paginationContainer');
 
         // --- MAIN INITIALIZATION LOGIC ---
-        window.addEventListener('load', function() {
-            // This ensures all scripts, including external ones, have loaded
-            fetchHeaderAndInit();
+        // DEBUG: Replace simple 'load' listener with robust checker
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DEBUG: DOMContentLoaded event fired.");
+            waitForDataAndInitialize();
         });
 
+        function waitForDataAndInitialize() {
+            let attempts = 0;
+            const maxAttempts = 50; // 5 seconds timeout
+            const interval = setInterval(() => {
+                attempts++;
+                console.log(`DEBUG: Checking for data... (Attempt ${attempts})`);
+                
+                const dataIsReady = window.presentDayArticles && window.premiumArticles && window.pastArticles && window.sourceImageMap;
+
+                if (dataIsReady) {
+                    console.log("DEBUG: All data is ready! Initializing application.");
+                    clearInterval(interval);
+                    fetchHeaderAndInit();
+                } else if (attempts > maxAttempts) {
+                    clearInterval(interval);
+                    console.error("DEBUG: Failed to load article data after 5 seconds. Aborting initialization.");
+                    if (newsGrid) newsGrid.innerHTML = '<p class="text-center text-red-500 font-bold">Error: Critical data files failed to load. Please check your network connection and try refreshing the page.</p>';
+                }
+            }, 100);
+        }
+
         function fetchHeaderAndInit() {
+            console.log("DEBUG: Fetching header.html");
             fetch('header.html')
                 .then(response => {
                     if (!response.ok) throw new Error('Header fetch failed');
@@ -338,14 +363,15 @@
                 })
                 .then(data => {
                     document.getElementById('navbar').innerHTML = data;
+                    console.log("DEBUG: Header HTML injected.");
                     adjustLayoutForHeader();
                     // Initialize app logic after header is loaded
-                    setTimeout(initializeAppLogic, 0);
+                    initializeAppLogic();
                 })
                 .catch(error => {
-                    console.error('Error fetching header:', error);
+                    console.error('DEBUG: Error fetching header:', error);
                     // Initialize app logic even if header fails
-                    setTimeout(initializeAppLogic, 0);
+                    initializeAppLogic();
                 })
                 .finally(() => {
                     updateTickerBanner(); // Update ticker regardless of header success
@@ -356,9 +382,10 @@
             const header = document.querySelector('nav.fixed');
             const tickerBanner = document.querySelector('.ticker-banner');
             if (header && tickerBanner) {
-                // Use requestAnimationFrame to ensure the browser has painted the header
                 requestAnimationFrame(() => {
-                    tickerBanner.style.marginTop = `${header.offsetHeight}px`;
+                    const headerHeight = header.offsetHeight;
+                    console.log(`DEBUG: Adjusting layout for header height: ${headerHeight}px`);
+                    tickerBanner.style.marginTop = `${headerHeight}px`;
                 });
             }
         }
@@ -401,32 +428,34 @@
         
         // --- GLOBAL STATE --- 
         let currentPage = 1; 
-        let allArticlesFlat = []; // RENAME for clarity 
+        let allArticlesFlat = []; 
         let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || []; 
-        const ARTICLES_PER_PAGE = 25; // Define how many articles to show per page 
+        const ARTICLES_PER_PAGE = 25; 
 
-        // --- (In initializeAppLogic function) --- 
+        // --- APP LOGIC --- 
         function initializeAppLogic() { 
-            console.log('Initializing app logic...'); 
+            console.log('DEBUG: Initializing app logic...'); 
             
-            // Check if article data is available 
+            // DEBUG: Log the state of each required window variable
+            console.log('DEBUG: window.presentDayArticles exists:', !!window.presentDayArticles);
+            console.log('DEBUG: window.premiumArticles exists:', !!window.premiumArticles);
+            console.log('DEBUG: window.pastArticles exists:', !!window.pastArticles);
+            console.log('DEBUG: window.sourceImageMap exists:', !!window.sourceImageMap);
+            
             if (!window.presentDayArticles || !window.premiumArticles || !window.pastArticles || !window.sourceImageMap) { 
-                console.error('One or more article data files are not loaded.'); 
-                if (newsGrid) newsGrid.innerHTML = '<p class="text-center text-gray-500">Error: Could not load news articles.</p>'; 
-                return; // Stop execution 
+                console.error('DEBUG: One or more critical article data files are not loaded. This is the source of the error.'); 
+                if (newsGrid) newsGrid.innerHTML = '<p class="text-center text-gray-500">Error: Could not load news articles. Please try again later.</p>'; 
+                return;
             } 
-
-            // --- FIX: Create a single FLAT array of all articles --- 
-            const todayArticles = [...window.presentDayArticles, ...window.premiumArticles]; 
-            const pastArticlesFlat = [].concat(...window.pastArticles); // Flattens the nested past articles 
-            allArticlesFlat = [...todayArticles, ...pastArticlesFlat]; // Combine all into one array 
-
-            console.log('Combined flat articles:', allArticlesFlat); 
-
-            // Initial display 
-            filterAndDisplayArticles(); // Call this instead of loadPage 
             
-            // Add event listeners now that data is processed
+            const todayArticles = [...window.presentDayArticles, ...window.premiumArticles]; 
+            const pastArticlesFlat = [].concat(...window.pastArticles); 
+            allArticlesFlat = [...todayArticles, ...pastArticlesFlat];
+
+            console.log(`DEBUG: Combined all articles. Total count: ${allArticlesFlat.length}`); 
+
+            filterAndDisplayArticles();
+            
             if (categoryList) categoryList.addEventListener('click', handleCategoryFilter);
             if (searchInput) searchInput.addEventListener('input', filterAndDisplayArticles);
             if (newsGrid) newsGrid.addEventListener('click', handleFavoriteClick);
@@ -440,13 +469,14 @@
             paginationContainer.innerHTML = ''; 
 
             if (!articles || articles.length === 0) { 
+                console.log("DEBUG: No articles to display after filtering.");
                 newsGrid.innerHTML = '<p class="text-center text-gray-500 col-span-full">No articles found.</p>'; 
                 return; 
             } 
+            console.log(`DEBUG: Displaying ${articles.length} articles.`);
 
             const pageCount = Math.ceil(articles.length / ARTICLES_PER_PAGE); 
             
-            // Ensure currentPage is not out of bounds 
             if (currentPage > pageCount) { 
                 currentPage = 1; 
             } 
@@ -456,8 +486,6 @@
             const paginatedArticles = articles.slice(start, end); 
 
             paginatedArticles.forEach(article => { 
-                // --- This is the same article rendering logic from your original file --- 
-                // Note: The isLocked logic might need adjustment based on new requirements 
                 const isLocked = (article.premium && !isSubscribed); 
                 const articleElement = document.createElement('article'); 
                 articleElement.className = 'news-card'; 
@@ -486,7 +514,6 @@
                 newsGrid.appendChild(articleElement); 
             }); 
 
-            // Recreate pagination buttons 
             for (let i = 1; i <= pageCount; i++) { 
                 const button = document.createElement('button'); 
                 button.className = 'pagination-btn'; 
@@ -507,7 +534,7 @@
         function handleCategoryFilter(e) { 
             if (e.target.classList.contains('filter-button')) { 
                 e.target.classList.toggle('active'); 
-                currentPage = 1; // Reset to page 1 on filter change 
+                currentPage = 1; 
                 filterAndDisplayArticles(); 
             } 
         } 
@@ -516,13 +543,13 @@
             const searchQuery = searchInput.value.toLowerCase(); 
             const activeCategories = [...document.querySelectorAll('#categoryList .filter-button.active')].map(btn => btn.dataset.category); 
             
-            // --- FIX: Filter the single flat array --- 
+            console.log(`DEBUG: Filtering with query: "${searchQuery}" and categories: [${activeCategories.join(', ')}]`);
+            
             const filtered = allArticlesFlat.filter(article => 
                 (activeCategories.length === 0 || activeCategories.includes(article.category)) && 
                 (!searchQuery || article.title.toLowerCase().includes(searchQuery) || article.source.toLowerCase().includes(searchQuery)) 
             ); 
             
-            // Call the new display function 
             displayPaginatedArticles(filtered); 
         } 
         
