@@ -165,11 +165,13 @@
     </footer>
 
     <script>
+        // --- State Variables ---
         let isSubscribed = false; 
         let currentDay = 1;
-        let activeCategories = []; // Array to hold multiple categories
+        let activeCategories = [];
         let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || [];
 
+        // --- Core Functions ---
         function displayArticles() {
             const newsGrid = document.getElementById('newsGrid');
             if (!newsGrid) return;
@@ -243,10 +245,8 @@
             const button = event.target;
             const category = button.dataset.category;
             
-            // Toggle active state for the button
             button.classList.toggle('active');
 
-            // Update the activeCategories array
             if (button.classList.contains('active')) {
                 activeCategories.push(category);
             } else {
@@ -255,7 +255,6 @@
                     activeCategories.splice(index, 1);
                 }
             }
-            
             displayArticles();
         }
 
@@ -302,7 +301,15 @@
             });
         }
         
-        document.addEventListener('DOMContentLoaded', () => {
+        function initializePage() {
+             // Check if all data is loaded before proceeding
+            if (typeof presentDayArticles === 'undefined' || typeof premiumArticles === 'undefined' || 
+                typeof pastDaysArticles === 'undefined' || typeof sourceImageMap === 'undefined') {
+                console.error("Article data scripts did not load correctly.");
+                document.getElementById('newsGrid').innerHTML = '<p class="text-red-500 col-span-full text-center py-10">Error: Could not load article data.</p>';
+                return;
+            }
+
             fetch('header.html')
                 .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
                 .then(data => {
@@ -341,7 +348,7 @@
                 if (user) {
                     const userRef = db.collection("users").doc(user.uid);
                     userRef.get().then((doc) => {
-                        isSubscribed = doc.exists && doc.data().isSubscribed;
+                        isSubscribed = doc.exists && doc.data().isSubscribed === true;
                         displayArticles();
                     }).catch(error => {
                         console.error("Error getting subscription status:", error);
@@ -355,7 +362,10 @@
             });
             
             setupPagination();
-        });
+        }
+
+        // Use window.onload to ensure all external scripts are loaded before initialization
+        window.onload = initializePage;
     </script>
 </body>
 </html>
