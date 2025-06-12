@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linq - Your Energy News</title>
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
-    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
-    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap)" rel="stylesheet">
-    <link href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)" rel="stylesheet">
-    <script src="[https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js](https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js)"></script>
-    <script src="[https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js](https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js)"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     
-    <!-- External Scripts for Article Data with Cache-Busting -->
     <script src="source_images.js?v=20250612v2" defer></script>
     <script src="articles_present.js?v=20250612v2" defer></script>
     <script src="articles_premium.js?v=20250612v2" defer></script>
+    <!-- Referencing the potentially updated past articles file -->
     <script src="articles_past.js?v=20250612v4" defer></script>
 
     <style>
@@ -233,8 +233,7 @@
     </style>
 </head>
 <body class="antialiased">
-    <!-- This div will be populated with header.html content -->
-    <div id="header-placeholder"></div>
+    <div id="navbar"></div>
 
     <div class="ticker-banner">
       <div class="ticker-content" id="tickerContent"></div>
@@ -254,7 +253,7 @@
                     <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-8">
                         <h2 id="sectionDateTitle" class="section-title !mb-3 sm:!mb-0 !border-none">Latest News</h2>
                         <div class="relative w-full sm:w-auto sm:max-w-xs search-container">
-                            <svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             <input type="search" id="searchInput" placeholder="Search news..." class="search-input !mb-0 pl-10">
                         </div>
                     </div>
@@ -310,95 +309,18 @@
         const paginationContainer = document.getElementById('paginationContainer');
         const sectionDateTitle = document.getElementById('sectionDateTitle');
         const mainContent = document.getElementById('main-content');
-        
-        // --- Function to Initialize and Run All Header Related Logic ---
-        function initializeHeaderAndAuth() {
-            // Get all necessary elements from the DOM *after* the header is loaded
-            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
-            const profileLinkDesktop = document.getElementById('profileLinkDesktop');
-            const navProfilePic = document.getElementById('navProfilePic');
-
-            // Firebase configuration
-            if (!firebase.apps.length) {
-                const firebaseConfigShared = {
-                    apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-                    authDomain: "linq-b27a8.firebaseapp.com",
-                    projectId: "linq-b27a8",
-                    storageBucket: "linq-b27a8.appspot.com",
-                    messagingSenderId: "1067901051826",
-                    appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-                };
-                firebase.initializeApp(firebaseConfigShared);
-            }
-            const authInstance = firebase.auth();
-
-            authInstance.onAuthStateChanged(user => {
-                if (user) {
-                    // --- User is LOGGED IN ---
-                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
-                    if (profileLinkDesktop) profileLinkDesktop.classList.remove('hidden');
-
-                    if(navProfilePic) {
-                        if (user.photoURL) {
-                            navProfilePic.src = user.photoURL;
-                        } else if (user.displayName) {
-                             navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
-                        } else if (user.email) {
-                             navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
-                        } else {
-                            navProfilePic.src = '[https://placehold.co/40x40/2C2F33/EAEAEA?text=U](https://placehold.co/40x40/2C2F33/EAEAEA?text=U)';
-                        }
-                    }
-                } else {
-                    // --- User is LOGGED OUT ---
-                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.remove('hidden');
-                    if (profileLinkDesktop) profileLinkDesktop.classList.add('hidden');
-                }
-                setActiveNavLink();
-            });
-
-            function setActiveNavLink() {
-                const currentPath = window.location.pathname.split("/").pop() || "index.html";
-                const navLinks = document.querySelectorAll('#header-placeholder nav.fixed a.nav-link');
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    const linkHref = link.getAttribute('href');
-                    if (linkHref === currentPath || ((currentPath === "index.html" || currentPath === "") && linkHref === "index.html")) {
-                        link.classList.add('active');
-                    }
-                });
-            }
-        }
-
 
         // --- MAIN INITIALIZATION LOGIC ---
         document.addEventListener('DOMContentLoaded', () => {
+            // [MODIFIED] Wait for external article scripts to load before initializing the app.
+            // This prevents a race condition where the app tries to access article data before it's available.
             let tries = 0;
             const dataLoadCheck = setInterval(() => {
+                // We need both present and past articles to be loaded from the external JS files.
                 if (window.presentDayArticles && window.pastArticles) {
                     clearInterval(dataLoadCheck);
-                    // Fetch header first, then initialize the rest of the app logic
-                    fetch('header.html')
-                        .then(response => {
-                            if (!response.ok) throw new Error('Network response was not ok for header.html');
-                            return response.text();
-                        })
-                        .then(data => {
-                            const headerPlaceholder = document.getElementById('header-placeholder');
-                            if (headerPlaceholder) {
-                                headerPlaceholder.innerHTML = data;
-                                initializeHeaderAndAuth(); // Initialize header logic
-                                adjustLayoutForHeader(); // Adjust layout after header is loaded
-                                initializeAppLogic(); // Initialize main page content logic
-                                updateTickerBanner(); // Start ticker updates
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error fetching header:', error);
-                            // Still initialize the app logic even if the header fails to load
-                            initializeAppLogic();
-                        });
-                } else if (++tries > 50) { 
+                    initializeAppLogic(); // Data is ready, so we can run the main app logic.
+                } else if (++tries > 50) { // Fail after 5 seconds to prevent an infinite loop.
                     clearInterval(dataLoadCheck);
                     console.error("Article data scripts failed to load in time.");
                     if(document.getElementById('newsGrid')) {
@@ -408,11 +330,15 @@
             }, 100);
         });
         
+        // This function now runs ONLY after we've confirmed the data is loaded.
         function initializeAppLogic() { 
             const presentArticles = Array.isArray(window.presentDayArticles) ? window.presentDayArticles : [];
             const premiumArticles = Array.isArray(window.premiumArticles) ? window.premiumArticles : [];
             const todayArticles = [...presentArticles, ...premiumArticles];
             
+            // This correctly combines today's articles with the array of past day articles.
+            // allDaysData will be structured like: [ [page1_articles], [page2_articles], ... ]
+            // where page 2 corresponds to the first day in `pastArticles`, page 3 to the second, etc.
             allDaysData = [todayArticles].concat(window.pastArticles);
             
             displayArticlesForPage(currentPage);
@@ -425,6 +351,9 @@
             });
             newsGrid.addEventListener('click', handleFavoriteClick);
             window.addEventListener('resize', adjustLayoutForHeader);
+            
+            adjustLayoutForHeader();
+            updateTickerBanner();
         }
 
         function adjustLayoutForHeader() {
@@ -526,7 +455,7 @@
                     articleElement.innerHTML = ` 
                         ${shouldBeLocked ? lockedOverlayHTML + sideLockIconHTML : ''} 
                         <div class="news-card-content"> 
-                            <div class="news-source-logo-container"><img src="${imageUrl}" alt="${article.source || 'News'}" class="news-source-logo" onerror="this.src='[https://placehold.co/50/cccccc/333333?text=Err](https://placehold.co/50/cccccc/333333?text=Err)';"></div> 
+                            <div class="news-source-logo-container"><img src="${imageUrl}" alt="${article.source || 'News'}" class="news-source-logo" onerror="this.src='https://placehold.co/50/cccccc/333333?text=Err';"></div> 
                             <div class="news-content-wrapper"> 
                                 <div class="news-text-content"> 
                                     <h3 class="news-title"><a href="${article.link}" target="_blank" rel="noopener noreferrer">${article.title}</a></h3> 
@@ -536,7 +465,7 @@
                                     </div> 
                                 </div> 
                                 <div class="favorite-btn-area"> 
-                                    <button class="favorite-btn" data-id="${article.id}" aria-label="Toggle Favorite"><svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" /></svg></button> 
+                                    <button class="favorite-btn" data-id="${article.id}" aria-label="Toggle Favorite"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" /></svg></button> 
                                 </div>
                             </div> 
                         </div>`; 
@@ -546,12 +475,14 @@
             updateFavoriteIcons();
         } 
 
+        // [MODIFIED] This function implements the specific pagination logic based on the user's images and request.
 		function setupPagination() {
             if (!paginationContainer) return;
             paginationContainer.innerHTML = '';
             const totalPages = 30;
-            const page = currentPage; 
+            const page = currentPage; // Use a shorter alias for the current page
 
+            // Helper function to create a button element
             const createButton = (text, pageNumber, isDisabled = false, isCurrent = false) => {
                 const btn = document.createElement('button');
                 btn.className = 'pagination-btn';
@@ -570,6 +501,7 @@
                 return btn;
             };
 
+            // Helper function to create an ellipsis "..." element
             const createEllipsis = () => {
                 const ellipsis = document.createElement('span');
                 ellipsis.className = 'pagination-ellipsis';
@@ -577,25 +509,33 @@
                 return ellipsis;
             }
 
+            // --- Previous Arrow Button ---
             paginationContainer.appendChild(createButton('&larr;', page - 1, page === 1));
 
+            // --- Page Number Logic ---
             if (totalPages <= 7) { 
+                // Simple case: If there are 7 or fewer pages, show all of them without ellipses
                 for (let i = 1; i <= totalPages; i++) {
                     paginationContainer.appendChild(createButton(i, i, false, i === page));
                 }
             } else {
+                // Complex case: Use ellipses for a large number of pages
                 let pagesToShow = [];
                 
+                // Case 1: Near the beginning (pages 1-4) -> Show 1, 2, 3, 4, 5, ..., 30
                 if (page < 5) {
                     pagesToShow = [1, 2, 3, 4, 5, '...', totalPages];
                 } 
+                // Case 2: Near the end (pages 27-30) -> Show 1, ..., 26, 27, 28, 29, 30
                 else if (page > totalPages - 4) {
                     pagesToShow = [1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
                 }
+                // Case 3: In the middle -> Show 1, ..., current-1, current, current+1, ..., 30
                 else {
                     pagesToShow = [1, '...', page - 1, page, page + 1, '...', totalPages];
                 }
 
+                // This logic correctly renders the pages and preserves both "..." where needed for middle pages.
                 pagesToShow.forEach(p => {
                     if (p === '...') {
                         paginationContainer.appendChild(createEllipsis());
@@ -605,6 +545,7 @@
                 });
             }
 
+            // --- Next Arrow Button ---
             paginationContainer.appendChild(createButton('&rarr;', page + 1, page === totalPages));
         }
 
