@@ -1,5 +1,5 @@
 // Energy news articles for June 11, 2025
-window.presentDayArticles = [
+const presentDayArticles = [
     {
         id: "p1",
         category: 'Crude Oil',
@@ -139,7 +139,7 @@ window.presentDayArticles = [
     {
         id: "p18",
         category: 'Power',
-        title: 'Europe’s Nuclear Comeback: New Projects Announced',
+        title: 'Europe's Nuclear Comeback: New Projects Announced',
         date: 'June 11, 2025',
         source: 'Seeking Alpha',
         link: 'https://seekingalpha.com/news/4049522-europe-nuclear-new-projects-announced'
@@ -163,4 +163,5 @@ window.presentDayArticles = [
     // Add more free articles for the current day here
 ];
 
+window.presentDayArticles = presentDayArticles;
 export default presentDayArticles;
