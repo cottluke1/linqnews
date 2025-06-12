@@ -13,12 +13,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
-    <!-- Article Data Files (Corrected Paths) -->
-    <script src="source_images.js"></script>
-    <script src="articles_present.js"></script>
-    <script src="articles_premium.js"></script>
-    <script src="articles_past.js"></script>
-
     <style>
         /* Original Styles Restored */
         body {
@@ -164,6 +158,12 @@
         <p>&copy; <span id="current-year">2025</span> Linq. All rights reserved.</p>
     </footer>
 
+    <!-- **FIX:** Moved scripts to the end of the body -->
+    <script src="source_images.js"></script>
+    <script src="articles_present.js"></script>
+    <script src="articles_premium.js"></script>
+    <script src="articles_past.js"></script>
+    
     <script>
         // --- State Variables ---
         let isSubscribed = false; 
@@ -175,6 +175,12 @@
         function displayArticles() {
             const newsGrid = document.getElementById('newsGrid');
             if (!newsGrid) return;
+
+            // **FIX:** Check if data exists before trying to use it.
+            if (typeof presentDayArticles === 'undefined' || typeof premiumArticles === 'undefined' || typeof pastDaysArticles === 'undefined') {
+                 console.error("Article data is not available yet.");
+                 return;
+            }
 
             let articlesToDisplay = [];
             if (currentDay === 1) {
@@ -205,7 +211,7 @@
                 const articleElement = document.createElement('article');
                 articleElement.className = `news-card rounded-lg shadow-md flex flex-col ${isLocked ? 'locked-article' : ''}`;
                 
-                let imageUrl = sourceImageMap[article.source] || `https://placehold.co/80x80/1A1A1A/FFFFFF?text=${encodeURIComponent(article.source?.charAt(0) || 'N')}&font=Inter`;
+                let imageUrl = (typeof sourceImageMap !== 'undefined' && sourceImageMap[article.source]) || `https://placehold.co/80x80/1A1A1A/FFFFFF?text=${encodeURIComponent(article.source?.charAt(0) || 'N')}&font=Inter`;
                 
                 articleElement.innerHTML = `
                     <div class="locked-content">
@@ -242,7 +248,9 @@
         }
         
         function handleCategoryClick(event) {
-            const button = event.target;
+            const button = event.target.closest('.filter-button');
+            if (!button) return;
+            
             const category = button.dataset.category;
             
             button.classList.toggle('active');
@@ -301,12 +309,13 @@
             });
         }
         
-        function initializePage() {
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
              // Check if all data is loaded before proceeding
             if (typeof presentDayArticles === 'undefined' || typeof premiumArticles === 'undefined' || 
                 typeof pastDaysArticles === 'undefined' || typeof sourceImageMap === 'undefined') {
                 console.error("Article data scripts did not load correctly.");
-                document.getElementById('newsGrid').innerHTML = '<p class="text-red-500 col-span-full text-center py-10">Error: Could not load article data.</p>';
+                document.getElementById('newsGrid').innerHTML = '<p class="text-red-500 col-span-full text-center py-10">Error: Could not load article data. Please check file paths.</p>';
                 return;
             }
 
@@ -362,10 +371,7 @@
             });
             
             setupPagination();
-        }
-
-        // Use window.onload to ensure all external scripts are loaded before initialization
-        window.onload = initializePage;
+        });
     </script>
 </body>
 </html>
