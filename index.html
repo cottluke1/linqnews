@@ -318,11 +318,6 @@
             'RB1:COM', 'HO1:COM', 'TMUBMUSD02Y', 'TMUBMUSD05Y', 'TMUBMUSD10Y', '^GSPC', '^DJI', '^IXIC', 'DXY'
         ];
 
-        // --- GLOBAL STATE ---
-        let currentPage = 1;
-        let allArticles = [];
-        let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || [];
-
         // --- DOM ELEMENTS ---
         const newsGrid = document.getElementById('newsGrid');
         const searchInput = document.getElementById('searchInput');
@@ -330,8 +325,8 @@
         const paginationContainer = document.getElementById('paginationContainer');
 
         // --- MAIN INITIALIZATION LOGIC ---
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize once the DOM and deferred scripts are ready
+        window.addEventListener('load', function() {
+            // This ensures all scripts, including external ones, have loaded
             fetchHeaderAndInit();
         });
 
@@ -357,36 +352,6 @@
                 });
         }
         
-        function initializeAppLogic() {
-            console.log('Initializing app logic...');
-            console.log('presentDayArticles:', window.presentDayArticles);
-            console.log('premiumArticles:', window.premiumArticles);
-            console.log('pastArticles:', window.pastArticles);
-            console.log('sourceImageMap:', window.sourceImageMap);
-
-            // Check if article data is available
-            if (!window.presentDayArticles || !window.premiumArticles || !window.pastArticles || !window.sourceImageMap) {
-                console.error('One or more article data files are not loaded.');
-                if (newsGrid) newsGrid.innerHTML = '<p class="text-center text-gray-500">Error: Could not load news articles. Please try again later.</p>';
-                return; // Stop execution if data is missing
-            }
-
-            // Combine all article data
-            const todayArticles = [...window.presentDayArticles, ...window.premiumArticles];
-            // Flatten all article arrays into a single list
-            const combinedPastArticles = [].concat(...window.pastArticles);
-            allArticles = [todayArticles, ...combinedPastArticles];
-            console.log('Combined articles:', allArticles);
-
-            // Setup UI and event listeners
-            createPagination();
-            loadPage(1); 
-            categoryList.addEventListener('click', handleCategoryFilter);
-            searchInput.addEventListener('input', filterAndDisplayArticles);
-            newsGrid.addEventListener('click', handleFavoriteClick);
-            window.addEventListener('resize', adjustLayoutForHeader);
-        }
-
         function adjustLayoutForHeader() {
             const header = document.querySelector('nav.fixed');
             const tickerBanner = document.querySelector('.ticker-banner');
@@ -433,106 +398,135 @@
             const repeatCount = Math.ceil((window.innerWidth * 2) / (TICKER_ITEMS_TO_SHOW.length * 180)) + 1;
             tickerContent.innerHTML = allItemsHTML.repeat(Math.max(2, repeatCount));
         }
+        
+        // --- GLOBAL STATE --- 
+        let currentPage = 1; 
+        let allArticlesFlat = []; // RENAME for clarity 
+        let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || []; 
+        const ARTICLES_PER_PAGE = 25; // Define how many articles to show per page 
+
+        // --- (In initializeAppLogic function) --- 
+        function initializeAppLogic() { 
+            console.log('Initializing app logic...'); 
+            
+            // Check if article data is available 
+            if (!window.presentDayArticles || !window.premiumArticles || !window.pastArticles || !window.sourceImageMap) { 
+                console.error('One or more article data files are not loaded.'); 
+                if (newsGrid) newsGrid.innerHTML = '<p class="text-center text-gray-500">Error: Could not load news articles.</p>'; 
+                return; // Stop execution 
+            } 
+
+            // --- FIX: Create a single FLAT array of all articles --- 
+            const todayArticles = [...window.presentDayArticles, ...window.premiumArticles]; 
+            const pastArticlesFlat = [].concat(...window.pastArticles); // Flattens the nested past articles 
+            allArticlesFlat = [...todayArticles, ...pastArticlesFlat]; // Combine all into one array 
+
+            console.log('Combined flat articles:', allArticlesFlat); 
+
+            // Initial display 
+            filterAndDisplayArticles(); // Call this instead of loadPage 
+            
+            // Add event listeners now that data is processed
+            if (categoryList) categoryList.addEventListener('click', handleCategoryFilter);
+            if (searchInput) searchInput.addEventListener('input', filterAndDisplayArticles);
+            if (newsGrid) newsGrid.addEventListener('click', handleFavoriteClick);
+            window.addEventListener('resize', adjustLayoutForHeader);
+        } 
 
 
-        // --- PAGINATION ---
-        function createPagination() {
-            paginationContainer.innerHTML = '';
-            for (let i = 1; i <= 5; i++) {
-                const button = document.createElement('button');
-                button.className = 'pagination-btn';
-                button.textContent = i;
-                button.dataset.page = i;
-                if (i === currentPage) button.classList.add('active');
-                button.addEventListener('click', () => loadPage(i));
-                paginationContainer.appendChild(button);
-            }
-        }
+        // --- PAGINATION & DISPLAY --- 
+        function displayPaginatedArticles(articles) { 
+            newsGrid.innerHTML = ''; 
+            paginationContainer.innerHTML = ''; 
 
-        function loadPage(pageNumber) {
-            console.log('Loading page:', pageNumber);
-            currentPage = pageNumber;
-            searchInput.value = '';
-            document.querySelectorAll('#categoryList .filter-button.active').forEach(btn => btn.classList.remove('active'));
-            const articlesForCurrentPage = allArticles[currentPage - 1] || [];
-            console.log('Articles for current page:', articlesForCurrentPage);
-            displayArticles(articlesForCurrentPage);
-            updatePaginationUI();
-        }
+            if (!articles || articles.length === 0) { 
+                newsGrid.innerHTML = '<p class="text-center text-gray-500 col-span-full">No articles found.</p>'; 
+                return; 
+            } 
 
-        function updatePaginationUI() {
-            document.querySelectorAll('.pagination-btn').forEach(button => {
-                button.classList.toggle('active', parseInt(button.dataset.page) === currentPage);
-            });
-        }
+            const pageCount = Math.ceil(articles.length / ARTICLES_PER_PAGE); 
+            
+            // Ensure currentPage is not out of bounds 
+            if (currentPage > pageCount) { 
+                currentPage = 1; 
+            } 
 
+            const start = (currentPage - 1) * ARTICLES_PER_PAGE; 
+            const end = start + ARTICLES_PER_PAGE; 
+            const paginatedArticles = articles.slice(start, end); 
 
-        // --- ARTICLE RENDERING ---
-        function displayArticles(articlesToDisplay) {
-            console.log('Displaying articles:', articlesToDisplay);
-            newsGrid.innerHTML = '';
-            if (!articlesToDisplay || articlesToDisplay.length === 0) {
-                newsGrid.innerHTML = '<p class="text-center text-gray-500 col-span-full">No articles found.</p>';
-                return;
-            }
-            articlesToDisplay.forEach(article => {
-                const isLocked = (article.premium && !isSubscribed) || (currentPage > 1);
-                const articleElement = document.createElement('article');
-                articleElement.className = 'news-card';
-                if (isLocked) articleElement.classList.add('locked');
+            paginatedArticles.forEach(article => { 
+                // --- This is the same article rendering logic from your original file --- 
+                // Note: The isLocked logic might need adjustment based on new requirements 
+                const isLocked = (article.premium && !isSubscribed); 
+                const articleElement = document.createElement('article'); 
+                articleElement.className = 'news-card'; 
+                if (isLocked) articleElement.classList.add('locked'); 
                 
-                const safeSourceImageMap = window.sourceImageMap || {};
-                const imageUrl = safeSourceImageMap[article.source] || `https://placehold.co/50/2a2a2a/ffffff?text=${article.source ? article.source.charAt(0) : 'N'}`;
+                const safeSourceImageMap = window.sourceImageMap || {}; 
+                const imageUrl = safeSourceImageMap[article.source] || `https://placehold.co/50/2a2a2a/ffffff?text=${article.source ? article.source.charAt(0) : 'N'}`; 
                 
-                articleElement.innerHTML = `
-                    ${isLocked ? `
-                        <a href="linqplus.html" class="locked-overlay">
-                            <svg class="lock-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6a3 3 0 003 3h10.5a3 3 0 003-3v-6a3 3 0 00-3-3v-3A5.25 5.25 0 0012 1.5zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z"></path></svg>
-                        </a>` : ''}
-                    <div class="news-card-content">
-                        <div class="news-source-logo-container">
-                            <img src="${imageUrl}" alt="${article.source} Logo" class="news-source-logo" onerror="this.src='https://placehold.co/50/cccccc/333333?text=Err';">
-                        </div>
-                        <div class="news-content-wrapper">
-                            <div class="news-text-content">
-                                <h3 class="news-title"><a href="${article.link}" target="_blank" rel="noopener noreferrer">${article.title}</a></h3>
-                                <div class="news-meta-tags">
-                                    <p class="news-meta">${article.date} &bull; ${article.source}</p>
-                                    <span class="news-tag">${article.category}</span>
-                                </div>
-                            </div>
-                            <div class="favorite-btn-area">
-                                <button class="favorite-btn" data-id="${article.id}" aria-label="Toggle Favorite">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" /></svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>`;
-                newsGrid.appendChild(articleElement);
-            });
-            updateFavoriteIcons();
-        }
+                articleElement.innerHTML = ` 
+                    ${isLocked ? `<a href="linqplus.html" class="locked-overlay"><svg class="lock-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6a3 3 0 003 3h10.5a3 3 0 003-3v-6a3 3 0 00-3-3v-3A5.25 5.25 0 0012 1.5zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z"></path></svg></a>` : ''} 
+                    <div class="news-card-content"> 
+                        <div class="news-source-logo-container"><img src="${imageUrl}" alt="${article.source} Logo" class="news-source-logo" onerror="this.src='https://placehold.co/50/cccccc/333333?text=Err';"></div> 
+                        <div class="news-content-wrapper"> 
+                            <div class="news-text-content"> 
+                                <h3 class="news-title"><a href="${article.link}" target="_blank" rel="noopener noreferrer">${article.title}</a></h3> 
+                                <div class="news-meta-tags"> 
+                                    <p class="news-meta">${article.date} &bull; ${article.source}</p> 
+                                    <span class="news-tag">${article.category}</span> 
+                                </div> 
+                            </div> 
+                            <div class="favorite-btn-area"> 
+                                <button class="favorite-btn" data-id="${article.id}" aria-label="Toggle Favorite"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" /></svg></button> 
+                            </div> 
+                        </div> 
+                    </div>`; 
+                newsGrid.appendChild(articleElement); 
+            }); 
 
+            // Recreate pagination buttons 
+            for (let i = 1; i <= pageCount; i++) { 
+                const button = document.createElement('button'); 
+                button.className = 'pagination-btn'; 
+                button.textContent = i; 
+                button.dataset.page = i; 
+                if (i === currentPage) button.classList.add('active'); 
+                button.addEventListener('click', () => { 
+                    currentPage = i; 
+                    displayPaginatedArticles(articles); 
+                }); 
+                paginationContainer.appendChild(button); 
+            } 
 
-        // --- FILTERING & FAVORITES ---
-        function handleCategoryFilter(e) {
-            if (e.target.classList.contains('filter-button')) {
-                e.target.classList.toggle('active');
-                filterAndDisplayArticles();
-            }
-        }
+            updateFavoriteIcons(); 
+        } 
 
-        function filterAndDisplayArticles() {
-            const articlesForCurrentPage = allArticles[currentPage - 1] || [];
-            const searchQuery = searchInput.value.toLowerCase();
-            const activeCategories = [...document.querySelectorAll('#categoryList .filter-button.active')].map(btn => btn.dataset.category);
-            const filtered = articlesForCurrentPage.filter(article => 
-                (activeCategories.length === 0 || activeCategories.includes(article.category)) &&
-                (!searchQuery || article.title.toLowerCase().includes(searchQuery) || article.source.toLowerCase().includes(searchQuery))
-            );
-            displayArticles(filtered);
-        }
+        // --- FILTERING --- 
+        function handleCategoryFilter(e) { 
+            if (e.target.classList.contains('filter-button')) { 
+                e.target.classList.toggle('active'); 
+                currentPage = 1; // Reset to page 1 on filter change 
+                filterAndDisplayArticles(); 
+            } 
+        } 
 
+        function filterAndDisplayArticles() { 
+            const searchQuery = searchInput.value.toLowerCase(); 
+            const activeCategories = [...document.querySelectorAll('#categoryList .filter-button.active')].map(btn => btn.dataset.category); 
+            
+            // --- FIX: Filter the single flat array --- 
+            const filtered = allArticlesFlat.filter(article => 
+                (activeCategories.length === 0 || activeCategories.includes(article.category)) && 
+                (!searchQuery || article.title.toLowerCase().includes(searchQuery) || article.source.toLowerCase().includes(searchQuery)) 
+            ); 
+            
+            // Call the new display function 
+            displayPaginatedArticles(filtered); 
+        } 
+        
+        // --- FAVORITES ---
         function handleFavoriteClick(e) {
             const favButton = e.target.closest('.favorite-btn');
             if (favButton) {
@@ -554,7 +548,7 @@
                 button.classList.toggle('favorited', favorites.includes(String(button.dataset.id)));
             });
         }
-
+        
         // --- MODAL & OTHER UTILITIES ---
         function showTermsModal(event) { event.preventDefault(); document.getElementById('termsContent').style.display = 'block'; }
         function closeTermsModal() { document.getElementById('termsContent').style.display = 'none'; }
