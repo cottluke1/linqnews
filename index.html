@@ -5,365 +5,518 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linq - Your Energy News</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    
+    <!-- External Scripts for Article Data -->
+    <script src="articles_present.js"></script>
+    <script src="articles_premium.js"></script>
+    <script src="articles_past.js"></script>
+    <script src="source_images.js"></script>
 
     <style>
-        /* Original Styles Restored */
+        /* Custom base styles */
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
             background-color: #000000;
             background-image: radial-gradient(ellipse 40% 20% at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
             color: #E7E9EA;
+            font-weight: 400;
         }
         body.overflow-hidden {
             overflow: hidden;
         }
-        .nav-link.active {
-            color: #FFFFFF !important;
-            opacity: 1 !important;
+
+        /* Header Styles */
+        nav.fixed {
+            background-color: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(10px) saturate(150%);
+            -webkit-backdrop-filter: blur(10px) saturate(150%);
+            border-bottom: 1px solid #2F3336;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
         }
+        .nav-link {
+            transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+            font-weight: 500; color: #B0B0B0; opacity: 0.8;
+            padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem;
+        }
+        .nav-link:hover { color: #FFFFFF; opacity: 1; background-color: rgba(255,255,255,0.05); }
+        .nav-link.active { color: #FFFFFF; opacity: 1; background-color: transparent; }
+        #authLinkDesktopLogin.nav-link-button {
+            background-color: #00BFFF; color: #FFFFFF !important; opacity: 1 !important; padding: 0.5rem 1rem;
+        }
+        #authLinkDesktopLogin.nav-link-button:hover { background-color: #00A9E0; opacity: 1; }
+        
+        /* Ticker Banner */
         .ticker-banner {
-            background: #121212; color: #A0A0A0;
-            border-bottom: 1px solid #282828;
+            background: #121212; color: #A0A0A0; padding: 0.625rem 0;
+            overflow: hidden; white-space: nowrap; position: relative;
+            width: 100%; z-index: 35; font-size: 0.8rem; line-height: 1.3;
+            border-bottom: 1px solid #282828; 
+            margin-top: 65px; /* Adjust this based on header height */
         }
-        .ticker-content {
-            animation: ticker-scroll 300s linear infinite;
-        }
+        .ticker-content { display: inline-block; white-space: nowrap; animation: ticker-scroll 300s linear infinite; }
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        .ticker-item { display: inline-block; margin-right: 1.75rem; }
         .ticker-item .positive { color: #22C55E; }
         .ticker-item .negative { color: #EF4444; }
+
+        /* Hero Section */
+        .hero-section { background: transparent; padding: 5rem 1rem; text-align: center; }
+        .hero-title {
+            font-size: 2.5rem; font-weight: 800; color: #E7E9EA;
+            margin: 0 0 1rem 0; text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3);
+        }
         .hero-title .accent-text { color: #00BFFF; }
+        .hero-subtitle {
+            font-size: 1.125rem; color: #6E767D; max-width: 600px;
+            margin: 0 auto; line-height: 1.6;
+        }
         
+        .section-title {
+            font-size: 1.75rem; font-weight: 700; color: #E7E9EA; margin-bottom: 2rem;
+            padding-bottom: 0.75rem; border-bottom: 1px solid #2F3336;
+        }
+
+        /* News Card & Locked State */
         .news-card {
-            background-color: transparent; border: 1px solid #2F3336;
+            background-color: transparent; border-radius: 0.75rem; border: 1px solid #2F3336;
+            box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.6); overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            margin-bottom: 1.5rem; display: flex; align-items: center; padding: 1rem;
+            position: relative; /* Needed for overlay positioning */
         }
         .news-card:hover {
             transform: translateY(-4px); box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.2);
             border-color: #5a6268;
         }
+        .news-card.locked .news-card-content {
+            filter: blur(4px);
+            pointer-events: none;
+        }
+        .locked-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(10, 10, 10, 0.7);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 10;
+            border-radius: 0.75rem;
+        }
+        .lock-icon {
+            color: white; width: 2.5rem; height: 2.5rem;
+        }
+        .news-card-content { display: flex; flex-grow: 1; align-items: center; }
+        .news-source-logo-container {
+            flex-shrink: 0; margin-right: 1rem; width: 50px; height: 50px;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; border-radius: 0.375rem;
+        }
+        .news-source-logo { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .news-content-wrapper { flex-grow: 1; display: flex; justify-content: space-between; align-items: flex-start; }
+        .news-text-content { }
+        .news-title {
+            font-size: 1.1rem; font-weight: 500; color: #E7E9EA;
+            margin-bottom: 0.25rem; line-height: 1.3;
+        }
+        .news-title a { color: #E7E9EA; transition: color 0.2s ease; }
         .news-title a:hover { color: #00BFFF; }
+        .news-meta-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+        .news-meta { font-size: 0.75rem; color: #6E767D; }
         .news-tag {
-            background-color: rgba(0, 191, 255, 0.15); color: #00BFFF;
-            border: 1px solid rgba(0, 191, 255, 0.3);
+            background-color: rgba(0, 191, 255, 0.15); color: #00BFFF; padding: 0.25rem 0.6rem;
+            border-radius: 9999px; font-size: 0.65rem; font-weight: 500;
+            display: inline-block; border: 1px solid rgba(0, 191, 255, 0.3);
         }
-        .favorite-btn:hover {
-            color: #00BFFF;
-            transform: scale(1.15);
-        }
-        .favorite-btn.favorited { color: #00BFFF; }
-        .favorite-btn.favorited svg { fill: #00BFFF; }
+        .favorite-btn-area { flex-shrink: 0; margin-left: 2rem; }
         .filter-panel {
-            background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px);
-            border: 1px solid #2a2a2a;
+            background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%);
+            padding: 2rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
+            border: 1px solid #2a2a2a; position: sticky;
+            top: 94px;
         }
+        .filter-title { font-size: 1.25rem; font-weight: 600; color: #E0E0E0; margin-bottom: 1.25rem; }
         .filter-button {
+            display: block; width: 100%; text-align: left; padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem; border-radius: 0.375rem; color: #B0B0B0; font-weight: 500;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
             background-color: #1A1A1A; border: 1px solid #333333;
-            color: #B0B0B0; transition: all 0.2s ease;
         }
         .filter-button:hover {
             background-color: rgba(0, 191, 255, 0.1); color: #FFFFFF; border-color: #00BFFF;
         }
         .filter-button.active {
-            background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; font-weight: 600; border-color: #00BFFF;
+            background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; font-weight: 600;
+            border-color: #00BFFF;
         }
+        .search-container { position: relative; display: flex; align-items: center;}
         .search-input {
-            background-color: #1A1A1A; border: 1px solid #333333;
+            width: 100%;
+            padding: 0.875rem 1.125rem 0.875rem 2.75rem;
+            background-color: #1A1A1A;
+            border: 1px solid #333333;
+            border-radius: 0.5rem;
+            font-size: 0.9rem; color: #E0E0E0;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            line-height: normal;
+            height: auto;
         }
+        .search-input::placeholder { color: #666666; }
         .search-input:focus {
             outline: none; border-color: #00BFFF;
-            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3);
+            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3); background-color: #1F1F1F;
+        }
+        .search-container svg {
+            position: absolute; left: 0.875rem;
+            width: 1.1rem; height: 1.1rem; color: #A0A0A0; pointer-events: none;
+        }
+
+        .favorite-btn {
+            width: 2rem; height: 2rem; color: #888888; cursor: pointer;
+            transition: color 0.2s ease, transform 0.2s ease;
+            background: none; border: none; padding: 0.25rem; 
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        .favorite-btn:hover { color: #00BFFF; transform: scale(1.15); }
+        .favorite-btn svg { width: 100%; height: 100%; stroke-width: 1.5; stroke: currentColor; fill: none; }
+        .favorite-btn.favorited svg { fill: #00BFFF; stroke: #00BFFF; }
+
+        /* Pagination Styles */
+        .pagination-container {
+            display: flex; justify-content: center; align-items: center;
+            margin-top: 3rem; padding: 1rem;
         }
         .pagination-btn {
-            background-color: #1A1A1A; border: 1px solid #333333;
-            color: #A0A0A0; transition: all 0.2s ease;
+            background-color: #1A1A1A; border: 1px solid #333333; color: #B0B0B0;
+            font-weight: 500; margin: 0 0.25rem; border-radius: 0.375rem;
+            width: 2.5rem; height: 2.5rem;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
         }
-        .pagination-btn:hover { background-color: #2A2A2A; color: #FFFFFF; }
+        .pagination-btn:hover {
+            background-color: rgba(0, 191, 255, 0.1); border-color: #00BFFF; color: #FFFFFF;
+        }
         .pagination-btn.active {
             background-color: #00BFFF; color: #FFFFFF; border-color: #00BFFF; font-weight: 600;
         }
-        .locked-article { position: relative; overflow: hidden; }
-        .locked-article .locked-content {
-            filter: blur(4px); pointer-events: none; user-select: none;
+        
+        /* Footer & Modals */
+        .footer {
+            background-color: #080808; color: #888888; padding: 3rem 1rem;
+            margin-top: 4rem; border-top: 1px solid #222222;
         }
-        .locked-overlay {
-            position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5);
-            display: flex; align-items: center; justify-content: center; z-index: 10;
+        .terms-privacy-content {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background-color: rgba(22, 22, 22, 0.9); backdrop-filter: blur(10px) saturate(150%);
+            -webkit-backdrop-filter: blur(10px) saturate(150%); padding: 2.5rem;
+            border-radius: 0.75rem; max-height: 85vh; overflow-y: auto;
+            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7); z-index: 100;
+            color: #E0E0E0; border: 1px solid rgba(0, 191, 255, 0.3);
+            max-width: 700px; width: 90%;
         }
-        .locked-icon {
-            color: white; background: rgba(0,0,0,0.6);
-            padding: 1rem; border-radius: 50%; border: 2px solid rgba(255,255,255,0.5);
+        .terms-privacy-content h2 {
+            font-size: 1.75rem; font-weight: 600; color: #FFFFFF; margin-bottom: 1.5rem;
+            border-bottom: 1px solid #00BFFF; padding-bottom: 0.75rem;
         }
+        .terms-privacy-content p { margin-bottom: 1rem; line-height: 1.7; color: #C0C0C0; }
+        .terms-privacy-content strong { color: #00BFFF; font-weight: 600; }
+        .terms-privacy-content a { color: #00BFFF; text-decoration: underline; transition: color 0.2s ease; }
+        .terms-privacy-content a:hover { color: #00A9E0; }
+        .close-btn {
+            position: absolute; top: 1.5rem; right: 1.5rem; font-size: 1.75rem;
+            cursor: pointer; color: #A0A0A0;
+            transition: color 0.2s ease, transform 0.2s ease; line-height: 1;
+        }
+        .close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
     </style>
 </head>
 <body class="antialiased">
     <div id="navbar"></div>
 
-    <div class="ticker-banner whitespace-nowrap overflow-hidden py-2.5 text-xs relative z-30">
-      <div id="tickerContent" class="ticker-content inline-block">
-        </div>
+    <div class="ticker-banner">
+      <div class="ticker-content" id="tickerContent"></div>
     </div>
 
-    <header class="hero-section text-center py-12 px-4">
-        <h1 class="hero-title text-4xl md:text-5xl font-extrabold text-white mb-3">Your <span class="accent-text">Linq</span> to Energy News</h1>
-        <p class="hero-subtitle max-w-2xl mx-auto text-lg text-gray-400">Your daily source for curated energy news and market intelligence.</p>
+    <header class="hero-section">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="hero-title">Your <span class="accent-text">Linq</span> to Energy News</h1>
+            <p class="hero-subtitle">Your daily source for curated energy news and market intelligence.</p>
+        </div>
     </header>
 
-    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8 mt-10">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-10">
-            
-            <section class="lg:col-span-9">
-                <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-8">
-                    <h2 class="text-2xl font-bold mb-3 sm:mb-0">Latest News</h2>
-                    <div class="relative w-full sm:w-auto sm:max-w-xs">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                        <input type="search" id="searchInput" placeholder="Search news..." class="search-input w-full rounded-md pl-10 pr-4 py-2">
+            <div class="lg:col-span-9" id="news">
+                <section>
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-8">
+                        <h2 class="section-title !mb-3 sm:!mb-0 !border-none">Latest News</h2>
+                        <div class="relative w-full sm:w-auto sm:max-w-xs search-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            <input type="search" id="searchInput" placeholder="Search news..." class="search-input !mb-0 pl-10">
+                        </div>
                     </div>
-                </div>
-                <div id="newsGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    <!-- News articles will be injected here -->
-                </div>
-                <div id="pagination-controls" class="flex justify-center items-center mt-12 space-x-2">
-                    <!-- Pagination buttons will be loaded here -->
-                </div>
-            </section>
-
+                    <div class="space-y-6" id="newsGrid"></div>
+                    <div id="paginationContainer" class="pagination-container"></div>
+                </section>
+            </div>
             <aside class="lg:col-span-3 space-y-8">
-                <div class="filter-panel p-6 rounded-lg sticky top-24">
-                    <h3 class="text-lg font-semibold mb-4">Filter by Category</h3>
+                <div class="filter-panel p-6">
+                    <h3 class="filter-title">Filter by Category</h3>
                     <div id="categoryList" class="space-y-3">
-                        <button class="filter-button w-full text-left rounded-md px-4 py-3 text-sm" data-category="Crude Oil">Crude Oil</button>
-                        <button class="filter-button w-full text-left rounded-md px-4 py-3 text-sm" data-category="Natural Gas">Natural Gas</button>
-                        <button class="filter-button w-full text-left rounded-md px-4 py-3 text-sm" data-category="Petrochemicals">Petrochemicals</button>
-                        <button class="filter-button w-full text-left rounded-md px-4 py-3 text-sm" data-category="Power">Power</button>
-                        <button class="filter-button w-full text-left rounded-md px-4 py-3 text-sm" data-category="Renewables">Renewables</button>
-                        <button class="filter-button w-full text-left rounded-md px-4 py-3 text-sm" data-category="Company News">Company News</button>
-                        <button class="filter-button w-full text-left rounded-md px-4 py-3 text-sm" data-category="Earnings">Earnings</button>
+                        <button class="filter-button" data-category="Crude Oil">Crude Oil</button>
+                        <button class="filter-button" data-category="Natural Gas">Natural Gas</button>
+                        <button class="filter-button" data-category="Petrochemicals">Petrochemicals</button>
+                        <button class="filter-button" data-category="Power">Power</button>
+                        <button class="filter-button" data-category="Renewables">Renewables</button>
+                        <button class="filter-button" data-category="Company News">Company News</button>
+                        <button class="filter-button" data-category="Earnings">Earnings</button>
                     </div>
                 </div>
             </aside>
-
         </div>
     </main>
 
-    <footer class="footer text-center mt-16 py-8">
-        <p>&copy; <span id="current-year">2025</span> Linq. All rights reserved.</p>
+    <footer class="footer text-center">
+        <div class="container mx-auto">
+            <p class="text-sm">&copy; 2025 Linq. All rights reserved.</p>
+            <p class="text-xs mt-1">
+                <a href="#terms" onclick="showTermsModal(event)" class="hover:text-sky-400 transition-colors">Terms of Service</a> |
+                <a href="#privacy" onclick="showPrivacyModal(event)" class="hover:text-sky-400 transition-colors">Privacy Policy</a>
+            </p>
+        </div>
     </footer>
 
-    <!-- Scripts at the end of the body -->
-    <script src="source_images.js"></script>
-    <script src="articles_present.js"></script>
-    <script src="articles_premium.js"></script>
-    <script src="articles_past.js"></script>
-    
+    <div id="termsContent" class="terms-privacy-content">
+        <span class="close-btn" onclick="closeTermsModal()">×</span> <h2>Terms of Service</h2>
+        <p>Welcome to Linq... (Your full terms content here)</p>
+    </div>
+    <div id="privacyContent" class="terms-privacy-content">
+        <span class="close-btn" onclick="closePrivacyModal()">×</span> <h2>Privacy Policy</h2>
+        <p>At Linq, we are committed... (Your full privacy policy content here)</p>
+    </div>
+
     <script>
+        // --- CONFIGURATION ---
+        const isSubscribed = false; // <-- CHANGE THIS TO 'true' TO SIMULATE A SUBSCRIBED USER
+        const FINNHUB_API_KEY = 'cprdj2pr01qjjs4st2e0cprdj2pr01qjjs4st2eg'; 
+        const DISPLAY_SYMBOLS = {
+            'OANDA:USD_JPY': 'JPY', 'OANDA:USD_CNY': 'CNY', 'OANDA:EUR_USD': 'EUR', 'OANDA:GBP_USD': 'GBP',
+            'CL1:COM': 'WTI CRUDE', 'CO1:COM': 'BRENT CRUDE', 'RB1:COM': 'RBOB GASOLINE', 'HO1:COM': 'HEATING OIL',
+            'NG1:COM': 'NATURAL GAS', 'TMUBMUSD02Y': 'US 2YR YIELD', 'TMUBMUSD05Y': 'US 5YR YIELD',
+            'TMUBMUSD10Y': 'US 10YR YIELD', '^GSPC': 'S&P 500', '^DJI': 'DOW 30', '^IXIC': 'NASDAQ', 'DXY': 'US DOLLAR IDX'
+        };
+         const TICKER_ITEMS_TO_SHOW = [
+            'OANDA:EUR_USD', 'OANDA:GBP_USD', 'OANDA:USD_JPY', 'OANDA:USD_CNY', 'CO1:COM', 'CL1:COM', 'NG1:COM', 
+            'RB1:COM', 'HO1:COM', 'TMUBMUSD02Y', 'TMUBMUSD05Y', 'TMUBMUSD10Y', '^GSPC', '^DJI', '^IXIC', 'DXY'
+        ];
+
+        // --- GLOBAL STATE ---
+        let currentPage = 1;
+        let allArticles = [];
+        let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || [];
+
+        // --- DOM ELEMENTS ---
+        const newsGrid = document.getElementById('newsGrid');
+        const searchInput = document.getElementById('searchInput');
+        const categoryList = document.getElementById('categoryList');
+        const paginationContainer = document.getElementById('paginationContainer');
+
+
+        // --- DATA LOADING & INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            // --- State Variables ---
-            let isSubscribed = false; 
-            let currentDay = 1;
-            let activeCategories = [];
-            let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || [];
-
-            // --- Core Functions ---
-            function displayArticles() {
-                const newsGrid = document.getElementById('newsGrid');
-                if (!newsGrid) return;
-                
-                if (typeof window.presentDayArticles === 'undefined' || typeof window.premiumArticles === 'undefined' || typeof window.pastDaysArticles === 'undefined') {
-                    console.error("Article data is not available yet.");
-                    newsGrid.innerHTML = `<p class="text-red-500 col-span-full text-center py-10">Error: Could not load article data. Please check file paths and ensure variables are on the window object.</p>`;
-                    return;
-                }
-
-                let articlesToDisplay = [];
-                if (currentDay === 1) {
-                    articlesToDisplay = [...window.presentDayArticles, ...window.premiumArticles];
-                } else {
-                    articlesToDisplay = window.pastDaysArticles[currentDay - 2] || [];
-                }
-                
-                const searchQuery = document.getElementById('searchInput')?.value.toLowerCase() || "";
-                
-                const filteredArticles = articlesToDisplay.filter(article => {
-                    const matchesCategory = activeCategories.length === 0 || activeCategories.includes(article.category);
-                    const matchesSearch = !searchQuery || 
-                                          article.title.toLowerCase().includes(searchQuery) ||
-                                          article.source.toLowerCase().includes(searchQuery) ||
-                                          article.category.toLowerCase().includes(searchQuery);
-                    return matchesCategory && matchesSearch;
-                });
-
-                newsGrid.innerHTML = '';
-                if (filteredArticles.length === 0) {
-                    newsGrid.innerHTML = `<p class="text-gray-400 col-span-full text-center py-10">No articles found for the selected criteria.</p>`;
-                    return;
-                }
-
-                filteredArticles.forEach(article => {
-                    const isLocked = article.premium && !isSubscribed;
-                    const articleElement = document.createElement('article');
-                    articleElement.className = `news-card rounded-lg shadow-md flex flex-col ${isLocked ? 'locked-article' : ''}`;
-                    
-                    let imageUrl = (typeof window.sourceImageMap !== 'undefined' && window.sourceImageMap[article.source]) || `https://placehold.co/80x80/1A1A1A/FFFFFF?text=${encodeURIComponent(article.source?.charAt(0) || 'N')}&font=Inter`;
-                    
-                    articleElement.innerHTML = `
-                        <div class="locked-content">
-                            <div class="p-5 flex-grow">
-                                <div class="flex items-center mb-3">
-                                    <img src="${imageUrl}" alt="${article.source}" class="w-8 h-8 mr-3 object-contain" onerror="this.style.display='none'; this.onerror=null;">
-                                    <div>
-                                        <p class="text-sm font-semibold text-white">${article.source}</p>
-                                        <p class="text-xs text-gray-400">${article.date}</p>
-                                    </div>
-                                </div>
-                                <h3 class="text-lg font-bold mb-2 text-white">
-                                    <a href="${isLocked ? 'linqplus.html' : article.link}" ${!isLocked ? 'target="_blank"' : ''} class="hover:text-cyan-400 transition-colors duration-200">${article.title}</a>
-                                </h3>
-                            </div>
-                            <div class="p-5 pt-0 flex justify-between items-center">
-                                <span class="news-tag text-xs font-semibold rounded-full px-3 py-1">${article.category}</span>
-                                <button class="favorite-btn text-gray-500" data-id="${article.id}" aria-label="Toggle Favorite">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
-                                </button>
-                            </div>
-                        </div>
-                        ${isLocked ? `
-                            <a href="linqplus.html" class="locked-overlay">
-                                <div class="locked-icon">
-                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"></path></svg>
-                                </div>
-                            </a>
-                        ` : ''}
-                    `;
-                    newsGrid.appendChild(articleElement);
-                });
-                updateFavoriteIcons();
-            }
-            
-            function handleCategoryClick(event) {
-                const button = event.target.closest('.filter-button');
-                if (!button) return;
-                
-                const category = button.dataset.category;
-                
-                button.classList.toggle('active');
-
-                if (button.classList.contains('active')) {
-                    activeCategories.push(category);
-                } else {
-                    const index = activeCategories.indexOf(category);
-                    if (index > -1) {
-                        activeCategories.splice(index, 1);
-                    }
-                }
-                displayArticles();
-            }
-
-            function setupPagination() {
-                const paginationContainer = document.getElementById('pagination-controls');
-                if(!paginationContainer) return;
-                paginationContainer.innerHTML = '';
-                for(let i = 1; i <= 5; i++) {
-                    const btn = document.createElement('button');
-                    btn.className = 'pagination-btn w-10 h-10 rounded-md text-sm';
-                    btn.textContent = i;
-                    btn.dataset.day = i;
-                    if (i === currentDay) {
-                        btn.classList.add('active');
-                    }
-                    btn.addEventListener('click', handleDayClick);
-                    paginationContainer.appendChild(btn);
-                }
-            }
-
-            function handleDayClick(event) {
-                currentDay = parseInt(event.target.dataset.day);
-                document.querySelectorAll('.pagination-btn').forEach(btn => btn.classList.remove('active'));
-                event.target.classList.add('active');
-                displayArticles();
-            }
-
-            function toggleFavorite(articleId) {
-                const idStr = String(articleId);
-                const index = favorites.indexOf(idStr);
-                if (index > -1) {
-                    favorites.splice(index, 1);
-                } else {
-                    favorites.push(idStr);
-                }
-                localStorage.setItem('linqFavoritesV2', JSON.stringify(favorites));
-                updateFavoriteIcons();
-            }
-
-            function updateFavoriteIcons() {
-                 document.querySelectorAll('.favorite-btn').forEach(button => {
-                    const isFavorited = favorites.includes(String(button.dataset.id));
-                    button.classList.toggle('favorited', isFavorited);
-                });
-            }
-            
-            // --- Initialization ---
             fetch('header.html')
                 .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
                 .then(data => {
                     document.getElementById('navbar').innerHTML = data;
-                });
-            
-            const firebaseConfig = {
-                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-                authDomain: "linq-b27a8.firebaseapp.com",
-                projectId: "linq-b27a8",
-                storageBucket: "linq-b27a8.appspot.com",
-                messagingSenderId: "1067901051826",
-                appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-            };
+                    // Any header-specific JS initializations would go here
+                    const tickerBanner = document.querySelector('.ticker-banner');
+                    const navElement = document.querySelector('nav.fixed');
+                    if (tickerBanner && navElement) {
+                        tickerBanner.style.marginTop = `${navElement.offsetHeight}px`;
+                    }
+                })
+                .catch(error => console.error('Error fetching header:', error))
+                .finally(updateTickerBanner);
 
-            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-            
-            const auth = firebase.auth();
-            const db = firebase.firestore();
+            // Safely combine article data, handling cases where files might not load
+            const todayArticles = [...(window.presentDayArticles || []), ...(window.premiumArticles || [])];
+            allArticles = [todayArticles, ...(window.pastDaysArticles || [])];
 
-            document.getElementById('searchInput')?.addEventListener('input', displayArticles);
+            createPagination();
+            loadPage(1); 
 
-            document.getElementById('newsGrid')?.addEventListener('click', e => {
-                const favButton = e.target.closest('.favorite-btn');
-                if (favButton) {
-                    e.preventDefault();
-                    toggleFavorite(favButton.dataset.id);
-                }
-            });
-
-            document.querySelectorAll('#categoryList .filter-button').forEach(button => {
-                button.addEventListener('click', handleCategoryClick);
-            });
-
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    const userRef = db.collection("users").doc(user.uid);
-                    userRef.get().then((doc) => {
-                        isSubscribed = doc.exists && doc.data().isSubscribed === true;
-                        displayArticles();
-                    }).catch(error => {
-                        console.error("Error getting subscription status:", error);
-                        isSubscribed = false;
-                        displayArticles();
-                    });
-                } else {
-                    isSubscribed = false;
-                    displayArticles();
-                }
-            });
-            
-            setupPagination();
+            categoryList.addEventListener('click', handleCategoryFilter);
+            searchInput.addEventListener('input', filterAndDisplayArticles);
+            newsGrid.addEventListener('click', handleFavoriteClick);
         });
+
+        // --- TICKER BANNER ---
+        async function fetchFinnhubQuote(symbol) {
+            const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`API error for ${symbol}: ${response.status}`);
+                const data = await response.json();
+                return { 
+                    price: data.c?.toFixed(2) || 'N/A', 
+                    change: data.d?.toFixed(2) || 'N/A', 
+                    percent: data.dp?.toFixed(2) || 'N/A' 
+                };
+            } catch (err) {
+                console.error(`Failed to fetch ${symbol}:`, err);
+                return { price: 'N/A', change: 'N/A', percent: 'N/A' };
+            }
+        }
+
+        async function updateTickerBanner() {
+            const tickerContent = document.getElementById('tickerContent');
+            if (!tickerContent) return;
+            const promises = TICKER_ITEMS_TO_SHOW.map(fetchFinnhubQuote);
+            const results = await Promise.all(promises);
+            let allItemsHTML = results.map((data, index) => {
+                const symbol = TICKER_ITEMS_TO_SHOW[index];
+                const changeClass = data.percent !== 'N/A' ? (parseFloat(data.percent) >= 0 ? 'positive' : 'negative') : '';
+                const percentDisplay = data.percent !== 'N/A' ? `${parseFloat(data.percent) >= 0 ? '+' : ''}${data.percent}%` : 'N/A';
+                const displayName = DISPLAY_SYMBOLS[symbol] || symbol;
+                let priceDisplay = symbol.includes('YIELD') || symbol.includes('TMUBMUSD') ? `${data.price}%` : `$${data.price}`;
+                if (data.price === 'N/A') priceDisplay = 'N/A';
+                return `<span class="ticker-item">${displayName}: <span class="text-white">${priceDisplay}</span> <span class="${changeClass}">${percentDisplay}</span></span>`;
+            }).join('');
+            const repeatCount = Math.ceil((window.innerWidth * 2) / (TICKER_ITEMS_TO_SHOW.length * 180)) + 1;
+            tickerContent.innerHTML = allItemsHTML.repeat(Math.max(2, repeatCount));
+        }
+
+
+        // --- PAGINATION ---
+        function createPagination() {
+            paginationContainer.innerHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                const button = document.createElement('button');
+                button.className = 'pagination-btn';
+                button.textContent = i;
+                button.dataset.page = i;
+                if (i === currentPage) button.classList.add('active');
+                button.addEventListener('click', () => loadPage(i));
+                paginationContainer.appendChild(button);
+            }
+        }
+
+        function loadPage(pageNumber) {
+            currentPage = pageNumber;
+            searchInput.value = '';
+            document.querySelectorAll('#categoryList .filter-button.active').forEach(btn => btn.classList.remove('active'));
+            filterAndDisplayArticles();
+            updatePaginationUI();
+        }
+
+        function updatePaginationUI() {
+            document.querySelectorAll('.pagination-btn').forEach(button => {
+                button.classList.toggle('active', parseInt(button.dataset.page) === currentPage);
+            });
+        }
+
+
+        // --- ARTICLE RENDERING ---
+        function displayArticles(articlesToDisplay) {
+            newsGrid.innerHTML = '';
+            if (!articlesToDisplay || articlesToDisplay.length === 0) {
+                newsGrid.innerHTML = '<p class="text-center text-gray-500 col-span-full">No articles found.</p>';
+                return;
+            }
+            articlesToDisplay.forEach(article => {
+                const isLocked = (article.premium && !isSubscribed) || (currentPage > 1);
+                const articleElement = document.createElement('article');
+                articleElement.className = 'news-card';
+                if (isLocked) articleElement.classList.add('locked');
+                
+                // **FIX:** Safely access sourceImageMap
+                const safeSourceImageMap = window.sourceImageMap || {};
+                const imageUrl = safeSourceImageMap[article.source] || `https://placehold.co/50/2a2a2a/ffffff?text=${article.source ? article.source.charAt(0) : 'N'}`;
+                
+                articleElement.innerHTML = `
+                    ${isLocked ? `
+                        <a href="linqplus.html" class="locked-overlay">
+                            <svg class="lock-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6a3 3 0 003 3h10.5a3 3 0 003-3v-6a3 3 0 00-3-3v-3A5.25 5.25 0 0012 1.5zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z"></path></svg>
+                        </a>` : ''}
+                    <div class="news-card-content">
+                        <div class="news-source-logo-container">
+                            <img src="${imageUrl}" alt="${article.source} Logo" class="news-source-logo" onerror="this.src='https://placehold.co/50/cccccc/333333?text=Err';">
+                        </div>
+                        <div class="news-content-wrapper">
+                            <div class="news-text-content">
+                                <h3 class="news-title"><a href="${article.link}" target="_blank" rel="noopener noreferrer">${article.title}</a></h3>
+                                <div class="news-meta-tags">
+                                    <p class="news-meta">${article.date} &bull; ${article.source}</p>
+                                    <span class="news-tag">${article.category}</span>
+                                </div>
+                            </div>
+                            <div class="favorite-btn-area">
+                                <button class="favorite-btn" data-id="${article.id}" aria-label="Toggle Favorite">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" /></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>`;
+                newsGrid.appendChild(articleElement);
+            });
+            updateFavoriteIcons();
+        }
+
+
+        // --- FILTERING & FAVORITES ---
+        function handleCategoryFilter(e) {
+            if (e.target.classList.contains('filter-button')) {
+                e.target.classList.toggle('active');
+                filterAndDisplayArticles();
+            }
+        }
+
+        function filterAndDisplayArticles() {
+            const articlesForCurrentPage = allArticles[currentPage - 1] || [];
+            const searchQuery = searchInput.value.toLowerCase();
+            const activeCategories = [...document.querySelectorAll('#categoryList .filter-button.active')].map(btn => btn.dataset.category);
+            const filtered = articlesForCurrentPage.filter(article => 
+                (activeCategories.length === 0 || activeCategories.includes(article.category)) &&
+                (!searchQuery || article.title.toLowerCase().includes(searchQuery) || article.source.toLowerCase().includes(searchQuery))
+            );
+            displayArticles(filtered);
+        }
+
+        function handleFavoriteClick(e) {
+            const favButton = e.target.closest('.favorite-btn');
+            if (favButton) {
+                toggleFavorite(favButton.dataset.id);
+            }
+        }
+
+        function toggleFavorite(articleId) {
+            const idStr = String(articleId);
+            const index = favorites.indexOf(idStr);
+            if (index > -1) favorites.splice(index, 1);
+            else favorites.push(idStr);
+            localStorage.setItem('linqFavoritesV2', JSON.stringify(favorites));
+            updateFavoriteIcons();
+        }
+
+        function updateFavoriteIcons() {
+             document.querySelectorAll('.favorite-btn').forEach(button => {
+                button.classList.toggle('favorited', favorites.includes(String(button.dataset.id)));
+            });
+        }
+
+        // --- MODAL & OTHER UTILITIES ---
+        function showTermsModal(event) { event.preventDefault(); document.getElementById('termsContent').style.display = 'block'; }
+        function closeTermsModal() { document.getElementById('termsContent').style.display = 'none'; }
+        function showPrivacyModal(event) { event.preventDefault(); document.getElementById('privacyContent').style.display = 'block'; }
+        function closePrivacyModal() { document.getElementById('privacyContent').style.display = 'none'; }
     </script>
 </body>
 </html>
