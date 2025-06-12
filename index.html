@@ -373,7 +373,9 @@
 
             // Combine all article data
             const todayArticles = [...window.presentDayArticles, ...window.premiumArticles];
-            allArticles = [todayArticles, ...window.pastArticles];
+            // Flatten all article arrays into a single list
+            const combinedPastArticles = [].concat(...window.pastArticles);
+            allArticles = [todayArticles, ...combinedPastArticles];
             console.log('Combined articles:', allArticles);
 
             // Setup UI and event listeners
