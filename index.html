@@ -334,7 +334,6 @@
         window.onload = function() {
             // This ensures all scripts, including external ones, have loaded
             fetchHeaderAndInit();
-            initializeAppLogic();
         };
 
         function fetchHeaderAndInit() {
@@ -346,10 +345,13 @@
                 .then(data => {
                     document.getElementById('navbar').innerHTML = data;
                     adjustLayoutForHeader();
-                    // Any other header-dependent initializations can go here
+                    // Initialize app logic after header is loaded
+                    setTimeout(initializeAppLogic, 0);
                 })
                 .catch(error => {
                     console.error('Error fetching header:', error);
+                    // Initialize app logic even if header fails
+                    setTimeout(initializeAppLogic, 0);
                 })
                 .finally(() => {
                     updateTickerBanner(); // Update ticker regardless of header success
@@ -358,7 +360,7 @@
         
         function initializeAppLogic() {
             // Check if article data is available
-            if (typeof presentDayArticles === 'undefined' || typeof premiumArticles === 'undefined' || typeof pastDaysArticles === 'undefined' || typeof sourceImageMap === 'undefined') {
+            if (typeof presentDayArticles === 'undefined' || typeof premiumArticles === 'undefined' || typeof pastArticles === 'undefined' || typeof sourceImageMap === 'undefined') {
                 console.error('One or more article data files are not loaded.');
                 if (newsGrid) newsGrid.innerHTML = '<p class="text-center text-gray-500">Error: Could not load news articles. Please try again later.</p>';
                 return; // Stop execution if data is missing
@@ -366,7 +368,7 @@
 
             // Combine all article data
             const todayArticles = [...presentDayArticles, ...premiumArticles];
-            allArticles = [todayArticles, ...pastDaysArticles];
+            allArticles = [todayArticles, ...pastArticles];
 
             // Setup UI and event listeners
             createPagination();
@@ -443,7 +445,8 @@
             currentPage = pageNumber;
             searchInput.value = '';
             document.querySelectorAll('#categoryList .filter-button.active').forEach(btn => btn.classList.remove('active'));
-            filterAndDisplayArticles();
+            const articlesForCurrentPage = allArticles[currentPage - 1] || [];
+            displayArticles(articlesForCurrentPage);
             updatePaginationUI();
         }
 
