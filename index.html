@@ -14,10 +14,10 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     
     <!-- External Scripts for Article Data -->
-    <script src="articles_present.js" defer></script>
-    <script src="articles_premium.js" defer></script>
-    <script src="articles_past.js" defer></script>
-    <script src="source_images.js" defer></script>
+    <script src="source_images.js"></script>
+    <script src="articles_present.js"></script>
+    <script src="articles_premium.js"></script>
+    <script src="articles_past.js"></script>
 
     <style>
         /* Custom base styles */
@@ -313,7 +313,7 @@
             'NG1:COM': 'NATURAL GAS', 'TMUBMUSD02Y': 'US 2YR YIELD', 'TMUBMUSD05Y': 'US 5YR YIELD',
             'TMUBMUSD10Y': 'US 10YR YIELD', '^GSPC': 'S&P 500', '^DJI': 'DOW 30', '^IXIC': 'NASDAQ', 'DXY': 'US DOLLAR IDX'
         };
-         const TICKER_ITEMS_TO_SHOW = [
+        const TICKER_ITEMS_TO_SHOW = [
             'OANDA:EUR_USD', 'OANDA:GBP_USD', 'OANDA:USD_JPY', 'OANDA:USD_CNY', 'CO1:COM', 'CL1:COM', 'NG1:COM', 
             'RB1:COM', 'HO1:COM', 'TMUBMUSD02Y', 'TMUBMUSD05Y', 'TMUBMUSD10Y', '^GSPC', '^DJI', '^IXIC', 'DXY'
         ];
@@ -329,12 +329,11 @@
         const categoryList = document.getElementById('categoryList');
         const paginationContainer = document.getElementById('paginationContainer');
 
-
         // --- MAIN INITIALIZATION LOGIC ---
-        window.onload = function() {
+        document.addEventListener('DOMContentLoaded', function() {
             // This ensures all scripts, including external ones, have loaded
             fetchHeaderAndInit();
-        };
+        });
 
         function fetchHeaderAndInit() {
             fetch('header.html')
@@ -346,12 +345,12 @@
                     document.getElementById('navbar').innerHTML = data;
                     adjustLayoutForHeader();
                     // Initialize app logic after header is loaded
-                    setTimeout(initializeAppLogic, 0);
+                    initializeAppLogic();
                 })
                 .catch(error => {
                     console.error('Error fetching header:', error);
                     // Initialize app logic even if header fails
-                    setTimeout(initializeAppLogic, 0);
+                    initializeAppLogic();
                 })
                 .finally(() => {
                     updateTickerBanner(); // Update ticker regardless of header success
@@ -360,15 +359,15 @@
         
         function initializeAppLogic() {
             // Check if article data is available
-            if (typeof presentDayArticles === 'undefined' || typeof premiumArticles === 'undefined' || typeof pastArticles === 'undefined' || typeof sourceImageMap === 'undefined') {
+            if (typeof window.presentDayArticles === 'undefined' || typeof window.premiumArticles === 'undefined' || typeof window.pastArticles === 'undefined' || typeof window.sourceImageMap === 'undefined') {
                 console.error('One or more article data files are not loaded.');
                 if (newsGrid) newsGrid.innerHTML = '<p class="text-center text-gray-500">Error: Could not load news articles. Please try again later.</p>';
                 return; // Stop execution if data is missing
             }
 
             // Combine all article data
-            const todayArticles = [...presentDayArticles, ...premiumArticles];
-            allArticles = [todayArticles, ...pastArticles];
+            const todayArticles = [...window.presentDayArticles, ...window.premiumArticles];
+            allArticles = [todayArticles, ...window.pastArticles];
 
             // Setup UI and event listeners
             createPagination();
