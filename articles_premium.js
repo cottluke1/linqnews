@@ -1,6 +1,6 @@
 // /js/articles_premium.js
 
-const premiumArticles = [
+window.premiumArticles = [
     {
         id: "prem1",
         category: 'Market Analysis',
@@ -182,6 +182,3 @@ const premiumArticles = [
         premium: true
     }
 ];
-
-window.premiumArticles = premiumArticles;
-export default premiumArticles;
