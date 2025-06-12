@@ -13,8 +13,11 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     
-        <!-- Article data will be loaded via ES modules -->
-
+    <!-- External Scripts for Article Data with Cache-Busting -->
+    <script src="source_images.js?v=20250612v2" defer></script>
+    <script src="articles_present.js?v=20250612v2" defer></script>
+    <script src="articles_premium.js?v=20250612v2" defer></script>
+    <script src="articles_past.js?v=20250612v2" defer></script>
 
     <style>
         /* Custom base styles */
@@ -324,7 +327,6 @@
         const paginationContainer = document.getElementById('paginationContainer');
 
         // --- MAIN INITIALIZATION LOGIC ---
-        // DEBUG: Replace simple 'load' listener with robust checker
         document.addEventListener('DOMContentLoaded', () => {
             console.log("DEBUG: DOMContentLoaded event fired.");
             waitForDataAndInitialize();
@@ -335,7 +337,6 @@
             const maxAttempts = 50; // 5 seconds timeout
             const interval = setInterval(() => {
                 attempts++;
-                console.log(`DEBUG: Checking for data... (Attempt ${attempts})`);
                 
                 const dataIsReady = window.presentDayArticles && window.premiumArticles && window.pastArticles && window.sourceImageMap;
 
@@ -362,16 +363,14 @@
                     document.getElementById('navbar').innerHTML = data;
                     console.log("DEBUG: Header HTML injected.");
                     adjustLayoutForHeader();
-                    // Initialize app logic after header is loaded
                     initializeAppLogic();
                 })
                 .catch(error => {
                     console.error('DEBUG: Error fetching header:', error);
-                    // Initialize app logic even if header fails
                     initializeAppLogic();
                 })
                 .finally(() => {
-                    updateTickerBanner(); // Update ticker regardless of header success
+                    updateTickerBanner(); 
                 });
         }
         
@@ -381,7 +380,6 @@
             if (header && tickerBanner) {
                 requestAnimationFrame(() => {
                     const headerHeight = header.offsetHeight;
-                    console.log(`DEBUG: Adjusting layout for header height: ${headerHeight}px`);
                     tickerBanner.style.marginTop = `${headerHeight}px`;
                 });
             }
@@ -433,18 +431,6 @@
         function initializeAppLogic() { 
             console.log('DEBUG: Initializing app logic...'); 
             
-            // DEBUG: Log the state of each required window variable
-            console.log('DEBUG: window.presentDayArticles exists:', !!window.presentDayArticles);
-            console.log('DEBUG: window.premiumArticles exists:', !!window.premiumArticles);
-            console.log('DEBUG: window.pastArticles exists:', !!window.pastArticles);
-            console.log('DEBUG: window.sourceImageMap exists:', !!window.sourceImageMap);
-            
-            if (!window.presentDayArticles || !window.premiumArticles || !window.pastArticles || !window.sourceImageMap) { 
-                console.error('DEBUG: One or more critical article data files are not loaded. This is the source of the error.'); 
-                if (newsGrid) newsGrid.innerHTML = '<p class="text-center text-gray-500">Error: Could not load news articles. Please try again later.</p>'; 
-                return;
-            } 
-            
             const todayArticles = [...window.presentDayArticles, ...window.premiumArticles]; 
             const pastArticlesFlat = [].concat(...window.pastArticles); 
             allArticlesFlat = [...todayArticles, ...pastArticlesFlat];
@@ -466,11 +452,9 @@
             paginationContainer.innerHTML = ''; 
 
             if (!articles || articles.length === 0) { 
-                console.log("DEBUG: No articles to display after filtering.");
                 newsGrid.innerHTML = '<p class="text-center text-gray-500 col-span-full">No articles found.</p>'; 
                 return; 
             } 
-            console.log(`DEBUG: Displaying ${articles.length} articles.`);
 
             const pageCount = Math.ceil(articles.length / ARTICLES_PER_PAGE); 
             
@@ -539,8 +523,6 @@
         function filterAndDisplayArticles() { 
             const searchQuery = searchInput.value.toLowerCase(); 
             const activeCategories = [...document.querySelectorAll('#categoryList .filter-button.active')].map(btn => btn.dataset.category); 
-            
-            console.log(`DEBUG: Filtering with query: "${searchQuery}" and categories: [${activeCategories.join(', ')}]`);
             
             const filtered = allArticlesFlat.filter(article => 
                 (activeCategories.length === 0 || activeCategories.includes(article.category)) && 
