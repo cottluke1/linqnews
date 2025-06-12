@@ -61,7 +61,8 @@
             background: #121212; color: #A0A0A0; padding: 0.625rem 0;
             overflow: hidden; white-space: nowrap; position: relative;
             width: 100%; z-index: 35; font-size: 0.8rem; line-height: 1.3;
-            border-bottom: 1px solid #282828; margin-top: 0;
+            border-bottom: 1px solid #282828; 
+            margin-top: 65px; /* Adjust this based on header height */
         }
         .ticker-content { display: inline-block; white-space: nowrap; animation: ticker-scroll 300s linear infinite; }
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
@@ -306,10 +307,21 @@
         // --- CONFIGURATION ---
         const isSubscribed = false; // <-- CHANGE THIS TO 'true' TO SIMULATE A SUBSCRIBED USER
         const FINNHUB_API_KEY = 'cprdj2pr01qjjs4st2e0cprdj2pr01qjjs4st2eg'; 
+        const DISPLAY_SYMBOLS = {
+            'OANDA:USD_JPY': 'JPY', 'OANDA:USD_CNY': 'CNY', 'OANDA:EUR_USD': 'EUR', 'OANDA:GBP_USD': 'GBP',
+            'CL1:COM': 'WTI CRUDE', 'CO1:COM': 'BRENT CRUDE', 'RB1:COM': 'RBOB GASOLINE', 'HO1:COM': 'HEATING OIL',
+            'NG1:COM': 'NATURAL GAS', 'TMUBMUSD02Y': 'US 2YR YIELD', 'TMUBMUSD05Y': 'US 5YR YIELD',
+            'TMUBMUSD10Y': 'US 10YR YIELD', '^GSPC': 'S&P 500', '^DJI': 'DOW 30', '^IXIC': 'NASDAQ', 'DXY': 'US DOLLAR IDX'
+        };
+         const TICKER_ITEMS_TO_SHOW = [
+            'OANDA:EUR_USD', 'OANDA:GBP_USD', 'OANDA:USD_JPY', 'OANDA:USD_CNY', 'CO1:COM', 'CL1:COM', 'NG1:COM', 
+            'RB1:COM', 'HO1:COM', 'TMUBMUSD02Y', 'TMUBMUSD05Y', 'TMUBMUSD10Y', '^GSPC', '^DJI', '^IXIC', 'DXY'
+        ];
 
         // --- GLOBAL STATE ---
         let currentPage = 1;
-        let allArticles = []; // Holds all article data once loaded
+        let allArticles = [];
+        let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || [];
 
         // --- DOM ELEMENTS ---
         const newsGrid = document.getElementById('newsGrid');
@@ -320,31 +332,78 @@
 
         // --- DATA LOADING & INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Combine all article data into one master array
-            // Today's articles (page 1) are a mix of present and premium
+            fetch('header.html')
+                .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
+                .then(data => {
+                    document.getElementById('navbar').innerHTML = data;
+                    // Any header-specific JS initializations would go here
+                    const tickerBanner = document.querySelector('.ticker-banner');
+                    const navElement = document.querySelector('nav.fixed');
+                    if (tickerBanner && navElement) {
+                        tickerBanner.style.marginTop = `${navElement.offsetHeight}px`;
+                    }
+                })
+                .catch(error => console.error('Error fetching header:', error))
+                .finally(updateTickerBanner);
+
+            // Safely combine article data, handling cases where files might not load
             const todayArticles = [...(window.presentDayArticles || []), ...(window.premiumArticles || [])];
             allArticles = [todayArticles, ...(window.pastDaysArticles || [])];
 
             createPagination();
-            loadPage(1); // Load the first page (today's news) by default
+            loadPage(1); 
 
-            // Add event listeners
             categoryList.addEventListener('click', handleCategoryFilter);
             searchInput.addEventListener('input', filterAndDisplayArticles);
+            newsGrid.addEventListener('click', handleFavoriteClick);
         });
+
+        // --- TICKER BANNER ---
+        async function fetchFinnhubQuote(symbol) {
+            const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`API error for ${symbol}: ${response.status}`);
+                const data = await response.json();
+                return { 
+                    price: data.c?.toFixed(2) || 'N/A', 
+                    change: data.d?.toFixed(2) || 'N/A', 
+                    percent: data.dp?.toFixed(2) || 'N/A' 
+                };
+            } catch (err) {
+                console.error(`Failed to fetch ${symbol}:`, err);
+                return { price: 'N/A', change: 'N/A', percent: 'N/A' };
+            }
+        }
+
+        async function updateTickerBanner() {
+            const tickerContent = document.getElementById('tickerContent');
+            if (!tickerContent) return;
+            const promises = TICKER_ITEMS_TO_SHOW.map(fetchFinnhubQuote);
+            const results = await Promise.all(promises);
+            let allItemsHTML = results.map((data, index) => {
+                const symbol = TICKER_ITEMS_TO_SHOW[index];
+                const changeClass = data.percent !== 'N/A' ? (parseFloat(data.percent) >= 0 ? 'positive' : 'negative') : '';
+                const percentDisplay = data.percent !== 'N/A' ? `${parseFloat(data.percent) >= 0 ? '+' : ''}${data.percent}%` : 'N/A';
+                const displayName = DISPLAY_SYMBOLS[symbol] || symbol;
+                let priceDisplay = symbol.includes('YIELD') || symbol.includes('TMUBMUSD') ? `${data.price}%` : `$${data.price}`;
+                if (data.price === 'N/A') priceDisplay = 'N/A';
+                return `<span class="ticker-item">${displayName}: <span class="text-white">${priceDisplay}</span> <span class="${changeClass}">${percentDisplay}</span></span>`;
+            }).join('');
+            const repeatCount = Math.ceil((window.innerWidth * 2) / (TICKER_ITEMS_TO_SHOW.length * 180)) + 1;
+            tickerContent.innerHTML = allItemsHTML.repeat(Math.max(2, repeatCount));
+        }
 
 
         // --- PAGINATION ---
         function createPagination() {
-            paginationContainer.innerHTML = ''; // Clear existing buttons
+            paginationContainer.innerHTML = '';
             for (let i = 1; i <= 5; i++) {
                 const button = document.createElement('button');
                 button.className = 'pagination-btn';
                 button.textContent = i;
                 button.dataset.page = i;
-                if (i === currentPage) {
-                    button.classList.add('active');
-                }
+                if (i === currentPage) button.classList.add('active');
                 button.addEventListener('click', () => loadPage(i));
                 paginationContainer.appendChild(button);
             }
@@ -352,10 +411,8 @@
 
         function loadPage(pageNumber) {
             currentPage = pageNumber;
-            // Reset filters when changing pages
             searchInput.value = '';
             document.querySelectorAll('#categoryList .filter-button.active').forEach(btn => btn.classList.remove('active'));
-            
             filterAndDisplayArticles();
             updatePaginationUI();
         }
@@ -374,19 +431,16 @@
                 newsGrid.innerHTML = '<p class="text-center text-gray-500 col-span-full">No articles found.</p>';
                 return;
             }
-            articlesToDisplay.forEach((article, index) => {
-                // Determine if the article should be locked
+            articlesToDisplay.forEach(article => {
                 const isLocked = (article.premium && !isSubscribed) || (currentPage > 1);
-                
                 const articleElement = document.createElement('article');
                 articleElement.className = 'news-card';
-                if (isLocked) {
-                    articleElement.classList.add('locked');
-                }
-
-                // Placeholder for source logo
-                const imageUrl = sourceImageMap[article.source] || `https://placehold.co/50/2a2a2a/ffffff?text=${article.source ? article.source.charAt(0) : 'N'}`;
-
+                if (isLocked) articleElement.classList.add('locked');
+                
+                // **FIX:** Safely access sourceImageMap
+                const safeSourceImageMap = window.sourceImageMap || {};
+                const imageUrl = safeSourceImageMap[article.source] || `https://placehold.co/50/2a2a2a/ffffff?text=${article.source ? article.source.charAt(0) : 'N'}`;
+                
                 articleElement.innerHTML = `
                     ${isLocked ? `
                         <a href="linqplus.html" class="locked-overlay">
@@ -413,10 +467,11 @@
                     </div>`;
                 newsGrid.appendChild(articleElement);
             });
+            updateFavoriteIcons();
         }
 
 
-        // --- FILTERING LOGIC ---
+        // --- FILTERING & FAVORITES ---
         function handleCategoryFilter(e) {
             if (e.target.classList.contains('filter-button')) {
                 e.target.classList.toggle('active');
@@ -426,28 +481,42 @@
 
         function filterAndDisplayArticles() {
             const articlesForCurrentPage = allArticles[currentPage - 1] || [];
-            
             const searchQuery = searchInput.value.toLowerCase();
             const activeCategories = [...document.querySelectorAll('#categoryList .filter-button.active')].map(btn => btn.dataset.category);
-            
-            const filtered = articlesForCurrentPage.filter(article => {
-                const matchesCategory = activeCategories.length === 0 || activeCategories.includes(article.category);
-                const matchesSearch = !searchQuery || 
-                                    article.title.toLowerCase().includes(searchQuery) || 
-                                    article.source.toLowerCase().includes(searchQuery);
-                return matchesCategory && matchesSearch;
-            });
-
+            const filtered = articlesForCurrentPage.filter(article => 
+                (activeCategories.length === 0 || activeCategories.includes(article.category)) &&
+                (!searchQuery || article.title.toLowerCase().includes(searchQuery) || article.source.toLowerCase().includes(searchQuery))
+            );
             displayArticles(filtered);
         }
 
+        function handleFavoriteClick(e) {
+            const favButton = e.target.closest('.favorite-btn');
+            if (favButton) {
+                toggleFavorite(favButton.dataset.id);
+            }
+        }
 
-        // --- MODAL & OTHER UTILITIES (Placeholder functions from original code) ---
+        function toggleFavorite(articleId) {
+            const idStr = String(articleId);
+            const index = favorites.indexOf(idStr);
+            if (index > -1) favorites.splice(index, 1);
+            else favorites.push(idStr);
+            localStorage.setItem('linqFavoritesV2', JSON.stringify(favorites));
+            updateFavoriteIcons();
+        }
+
+        function updateFavoriteIcons() {
+             document.querySelectorAll('.favorite-btn').forEach(button => {
+                button.classList.toggle('favorited', favorites.includes(String(button.dataset.id)));
+            });
+        }
+
+        // --- MODAL & OTHER UTILITIES ---
         function showTermsModal(event) { event.preventDefault(); document.getElementById('termsContent').style.display = 'block'; }
         function closeTermsModal() { document.getElementById('termsContent').style.display = 'none'; }
         function showPrivacyModal(event) { event.preventDefault(); document.getElementById('privacyContent').style.display = 'block'; }
         function closePrivacyModal() { document.getElementById('privacyContent').style.display = 'none'; }
-        // ... any other helper functions from the original script
     </script>
 </body>
 </html>
