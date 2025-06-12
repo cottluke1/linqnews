@@ -62,7 +62,7 @@
             overflow: hidden; white-space: nowrap; position: relative;
             width: 100%; z-index: 35; font-size: 0.8rem; line-height: 1.3;
             border-bottom: 1px solid #282828; 
-            margin-top: 65px; /* Adjust this based on header height */
+            /* margin-top will be set by JavaScript */
         }
         .ticker-content { display: inline-block; white-space: nowrap; animation: ticker-scroll 300s linear infinite; }
         @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
@@ -336,27 +336,44 @@
                 .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
                 .then(data => {
                     document.getElementById('navbar').innerHTML = data;
-                    // Any header-specific JS initializations would go here
-                    const tickerBanner = document.querySelector('.ticker-banner');
-                    const navElement = document.querySelector('nav.fixed');
-                    if (tickerBanner && navElement) {
-                        tickerBanner.style.marginTop = `${navElement.offsetHeight}px`;
-                    }
+                    adjustLayout();
+                    // Any other header-dependent initializations can go here
                 })
-                .catch(error => console.error('Error fetching header:', error))
-                .finally(updateTickerBanner);
+                .catch(error => {
+                    console.error('Error fetching header:', error);
+                })
+                .finally(() => {
+                    // Update ticker regardless of header load success
+                    updateTickerBanner(); 
+                });
+            
+            // Wait for the next paint cycle to ensure external scripts are loaded
+            requestAnimationFrame(() => {
+                if (typeof presentDayArticles === 'undefined' || typeof premiumArticles === 'undefined' || typeof pastDaysArticles === 'undefined') {
+                    console.error('Article data files not loaded correctly.');
+                    if(newsGrid) newsGrid.innerHTML = '<p class="text-center text-gray-500">Error: Could not load article data.</p>';
+                    return; 
+                }
+                const todayArticles = [...presentDayArticles, ...premiumArticles];
+                allArticles = [todayArticles, ...pastDaysArticles];
 
-            // Safely combine article data, handling cases where files might not load
-            const todayArticles = [...(window.presentDayArticles || []), ...(window.premiumArticles || [])];
-            allArticles = [todayArticles, ...(window.pastDaysArticles || [])];
+                createPagination();
+                loadPage(1); 
 
-            createPagination();
-            loadPage(1); 
-
-            categoryList.addEventListener('click', handleCategoryFilter);
-            searchInput.addEventListener('input', filterAndDisplayArticles);
-            newsGrid.addEventListener('click', handleFavoriteClick);
+                categoryList.addEventListener('click', handleCategoryFilter);
+                searchInput.addEventListener('input', filterAndDisplayArticles);
+                newsGrid.addEventListener('click', handleFavoriteClick);
+            });
+            window.addEventListener('resize', adjustLayout);
         });
+
+        function adjustLayout() {
+            const header = document.querySelector('nav.fixed');
+            const tickerBanner = document.querySelector('.ticker-banner');
+            if (header && tickerBanner) {
+                tickerBanner.style.marginTop = `${header.offsetHeight}px`;
+            }
+        }
 
         // --- TICKER BANNER ---
         async function fetchFinnhubQuote(symbol) {
@@ -437,7 +454,6 @@
                 articleElement.className = 'news-card';
                 if (isLocked) articleElement.classList.add('locked');
                 
-                // **FIX:** Safely access sourceImageMap
                 const safeSourceImageMap = window.sourceImageMap || {};
                 const imageUrl = safeSourceImageMap[article.source] || `https://placehold.co/50/2a2a2a/ffffff?text=${article.source ? article.source.charAt(0) : 'N'}`;
                 
