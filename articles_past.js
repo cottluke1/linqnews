@@ -1,5 +1,5 @@
-// /js/articles_past.js
-
+// Past articles, with each day's articles in a nested array.
+// Data is assigned to the global 'window' object.
 window.pastArticles = [
     // Day 2 (Yesterday)
     [
@@ -9,7 +9,7 @@ window.pastArticles = [
         { id: "past_d2_4", category: 'Natural Gas', title: "US NatGas Prices Slide as Weather Cools Across Midwest", date: 'June 10, 2025', source: 'Yahoo Finance', link: '#', premium: true },
         { id: "past_d2_5", category: 'Renewables', title: "China Expands Solar Investments Amidst Falling Module Prices", date: 'June 10, 2025', source: 'CNBC', link: '#', premium: true }
     ],
-    // Day  3
+    // Day 3
     [
         { id: "past_d3_1", category: 'Company News', title: "Chevron Announces New Deepwater Discovery in Gulf of Mexico", date: 'June 9, 2025', source: 'Rigzone', link: '#', premium: true },
         { id: "past_d3_2", category: 'Renewables', title: "UK Awards Contracts for New Offshore Wind Projects", date: 'June 9, 2025', source: 'BBC News', link: '#', premium: true },
