@@ -14,10 +14,10 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     
     <!-- External Scripts for Article Data -->
-    <script src="source_images.js"></script>
-    <script src="articles_present.js"></script>
-    <script src="articles_premium.js"></script>
-    <script src="articles_past.js"></script>
+    <script src="source_images.js" defer></script>
+    <script src="articles_present.js" defer></script>
+    <script src="articles_premium.js" defer></script>
+    <script src="articles_past.js" defer></script>
 
     <style>
         /* Custom base styles */
@@ -330,7 +330,7 @@
         const paginationContainer = document.getElementById('paginationContainer');
 
         // --- MAIN INITIALIZATION LOGIC ---
-        document.addEventListener('DOMContentLoaded', function() {
+        window.addEventListener('load', function() {
             // This ensures all scripts, including external ones, have loaded
             fetchHeaderAndInit();
         });
@@ -345,12 +345,12 @@
                     document.getElementById('navbar').innerHTML = data;
                     adjustLayoutForHeader();
                     // Initialize app logic after header is loaded
-                    initializeAppLogic();
+                    setTimeout(initializeAppLogic, 0);
                 })
                 .catch(error => {
                     console.error('Error fetching header:', error);
                     // Initialize app logic even if header fails
-                    initializeAppLogic();
+                    setTimeout(initializeAppLogic, 0);
                 })
                 .finally(() => {
                     updateTickerBanner(); // Update ticker regardless of header success
@@ -358,8 +358,14 @@
         }
         
         function initializeAppLogic() {
+            console.log('Initializing app logic...');
+            console.log('presentDayArticles:', window.presentDayArticles);
+            console.log('premiumArticles:', window.premiumArticles);
+            console.log('pastArticles:', window.pastArticles);
+            console.log('sourceImageMap:', window.sourceImageMap);
+
             // Check if article data is available
-            if (typeof window.presentDayArticles === 'undefined' || typeof window.premiumArticles === 'undefined' || typeof window.pastArticles === 'undefined' || typeof window.sourceImageMap === 'undefined') {
+            if (!window.presentDayArticles || !window.premiumArticles || !window.pastArticles || !window.sourceImageMap) {
                 console.error('One or more article data files are not loaded.');
                 if (newsGrid) newsGrid.innerHTML = '<p class="text-center text-gray-500">Error: Could not load news articles. Please try again later.</p>';
                 return; // Stop execution if data is missing
@@ -368,6 +374,7 @@
             // Combine all article data
             const todayArticles = [...window.presentDayArticles, ...window.premiumArticles];
             allArticles = [todayArticles, ...window.pastArticles];
+            console.log('Combined articles:', allArticles);
 
             // Setup UI and event listeners
             createPagination();
@@ -441,10 +448,12 @@
         }
 
         function loadPage(pageNumber) {
+            console.log('Loading page:', pageNumber);
             currentPage = pageNumber;
             searchInput.value = '';
             document.querySelectorAll('#categoryList .filter-button.active').forEach(btn => btn.classList.remove('active'));
             const articlesForCurrentPage = allArticles[currentPage - 1] || [];
+            console.log('Articles for current page:', articlesForCurrentPage);
             displayArticles(articlesForCurrentPage);
             updatePaginationUI();
         }
@@ -458,6 +467,7 @@
 
         // --- ARTICLE RENDERING ---
         function displayArticles(articlesToDisplay) {
+            console.log('Displaying articles:', articlesToDisplay);
             newsGrid.innerHTML = '';
             if (!articlesToDisplay || articlesToDisplay.length === 0) {
                 newsGrid.innerHTML = '<p class="text-center text-gray-500 col-span-full">No articles found.</p>';
