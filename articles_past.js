@@ -1,6 +1,6 @@
-// Past articles, with each day's articles in a nested array.
-// Data is assigned to the global 'window' object.
-export const pastArticles = [
+// /js/articles_past.js
+// Data is assigned to the global 'window' object to be accessible by other scripts.
+window.pastArticles = [
     // Day 2 (Yesterday)
     [
         { id: "past_d2_1", category: 'Crude Oil', title: "OPEC+ Production Compliance Hits 3-Month High", date: 'June 10, 2025', source: 'Reuters', link: '#', premium: true },
