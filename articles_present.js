@@ -160,5 +160,4 @@ window.presentDayArticles = [
         source: 'Bloomberg',
         link: 'https://www.bloomberg.com/news/articles/2025-06-11/eni-outperforms-quarterly-earnings'
     }
-    // Add more free articles for the current day here
 ];
