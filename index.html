@@ -14,10 +14,10 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     
     <!-- External Scripts for Article Data -->
-    <script src="articles_present.js"></script>
-    <script src="articles_premium.js"></script>
-    <script src="articles_past.js"></script>
-    <script src="source_images.js"></script>
+    <script src="articles_present.js" defer></script>
+    <script src="articles_premium.js" defer></script>
+    <script src="articles_past.js" defer></script>
+    <script src="source_images.js" defer></script>
 
     <style>
         /* Custom base styles */
@@ -330,48 +330,61 @@
         const paginationContainer = document.getElementById('paginationContainer');
 
 
-        // --- DATA LOADING & INITIALIZATION ---
-        document.addEventListener('DOMContentLoaded', () => {
+        // --- MAIN INITIALIZATION LOGIC ---
+        window.onload = function() {
+            // This ensures all scripts, including external ones, have loaded
+            fetchHeaderAndInit();
+            initializeAppLogic();
+        };
+
+        function fetchHeaderAndInit() {
             fetch('header.html')
-                .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
+                .then(response => {
+                    if (!response.ok) throw new Error('Header fetch failed');
+                    return response.text();
+                })
                 .then(data => {
                     document.getElementById('navbar').innerHTML = data;
-                    adjustLayout();
+                    adjustLayoutForHeader();
                     // Any other header-dependent initializations can go here
                 })
                 .catch(error => {
                     console.error('Error fetching header:', error);
                 })
                 .finally(() => {
-                    // Update ticker regardless of header load success
-                    updateTickerBanner(); 
+                    updateTickerBanner(); // Update ticker regardless of header success
                 });
-            
-            // Wait for the next paint cycle to ensure external scripts are loaded
-            requestAnimationFrame(() => {
-                if (typeof presentDayArticles === 'undefined' || typeof premiumArticles === 'undefined' || typeof pastDaysArticles === 'undefined') {
-                    console.error('Article data files not loaded correctly.');
-                    if(newsGrid) newsGrid.innerHTML = '<p class="text-center text-gray-500">Error: Could not load article data.</p>';
-                    return; 
-                }
-                const todayArticles = [...presentDayArticles, ...premiumArticles];
-                allArticles = [todayArticles, ...pastDaysArticles];
+        }
+        
+        function initializeAppLogic() {
+            // Check if article data is available
+            if (typeof presentDayArticles === 'undefined' || typeof premiumArticles === 'undefined' || typeof pastDaysArticles === 'undefined' || typeof sourceImageMap === 'undefined') {
+                console.error('One or more article data files are not loaded.');
+                if (newsGrid) newsGrid.innerHTML = '<p class="text-center text-gray-500">Error: Could not load news articles. Please try again later.</p>';
+                return; // Stop execution if data is missing
+            }
 
-                createPagination();
-                loadPage(1); 
+            // Combine all article data
+            const todayArticles = [...presentDayArticles, ...premiumArticles];
+            allArticles = [todayArticles, ...pastDaysArticles];
 
-                categoryList.addEventListener('click', handleCategoryFilter);
-                searchInput.addEventListener('input', filterAndDisplayArticles);
-                newsGrid.addEventListener('click', handleFavoriteClick);
-            });
-            window.addEventListener('resize', adjustLayout);
-        });
+            // Setup UI and event listeners
+            createPagination();
+            loadPage(1); 
+            categoryList.addEventListener('click', handleCategoryFilter);
+            searchInput.addEventListener('input', filterAndDisplayArticles);
+            newsGrid.addEventListener('click', handleFavoriteClick);
+            window.addEventListener('resize', adjustLayoutForHeader);
+        }
 
-        function adjustLayout() {
+        function adjustLayoutForHeader() {
             const header = document.querySelector('nav.fixed');
             const tickerBanner = document.querySelector('.ticker-banner');
             if (header && tickerBanner) {
-                tickerBanner.style.marginTop = `${header.offsetHeight}px`;
+                // Use requestAnimationFrame to ensure the browser has painted the header
+                requestAnimationFrame(() => {
+                    tickerBanner.style.marginTop = `${header.offsetHeight}px`;
+                });
             }
         }
 
