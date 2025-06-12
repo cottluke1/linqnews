@@ -330,8 +330,8 @@
         const paginationContainer = document.getElementById('paginationContainer');
 
         // --- MAIN INITIALIZATION LOGIC ---
-        window.addEventListener('load', function() {
-            // This ensures all scripts, including external ones, have loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize once the DOM and deferred scripts are ready
             fetchHeaderAndInit();
         });
 
