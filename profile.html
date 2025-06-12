@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linq - Account</title>
+    <title>Linq - Your Account</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script> 
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
     <style>
         :root {
-            --accent-blue: #007AFF;
-            --accent-blue-darker: #0059B3;
-            --accent-blue-hover: #0062CC;
-            --success-green: #34C759;
+            --accent-cyan: #00BFFF;
             --error-red: #FF3B30;
+            --success-green: #34C759;
             --border-radius-md: 8px;
             --border-radius-lg: 16px; 
         }
@@ -26,7 +25,7 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #0B0C10; 
-            background-image: radial-gradient(at 50% 0%, rgba(67, 56, 202, 0.15) 0%, rgba(8, 0, 20, 0) 50%);
+            background-image: radial-gradient(at 50% 0%, rgba(0, 191, 255, 0.1) 0%, rgba(8, 0, 20, 0) 50%);
             color: #F5F5F5;
             line-height: 1.65;
             -webkit-font-smoothing: antialiased;
@@ -35,30 +34,23 @@
             flex-direction: column;
             min-height: 100vh;
         }
-        body.overflow-hidden { overflow: hidden; }
 
-        .container {
-            width: 90%;
-            max-width: 960px;
-            margin: 0 auto;
-        }
-        
         /* --- Main Content Area --- */
         main {
-            padding-top: 70px;
+            padding-top: 80px; /* Space for fixed header */
             flex-grow: 1;
         }
         main .container {
             padding-top: 40px;
-            padding-bottom: 40px;
+            padding-bottom: 60px;
         }
 
-        /* --- Glassy Styles --- */
+        /* --- Glassmorphism UI --- */
         .glass-ui {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(22, 22, 22, 0.6);
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
@@ -87,13 +79,13 @@
             border: 2px solid transparent;
         }
         .nav-tab:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.05);
             color: #FFFFFF;
         }
         .nav-tab.active-link {
             color: #FFFFFF;
-            background-color: rgba(0, 123, 255, 0.2);
-            border: 2px solid var(--accent-blue);
+            background-color: rgba(0, 191, 255, 0.15);
+            border-color: var(--accent-cyan);
         }
 
         /* --- Content Sections --- */
@@ -104,13 +96,13 @@
         .card {
             border-radius: var(--border-radius-lg);
             overflow: hidden;
-            margin-bottom: 0; 
         }
         .card-header {
             padding: 25px 30px;
-            background: rgba(255, 255, 255, 0.07);
+            background: rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .card-header h3 { margin-bottom: 0; font-size: 1.5em; font-weight: 700; }
+        .card-header h3 { margin: 0; font-size: 1.5em; font-weight: 700; }
         .card-body { padding: 30px; }
 
         /* --- Profile Section Specifics --- */
@@ -163,27 +155,31 @@
         }
         .form-input::placeholder { color: #888; }
         .form-input:focus {
-            outline: none; border-color: var(--accent-blue);
-            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
+            outline: none; border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 4px rgba(0, 191, 255, 0.25);
         }
 
         /* --- Buttons --- */
         .btn {
-            padding: 12px 24px; border: none; border-radius: var(--border-radius-md);
+            padding: 12px 24px; border-radius: var(--border-radius-md);
             cursor: pointer; font-size: 1em; font-weight: 600;
             transition: all 0.2s ease;
             text-align: center; letter-spacing: 0.3px;
             text-decoration: none; display: inline-flex; justify-content: center; align-items: center; gap: 8px;
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .btn:active { transform: translateY(0); }
-        .btn-primary {
-            background-image: linear-gradient(to right, #007aff, #0051ff);
-            color: #fff;
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #F5F5F5;
         }
-        .btn-primary:hover { box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4); }
-        .btn-secondary { background-color: rgba(255,255,255,0.1); color: #F5F5F5; }
-        .btn-secondary:hover { background-color: rgba(255,255,255,0.15); }
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .btn:active { transform: translateY(0); }
+        
         .btn-danger { background-color: var(--error-red); color: white; }
         .btn-danger:hover { background-color: #d92d23; box-shadow: 0 6px 20px rgba(255, 59, 48, 0.4);}
         .btn-danger:disabled { background-color: #7f1d1d; cursor: not-allowed; opacity: 0.6; }
@@ -220,14 +216,13 @@
     <div id="header-placeholder"></div>
 
     <main>
-        <div class="container">
+        <div class="container mx-auto max-w-4xl">
             <div>
                 <div class="profile-nav-container">
                     <nav class="profile-nav glass-ui">
                         <a href="#profile" class="nav-tab active-link">Profile</a>
                         <a href="#subscription" class="nav-tab">Subscription</a>
                         <a href="#security" class="nav-tab">Security</a>
-                        <a href="#newsletter" class="nav-tab">Newsletter</a>
                         <a href="#contact" class="nav-tab">Contact</a>
                     </nav>
                 </div>
@@ -272,7 +267,7 @@
                         <div class="card-body">
                             <p class="text-lg">Your current plan: <span id="current-plan-name" class="font-bold text-cyan-400">Free Plan</span></p>
                             <p class="text-gray-400" id="subscription-status-text">You have access to basic news and community features.</p>
-                            <a href="linqplus.html" class="btn btn-primary mt-6">See Plans</a>
+                            <a href="linqplus.html" class="btn btn-glass mt-6">See All Plans</a>
                         </div>
                     </div>
                 </div>
@@ -280,14 +275,10 @@
                 <div id="security" class="content-section">
                     <div class="card glass-ui">
                         <div class="card-header">
-                            <h3>Change Password</h3>
+                            <h3>Account Security</h3>
                         </div>
                         <div class="card-body">
                             <form id="changePasswordForm">
-                                <div class="form-group">
-                                    <label for="current-password">Current Password:</label>
-                                    <input type="password" id="current-password" name="current-password" placeholder="Enter current password" class="form-input" required>
-                                </div>
                                 <div class="form-group">
                                     <label for="new-password">New Password:</label>
                                     <input type="password" id="new-password" name="new-password" placeholder="Enter new password (min. 8 characters)" class="form-input" required minlength="8">
@@ -296,30 +287,13 @@
                                     <label for="confirm-password">Confirm New Password:</label>
                                     <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm new password" class="form-input" required minlength="8">
                                 </div>
-                                <button type="submit" class="btn btn-primary">Update Password</button>
+                                <button type="submit" class="btn btn-glass">Update Password</button>
                             </form>
-                        </div>
-                    </div>
-                    <div class="card glass-ui mt-8">
-                        <div class="card-header">
-                            <h3>Delete Account</h3>
-                        </div>
-                        <div class="card-body">
-                            <p class="text-gray-300 mb-4">Permanently delete your account and all of your content. This action is not reversible and cannot be undone.</p>
-                            <button id="deleteAccountBtn" class="btn btn-danger">Delete Account</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div id="newsletter" class="content-section">
-                     <div class="card glass-ui">
-                        <div class="card-header">
-                            <h3>Weekly Newsletter</h3>
-                        </div>
-                        <div class="card-body">
-                            <p class="text-gray-300 mb-4">Receive a weekly digest of top energy news and market analysis, exclusively for Linq+ subscribers.</p>
-                            <p class="text-gray-400 text-sm mb-6">Upgrade to Linq+ to receive our premium newsletter.</p>
-                            <a href="linqplus.html" class="btn btn-primary">Upgrade to Premium</a>
+                            <hr class="border-gray-700 my-8">
+                            <div class="space-y-4">
+                                <button id="logoutButton" class="btn btn-glass w-full">Logout</button>
+                                <button id="deleteAccountBtn" class="btn btn-danger w-full">Delete Account</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -331,7 +305,7 @@
                         </div>
                         <div class="card-body">
                             <p class="text-gray-300 mb-6">Have a question or feedback? We'd love to hear from you. Reach out to our support team, and we'll get back to you as soon as possible.</p>
-                            <a href="mailto:support@linqnews.com" class="btn btn-primary">Email Support</a>
+                            <a href="mailto:support@linqnews.com" class="btn btn-glass">Email Support</a>
                         </div>
                     </div>
                 </div>
@@ -347,12 +321,11 @@
                 <input type="text" id="deleteConfirmInput" placeholder="DELETE" class="form-input">
             </div>
             <div class="flex justify-end gap-4">
-                <button id="cancelDeleteBtn" class="btn btn-secondary">Cancel</button>
+                <button id="cancelDeleteBtn" class="btn btn-glass">Cancel</button>
                 <button id="confirmDeleteBtn" class="btn btn-danger" disabled>Delete My Account</button>
             </div>
         </div>
     </div>
-
 
     <footer>
         <div class="container">
@@ -365,6 +338,7 @@
             const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
             const profileLinkDesktop = document.getElementById('profileLinkDesktop');
             const navProfilePic = document.getElementById('navProfilePic');
+            const logoutButton = document.getElementById('logoutButton');
             
             const firebaseConfig = {
                 apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
@@ -379,6 +353,17 @@
             }
             const authInstance = firebase.auth();
             const storageInstance = firebase.storage();
+
+            const handleLogout = () => {
+                authInstance.signOut().then(() => {
+                    window.location.href = "login.html";
+                }).catch(error => {
+                    console.error("Logout Error:", error);
+                    alert("Error signing out. Please try again.");
+                });
+            };
+
+            if(logoutButton) logoutButton.addEventListener('click', handleLogout);
 
             authInstance.onAuthStateChanged(user => {
                 const profileFullNameEl = document.getElementById('profileFullName');
@@ -419,15 +404,6 @@
                     }
 
                 } else {
-                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.remove('hidden');
-                    if (profileLinkDesktop) profileLinkDesktop.classList.add('hidden');
-                    // Set placeholders to N/A if user is not logged in, before redirecting
-                    if(profileFullNameEl) profileFullNameEl.textContent = 'N/A';
-                    if(profileEmailEl) profileEmailEl.textContent = 'N/A';
-                    if(profileUsernameEl) profileUsernameEl.textContent = 'N/A';
-                    if(profileJoinedDateEl) profileJoinedDateEl.textContent = 'N/A';
-                    
-                    // Redirect to login page if trying to access profile while logged out
                     window.location.href = 'login.html';
                 }
             });
@@ -456,6 +432,7 @@
                         }
                     } catch (error) {
                         console.error("Avatar upload error:", error);
+                        alert("Failed to upload new avatar.");
                     }
                 });
             }
@@ -549,7 +526,7 @@
                             window.location.href = "index.html";
                         } catch (error) {
                             console.error("Error deleting account:", error);
-                            alert("Error deleting account: " + error.message + ". Please re-login and try again.");
+                            alert("Error deleting account: " + error.message + ". Please re-login and try again if necessary.");
                         }
                     }
                 });
