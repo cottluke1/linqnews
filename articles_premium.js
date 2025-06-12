@@ -1,5 +1,5 @@
 // Premium articles for June 11, 2025
-window.premiumArticles = [
+export const premiumArticles = [
     {
         id: "prem1",
         category: 'Market Analysis',

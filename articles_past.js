@@ -1,6 +1,6 @@
 // /js/articles_past.js
 
-window.pastArticles = [
+export const pastArticles = [
     // Day 2 (Yesterday)
     [
         { id: "past_d2_1", category: 'Crude Oil', title: "OPEC+ Production Compliance Hits 3-Month High", date: 'June 10, 2025', source: 'Reuters', link: '#', premium: true },

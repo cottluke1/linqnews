@@ -13,11 +13,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     
-    <!-- External Scripts for Article Data -->
-    <script src="source_images.js" defer></script>
-    <script src="articles_present.js" defer></script>
-    <script src="articles_premium.js" defer></script>
-    <script src="articles_past.js" defer></script>
+    <!-- Article data will be loaded via ES modules -->
 
     <style>
         /* Custom base styles */
@@ -303,7 +299,18 @@
         <p>At Linq, we are committed... (Your full privacy policy content here)</p>
     </div>
 
-    <script>
+    <script type="module">
+        import { presentDayArticles } from './articles_present.js';
+        import { premiumArticles } from './articles_premium.js';
+        import { pastArticles } from './articles_past.js';
+        import { sourceImageMap } from './source_images.js';
+
+        // Expose data on the global window object for simplicity
+        window.presentDayArticles = presentDayArticles;
+        window.premiumArticles = premiumArticles;
+        window.pastArticles = pastArticles;
+        window.sourceImageMap = sourceImageMap;
+
         console.log("DEBUG: HTML parsing started.");
 
         // --- CONFIGURATION ---
