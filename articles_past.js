@@ -1,6 +1,6 @@
 // /js/articles_past.js
 
-const pastArticles = [
+window.pastArticles = [
     // Day 2 (Yesterday)
     [
         { id: "past_d2_1", category: 'Crude Oil', title: "OPEC+ Production Compliance Hits 3-Month High", date: 'June 10, 2025', source: 'Reuters', link: '#', premium: true },
@@ -34,6 +34,3 @@ const pastArticles = [
         { id: "past_d5_5", category: 'Natural Gas', title: "Australian LNG Exports Hold Steady Despite Weather Disruptions", date: 'June 7, 2025', source: 'Yahoo Finance', link: '#', premium: true }
     ]
 ];
-
-window.pastArticles = pastArticles;
-export default pastArticles;
