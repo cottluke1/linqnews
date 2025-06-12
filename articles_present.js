@@ -1,6 +1,6 @@
 // Energy news articles for June 11, 2025
 // Data is assigned to the global 'window' object.
-window.presentDayArticles = [
+export const presentDayArticles = [
     {
         id: "p1",
         category: 'Crude Oil',
