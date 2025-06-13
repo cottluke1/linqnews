@@ -568,12 +568,11 @@
             }
 
             try {
-                const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
-                if (userDoc.exists) {
-                    communityFavoritesPage = userDoc.data().communityBookmarks || [];
-                } else {
-                    communityFavoritesPage = [];
-                }
+                const favoritesSnapshot = await firebase.firestore().collection('users').doc(user.uid).collection('favorites')
+                    .where('type', '==', 'community')
+                    .get();
+                
+                communityFavoritesPage = favoritesSnapshot.docs.map(doc => doc.id);
                 updateCommunityFavoriteIconsPage();
             } catch (error) {
                 console.error('Error fetching community bookmarks:', error);
@@ -583,21 +582,25 @@
         }
 
         // Function to update community bookmarks in Firestore
-        async function updateCommunityBookmarks(postId, isAdding) {
+        async function updateCommunityBookmarks(postId, isAdding, postData) {
             const user = authInstance.currentUser;
             if (!user) {
+                window.location.href = 'login.html';
                 return;
             }
 
             try {
-                const userRef = firebase.firestore().collection('users').doc(user.uid);
-                const value = isAdding ? 
-                    firebase.firestore.FieldValue.arrayUnion(postId) : 
-                    firebase.firestore.FieldValue.arrayRemove(postId);
+                const favRef = firebase.firestore().collection('users').doc(user.uid).collection('favorites').doc(postId);
                 
-                await userRef.set({
-                    communityBookmarks: value
-                }, { merge: true });
+                if (isAdding) {
+                    await favRef.set({
+                        ...postData,
+                        type: 'community',
+                        addedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                } else {
+                    await favRef.delete();
+                }
                 
                 await fetchCommunityBookmarks(); // Refresh the bookmarks
             } catch (error) {
@@ -605,9 +608,9 @@
             }
         }
 
-        async function toggleCommunityFavoritePage(postId) {
+        async function toggleCommunityFavoritePage(postId, postData) {
             const isAdding = !communityFavoritesPage.includes(postId);
-            await updateCommunityBookmarks(postId, isAdding);
+            await updateCommunityBookmarks(postId, isAdding, postData);
         }
 
         // Update the auth state change listener to fetch bookmarks
@@ -634,6 +637,9 @@
                 postElement.setAttribute('data-id', post.id);
                 const tweetHTML = typeof post.tweetContent === 'string' ? post.tweetContent : '<p>Error loading tweet content.</p>';
 
+                // Store post data in a data attribute
+                postElement.setAttribute('data-post', btoa(JSON.stringify(post)));
+
                 postElement.innerHTML = `
                     <p class="post-title">${post.title || 'Untitled Post'}</p>
                     <p class="post-meta">${post.meta || 'N/A'} <span class="post-category-tag">${post.category || 'General'}</span></p>
@@ -644,7 +650,7 @@
                     </div>
                     <div class="post-actions">
                         <span class="share-confirmation hidden" style="margin-right: auto;">Linq copied!</span>
-                        <button class="action-btn favorite-btn" data-id="${post.id}" aria-label="Toggle Favorite">
+                        <button class="action-btn favorite-btn" data-id="${post.id}" onclick="handleCommunityFavoriteClickPage(event)" aria-label="Toggle Favorite">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                 <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" />
@@ -715,7 +721,9 @@
         function handleCommunityFavoriteClickPage(event) {
             const button = event.currentTarget;
             const postId = button.getAttribute('data-id');
-            toggleCommunityFavoritePage(postId);
+            const postElement = button.closest('.post-card');
+            const postData = JSON.parse(atob(postElement.getAttribute('data-post')));
+            toggleCommunityFavoritePage(postId, postData);
         }
 
         function handleShareClickPage(event) {
