@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linq+ Subscription</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://web.squarecdn.com/v1/square.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0B0C10;
+            background-image: radial-gradient(at 50% 0%, rgba(0, 191, 255, 0.1) 0%, rgba(8, 0, 20, 0) 50%);
+            color: #F5F5F5;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        .payment-container {
+            width: 100%;
+            max-width: 480px;
+        }
+        .payment-form {
+            background: rgba(22, 22, 22, 0.7);
+            backdrop-filter: blur(15px) saturate(150%);
+            -webkit-backdrop-filter: blur(15px) saturate(150%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        }
+        .plan-option {
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .plan-option.selected {
+            border-color: #00BFFF;
+            box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.3);
+            background-color: rgba(0, 191, 255, 0.1);
+        }
+        #card-container {
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        .pay-button {
+            background-color: #00BFFF;
+            color: #FFFFFF;
+            font-weight: 600;
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px -5px rgba(0, 191, 255, 0.4);
+        }
+        .pay-button:hover {
+            background-color: #00A9E0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px -5px rgba(0, 191, 255, 0.5);
+        }
+        .pay-button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        #payment-status-container {
+            text-align: center;
+            font-weight: 500;
+            display: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+        }
+        #payment-status-container.success {
+            background-color: rgba(52, 199, 89, 0.2);
+            border: 1px solid #34C759;
+            color: #34C759;
+        }
+        #payment-status-container.error {
+            background-color: rgba(255, 59, 48, 0.2);
+            border: 1px solid #FF3B30;
+            color: #FF3B30;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="payment-container">
+        <a href="index.html" class="block text-center mb-6 text-3xl font-bold text-white">Linq</a>
+        <div class="payment-form">
+            <h2 class="text-2xl font-bold text-center mb-6">Subscribe to Linq+</h2>
+            
+            <div class="space-y-4 mb-6">
+                <div id="plan-monthly" class="plan-option selected" onclick="selectPlan('monthly')">
+                    <h3 class="font-bold">Linq+ Monthly</h3>
+                    <p class="text-lg font-semibold">$2.99 <span class="text-sm font-normal text-gray-400">/ month</span></p>
+                </div>
+                <div id="plan-annual" class="plan-option" onclick="selectPlan('annual')">
+                    <h3 class="font-bold">Linq+ Annual <span class="text-xs bg-cyan-500 text-white px-2 py-1 rounded-full ml-2">Best Value</span></h3>
+                    <p class="text-lg font-semibold">$35.88 <span class="text-sm font-normal text-gray-400">/ year</span></p>
+                </div>
+            </div>
+
+            <form id="payment-form">
+                <div id="card-container"></div>
+                <button id="card-button" class="pay-button mt-6" type="button">Pay</button>
+            </form>
+            
+            <div id="payment-status-container"></div>
+
+            <div class="text-center mt-6">
+                <img src="https://docs.cdn.squareup.com/images/powered-by-square-dark-2x.png" alt="Powered by Square" class="h-6 inline-block">
+            </div>
+        </div>
+        <p class="text-center text-xs text-gray-500 mt-4">
+            By subscribing, you agree to our Terms of Service. Your subscription will auto-renew. You can cancel anytime from your profile.
+        </p>
+    </div>
+
+    <script>
+        let selectedPlan = 'monthly';
+
+        function selectPlan(plan) {
+            selectedPlan = plan;
+            document.getElementById('plan-monthly').classList.toggle('selected', plan === 'monthly');
+            document.getElementById('plan-annual').classList.toggle('selected', plan === 'annual');
+        }
+
+        async function main() {
+            // Use the Production Application ID you provided
+            const appId = 'sq0idp-17DmpOv5zxtsf55HujCS-g';
+            const payments = Square.payments(appId, 'L62NCZ5QQ6SWM'); // Use the Location ID you provided
+            
+            const card = await payments.card();
+            await card.attach('#card-container'); 
+
+            const cardButton = document.getElementById('card-button');
+            cardButton.addEventListener('click', async () => {
+                const statusContainer = document.getElementById('payment-status-container');
+                statusContainer.style.display = 'none';
+                cardButton.disabled = true;
+                cardButton.textContent = 'Processing...';
+
+                const result = await card.tokenize();
+                if (result.status === 'OK') {
+                    console.log(`Payment token is ${result.token}`);
+                    // Send the token and selected plan to your server
+                    try {
+                        const response = await fetch('/api/pay', { // This endpoint will be on your server
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                sourceId: result.token,
+                                plan: selectedPlan
+                            }),
+                        });
+                        const data = await response.json();
+                        if (data.success) {
+                            statusContainer.textContent = 'Payment Successful! Redirecting...';
+                            statusContainer.className = 'success';
+                            statusContainer.style.display = 'block';
+                            // Redirect to a success page or user profile after a short delay
+                            setTimeout(() => { window.location.href = 'profile.html'; }, 2000);
+                        } else {
+                            throw new Error(data.error || 'Payment failed on server.');
+                        }
+                    } catch (error) {
+                        console.error('Server payment error:', error);
+                        statusContainer.textContent = `Payment Failed: ${error.message}`;
+                        statusContainer.className = 'error';
+                        statusContainer.style.display = 'block';
+                        cardButton.disabled = false;
+                        cardButton.textContent = 'Pay';
+                    }
+                } else {
+                    console.error('Tokenization error:', result.errors);
+                    statusContainer.textContent = 'Card details are invalid. Please check and try again.';
+                    statusContainer.className = 'error';
+                    statusContainer.style.display = 'block';
+                    cardButton.disabled = false;
+                    cardButton.textContent = 'Pay';
+                }
+            });
+        }
+        main();
+    </script>
+</body>
+</html>
