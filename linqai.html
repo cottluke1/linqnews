@@ -285,7 +285,7 @@
                     <i class="fas fa-brain fa-lg"></i>
                 </div>
                 <div class="message-content">
-                    I’m Linq’s AI Energy Analyst—here to answer your energy questions with the latest data and real insights. What’s on your mind?
+                    I'm Linq's AI Energy Analyst—here to answer your energy questions with the latest data and real insights. What's on your mind?
                     <span class="message-timestamp">Just now</span>
                 </div>
             </div>
@@ -367,8 +367,7 @@
                 try {
                     const userDoc = await db.collection('users').doc(user.uid).get();
                     if (userDoc.exists && userDoc.data().isSubscribed) {
-                        const subEndDate = userDoc.data().subscriptionEndDate.toDate();
-                        isSubscribed = subEndDate > new Date();
+                        isSubscribed = true;
                     } else {
                         isSubscribed = false;
                     }
