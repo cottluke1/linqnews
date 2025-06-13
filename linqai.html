@@ -415,7 +415,7 @@
         // --- FIXED: OpenAI Call ---
         async function getOpenAIResponse(userMessage) {
             conversationHistory.push({ role: 'user', content: userMessage });
-            const functionUrl = 'https://openaiproxy-j3cfx3cila-uc.a.run.app';
+            const functionUrl = 'https://us-central1-linq-b27a8.cloudfunctions.net/linqAI';
             try {
                 const response = await fetch(functionUrl, {
                     method: 'POST',
