@@ -365,15 +365,7 @@
                     try {
                         const userDoc = await db.collection('users').doc(user.uid).get();
                         if (userDoc.exists && userDoc.data().isSubscribed) {
-                            // Check if the subscription is still active
-                            const subEndDate = userDoc.data().subscriptionEndDate.toDate();
-                            if (subEndDate > new Date()) {
-                                isSubscribed = true;
-                            } else {
-                                isSubscribed = false;
-                                // Optional: Update the database to reflect expired subscription
-                                await db.collection('users').doc(user.uid).update({ isSubscribed: false });
-                            }
+                            isSubscribed = true;
                         } else {
                             isSubscribed = false;
                         }
