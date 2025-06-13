@@ -423,7 +423,6 @@
         };
         const genericPlaceholderColors = ['00BFFF', '4B0082', '800080', 'FF1493', 'FF8C00', '20B2AA', 'DA70D6'];
 
-
         const articlesData = [
             { id: "1", category: 'Crude Oil', title: 'Oil Prices Surge Amid Supply Concerns', date: 'May 10, 2025', source: 'Reuters', link: '#', image: '...' },
             { id: "2", category: 'Crude Oil', title: 'OPEC+ Extends Production Cuts', date: 'May 9, 2025', source: 'Bloomberg', link: '#', image: '...' },
@@ -432,17 +431,81 @@
             { id: "5", category: 'Power', title: 'Global Power Grids Under Strain from Extreme Weather Events', date: 'May 10, 2025', source: 'BBC News', link: '#', image: '...' },
             { id: "6", category: 'Renewables', title: 'Solar Panel Efficiency Reaches New Heights, Driving Adoption', date: 'May 9, 2025', source: 'Seeking Alpha', link: '#', image: '...' },
         ];
-        let newsFavorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || [];
 
-        const communityPostsDataPage = [
-            { id: 'tweet1', url: '...', title: 'Saudi Production Levels & Brent Impact', meta: 'May 10, 2025 • JH (@CRUDEOIL231)', category: 'Crude oil', tweetContent: '...' },
-            { id: 'tweet2', url: '...', title: "India's Rising Oil Consumption", meta: 'May 10, 2025 • Linq AI Insights (@LinqAI)', category: 'Energy Demand', tweetContent: '...' },
-            { id: 'tweet3', url: '...', title: 'Crude Gaps Down on OPEC+ News', meta: 'May 09, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Market Analysis', tweetContent: '...' },
-            { id: 'tweet4', url: '...', title: 'Riyadh’s Strategic Oil Play', meta: 'May 05, 2025 • Art Berman (@aeberman12)', category: 'Energy', tweetContent: '...' },
-            { id: 'tweet5', url: '...', title: 'IPAA Supports Budget Provisions', meta: 'May 05, 2025 • IPAA American Energy (@IPAAaccess)', category: 'Policy', tweetContent: '...' }
-        ];
-        let communityFavorites = JSON.parse(localStorage.getItem('linqCommunityFavoritesV1')) || [];
+        let newsFavorites = [];
+        let communityFavorites = [];
 
+        // Function to fetch user's bookmarks from Firestore
+        async function fetchUserBookmarks() {
+            const user = authInstance.currentUser;
+            if (!user) {
+                newsFavorites = [];
+                communityFavorites = [];
+                displayFavoriteArticles();
+                displayFavoriteCommunityPosts();
+                return;
+            }
+
+            try {
+                const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+                if (userDoc.exists) {
+                    const data = userDoc.data();
+                    newsFavorites = data.bookmarks || [];
+                    communityFavorites = data.communityBookmarks || [];
+                } else {
+                    newsFavorites = [];
+                    communityFavorites = [];
+                }
+                displayFavoriteArticles();
+                displayFavoriteCommunityPosts();
+            } catch (error) {
+                console.error('Error fetching bookmarks:', error);
+                newsFavorites = [];
+                communityFavorites = [];
+                displayFavoriteArticles();
+                displayFavoriteCommunityPosts();
+            }
+        }
+
+        // Function to update bookmarks in Firestore
+        async function updateBookmarks(articleId, type, isAdding) {
+            const user = authInstance.currentUser;
+            if (!user) {
+                return;
+            }
+
+            try {
+                const userRef = firebase.firestore().collection('users').doc(user.uid);
+                const field = type === 'news' ? 'bookmarks' : 'communityBookmarks';
+                const value = isAdding ? firebase.firestore.FieldValue.arrayUnion(articleId) : firebase.firestore.FieldValue.arrayRemove(articleId);
+                
+                await userRef.set({
+                    [field]: value
+                }, { merge: true });
+                
+                await fetchUserBookmarks(); // Refresh the bookmarks
+            } catch (error) {
+                console.error('Error updating bookmarks:', error);
+            }
+        }
+
+        async function toggleFavoriteOnFavoritesPage(articleId, type) {
+            const idStr = String(articleId);
+            const isAdding = type === 'news' ? !newsFavorites.includes(idStr) : !communityFavorites.includes(idStr);
+            await updateBookmarks(idStr, type, isAdding);
+        }
+
+        // Update the auth state change listener to fetch bookmarks
+        authInstance.onAuthStateChanged(user => {
+            if (user) {
+                fetchUserBookmarks();
+            } else {
+                newsFavorites = [];
+                communityFavorites = [];
+                displayFavoriteArticles();
+                displayFavoriteCommunityPosts();
+            }
+        });
 
         function displayFavoriteArticles() {
             const newsFavoritesGrid = document.getElementById('newsFavoritesGrid');
@@ -546,22 +609,6 @@
                 window.twttr.widgets.load(communityFavoritesGrid);
             }
             addFavoriteButtonListeners();
-        }
-
-
-        function toggleFavoriteOnFavoritesPage(articleId, type) {
-            const idStr = String(articleId);
-            if (type === 'news') {
-                const index = newsFavorites.indexOf(idStr);
-                if (index > -1) newsFavorites.splice(index, 1);
-                localStorage.setItem('linqFavoritesV2', JSON.stringify(newsFavorites));
-                displayFavoriteArticles();
-            } else if (type === 'community') {
-                const index = communityFavorites.indexOf(idStr);
-                if (index > -1) communityFavorites.splice(index, 1);
-                localStorage.setItem('linqCommunityFavoritesV1', JSON.stringify(communityFavorites));
-                displayFavoriteCommunityPosts();
-            }
         }
 
         function addFavoriteButtonListeners() {
