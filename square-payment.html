@@ -8,7 +8,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Required Square and Firebase SDKs -->
     <script type="text/javascript" src="https://web.squarecdn.com/v1/square.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -48,6 +53,7 @@
             box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.3);
             background-color: rgba(0, 191, 255, 0.1);
         }
+        /* This is the container where Square will securely inject the credit card form fields */
         #card-container {
             background-color: rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -64,7 +70,7 @@
             transition: all 0.2s ease;
             box-shadow: 0 4px 15px -5px rgba(0, 191, 255, 0.4);
         }
-        .pay-button:hover {
+        .pay-button:hover:not(:disabled) {
             background-color: #00A9E0;
             transform: translateY(-2px);
             box-shadow: 0 6px 20px -5px rgba(0, 191, 255, 0.5);
@@ -102,18 +108,21 @@
         <div class="payment-form">
             <h2 class="text-2xl font-bold text-center mb-6">Subscribe to Linq+</h2>
             
+            <!-- Plan Selection -->
             <div class="space-y-4 mb-6">
-                <div id="plan-monthly" class="plan-option selected" onclick="selectPlan('monthly')">
+                <div id="plan-monthly" class="plan-option" onclick="selectPlan('monthly')">
                     <h3 class="font-bold">Linq+ Monthly</h3>
-                    <p class="text-lg font-semibold">$2.99 <span class="text-sm font-normal text-gray-400">/ month</span></p>
+                    <p class="text-lg font-semibold">$9.99 <span class="text-sm font-normal text-gray-400">/ month</span></p>
                 </div>
-                <div id="plan-annual" class="plan-option" onclick="selectPlan('annual')">
+                <div id="plan-annual" class="plan-option selected" onclick="selectPlan('annual')">
                     <h3 class="font-bold">Linq+ Annual <span class="text-xs bg-cyan-500 text-white px-2 py-1 rounded-full ml-2">Best Value</span></h3>
                     <p class="text-lg font-semibold">$35.88 <span class="text-sm font-normal text-gray-400">/ year</span></p>
                 </div>
             </div>
 
+            <!-- Square Payment Form Container -->
             <form id="payment-form">
+                <!-- Square's Web Payments SDK will inject the card entry form here -->
                 <div id="card-container"></div>
                 <button id="card-button" class="pay-button mt-6" type="button">Pay</button>
             </form>
@@ -130,7 +139,7 @@
     </div>
 
     <script>
-        let selectedPlan = 'monthly';
+        let selectedPlan = 'annual'; // Default to annual as it is pre-selected
 
         function selectPlan(plan) {
             selectedPlan = plan;
@@ -138,63 +147,128 @@
             document.getElementById('plan-annual').classList.toggle('selected', plan === 'annual');
         }
 
-        async function main() {
-            // Use the Production Application ID you provided
-            const appId = 'sq0idp-17DmpOv5zxtsf55HujCS-g';
-            const payments = Square.payments(appId, 'L62NCZ5QQ6SWM'); // Use the Location ID you provided
-            
-            const card = await payments.card();
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+            authDomain: "linq-b27a8.firebaseapp.com",
+            projectId: "linq-b27a8",
+            storageBucket: "linq-b27a8.appspot.com",
+            messagingSenderId: "1067901051826",
+            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+
+        // Main function to initialize Square and handle payments
+        async function initializeCard(payments) {
+            // The card payment method is configured to require a postal code
+            const card = await payments.card({
+                postalCode: '12345' // A placeholder is fine, it will be rendered as an input
+            });
             await card.attach('#card-container'); 
+            return card;
+        }
 
+        async function handlePayment(payments, card) {
+            const statusContainer = document.getElementById('payment-status-container');
             const cardButton = document.getElementById('card-button');
-            cardButton.addEventListener('click', async () => {
-                const statusContainer = document.getElementById('payment-status-container');
-                statusContainer.style.display = 'none';
-                cardButton.disabled = true;
-                cardButton.textContent = 'Processing...';
+            
+            statusContainer.style.display = 'none';
+            cardButton.disabled = true;
+            cardButton.textContent = 'Processing...';
 
-                const result = await card.tokenize();
-                if (result.status === 'OK') {
-                    console.log(`Payment token is ${result.token}`);
-                    // Send the token and selected plan to your server
-                    try {
-                        const response = await fetch('/api/pay', { // This endpoint will be on your server
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                sourceId: result.token,
-                                plan: selectedPlan
-                            }),
-                        });
-                        const data = await response.json();
-                        if (data.success) {
-                            statusContainer.textContent = 'Payment Successful! Redirecting...';
-                            statusContainer.className = 'success';
-                            statusContainer.style.display = 'block';
-                            // Redirect to a success page or user profile after a short delay
-                            setTimeout(() => { window.location.href = 'profile.html'; }, 2000);
-                        } else {
-                            throw new Error(data.error || 'Payment failed on server.');
-                        }
-                    } catch (error) {
-                        console.error('Server payment error:', error);
-                        statusContainer.textContent = `Payment Failed: ${error.message}`;
-                        statusContainer.className = 'error';
-                        statusContainer.style.display = 'block';
-                        cardButton.disabled = false;
-                        cardButton.textContent = 'Pay';
-                    }
+            try {
+                // First, check if a user is logged in
+                const currentUser = auth.currentUser;
+                if (!currentUser) {
+                    throw new Error('You must be logged in to subscribe. Redirecting to login...');
+                }
+
+                // Tokenize the card details from the secure form
+                const tokenizationResult = await card.tokenize();
+                if (tokenizationResult.status !== 'OK') {
+                    // Extract the first error message for simplicity
+                    const errorMessage = tokenizationResult.errors ? tokenizationResult.errors[0].message : "Invalid card details.";
+                    throw new Error(errorMessage);
+                }
+                
+                // Get the Firebase ID token to authenticate the user on the server
+                const firebaseIdToken = await currentUser.getIdToken(true);
+
+                // Send the payment token and user token to your server
+                const response = await fetch('/api/pay', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${firebaseIdToken}`
+                    },
+                    body: JSON.stringify({
+                        sourceId: tokenizationResult.token,
+                        plan: selectedPlan
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    statusContainer.textContent = 'Payment Successful! Redirecting...';
+                    statusContainer.className = 'success';
+                    setTimeout(() => { window.location.href = 'profile.html'; }, 2000);
                 } else {
-                    console.error('Tokenization error:', result.errors);
-                    statusContainer.textContent = 'Card details are invalid. Please check and try again.';
+                    throw new Error(data.error || 'Payment failed on the server.');
+                }
+            } catch (error) {
+                console.error('Payment process error:', error);
+                statusContainer.textContent = error.message;
+                statusContainer.className = 'error';
+                if(error.message.includes('Redirecting')) {
+                   setTimeout(() => { window.location.href = 'login.html'; }, 2000);
+                }
+            } finally {
+                statusContainer.style.display = 'block';
+                cardButton.disabled = false;
+                cardButton.textContent = 'Pay';
+            }
+        }
+
+        // Entry point for the page logic
+        document.addEventListener('DOMContentLoaded', async () => {
+            const statusContainer = document.getElementById('payment-status-container');
+            
+            // Check auth status immediately and update UI accordingly
+            auth.onAuthStateChanged(async (user) => {
+                const cardButton = document.getElementById('card-button');
+                if (!user) {
+                    statusContainer.textContent = 'Please log in to make a purchase.';
                     statusContainer.className = 'error';
                     statusContainer.style.display = 'block';
-                    cardButton.disabled = false;
-                    cardButton.textContent = 'Pay';
+                    cardButton.disabled = true;
+                } else {
+                     statusContainer.style.display = 'none';
+                     cardButton.disabled = false;
                 }
             });
-        }
-        main();
+
+            // Initialize the Square Payments SDK
+            try {
+                const appId = 'sq0idp-17DmpOv5zxtsf55HujCS-g'; // Production Application ID
+                const locationId = 'L62NCZ5QQ6SWM'; // Production Location ID
+                const payments = Square.payments(appId, locationId);
+                const card = await initializeCard(payments);
+
+                const cardButton = document.getElementById('card-button');
+                cardButton.addEventListener('click', () => handlePayment(payments, card));
+
+            } catch (e) {
+                console.error("Failed to initialize Square Payments:", e);
+                statusContainer.textContent = 'Could not load payment form. Please refresh the page.';
+                statusContainer.className = 'error';
+                statusContainer.style.display = 'block';
+            }
+        });
+
     </script>
 </body>
 </html>
