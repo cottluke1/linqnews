@@ -410,9 +410,7 @@
                         const userData = doc.data();
                         const planType = userData.subscriptionType || 'Premium';
                         planNameEl.textContent = `Linq+ ${planType.charAt(0).toUpperCase() + planType.slice(1)}`;
-                        
-                        const endDate = userData.subscriptionEndDate.toDate();
-                        statusTextEl.textContent = `Your subscription is active until ${endDate.toLocaleDateString()}.`;
+                        statusTextEl.textContent = 'Your subscription is active.';
                         
                         // Create and add the cancel button
                         const cancelBtn = document.createElement('button');
