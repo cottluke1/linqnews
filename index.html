@@ -376,8 +376,8 @@
             // This prevents a race condition where the app tries to access article data before it's available.
             let tries = 0;
             const dataLoadCheck = setInterval(() => {
-                // We need both present and past articles to be loaded from the external JS files.
-                if (window.presentDayArticles && window.pastArticles) {
+                // We need present articles to be loaded, and we'll handle past articles being undefined
+                if (window.presentDayArticles) {
                     clearInterval(dataLoadCheck);
                     initializeAppLogic(); // Data is ready, so we can run the main app logic.
                 } else if (++tries > 50) { // Fail after 5 seconds to prevent an infinite loop.
@@ -399,7 +399,7 @@
             // This correctly combines today's articles with the array of past day articles.
             // allDaysData will be structured like: [ [page1_articles], [page2_articles], ... ]
             // where page 2 corresponds to the first day in `pastArticles`, page 3 to the second, etc.
-            allDaysData = [todayArticles].concat(window.pastArticles);
+            allDaysData = [todayArticles].concat(Array.isArray(window.pastArticles) ? window.pastArticles : []);
             
             displayArticlesForPage(currentPage);
             setupPagination();
