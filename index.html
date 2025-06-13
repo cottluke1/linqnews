@@ -509,9 +509,6 @@
 
                     const sideLockIconHTML = `<div class="side-lock-icon"><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd" /></svg></div>`;
 
-                    // Store article data in a data attribute
-                    articleElement.setAttribute('data-article', btoa(JSON.stringify(article)));
-
                     articleElement.innerHTML = ` 
                         ${shouldBeLocked ? lockedOverlayHTML + sideLockIconHTML : ''} 
                         <div class="news-card-content"> 
@@ -525,10 +522,10 @@
                                     </div> 
                                 </div> 
                                 <div class="favorite-btn-area"> 
-                                    <button class="favorite-btn" data-id="${article.id}" onclick="handleFavoriteClick(event)" aria-label="Toggle Favorite"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" /></svg></button> 
+                                    <button class="favorite-btn" data-id="${article.id}" aria-label="Toggle Favorite"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" /></svg></button> 
                                 </div>
                             </div> 
-                        </div>`;
+                        </div>`; 
                     newsGrid.appendChild(articleElement); 
                 }); 
             }
@@ -588,12 +585,9 @@
             setupPagination();
         }
         
-        function handleFavoriteClick(event) {
-            const button = event.currentTarget;
-            const articleId = button.dataset.id;
-            const articleElement = button.closest('.news-card');
-            const articleData = JSON.parse(atob(articleElement.getAttribute('data-article')));
-            toggleFavorite(articleId, articleData);
+        function handleFavoriteClick(e) {
+            const favButton = e.target.closest('.favorite-btn');
+            if (favButton) toggleFavorite(favButton.dataset.id);
         }
 
         // Function to fetch user's bookmarks from Firestore
@@ -606,11 +600,12 @@
             }
 
             try {
-                const favoritesSnapshot = await db.collection('users').doc(user.uid).collection('favorites')
-                    .where('type', '==', 'news')
-                    .get();
-                
-                favorites = favoritesSnapshot.docs.map(doc => doc.id);
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (userDoc.exists) {
+                    favorites = userDoc.data().bookmarks || [];
+                } else {
+                    favorites = [];
+                }
                 updateFavoriteIcons();
             } catch (error) {
                 console.error('Error fetching bookmarks:', error);
@@ -620,26 +615,24 @@
         }
 
         // Function to update bookmarks in Firestore
-        async function updateBookmarks(articleId, isAdding, articleData) {
+        async function updateBookmarks(articleId, isAdding) {
             const user = auth.currentUser;
             if (!user) {
-                window.location.href = 'login.html';
+                // Show login prompt or handle unauthenticated state
                 return;
             }
 
             try {
-                const favRef = db.collection('users').doc(user.uid).collection('favorites').doc(articleId);
-                
+                const userRef = db.collection('users').doc(user.uid);
                 if (isAdding) {
-                    await favRef.set({
-                        ...articleData,
-                        type: 'news',
-                        addedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
+                    await userRef.set({
+                        bookmarks: firebase.firestore.FieldValue.arrayUnion(articleId)
+                    }, { merge: true });
                 } else {
-                    await favRef.delete();
+                    await userRef.set({
+                        bookmarks: firebase.firestore.FieldValue.arrayRemove(articleId)
+                    }, { merge: true });
                 }
-                
                 await fetchUserBookmarks(); // Refresh the local favorites array
             } catch (error) {
                 console.error('Error updating bookmarks:', error);
@@ -647,10 +640,10 @@
         }
 
         // Update the toggleFavorite function
-        async function toggleFavorite(articleId, articleData) {
+        async function toggleFavorite(articleId) {
             const idStr = String(articleId);
             const isAdding = !favorites.includes(idStr);
-            await updateBookmarks(idStr, isAdding, articleData);
+            await updateBookmarks(idStr, isAdding);
         }
 
         // Update the auth state change listener to fetch bookmarks
