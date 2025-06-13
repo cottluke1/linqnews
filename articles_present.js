@@ -1,394 +1,284 @@
+// /js/articles_present.js
+// Data is assigned to the global 'window' object to be accessible by other scripts.
 window.presentDayArticles = [
-  {
-    id: "p1",
-    category: "Crude Oil",
-    title: "Oil Prices Inch Higher on Supply Tightness and OPEC+ Cuts",
-    date: "June 11, 2025",
-    source: "Reuters",
-    link: "https://www.reuters.com/business/energy/oil-prices-inch-higher-supply-tightness-opec-cuts-2025-06-11/"
-  },
-  {
-    id: "p2",
-    category: "Natural Gas",
-    title: "European Natural Gas Storage Nears Capacity Ahead of Schedule",
-    date: "June 11, 2025",
-    source: "Bloomberg",
-    link: "https://www.bloomberg.com/news/articles/2025-06-11/european-gas-storage-nears-capacity-ahead-of-schedule"
-  },
-  {
-    id: "p3",
-    category: "Renewables",
-    title: "MIT Researchers Announce New Breakthrough in Solar Panel Efficiency",
-    date: "June 11, 2025",
-    source: "CNBC",
-    link: "https://www.cnbc.com/2025/06/11/mit-solar-panel-efficiency-breakthrough-announced.html"
-  },
-  {
-    id: "p4",
-    category: "Company News",
-    title: "ExxonMobil Advances Major Carbon Capture Project",
-    date: "June 11, 2025",
-    source: "Forbes",
-    link: "https://www.forbes.com/sites/forbesbusinesscouncil/2025/06/11/exxonmobil-advances-major-carbon-capture-project/"
-  },
-  {
-    id: "p5",
-    category: "Power",
-    title: "Texas Grid Faces New Record Demand as Heatwave Persists",
-    date: "June 11, 2025",
-    source: "BBC News",
-    link: "https://www.bbc.com/news/business-61856789"
-  },
-  {
-    id: "p6",
-    category: "Earnings",
-    title: "Chevron Beats Expectations in Q2 Earnings",
-    date: "June 11, 2025",
-    source: "Seeking Alpha",
-    link: "https://seekingalpha.com/news/4049501-chevron-q2-earnings-beat-expectations"
-  },
-  {
-    id: "p7",
-    category: "Petrochemicals",
-    title: "Dow to Expand Ethylene Production Capacity in Texas",
-    date: "June 11, 2025",
-    source: "Wall Street Journal",
-    link: "https://www.wsj.com/articles/dow-to-expand-ethylene-production-capacity-in-texas-2025-06-11"
-  },
-  {
-    id: "p8",
-    category: "Company News",
-    title: "BP to Sell $1 Billion of Non-Core Assets to Streamline Portfolio",
-    date: "June 11, 2025",
-    source: "Financial Times",
-    link: "https://www.ft.com/content/bp-sell-billion-assets-2025-06-11"
-  },
-  {
-    id: "p9",
-    category: "Crude Oil",
-    title: "Saudi Aramco Maintains Official Selling Price for Asia",
-    date: "June 11, 2025",
-    source: "Reuters",
-    link: "https://www.reuters.com/business/energy/saudi-aramco-maintains-asia-pricing-2025-06-11/"
-  },
-  {
-    id: "p10",
-    category: "Natural Gas",
-    title: "US LNG Exports Hit Monthly Record as Asian Demand Surges",
-    date: "June 11, 2025",
-    source: "Yahoo Finance",
-    link: "https://finance.yahoo.com/news/us-lng-exports-hit-record-asian-demand-2025-06-11-093000291.html"
-  },
-  {
-    id: "p11",
-    category: "Power",
-    title: "California Approves Massive Battery Storage Project",
-    date: "June 11, 2025",
-    source: "Bloomberg",
-    link: "https://www.bloomberg.com/news/articles/2025-06-11/california-approves-massive-battery-storage-project"
-  },
-  {
-    id: "p12",
-    category: "Renewables",
-    title: "Vestas Secures 1 GW Wind Turbine Order in India",
-    date: "June 11, 2025",
-    source: "CNBC",
-    link: "https://www.cnbc.com/2025/06/11/vestas-secures-1gw-wind-turbine-order-india.html"
-  },
-  {
-    id: "p13",
-    category: "Earnings",
-    title: "Shell Raises Dividend After Strong Quarterly Results",
-    date: "June 11, 2025",
-    source: "Forbes",
-    link: "https://www.forbes.com/sites/forbesbusinesscouncil/2025/06/11/shell-raises-dividend-q2-results/"
-  },
-  {
-    id: "p14",
-    category: "Petrochemicals",
-    title: "LyondellBasell Unveils Recycled Plastics Initiative",
-    date: "June 11, 2025",
-    source: "BBC News",
-    link: "https://www.bbc.com/news/business-61859989"
-  },
-  {
-    id: "p15",
-    category: "Company News",
-    title: "TotalEnergies Expands Offshore Wind in US",
-    date: "June 11, 2025",
-    source: "Wall Street Journal",
-    link: "https://www.wsj.com/articles/totalenergies-expands-offshore-wind-in-us-2025-06-11"
-  },
-  {
-    id: "p16",
-    category: "Crude Oil",
-    title: "Russia Boosts Crude Exports to India Despite Sanctions",
-    date: "June 11, 2025",
-    source: "Financial Times",
-    link: "https://www.ft.com/content/russia-boosts-crude-exports-india-2025-06-11"
-  },
-  {
-    id: "p17",
-    category: "Natural Gas",
-    title: "Australia Sees Natural Gas Export Revenue Climb",
-    date: "June 11, 2025",
-    source: "Yahoo Finance",
-    link: "https://finance.yahoo.com/news/australia-natural-gas-export-revenue-climb-2025-06-11.html"
-  },
-  {
-    id: "p18",
-    category: "Power",
-    title: "Europe's Nuclear Comeback: New Projects Announced",
-    date: "June 11, 2025",
-    source: "Seeking Alpha",
-    link: "https://seekingalpha.com/news/4049522-europe-nuclear-new-projects-announced"
-  },
-  {
-    id: "p19",
-    category: "Renewables",
-    title: "SolarEdge Reports Major Expansion into Latin America",
-    date: "June 11, 2025",
-    source: "Reuters",
-    link: "https://www.reuters.com/business/energy/solaredge-expansion-latin-america-2025-06-11/"
-  },
-  {
-    id: "p20",
-    category: "Earnings",
-    title: "Eni Outperforms in Quarterly Earnings",
-    date: "June 11, 2025",
-    source: "Bloomberg",
-    link: "https://www.bloomberg.com/news/articles/2025-06-11/eni-outperforms-quarterly-earnings"
-  },
-  {
-    id: "p21",
-    category: "Crude Oil",
-    title: "Oil Prices Top $67 As Iran Talks Deteriorate And Tensions Rise In The Middle East",
-    date: "June 12, 2025",
-    source: "Investors.com",
-    link: "https://www.investors.com/news/oil-prices-stock-market-iran-talks-deteriorate-tensions-rise-in-the-middle-east/"
-  },
-  {
-    id: "p22",
-    category: "Power",
-    title: "Texas Grid Faces New Record Demand as Heatwave Persists",
-    date: "June 12, 2025",
-    source: "BBC News",
-    link: "https://www.bbc.com/news/business-61856789"
-  },
-  {
-    id: "p23",
-    category: "Renewables",
-    title: "Why Investors Remain Bullish on US Renewables",
-    date: "June 12, 2025",
-    source: "Financial Times",
-    link: "https://www.ft.com/content/f8fd3b11-9d44-411a-9734-bcaaa52ee1ad"
-  },
-  {
-    id: "p24",
-    category: "Company News",
-    title: "NextEra Workers Net $45 Million from Sales of Company Stock",
-    date: "June 12, 2025",
-    source: "Reuters",
-    link: "https://www.reuters.com/business/energy/nextera-workers-net-45-million-sales-company-stock-2025-06-12/"
-  },
-  {
-    id: "p25",
-    category: "Petrochemicals",
-    title: "Dow to Expand Ethylene Production Capacity in Texas",
-    date: "June 12, 2025",
-    source: "Wall Street Journal",
-    link: "https://www.wsj.com/articles/dow-to-expand-ethylene-production-capacity-in-texas-2025-06-11"
-  },
-  {
-    id: "p26",
-    category: "Natural Gas",
-    title: "US Natural Gas Prices Slide as Weather Cools Across Midwest",
-    date: "June 12, 2025",
-    source: "Reuters",
-    link: "https://www.reuters.com/business/energy/us-natgas-prices-slide-weather-cools-midwest-2025-06-11/"
-  },
-  {
-    id: "p27",
-    category: "Power",
-    title: "California Approves Massive Battery Storage Project",
-    date: "June 12, 2025",
-    source: "Bloomberg",
-    link: "https://www.bloomberg.com/news/articles/2025-06-11/california-approves-massive-battery-storage-project"
-  },
-  {
-    id: "p28",
-    category: "Renewables",
-    title: "Vestas Secures 1 GW Wind Turbine Order in India",
-    date: "June 12, 2025",
-    source: "CNBC",
-    link: "https://www.cnbc.com/2025/06/11/vestas-secures-1gw-wind-turbine-order-india.html"
-  },
-  {
-    id: "p29",
-    category: "Company News",
-    title: "TotalEnergies Expands Offshore Wind in US",
-    date: "June 12, 2025",
-    source: "Wall Street Journal",
-    link: "https://www.wsj.com/articles/totalenergies-expands-offshore-wind-in-us-2025-06-11"
-  },
-  {
-    id: "p30",
-    category: "Earnings",
-    title: "Shell Raises Dividend After Strong Quarterly Results",
-    date: "June 12, 2025",
-    source: "Forbes",
-    link: "https://www.forbes.com/sites/forbesbusinesscouncil/2025/06/11/shell-raises-dividend-q2-results/"
-  },
-  {
-    id: "p31",
-    category: "Petrochemicals",
-    title: "LyondellBasell Unveils Recycled Plastics Initiative",
-    date: "June 12, 2025",
-    source: "BBC News",
-    link: "https://www.bbc.com/news/business-61859989"
-  },
-  {
-    id: "p32",
-    category: "Crude Oil",
-    title: "Saudi Aramco Maintains Official Selling Price for Asia",
-    date: "June 12, 2025",
-    source: "Reuters",
-    link: "https://www.reuters.com/business/energy/saudi-aramco-maintains-asia-pricing-2025-06-11/"
-  },
-  {
-    id: "p33",
-    category: "Natural Gas",
-    title: "Australia Sees Natural Gas Export Revenue Climb",
-    date: "June 12, 2025",
-    source: "Yahoo Finance",
-    link: "https://finance.yahoo.com/news/australia-natural-gas-export-revenue-climb-2025-06-11.html"
-  },
-  {
-    id: "p34",
-    category: "Power",
-    title: "Europe's Nuclear Comeback: New Projects Announced",
-    date: "June 12, 2025",
-    source: "Seeking Alpha",
-    link: "https://seekingalpha.com/news/4049522-europe-nuclear-new-projects-announced"
-  },
-  {
-    id: "p35",
-    category: "Renewables",
-    title: "SolarEdge Reports Major Expansion into Latin America",
-    date: "June 12, 2025",
-    source: "Reuters",
-    link: "https://www.reuters.com/business/energy/solaredge-expansion-latin-america-2025-06-11/"
-  },
-  {
-    id: "p36",
-    category: "Earnings",
-    title: "Eni Outperforms in Quarterly Earnings",
-    date: "June 12, 2025",
-    source: "Bloomberg",
-    link: "https://www.bloomberg.com/news/articles/2025-06-11/eni-outperforms-quarterly-earnings"
-  },
-  {
-    id: "p37",
-    category: "Crude Oil",
-    title: "Russia Boosts Crude Exports to India Despite Sanctions",
-    date: "June 12, 2025",
-    source: "Financial Times",
-    link: "https://www.ft.com/content/russia-boosts-crude-exports-india-2025-06-11"
-  },
-  {
-    id: "p38",
-    category: "Natural Gas",
-    title: "US LNG Exports Hit Monthly Record as Asian Demand Surges",
-    date: "June 12, 2025",
-    source: "Yahoo Finance",
-    link: "https://finance.yahoo.com/news/us-lng-exports-hit-record-asian-demand-2025-06-11-093000291.html"
-  },
-  {
-    id: "p39",
-    category: "Company News",
-    title: "NextEra workers net $45 million from sales of company stock",
-    date: "June 12, 2025",
-    source: "Reuters",
-    link: "https://www.reuters.com/business/energy/nextera-workers-net-45-million-sales-company-stock-2025-06-12/"
-  },
-  {
-    id: "p40",
-    category: "Petrochemicals",
-    title: "Dow to Expand Ethylene Production Capacity in Texas",
-    date: "June 12, 2025",
-    source: "Wall Street Journal",
-    link: "https://www.wsj.com/articles/dow-to-expand-ethylene-production-capacity-in-texas-2025-06-11"
-  },
-  {
-    id: "p41",
-    category: "Power",
-    title: "California Approves Massive Battery Storage Project",
-    date: "June 12, 2025",
-    source: "Bloomberg",
-    link: "https://www.bloomberg.com/news/articles/2025-06-11/california-approves-massive-battery-storage-project"
-  },
-  {
-    id: "p42",
-    category: "Renewables",
-    title: "Vestas Secures 1 GW Wind Turbine Order in India",
-    date: "June 12, 2025",
-    source: "CNBC",
-    link: "https://www.cnbc.com/2025/06/11/vestas-secures-1gw-wind-turbine-order-india.html"
-  },
-  {
-    id: "p43",
-    category: "Company News",
-    title: "TotalEnergies Expands Offshore Wind in US",
-    date: "June 12, 2025",
-    source: "Wall Street Journal",
-    link: "https://www.wsj.com/articles/totalenergies-expands-offshore-wind-in-us-2025-06-11"
-  },
-  {
-    id: "p44",
-    category: "Earnings",
-    title: "Shell Raises Dividend After Strong Quarterly Results",
-    date: "June 12, 2025",
-    source: "Forbes",
-    link: "https://www.forbes.com/sites/forbesbusinesscouncil/2025/06/11/shell-raises-dividend-q2-results/"
-  },
-  {
-    id: "p45",
-    category: "Petrochemicals",
-    title: "LyondellBasell Unveils Recycled Plastics Initiative",
-    date: "June 12, 2025",
-    source: "BBC News",
-    link: "https://www.bbc.com/news/business-61859989"
-  },
-  {
-    id: "p46",
-    category: "Renewables",
-    title: "SolarEdge Reports Major Expansion into Latin America",
-    date: "June 12, 2025",
-    source: "Reuters",
-    link: "https://www.reuters.com/business/energy/solaredge-expansion-latin-america-2025-06-11/"
-  },
-  {
-    id: "p47",
-    category: "Earnings",
-    title: "Eni Outperforms in Quarterly Earnings",
-    date: "June 12, 2025",
-    source: "Bloomberg",
-    link: "https://www.bloomberg.com/news/articles/2025-06-11/eni-outperforms-quarterly-earnings"
-  },
-  {
-    id: "p48",
-    category: "Crude Oil",
-    title: "Saudi Aramco Maintains Official Selling Price for Asia",
-    date: "June 12, 2025",
-    source: "Reuters",
-    link: "https://www.reuters.com/business/energy/saudi-aramco-maintains-asia-pricing-2025-06-11/"
-  },
-  {
-    id: "p49",
-    category: "Natural Gas",
-    title: "Australia Sees Natural Gas Export Revenue Climb",
-    date: "June 12, 2025",
-    source: "Yahoo Finance",
-    link: "https://finance.yahoo.com/news/australia-natural-gas-export-revenue-climb-2025-06-11.html"
-  }
+    {
+        id: "p1",
+        category: 'Company News',
+        title: "Trump's energy dominance agenda could be ravaged by Section 899",
+        date: 'June 12, 2025',
+        source: 'Reuters',
+        link: 'https://www.reuters.com/markets/commodities/trumps-energy-dominance-agenda-could-be-ravaged-by-section-899-2025-06-12/'
+    },
+    {
+        id: "p2",
+        category: 'Company News',
+        title: 'Trump to attend AI energy summit in Pittsburgh',
+        date: 'June 12, 2025',
+        source: 'Reuters',
+        link: 'https://www.reuters.com/world/us/trump-attend-ai-energy-summit-pittsburgh-2025-06-12/'
+    },
+    {
+        id: "p3",
+        category: 'Natural Gas',
+        title: 'NextDecade signs $9 billion contracts with Bechtel for LNG sites',
+        date: 'June 12, 2025',
+        source: 'Reuters',
+        link: 'https://www.reuters.com/business/energy/nextdecade-signs-9-billion-contracts-with-bechtel-construction-lng-sites-2025-06-12/'
+    },
+    {
+        id: "p4",
+        category: 'Company News',
+        title: 'Britain ready to implement US tariff deal, trade minister says',
+        date: 'June 12, 2025',
+        source: 'Reuters',
+        link: 'https://www.reuters.com/sustainability/climate-energy/britain-ready-implement-us-tariff-deal-trade-minister-says-2025-06-12/'
+    },
+    {
+        id: "p5",
+        category: 'Natural Gas',
+        title: 'Weekly storage of natural gas in U.S. increases: EIA-Xinhua',
+        date: 'June 13, 2025',
+        source: 'Xinhua',
+        link: 'https://english.news.cn/northamerica/20250613/2f735ff374d543268ca71a393ed456a1/c.html'
+    },
+    {
+        id: "p6",
+        category: 'Natural Gas',
+        title: 'United States Natural Gas Stocks Change',
+        date: 'June 12, 2025',
+        source: 'Trading Economics',
+        link: 'https://tradingeconomics.com/united-states/natural-gas-stocks-change/news/462650'
+    },
+    {
+        id: "p7",
+        category: 'Power',
+        title: 'Record US data center power usage amid AI boom, forecasts EIA',
+        date: 'June 12, 2025',
+        source: 'RCR Wireless News',
+        link: 'https://www.rcrwireless.com/20250612/energy/eia-power-ai-data'
+    },
+    {
+        id: "p8",
+        category: 'Company News',
+        title: 'HPCL, BPCL, IOC shares fall up to 4% as Brent crude breaches $70/bbl',
+        date: 'June 12, 2025',
+        source: 'Business Today',
+        link: 'https://www.businesstoday.in/markets/stocks/story/hpcl-bpcl-ioc-shares-fall-brent-crude-price-rises-middle-east-tensions-480099-2025-06-12'
+    },
+    {
+        id: "p9",
+        category: 'Power',
+        title: 'Daily on Energy: California EV rules canceled, global boost for nuclear, Wright on oil',
+        date: 'June 12, 2025',
+        source: 'Washington Examiner',
+        link: 'https://www.washingtonexaminer.com/daily-on-energy/3440160/daily-on-energy-california-ev-rules-canceled-global-boost-nuclear-wright-talks-oil/'
+    },
+    {
+        id: "p10",
+        category: 'Petrochemicals',
+        title: 'China-US trade deal kicks the rare earths can down the road',
+        date: 'June 12, 2025',
+        source: 'Reuters',
+        link: 'https://www.reuters.com/markets/commodities/china-us-trade-deal-kicks-rare-earths-can-down-road-2025-06-12/'
+    },
+    {
+        id: "p11",
+        category: 'Renewables',
+        title: 'Meta signs deal for advanced geothermal power in New Mexico',
+        date: 'June 12, 2025',
+        source: 'Reuters',
+        link: 'https://www.reuters.com/sustainability/boards-policy-regulation/meta-signs-deal-advanced-geothermal-power-new-mexico-2025-06-12/'
+    },
+    {
+        id: "p12",
+        category: 'Power',
+        title: 'Meta-Constellation virtual PPA could be first of many reactor deals: experts',
+        date: 'June 12, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/meta-constellation-ppa-could-be-first-of-many-deals-for-existing-reactors/750567/'
+    },
+    {
+        id: "p13",
+        category: 'Renewables',
+        title: 'Maryland residential solar loan program takes off despite rough market',
+        date: 'June 12, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/maryland-residential-solar-loans-green-bank-montgomery-county/750383/'
+    },
+    {
+        id: "p14",
+        category: 'Power',
+        title: 'Demand response program in New York cuts peak energy demand: ISO',
+        date: 'June 12, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/demand-response-dr-new-york-energy-demand-iso/750400/'
+    },
+    {
+        id: "p15",
+        category: 'Power',
+        title: 'Talen, Amazon AWS partner on Susquehanna nuclear data center',
+        date: 'June 12, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/talen-amazon-aws-susquehanna-nuclear-data-centert/750440/'
+    },
+    {
+        id: "p16",
+        category: 'Renewables',
+        title: 'DOE-House debate on baseload wind & solar reliability',
+        date: 'June 12, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/doe-wright-house-baseload-wind-solar-reliability/750421/'
+    },
+    {
+        id: "p17",
+        category: 'Power',
+        title: 'US utility-scale energy storage to double, reach 65 GW by 2027: EIA',
+        date: 'June 12, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/us-utility-scale-energy-storage-to-double-reach-65-gw-by-2027-eia/750338/'
+    },
+    {
+        id: "p18",
+        category: 'Renewables',
+        title: 'Atlantic Shores offshore wind OREC termination in New Jersey',
+        date: 'June 12, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/atlantic-shores-offshore-wind-terminate-new-jersey-orec/750279/'
+    },
+    {
+        id: "p19",
+        category: 'Company News',
+        title: 'GOP lawmakers ask for clean energy credit tweaks in reconciliation bill',
+        date: 'June 12, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/gop-lawmakers-ask-clean-energy-credit-tweaks-reconciliation-one-big-beautiful-bill/750331/'
+    },
+    {
+        id: "p20",
+        category: 'Company News',
+        title: 'Residential solar installer Sunnova files for bankruptcy, plans sale',
+        date: 'June 12, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/residential-solar-installer-sunnova-files-for-bankruptcy-plans-to-sell-and/750387/'
+    },
+    {
+        id: "p21",
+        category: 'Power',
+        title: 'NERC-MISO reliability market monitor highlights FERC capacity issues',
+        date: 'June 12, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/nerc-miso-reliability-market-monitor-ferc-capacity/750037/'
+    },
+    {
+        id: "p22",
+        category: 'Power',
+        title: 'MISO-FERC fast-track interconnection ERA rules move forward',
+        date: 'June 12, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/miso-ferc-fast-track-interconnection-eras/750260/'
+    },
+    {
+        id: "p23",
+        category: 'Power',
+        title: 'OMS-MISO resource adequacy survey in Midcontinent region',
+        date: 'June 12, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/oms-miso-resource-adequacy-survey-midcontinent/750140/'
+    },
+    {
+        id: "p24",
+        category: 'Company News',
+        title: 'Energy-as-a-Service model offers lower costs, predictability: Renew',
+        date: 'June 12, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/energy-as-a-service-lower-costs-add-predictability-Renew-Charlie-Lord-EaaS-/750551/'
+    },
+    {
+        id: "p25",
+        category: 'Power',
+        title: 'DOE cancels carbon capture decarbonization awards, grants',
+        date: 'June 12, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/doe-cancel-carbon-capture-decarbonization-awards-grants/749409/'
+    },
+    {
+        id: "p26",
+        category: 'Power',
+        title: 'Electric Supply Chain Act (HR 3638) advances in House',
+        date: 'June 12, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/Electric-Supply-Chain-Act-Latta-NEMA-HR3638/750137/'
+    },
+    {
+        id: "p27",
+        category: 'Power',
+        title: 'Tariffs to spike power generation costs, report finds',
+        date: 'June 12, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/tariffs-to-spike-power-generation-costs-reports/750133/'
+    },
+    {
+        id: "p28",
+        category: 'Power',
+        title: 'PJM-FERC data center capacity market updates',
+        date: 'June 12, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/pjm-ferc-data-center-capacity-market/749916/'
+    },
+    {
+        id: "p29",
+        category: 'Power',
+        title: 'GB Energy budget to fund £2.5 bn nuclear SMR programme',
+        date: 'June 12, 2025',
+        source: 'Energy Voice',
+        link: 'https://www.energyvoice.com/renewables-energy-transition/nuclear/574267/gb-energy-budget-to-fund-2-5bn-nuclear-smr-programme/'
+    },
+    {
+        id: "p30",
+        category: 'Crude Oil',
+        title: 'Badenoch calls for end to windfall tax and ban on new oil licences',
+        date: 'June 12, 2025',
+        source: 'Energy Voice',
+        link: 'https://www.energyvoice.com/oilandgas/north-sea/574301/badenoch-to-call-for-end-to-windfall-tax-and-ban-on-new-oil-licences/'
+    },
+    {
+        id: "p31",
+        category: 'Renewables',
+        title: 'Spending review boosts north-west nuclear, hydrogen and carbon capture',
+        date: 'June 12, 2025',
+        source: 'Energy Voice',
+        link: 'https://www.energyvoice.com/renewables-energy-transition/nuclear/574259/spending-review-boosts-north-west-nuclear-hydrogen-and-carbon-capture/'
+    },
+    {
+        id: "p32",
+        category: 'Renewables',
+        title: 'UK government backs Inverness & Cromarty Firth green freeport business case',
+        date: 'June 12, 2025',
+        source: 'Energy Voice',
+        link: 'https://www.energyvoice.com/renewables-energy-transition/wind/uk-wind/574279/uk-government-backs-inverness-and-cromarty-firth-green-freeport-business-case/'
+    },
+    {
+        id: "p33",
+        category: 'Crude Oil',
+        title: "Securing the deep UK's subsea supply chain can defend our underwater assets",
+        date: 'June 12, 2025',
+        source: 'Energy Voice',
+        link: 'https://www.energyvoice.com/oilandgas/subsea-exploration-production/574284/securing-the-deep-uks-subsea-supply-chain-can-defend-our-underwater-assets/'
+    },
+    {
+        id: "p34",
+        category: 'Crude Oil',
+        title: 'Alternative oil investment locations beyond the North Sea',
+        date: 'June 12, 2025',
+        source: 'Energy Voice',
+        link: 'https://www.energyvoice.com/oilandgas/574265/alternative-oil-investment-locations-beyond-the-north-sea/'
+    },
+    {
+        id: "p35",
+        category: 'Renewables',
+        title: 'Edinburgh Gravitricity funding hydrogen storage project',
+        date: 'June 12, 2025',
+        source: 'Energy Voice',
+        link: 'https://www.energyvoice.com/renewables-energy-transition/hydrogen/574185/edinburgh-gravitricity-funding-hydrogen-storage/'
+    }
 ];
