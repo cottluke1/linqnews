@@ -8,23 +8,24 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
+    <!-- ADDED: Firebase Functions library is required to call your new cancel function -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-functions-compat.js"></script>
     <style>
         :root {
             --accent-cyan: #00BFFF;
             --error-red: #FF3B30;
             --success-green: #34C759;
             --border-radius-md: 8px;
-            --border-radius-lg: 16px; 
+            --border-radius-lg: 16px;
         }
-
-        /* --- Global Styles --- */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0B0C10; 
+            background-color: #0B0C10;
             background-image: radial-gradient(at 50% 0%, rgba(0, 191, 255, 0.1) 0%, rgba(8, 0, 20, 0) 50%);
             color: #F5F5F5;
             line-height: 1.65;
@@ -34,18 +35,14 @@
             flex-direction: column;
             min-height: 100vh;
         }
-
-        /* --- Main Content Area --- */
         main {
-            padding-top: 80px; /* Space for fixed header */
+            padding-top: 80px;
             flex-grow: 1;
         }
         main .container {
             padding-top: 40px;
             padding-bottom: 60px;
         }
-
-        /* --- Glassmorphism UI --- */
         .glass-ui {
             background: rgba(22, 22, 22, 0.6);
             backdrop-filter: blur(20px) saturate(150%);
@@ -53,8 +50,6 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
-
-        /* --- Tab Navigation --- */
         .profile-nav-container {
              display: flex;
              justify-content: center;
@@ -87,8 +82,6 @@
             background-color: rgba(0, 191, 255, 0.15);
             border-color: var(--accent-cyan);
         }
-
-        /* --- Content Sections --- */
         .content-section { display: none; animation: fadeIn 0.5s ease-in-out; }
         .content-section.active-section { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
@@ -104,10 +97,8 @@
         }
         .card-header h3 { margin: 0; font-size: 1.5em; font-weight: 700; }
         .card-body { padding: 30px; }
-
-        /* --- Profile Section Specifics --- */
         .profile-info-container { display: flex; align-items: center; gap: 30px; flex-wrap: wrap; }
-        .avatar-section { 
+        .avatar-section {
             position: relative;
             cursor: pointer;
         }
@@ -141,14 +132,12 @@
             text-transform: uppercase; letter-spacing: 0.5px;
         }
         .info-item p { color: #F5F5F5; font-size: 1.1em; margin: 0; font-weight: 500;}
-
-        /* --- Forms --- */
         .form-group { margin-bottom: 25px; }
         .form-group label { display: block; color: #A0A0A0; margin-bottom: 10px; font-weight: 500; }
         .form-input {
-            width: 100%; padding: 14px 18px; 
+            width: 100%; padding: 14px 18px;
             background-color: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.15); 
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: var(--border-radius-md);
             color: #F5F5F5; font-size: 1em;
             transition: all 0.2s ease;
@@ -158,8 +147,6 @@
             outline: none; border-color: var(--accent-cyan);
             box-shadow: 0 0 0 4px rgba(0, 191, 255, 0.25);
         }
-
-        /* --- Buttons --- */
         .btn {
             padding: 12px 24px; border-radius: var(--border-radius-md);
             cursor: pointer; font-size: 1em; font-weight: 600;
@@ -179,12 +166,9 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         .btn:active { transform: translateY(0); }
-        
-        .btn-danger { background-color: var(--error-red); color: white; }
+        .btn-danger { background-color: var(--error-red); color: white; border: none; }
         .btn-danger:hover { background-color: #d92d23; box-shadow: 0 6px 20px rgba(255, 59, 48, 0.4);}
         .btn-danger:disabled { background-color: #7f1d1d; cursor: not-allowed; opacity: 0.6; }
-
-        /* --- Modal Styles --- */
         .modal-overlay {
             display: none; position: fixed; inset: 0;
             background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
@@ -194,16 +178,12 @@
             padding: 30px; border-radius: var(--border-radius-lg);
             width: 90%; max-width: 500px;
         }
-        
-        /* Footer */
         footer {
             background-color: transparent; color: #A0A0A0;
             padding: 30px 0; text-align: center;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             margin-top: auto;
         }
-
-        /* Responsive Design */
         @media (max-width: 768px) {
             .profile-info-container { flex-direction: column; align-items: stretch; }
             .profile-info { grid-template-columns: 1fr; }
@@ -267,7 +247,11 @@
                         <div class="card-body">
                             <p class="text-lg">Your current plan: <span id="current-plan-name" class="font-bold text-cyan-400">Free Plan</span></p>
                             <p class="text-gray-400" id="subscription-status-text">You have access to basic news and community features.</p>
-                            <a href="linqplus.html" class="btn btn-glass mt-6">See All Plans</a>
+                            <!-- UPDATED: Buttons are now in a container for better layout -->
+                            <div class="mt-6 flex flex-wrap gap-4" id="subscriptionActions">
+                                <a href="linqplus.html" class="btn btn-glass">See All Plans</a>
+                                <!-- Cancel button will be added here by JS if user is subscribed -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -335,11 +319,20 @@
 
     <script>
         function onHeaderLoaded() {
-            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
-            const profileLinkDesktop = document.getElementById('profileLinkDesktop');
-            const navProfilePic = document.getElementById('navProfilePic');
-            const logoutButton = document.getElementById('logoutButton');
-            
+            // Your existing onHeaderLoaded logic for showing profile pic etc. can go here
+            // But we will handle auth state changes in the main DOMContentLoaded listener
+        }
+
+        fetch('header.html')
+            .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data;
+                onHeaderLoaded(); 
+            })
+            .catch(error => console.error('Error fetching header:', error));
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- Firebase Initialization ---
             const firebaseConfig = {
                 apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
                 authDomain: "linq-b27a8.firebaseapp.com",
@@ -353,184 +346,182 @@
             }
             const authInstance = firebase.auth();
             const storageInstance = firebase.storage();
+            const db = firebase.firestore();
+            const functions = firebase.functions(); // Initialize Firebase Functions
 
-            const handleLogout = () => {
-                authInstance.signOut().then(() => {
-                    window.location.href = "login.html";
-                }).catch(error => {
-                    console.error("Logout Error:", error);
-                    alert("Error signing out. Please try again.");
-                });
-            };
-
-            if(logoutButton) logoutButton.addEventListener('click', handleLogout);
-
-            authInstance.onAuthStateChanged(user => {
-                const profileFullNameEl = document.getElementById('profileFullName');
-                const profileEmailEl = document.getElementById('profileEmail');
-                const profileUsernameEl = document.getElementById('profileUsername');
-                const profileJoinedDateEl = document.getElementById('profileJoinedDate');
-                const profileAvatarEl = document.getElementById('profileAvatar');
-                
-                if (user) {
-                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
-                    if (profileLinkDesktop) profileLinkDesktop.classList.remove('hidden');
-
-                    if(navProfilePic) {
-                        if (user.photoURL) navProfilePic.src = user.photoURL;
-                        else if (user.displayName) navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}&font=inter`;
-                        else if (user.email) navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}&font=inter`;
-                        else navProfilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U&font=inter';
-                    }
-
-                    if (profileFullNameEl) profileFullNameEl.textContent = user.displayName || 'N/A';
-                    if (profileEmailEl) profileEmailEl.textContent = user.email || 'N/A';
-                    if (profileUsernameEl) profileUsernameEl.textContent = `@${user.email ? user.email.split('@')[0] : (user.displayName?.replace(/\s+/g, '').toLowerCase() || 'user')}`;
-                    if (profileJoinedDateEl && user.metadata.creationTime) {
-                        profileJoinedDateEl.textContent = new Date(user.metadata.creationTime).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
-                    }
-                    if (profileAvatarEl) {
-                        if (user.photoURL) {
-                            profileAvatarEl.src = user.photoURL;
-                        } else {
-                            let initials = 'U';
-                            if (user.displayName) {
-                                initials = user.displayName.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
-                            } else if (user.email) {
-                                initials = user.email.charAt(0).toUpperCase();
-                            }
-                            profileAvatarEl.src = `https://placehold.co/140x140/1A1A1A/FFFFFF?text=${initials}&font=inter`;
-                        }
-                    }
-
-                } else {
-                    window.location.href = 'login.html';
-                }
-            });
-
-            const changeAvatarButton = document.getElementById("changeAvatarButton");
-            const avatarInput = document.getElementById("avatarInput");
-            if (changeAvatarButton && avatarInput) {
-                changeAvatarButton.addEventListener("click", () => avatarInput.click());
-                avatarInput.addEventListener("change", async (e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    const user = authInstance.currentUser;
-                    if (!user) return;
-                    
-                    const storageRef = storageInstance.ref();
-                    const avatarRef = storageRef.child(`avatars/${user.uid}/${file.name}`);
-                    
-                    try {
-                        const snapshot = await avatarRef.put(file);
-                        const downloadURL = await snapshot.ref.getDownloadURL();
-                        await user.updateProfile({ photoURL: downloadURL });
-                        
-                        document.getElementById('profileAvatar').src = downloadURL;
-                        if(document.getElementById('navProfilePic')) {
-                            document.getElementById('navProfilePic').src = downloadURL;
-                        }
-                    } catch (error) {
-                        console.error("Avatar upload error:", error);
-                        alert("Failed to upload new avatar.");
-                    }
-                });
-            }
-        }
-
-        fetch('header.html')
-            .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
-            .then(data => {
-                document.getElementById('header-placeholder').innerHTML = data;
-                onHeaderLoaded(); 
-            })
-            .catch(error => console.error('Error fetching header:', error));
-
-        document.addEventListener('DOMContentLoaded', function () {
+            // --- UI Elements ---
             const navTabs = document.querySelectorAll('.nav-tab');
             const contentSections = document.querySelectorAll('.content-section');
-            
             const deleteAccountBtn = document.getElementById('deleteAccountBtn');
             const deleteAccountModal = document.getElementById('deleteAccountModal');
             const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
             const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
             const deleteConfirmInput = document.getElementById('deleteConfirmInput');
 
-            function showSection(sectionId) {
-                contentSections.forEach(section => section.classList.remove('active-section'));
-                const targetSection = document.getElementById(sectionId);
-                if (targetSection) {
-                     targetSection.classList.add('active-section');
+            // --- Auth State Change Handler ---
+            authInstance.onAuthStateChanged(user => {
+                const logoutButton = document.getElementById('logoutButton');
+                if (logoutButton) logoutButton.addEventListener('click', () => {
+                     authInstance.signOut().then(() => window.location.href = "login.html");
+                });
+                
+                if (user) {
+                    // --- User is logged in, populate profile and subscription info ---
+                    populateUserProfile(user);
+                    checkSubscriptionStatus(user);
+                    setupAvatarUpload(user, authInstance, storageInstance);
                 } else {
-                    document.getElementById('profile')?.classList.add('active-section');
+                    // --- User is not logged in, redirect ---
+                    window.location.href = 'login.html';
                 }
+            });
 
-                navTabs.forEach(link => {
-                    link.classList.remove('active-link');
-                    if (link.getAttribute('href') === `#${sectionId}`) {
-                        link.classList.add('active-link');
+            // --- Functions ---
+            function populateUserProfile(user) {
+                document.getElementById('profileFullName').textContent = user.displayName || 'N/A';
+                document.getElementById('profileEmail').textContent = user.email || 'N/A';
+                document.getElementById('profileUsername').textContent = `@${user.email ? user.email.split('@')[0] : (user.displayName?.replace(/\s+/g, '').toLowerCase() || 'user')}`;
+                if (user.metadata.creationTime) {
+                    document.getElementById('profileJoinedDate').textContent = new Date(user.metadata.creationTime).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+                }
+                const profileAvatarEl = document.getElementById('profileAvatar');
+                if (user.photoURL) {
+                    profileAvatarEl.src = user.photoURL;
+                } else {
+                    let initials = 'U';
+                    if (user.displayName) initials = user.displayName.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+                    else if (user.email) initials = user.email.charAt(0).toUpperCase();
+                    profileAvatarEl.src = `https://placehold.co/140x140/1A1A1A/FFFFFF?text=${initials}&font=inter`;
+                }
+            }
+
+            function checkSubscriptionStatus(user) {
+                const userDocRef = db.collection('users').doc(user.uid);
+                userDocRef.get().then(doc => {
+                    const planNameEl = document.getElementById('current-plan-name');
+                    const statusTextEl = document.getElementById('subscription-status-text');
+                    const subscriptionActionsEl = document.getElementById('subscriptionActions');
+                    
+                    // Clear any existing cancel button
+                    const existingCancelBtn = document.getElementById('cancelSubscriptionBtn');
+                    if (existingCancelBtn) existingCancelBtn.remove();
+                    
+                    if (doc.exists && doc.data().isSubscribed) {
+                        const userData = doc.data();
+                        const planType = userData.subscriptionType || 'Premium';
+                        planNameEl.textContent = `Linq+ ${planType.charAt(0).toUpperCase() + planType.slice(1)}`;
+                        
+                        const endDate = userData.subscriptionEndDate.toDate();
+                        statusTextEl.textContent = `Your subscription is active until ${endDate.toLocaleDateString()}.`;
+                        
+                        // Create and add the cancel button
+                        const cancelBtn = document.createElement('button');
+                        cancelBtn.id = 'cancelSubscriptionBtn';
+                        cancelBtn.className = 'btn btn-danger';
+                        cancelBtn.textContent = 'Cancel Subscription';
+                        subscriptionActionsEl.appendChild(cancelBtn);
+                        
+                        // Add event listener to the new button
+                        cancelBtn.addEventListener('click', handleCancelSubscription);
+                    } else {
+                        planNameEl.textContent = 'Free Plan';
+                        statusTextEl.textContent = 'You have access to basic news and community features.';
                     }
+                }).catch(error => {
+                    console.error("Error getting user subscription data:", error);
                 });
             }
 
+            function handleCancelSubscription() {
+                if (confirm("Are you sure you want to cancel your Linq+ subscription? This will revoke your premium access immediately.")) {
+                    const cancelSubscriptionFunction = functions.httpsCallable('cancelSubscription');
+                    
+                    cancelSubscriptionFunction().then(result => {
+                        alert(result.data.message);
+                        window.location.reload(); // Reload to reflect changes
+                    }).catch(error => {
+                        console.error("Error canceling subscription:", error);
+                        alert("An error occurred: " + error.message);
+                    });
+                }
+            }
+            
+            function setupAvatarUpload(user, auth, storage) {
+                const changeAvatarButton = document.getElementById("changeAvatarButton");
+                const avatarInput = document.getElementById("avatarInput");
+                if (changeAvatarButton && avatarInput) {
+                    changeAvatarButton.addEventListener("click", () => avatarInput.click());
+                    avatarInput.addEventListener("change", async (e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        
+                        const storageRef = storage.ref();
+                        const avatarRef = storageRef.child(`avatars/${user.uid}/${file.name}`);
+                        
+                        try {
+                            const snapshot = await avatarRef.put(file);
+                            const downloadURL = await snapshot.ref.getDownloadURL();
+                            await user.updateProfile({ photoURL: downloadURL });
+                            
+                            document.getElementById('profileAvatar').src = downloadURL;
+                        } catch (error) {
+                            console.error("Avatar upload error:", error);
+                            alert("Failed to upload new avatar.");
+                        }
+                    });
+                }
+            }
+
+            // --- Tab Navigation and Modal Logic (Unchanged) ---
+            function showSection(sectionId) {
+                contentSections.forEach(section => section.classList.remove('active-section'));
+                const targetSection = document.getElementById(sectionId);
+                if (targetSection) targetSection.classList.add('active-section');
+                else document.getElementById('profile')?.classList.add('active-section');
+                navTabs.forEach(link => {
+                    link.classList.remove('active-link');
+                    if (link.getAttribute('href') === `#${sectionId}`) link.classList.add('active-link');
+                });
+            }
             navTabs.forEach(link => {
-                link.addEventListener('click', function (e) {
+                link.addEventListener('click', e => {
                     e.preventDefault();
-                    const targetSectionId = this.getAttribute('href')?.substring(1);
+                    const targetSectionId = link.getAttribute('href')?.substring(1);
                     if (targetSectionId) {
                         showSection(targetSectionId);
                         window.history.pushState(null, '', `#${targetSectionId}`);
                     }
                 });
             });
-
             function activateSectionFromHash() {
                 let hash = window.location.hash.substring(1);
                 const validHashes = Array.from(navTabs).map(t => t.getAttribute('href').substring(1));
-                if (!hash || !validHashes.includes(hash)) { 
-                    hash = 'profile';
-                }
+                if (!hash || !validHashes.includes(hash)) hash = 'profile';
                 showSection(hash);
             }
-
             activateSectionFromHash();
             window.addEventListener('hashchange', activateSectionFromHash);
             
-            if(deleteAccountBtn) {
-                deleteAccountBtn.addEventListener('click', () => {
-                    if(deleteAccountModal) deleteAccountModal.style.display = 'flex';
-                });
-            }
-
-            if(cancelDeleteBtn) {
-                cancelDeleteBtn.addEventListener('click', () => {
-                    if(deleteAccountModal) deleteAccountModal.style.display = 'none';
-                    if(deleteConfirmInput) deleteConfirmInput.value = '';
-                    if(confirmDeleteBtn) confirmDeleteBtn.disabled = true;
-                });
-            }
-            
-            if(deleteConfirmInput) {
-                deleteConfirmInput.addEventListener('input', (e) => {
-                    if(confirmDeleteBtn) confirmDeleteBtn.disabled = e.target.value !== 'DELETE';
-                });
-            }
-
-            if(confirmDeleteBtn) {
-                confirmDeleteBtn.addEventListener('click', async () => {
-                    const user = firebase.auth().currentUser;
-                    if(user) {
-                        try {
-                            await user.delete();
-                            alert("Account deleted successfully.");
-                            window.location.href = "index.html";
-                        } catch (error) {
-                            console.error("Error deleting account:", error);
-                            alert("Error deleting account: " + error.message + ". Please re-login and try again if necessary.");
-                        }
+            if (deleteAccountBtn) deleteAccountBtn.addEventListener('click', () => deleteAccountModal.style.display = 'flex');
+            if (cancelDeleteBtn) cancelDeleteBtn.addEventListener('click', () => {
+                deleteAccountModal.style.display = 'none';
+                deleteConfirmInput.value = '';
+                confirmDeleteBtn.disabled = true;
+            });
+            if (deleteConfirmInput) deleteConfirmInput.addEventListener('input', e => confirmDeleteBtn.disabled = e.target.value !== 'DELETE');
+            if (confirmDeleteBtn) confirmDeleteBtn.addEventListener('click', async () => {
+                const user = authInstance.currentUser;
+                if(user) {
+                    try {
+                        await user.delete();
+                        alert("Account deleted successfully.");
+                        window.location.href = "index.html";
+                    } catch (error) {
+                        console.error("Error deleting account:", error);
+                        alert("Error deleting account: " + error.message);
                     }
-                });
-            }
+                }
+            });
         });
     </script>
 </body>
