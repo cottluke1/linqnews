@@ -12,7 +12,6 @@
     <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <!-- ADDED: Firestore library to check subscription status -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <style>
         /* Base styles */
@@ -142,7 +141,6 @@
         .message-bubble.ai .message-timestamp { color: #718096; }
         .message-bubble.user .message-timestamp { text-align: right; }
         
-        /* ADDED: Upgrade button style */
         .upgrade-button {
             display: inline-block;
             background-color: #00BFFF;
@@ -157,7 +155,6 @@
         .upgrade-button:hover {
             background-color: #00A9E0;
         }
-
 
         /* Typing Indicator */
         .typing-indicator { padding: 1rem; }
@@ -206,7 +203,6 @@
         }
         .chat-input:focus { outline: none; }
         .chat-input::placeholder { color: #555; }
-        /* ADDED: Disabled state for input */
         .chat-input:disabled {
             cursor: not-allowed;
             background-color: #2a2a2a;
@@ -230,7 +226,6 @@
             transform: scale(1.1);
             box-shadow: 0 6px 15px rgba(0, 150, 255, 0.4);
         }
-        /* ADDED: Disabled state for button */
         .send-button:disabled {
             background: #555;
             cursor: not-allowed;
@@ -270,9 +265,6 @@
             box-shadow: 0 4px 10px rgba(0, 191, 255, 0.2);
         }
         
-        @media (max-width: 768px) {
-            /* Styles for mobile responsiveness */
-        }
     </style>
 </head>
 <body class="antialiased">
@@ -318,7 +310,7 @@
     
     <script>
         // --- Global State ---
-        let isSubscribed = false; // Default to not subscribed
+        let isSubscribed = false; 
 
         // --- Firebase Initialization ---
         const firebaseConfig = {
@@ -335,18 +327,27 @@
         const authInstance = firebase.auth();
         const db = firebase.firestore();
 
-        // --- Function to Initialize Header and Auth Logic ---
-        function initializeHeaderAndAuth() {
-            // This function remains the same as your previous version
+        // --- Header and Layout Management ---
+        function adjustMainContentPadding() {
+            const header = document.querySelector('#header-placeholder nav.fixed');
+            const chatContainer = document.querySelector('.chat-container-wrapper');
+            if (header && chatContainer) {
+                const headerHeight = header.offsetHeight;
+                chatContainer.style.paddingTop = `${headerHeight}px`;
+            }
         }
 
         fetch('header.html') 
             .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
             .then(data => {
                 document.getElementById('header-placeholder').innerHTML = data;
-                // Full header auth logic is now inside the onAuthStateChanged listener
+                // Defer padding adjustment until next animation frame to ensure header is rendered
+                requestAnimationFrame(adjustMainContentPadding); 
             })
             .catch(error => console.error('Error fetching header:', error));
+        
+        window.addEventListener('resize', adjustMainContentPadding);
+
 
         // --- LinqAI Page Specific JavaScript ---
         const chatWindow = document.getElementById('chat-window');
@@ -357,24 +358,17 @@
         
         let conversationHistory = [{
              role: 'system',
-             content: 'You are Linq AI, a helpful and knowledgeable energy analyst...'
+             content: 'You are Linq AI, a helpful and knowledgeable energy analyst. Provide concise, informative answers related to the energy sector, including oil, gas, renewables, and market trends. Keep responses to a few sentences unless asked for more detail.'
         }];
 
         // --- Authentication and Subscription Check ---
         authInstance.onAuthStateChanged(async (user) => {
-            // You can move your header logic from initializeHeaderAndAuth here
-            // to ensure it runs every time auth state changes.
-
             if (user) {
                 try {
                     const userDoc = await db.collection('users').doc(user.uid).get();
                     if (userDoc.exists && userDoc.data().isSubscribed) {
                         const subEndDate = userDoc.data().subscriptionEndDate.toDate();
-                        if (subEndDate > new Date()) {
-                            isSubscribed = true;
-                        } else {
-                            isSubscribed = false;
-                        }
+                        isSubscribed = subEndDate > new Date();
                     } else {
                         isSubscribed = false;
                     }
@@ -385,70 +379,86 @@
             } else {
                 isSubscribed = false; // Not subscribed if not logged in
             }
+            
+            // Re-enable input if user is subscribed, in case it was disabled before
+            if (isSubscribed) {
+                 chatInput.disabled = false;
+                 sendButton.disabled = false;
+            }
         });
 
-
+        // --- Chat UI Functions ---
         function addMessageToChat(message, type, timestamp, isHtml = false) {
             const messageBubble = document.createElement('div');
             messageBubble.classList.add('message-bubble', type);
-
-            let contentHTML = '';
-            if (type === 'ai') {
-                contentHTML += `<div class="ai-icon"><i class="fas fa-brain fa-lg"></i></div>`;
-            }
-            
-            if (isHtml) {
-                contentHTML += `<div class="message-content">${message}<span class="message-timestamp">${timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span></div>`;
-            } else {
-                const sanitizedMessage = message.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                const formattedMessage = sanitizedMessage.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                contentHTML += `<div class="message-content">${formattedMessage}<span class="message-timestamp">${timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span></div>`;
-            }
-            
+            let contentHTML = (type === 'ai') ? `<div class="ai-icon"><i class="fas fa-brain fa-lg"></i></div>` : '';
+            const messageText = isHtml ? message : message.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            contentHTML += `<div class="message-content">${messageText}<span class="message-timestamp">${timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span></div>`;
             messageBubble.innerHTML = contentHTML;
             chatWindow.appendChild(messageBubble);
             chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
         }
 
         function showTypingIndicator() {
-            // Same as before
-        }
-        function removeTypingIndicator() {
-            // Same as before
-        }
-        
-        async function getOpenAIResponse(userMessage) {
-            // Same as before
+            if (document.querySelector('.typing-indicator')) return;
+            const typingIndicator = document.createElement('div');
+            typingIndicator.classList.add('message-bubble', 'ai', 'typing-indicator');
+            typingIndicator.innerHTML = `<div class="ai-icon"><i class="fas fa-brain fa-lg"></i></div><div class="message-content"><span></span><span></span><span></span></div>`;
+            chatWindow.appendChild(typingIndicator);
+            chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
         }
 
+        function removeTypingIndicator() {
+            const indicator = document.querySelector('.typing-indicator');
+            if (indicator) indicator.remove();
+        }
+        
+        // --- FIXED: OpenAI Call ---
+        async function getOpenAIResponse(userMessage) {
+            conversationHistory.push({ role: 'user', content: userMessage });
+            const functionUrl = 'https://openaiproxy-j3cfx3cila-uc.a.run.app';
+            try {
+                const response = await fetch(functionUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ conversationHistory: conversationHistory })
+                });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Unknown error from proxy function.');
+                }
+                const data = await response.json();
+                const aiResponse = data.response;
+                conversationHistory.push({ role: 'assistant', content: aiResponse });
+                return aiResponse;
+            } catch (error) {
+                console.error('Error calling proxy function:', error);
+                return `Sorry, there was a problem reaching the AI service: ${error.message}`;
+            }
+        }
+
+        // --- Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
             chatForm.addEventListener('submit', async function(event) {
                 event.preventDefault();
-
-                // --- UPDATED: Subscription Check Logic ---
+                
                 if (!isSubscribed) {
                     const upgradeMessage = `Linq AI is a premium feature. To ask questions and get detailed energy analysis, please upgrade your account.<br><a href="linqplus.html" class="upgrade-button">Upgrade to Linq+</a>`;
-                    addMessageToChat(upgradeMessage, 'ai', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), true); // Pass true for isHtml
-                    
-                    // Disable input and button
+                    addMessageToChat(upgradeMessage, 'ai', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), true);
                     chatInput.disabled = true;
                     sendButton.disabled = true;
                     suggestedQuestionsContainer.style.display = 'none';
-                    return; // Stop further execution
+                    return;
                 }
 
                 const userMessage = chatInput.value.trim();
                 if (userMessage) {
-                    if (suggestedQuestionsContainer.style.display !== 'none') {
-                        suggestedQuestionsContainer.style.display = 'none';
-                    }
+                    suggestedQuestionsContainer.style.display = 'none';
                     addMessageToChat(userMessage, 'user');
                     chatInput.value = '';
                     chatInput.focus();
                     showTypingIndicator();
-
                     const aiResponse = await getOpenAIResponse(userMessage);
-
                     removeTypingIndicator();
                     addMessageToChat(aiResponse, 'ai');
                 }
