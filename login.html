@@ -220,6 +220,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
         import { GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js"; //
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", //
@@ -232,10 +233,25 @@
 
         const app = initializeApp(firebaseConfig); //
         const auth = getAuth(app); //
+        const db = getFirestore(app);
 
-        onAuthStateChanged(auth, (user) => { //
+        // Helper function to create user document if it doesn't exist
+        async function ensureUserDocument(user) {
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
+            if (!userSnap.exists()) {
+                await setDoc(userRef, {
+                    email: user.email,
+                    displayName: user.displayName || null,
+                    createdAt: new Date().toISOString()
+                });
+            }
+        }
+
+        onAuthStateChanged(auth, async (user) => { //
           const fromLogin = window.location.pathname.includes("login");
           if (user && fromLogin) {
+            await ensureUserDocument(user);
             window.location.href = "index.html"; // Redirect to index or a profile page
           }
         });
@@ -247,7 +263,8 @@
             errorMessage.style.display = "none"; // Hide error message initially
 
             try {
-                await signInWithEmailAndPassword(auth, email, password); //
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                await ensureUserDocument(userCredential.user);
                 window.location.href = "index.html"; // Or profile.html
             } catch (error) {
                 errorMessage.style.display = "block";
@@ -299,6 +316,9 @@
         
                 // Force reload of user object so displayName is available everywhere
                 await auth.currentUser.reload();
+                
+                // Create user document in Firestore
+                await ensureUserDocument(user);
         
                 window.location.href = "index.html"; // Redirect after successful signup
             } catch (error) {
@@ -323,7 +343,8 @@
         errorMessage.style.display = "none";
     
         try {
-            await signInWithPopup(auth, provider);
+            const userCredential = await signInWithPopup(auth, provider);
+            await ensureUserDocument(userCredential.user);
             window.location.href = "index.html"; // redirect on success
         } catch (error) {
             errorMessage.style.display = "block";
