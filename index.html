@@ -9,17 +9,20 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <!-- ADDED: Firestore library to check subscription status -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     
+    <!-- Article Data Scripts -->
     <script src="source_images.js?v=20250612v2" defer></script>
     <script src="articles_present.js?v=20250612v2" defer></script>
     <script src="articles_premium.js?v=20250612v2" defer></script>
-    <!-- Referencing the potentially updated past articles file -->
     <script src="articles_past.js?v=20250612v4" defer></script>
 
     <style>
-        /* Custom base styles */
+        /* Styles remain the same as your original index.html */
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
@@ -248,18 +251,9 @@
             </div>
             <!-- Right: Login/Profile -->
             <div class="flex items-center space-x-3">
-                <!-- The login button is now hidden by default to prevent flashing -->
-                <a href="login.html" id="authLinkDesktopLogin"
-                    class="hidden nav-link text-sm nav-link-button text-white bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded transition">
-                    Login
-                </a>
-                <!-- The profile link is hidden by default and will be shown by the main page's script -->
+                <a href="login.html" id="authLinkDesktopLogin" class="hidden nav-link text-sm nav-link-button text-white bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded transition">Login</a>
                 <a href="profile.html" id="profileLinkDesktop" class="hidden" title="My Profile">
-                    <img id="navProfilePic"
-                        src="https://placehold.co/40x40/2C2F33/EAEAEA?text=U"
-                        alt="User"
-                        class="rounded-full w-9 h-9 object-cover"
-                        onerror="this.src='https://placehold.co/40x40/2C2F33/EAEAEA?text=U';">
+                    <img id="navProfilePic" src="https://placehold.co/40x40/2C2F33/EAEAEA?text=U" alt="User" class="rounded-full w-9 h-9 object-cover" onerror="this.src='https://placehold.co/40x40/2C2F33/EAEAEA?text=U';">
                 </a>
             </div>
         </div>
@@ -323,7 +317,8 @@
 
     <script>
         // --- CONFIGURATION ---
-        const isSubscribed = false; 
+        // UPDATED: isSubscribed is now a let variable and determined dynamically.
+        let isSubscribed = false; 
         const FINNHUB_API_KEY = 'cprdj2pr01qjjs4st2e0cprdj2pr01qjjs4st2eg'; 
         const DISPLAY_SYMBOLS = {'OANDA:USD_JPY':'JPY','OANDA:USD_CNY':'CNY','OANDA:EUR_USD':'EUR','OANDA:GBP_USD':'GBP','CL1:COM':'WTI CRUDE','CO1:COM':'BRENT CRUDE','RB1:COM':'RBOB GASOLINE','HO1:COM':'HEATING OIL','NG1:COM':'NATURAL GAS','TMUBMUSD02Y':'US 2YR YIELD','TMUBMUSD05Y':'US 5YR YIELD','TMUBMUSD10Y':'US 10YR YIELD','^GSPC':'S&P 500','^DJI':'DOW 30','^IXIC':'NASDAQ','DXY':'US DOLLAR IDX'};
         const TICKER_ITEMS_TO_SHOW = ['OANDA:EUR_USD','OANDA:GBP_USD','OANDA:USD_JPY','OANDA:USD_CNY','CO1:COM','CL1:COM','NG1:COM','RB1:COM','HO1:COM','TMUBMUSD02Y','TMUBMUSD05Y','TMUBMUSD10Y','^GSPC','^DJI','^IXIC','DXY'];
@@ -331,7 +326,7 @@
         let allDaysData = [];
 		let favorites = JSON.parse(localStorage.getItem('linqFavoritesV2')) || [];
 
-        // Initialize Firebase
+        // --- Firebase Initialization ---
         const firebaseConfig = {
             apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
             authDomain: "linq-b27a8.firebaseapp.com",
@@ -341,6 +336,8 @@
             appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
         };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        // ADDED: Firestore instance
+        const db = firebase.firestore();
 
         // --- DOM ELEMENTS ---
         const newsGrid = document.getElementById('newsGrid');
@@ -352,8 +349,8 @@
 
         // --- MAIN INITIALIZATION LOGIC ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Handle authentication state
-            firebase.auth().onAuthStateChanged((user) => {
+            // Handle authentication state and check for subscription
+            firebase.auth().onAuthStateChanged(async (user) => {
                 const authLink = document.getElementById('authLinkDesktopLogin');
                 const profileLink = document.getElementById('profileLinkDesktop');
                 const profilePic = document.getElementById('navProfilePic');
@@ -362,45 +359,50 @@
                     // User is signed in
                     authLink.classList.add('hidden');
                     profileLink.classList.remove('hidden');
-                    if (user.photoURL) {
-                        profilePic.src = user.photoURL;
+                    if (user.photoURL) profilePic.src = user.photoURL;
+
+                    // --- ADDED: Check Firestore for subscription status ---
+                    try {
+                        const userDoc = await db.collection('users').doc(user.uid).get();
+                        if (userDoc.exists && userDoc.data().isSubscribed) {
+                            // Check if the subscription is still active
+                            const subEndDate = userDoc.data().subscriptionEndDate.toDate();
+                            if (subEndDate > new Date()) {
+                                isSubscribed = true;
+                            } else {
+                                isSubscribed = false;
+                                // Optional: Update the database to reflect expired subscription
+                                await db.collection('users').doc(user.uid).update({ isSubscribed: false });
+                            }
+                        } else {
+                            isSubscribed = false;
+                        }
+                    } catch (error) {
+                        console.error("Error checking subscription status:", error);
+                        isSubscribed = false; // Default to not subscribed on error
                     }
                 } else {
                     // User is signed out
                     authLink.classList.remove('hidden');
                     profileLink.classList.add('hidden');
+                    isSubscribed = false; // Not subscribed if not logged in
                 }
+                
+                // --- Now that we know the subscription status, initialize the page content ---
+                initializeAppLogic();
             });
 
-            // [MODIFIED] Wait for external article scripts to load before initializing the app.
-            // This prevents a race condition where the app tries to access article data before it's available.
-            let tries = 0;
-            const dataLoadCheck = setInterval(() => {
-                // We need present articles to be loaded, and we'll handle past articles being undefined
-                if (window.presentDayArticles && Array.isArray(window.presentDayArticles)) {
-                    clearInterval(dataLoadCheck);
-                    console.log("Loaded presentDayArticles:", window.presentDayArticles);
-                    initializeAppLogic(); // Data is ready, so we can run the main app logic.
-                } else if (++tries > 50) { // Fail after 5 seconds to prevent an infinite loop.
-                    clearInterval(dataLoadCheck);
-                    console.error("Article data scripts failed to load in time.");
-                    if(document.getElementById('newsGrid')) {
-                        document.getElementById('newsGrid').innerHTML = '<p class="text-center text-red-500 font-bold">Error: Critical article data failed to load. Please check the browser console for script errors and refresh the page.</p>';
-                    }
-                }
-            }, 100);
+            // Initial call to update ticker banner regardless of login status
+            updateTickerBanner();
         });
         
-        // This function now runs ONLY after we've confirmed the data is loaded.
+        // --- This function now runs AFTER auth and subscription check ---
         function initializeAppLogic() { 
-            const presentArticles = Array.isArray(window.presentDayArticles) ? window.presentDayArticles : [];
-            const premiumArticles = Array.isArray(window.premiumArticles) ? window.premiumArticles : [];
+            const presentArticles = window.presentDayArticles || [];
+            const premiumArticles = window.premiumArticles || [];
             const todayArticles = [...presentArticles, ...premiumArticles];
             
-            // This correctly combines today's articles with the array of past day articles.
-            // allDaysData will be structured like: [ [page1_articles], [page2_articles], ... ]
-            // where page 2 corresponds to the first day in `pastArticles`, page 3 to the second, etc.
-            allDaysData = [todayArticles].concat(Array.isArray(window.pastArticles) ? window.pastArticles : []);
+            allDaysData = [todayArticles].concat(window.pastArticles || []);
             
             displayArticlesForPage(currentPage);
             setupPagination();
@@ -414,9 +416,9 @@
             window.addEventListener('resize', adjustLayoutForHeader);
             
             adjustLayoutForHeader();
-            updateTickerBanner();
         }
 
+        // --- Other functions remain largely the same, but `displayArticlesForPage` will now use the correct `isSubscribed` value ---
         function adjustLayoutForHeader() {
             const header = document.querySelector('nav.fixed');
             const tickerBanner = document.querySelector('.ticker-banner');
@@ -429,6 +431,7 @@
         }
         
         async function updateTickerBanner() {
+            // Function content is unchanged
             const tickerContent = document.getElementById('tickerContent');
             if (!tickerContent || !FINNHUB_API_KEY) return;
             let contentHTML = '';
@@ -484,6 +487,7 @@
                 newsGrid.innerHTML = `<p class="text-center text-gray-500 col-span-full">No articles found for ${pageInfo.title}.</p>`; 
             } else {
                 articlesForDay.forEach(article => { 
+                    // UPDATED: Locking logic now correctly uses the dynamic isSubscribed variable
                     const isPremiumArticle = article.premium && !isSubscribed;
                     const isPastPage = page > 1 && !isSubscribed;
                     const shouldBeLocked = isPremiumArticle || isPastPage;
@@ -536,22 +540,18 @@
             updateFavoriteIcons();
         } 
 
-        // [MODIFIED] This function implements the specific pagination logic based on the user's images and request.
-		function setupPagination() {
+        // --- All other functions (pagination, filters, favorites, modals) remain unchanged ---
+        function setupPagination() {
             if (!paginationContainer) return;
             paginationContainer.innerHTML = '';
             const totalPages = 30;
-            const page = currentPage; // Use a shorter alias for the current page
-
-            // Helper function to create a button element
+            const page = currentPage;
             const createButton = (text, pageNumber, isDisabled = false, isCurrent = false) => {
                 const btn = document.createElement('button');
                 btn.className = 'pagination-btn';
                 btn.innerHTML = text;
                 btn.disabled = isDisabled;
-                if (isCurrent) {
-                    btn.classList.add('active');
-                }
+                if (isCurrent) btn.classList.add('active');
                 btn.addEventListener('click', () => {
                     if (pageNumber) {
                         displayArticlesForPage(pageNumber);
@@ -561,55 +561,29 @@
                 });
                 return btn;
             };
-
-            // Helper function to create an ellipsis "..." element
             const createEllipsis = () => {
                 const ellipsis = document.createElement('span');
                 ellipsis.className = 'pagination-ellipsis';
                 ellipsis.textContent = '...';
                 return ellipsis;
             }
-
-            // --- Previous Arrow Button ---
             paginationContainer.appendChild(createButton('&larr;', page - 1, page === 1));
-
-            // --- Page Number Logic ---
             if (totalPages <= 7) { 
-                // Simple case: If there are 7 or fewer pages, show all of them without ellipses
                 for (let i = 1; i <= totalPages; i++) {
                     paginationContainer.appendChild(createButton(i, i, false, i === page));
                 }
             } else {
-                // Complex case: Use ellipses for a large number of pages
                 let pagesToShow = [];
-                
-                // Case 1: Near the beginning (pages 1-4) -> Show 1, 2, 3, 4, 5, ..., 30
-                if (page < 5) {
-                    pagesToShow = [1, 2, 3, 4, 5, '...', totalPages];
-                } 
-                // Case 2: Near the end (pages 27-30) -> Show 1, ..., 26, 27, 28, 29, 30
-                else if (page > totalPages - 4) {
-                    pagesToShow = [1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
-                }
-                // Case 3: In the middle -> Show 1, ..., current-1, current, current+1, ..., 30
-                else {
-                    pagesToShow = [1, '...', page - 1, page, page + 1, '...', totalPages];
-                }
-
-                // This logic correctly renders the pages and preserves both "..." where needed for middle pages.
+                if (page < 5) pagesToShow = [1, 2, 3, 4, 5, '...', totalPages];
+                else if (page > totalPages - 4) pagesToShow = [1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+                else pagesToShow = [1, '...', page - 1, page, page + 1, '...', totalPages];
                 pagesToShow.forEach(p => {
-                    if (p === '...') {
-                        paginationContainer.appendChild(createEllipsis());
-                    } else {
-                        paginationContainer.appendChild(createButton(p, p, false, p === page));
-                    }
+                    if (p === '...') paginationContainer.appendChild(createEllipsis());
+                    else paginationContainer.appendChild(createButton(p, p, false, p === page));
                 });
             }
-
-            // --- Next Arrow Button ---
             paginationContainer.appendChild(createButton('&rarr;', page + 1, page === totalPages));
         }
-
 
         function handleCategoryFilter(e) {
             const button = e.target.closest('.filter-button');
@@ -621,19 +595,14 @@
         
         function handleFavoriteClick(e) {
             const favButton = e.target.closest('.favorite-btn');
-            if (favButton) {
-                toggleFavorite(favButton.dataset.id);
-            }
+            if (favButton) toggleFavorite(favButton.dataset.id);
         }
 
         function toggleFavorite(articleId) {
             const idStr = String(articleId);
             const index = favorites.indexOf(idStr);
-            if (index > -1) {
-                favorites.splice(index, 1);
-            } else {
-                favorites.push(idStr);
-            }
+            if (index > -1) favorites.splice(index, 1);
+            else favorites.push(idStr);
             localStorage.setItem('linqFavoritesV2', JSON.stringify(favorites));
             updateFavoriteIcons();
         }
