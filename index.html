@@ -377,14 +377,15 @@
             let tries = 0;
             const dataLoadCheck = setInterval(() => {
                 // We need present articles to be loaded, and we'll handle past articles being undefined
-                if (window.presentDayArticles) {
+                if (window.presentDayArticles && Array.isArray(window.presentDayArticles)) {
                     clearInterval(dataLoadCheck);
+                    console.log("Loaded presentDayArticles:", window.presentDayArticles);
                     initializeAppLogic(); // Data is ready, so we can run the main app logic.
                 } else if (++tries > 50) { // Fail after 5 seconds to prevent an infinite loop.
                     clearInterval(dataLoadCheck);
                     console.error("Article data scripts failed to load in time.");
                     if(document.getElementById('newsGrid')) {
-                        document.getElementById('newsGrid').innerHTML = '<p class="text-center text-red-500 font-bold">Error: Critical article data failed to load. Please refresh the page.</p>';
+                        document.getElementById('newsGrid').innerHTML = '<p class="text-center text-red-500 font-bold">Error: Critical article data failed to load. Please check the browser console for script errors and refresh the page.</p>';
                     }
                 }
             }, 100);
