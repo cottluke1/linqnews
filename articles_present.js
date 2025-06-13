@@ -1,5 +1,5 @@
 window.presentDayArticles = [
-  {
+  [
     id: "p1",
     category: "Crude Oil",
     title: "Oil Prices Inch Higher on Supply Tightness and OPEC+ Cuts",
