@@ -88,11 +88,12 @@
         }
         .news-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.2); border-color: #5a6268; }
         
+        /* UPDATED: Changed from gold to a platinum blue color */
         .news-card.premium-highlight:not(.locked) {
-             border-color: rgba(255, 215, 0, 0.6); /* Gold for premium */
+            border-color: rgba(0, 191, 255, 0.7); /* Platinum Blue Border */
         }
         .news-card.premium-highlight:not(.locked):hover {
-            box-shadow: 0 12px 30px -10px rgba(255, 215, 0, 0.25);
+            box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.25);
         }
         
         .news-card.locked .news-card-content { 
@@ -299,15 +300,17 @@
     <div id="privacyContent" class="terms-privacy-content"><span class="close-btn" onclick="closePrivacyModal()">×</span><h2>Privacy Policy</h2><p>At Linq, we are committed... (Your full privacy policy content here)</p></div>
 
     <script>
-        // --- CONFIGURATION ---
+        // --- CONFIGURATION & GLOBAL STATE ---
         let isSubscribed = false; 
+        let favorites = []; 
+        let currentPage = 1;
+        let allDaysData = [];
+        let unsubscribeUserListener = null; // To hold the listener function
+
         const FINNHUB_API_KEY = 'cprdj2pr01qjjs4st2e0cprdj2pr01qjjs4st2eg'; 
         const DISPLAY_SYMBOLS = {'OANDA:USD_JPY':'JPY','OANDA:USD_CNY':'CNY','OANDA:EUR_USD':'EUR','OANDA:GBP_USD':'GBP','CL1:COM':'WTI CRUDE','CO1:COM':'BRENT CRUDE','RB1:COM':'RBOB GASOLINE','HO1:COM':'HEATING OIL','NG1:COM':'NATURAL GAS','TMUBMUSD02Y':'US 2YR YIELD','TMUBMUSD05Y':'US 5YR YIELD','TMUBMUSD10Y':'US 10YR YIELD','^GSPC':'S&P 500','^DJI':'DOW 30','^IXIC':'NASDAQ','DXY':'US DOLLAR IDX'};
         const TICKER_ITEMS_TO_SHOW = ['OANDA:EUR_USD','OANDA:GBP_USD','OANDA:USD_JPY','OANDA:USD_CNY','CO1:COM','CL1:COM','NG1:COM','RB1:COM','HO1:COM','TMUBMUSD02Y','TMUBMUSD05Y','TMUBMUSD10Y','^GSPC','^DJI','^IXIC','DXY'];
-        let currentPage = 1;
-        let allDaysData = [];
-        let favorites = []; 
-
+        
         // --- Firebase Initialization ---
         const firebaseConfig = {
             apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
@@ -338,69 +341,68 @@
                     headerPlaceholder.innerHTML = data;
                     auth.onAuthStateChanged(handleAuthStateChange);
                 }).catch(error => console.error('Error fetching header:', error));
+            
+            // Set up one-time event listeners
+            categoryList.addEventListener('click', handleCategoryFilter);
+            searchInput.addEventListener('input', () => displayArticlesForPage(1));
+            newsGrid.addEventListener('click', handleFavoriteClick);
+            window.addEventListener('resize', adjustLayoutForHeader);
 
             updateTickerBanner();
         });
         
-        async function handleAuthStateChange(user) {
+        function handleAuthStateChange(user) {
             const authLink = document.getElementById('authLinkDesktopLogin');
             const profileLink = document.getElementById('profileLinkDesktop');
             const profilePic = document.getElementById('navProfilePic');
             
+            // Detach any previous listener to prevent memory leaks on user change
+            if (unsubscribeUserListener) {
+                unsubscribeUserListener();
+                unsubscribeUserListener = null;
+            }
+
             if (user) {
                 if(authLink) authLink.classList.add('hidden');
                 if(profileLink) profileLink.classList.remove('hidden');
                 
                 if (profilePic) {
-                    if (user.photoURL) {
-                        profilePic.src = user.photoURL;
-                    } else if (user.displayName) {
-                        profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
-                    } else if (user.email) {
-                        profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
-                    } else {
-                        profilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
-                    }
+                    if (user.photoURL) profilePic.src = user.photoURL;
+                    else if (user.displayName) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
+                    else if (user.email) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
+                    else profilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
                 }
 
-                try {
-                    const userDoc = await db.collection('users').doc(user.uid).get();
-                    isSubscribed = userDoc.exists && userDoc.data().isSubscribed === true;
-                    favorites = userDoc.exists ? userDoc.data().bookmarks || [] : [];
-                } catch (error) {
-                    console.error("Error checking user status:", error);
+                // **UPDATED**: Use onSnapshot for real-time updates
+                unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
+                    console.log("Real-time user data updated.");
+                    isSubscribed = doc.exists && doc.data().isSubscribed === true;
+                    favorites = doc.exists ? doc.data().bookmarks || [] : [];
+                    initializeAppLogic(); // Re-initialize the app logic with new user status
+                }, error => {
+                    console.error("Error with real-time listener:", error);
                     isSubscribed = false;
                     favorites = [];
-                }
-            } else {
+                    initializeAppLogic();
+                });
+
+            } else { // User is logged out
                 if(authLink) authLink.classList.remove('hidden');
                 if(profileLink) profileLink.classList.add('hidden');
                 isSubscribed = false;
                 favorites = [];
+                initializeAppLogic();
             }
-            
-            initializeAppLogic();
         }
 
         function initializeAppLogic() { 
             const presentArticles = window.presentDayArticles || [];
             const premiumArticles = window.premiumArticles || [];
             
-            // For Day 1, subscribed users see all articles. Non-subscribed see only non-premium.
-            const todayArticles = isSubscribed ? [...presentArticles, ...premiumArticles] : [...presentArticles];
-            
+            const todayArticles = isSubscribed ? [...presentArticles, ...premiumArticles] : presentArticles;
             allDaysData = [todayArticles].concat(window.pastArticles || []);
             
-            displayArticlesForPage(1); // Start on page 1
-            setupPagination();
-            
-            categoryList.addEventListener('click', handleCategoryFilter);
-            searchInput.addEventListener('input', () => {
-                displayArticlesForPage(1); // Reset to page 1 on search
-            });
-            newsGrid.addEventListener('click', handleFavoriteClick);
-            window.addEventListener('resize', adjustLayoutForHeader);
-            
+            displayArticlesForPage(currentPage);
             adjustLayoutForHeader();
         }
 
@@ -416,6 +418,7 @@
         }
         
         async function updateTickerBanner() {
+            // Unchanged from previous version
             const tickerContent = document.getElementById('tickerContent');
             if (!tickerContent || !FINNHUB_API_KEY) return;
             let contentHTML = '';
@@ -439,7 +442,7 @@
         }
 
         function getPageDateInfo(page) {
-            const today = new Date('2025-06-12T12:00:00Z'); // Using a fixed date for consistency
+            const today = new Date('2025-06-12T12:00:00Z');
             if (page === 1) return { title: 'Latest News', date: today };
             const dateForPage = new Date(today);
             dateForPage.setDate(today.getDate() - (page - 1));
@@ -450,19 +453,21 @@
         
         function displayArticlesForPage(page) {
             currentPage = page;
+            if(!newsGrid) return;
             newsGrid.innerHTML = ''; 
             const pageInfo = getPageDateInfo(page);
             sectionDateTitle.textContent = pageInfo.title;
 
-            // Get the correct set of articles for the current page
             let articlesForDay;
             if (page === 1) {
                  const presentArticles = window.presentDayArticles || [];
                  const premiumArticles = window.premiumArticles || [];
-                 articlesForDay = isSubscribed ? [...presentArticles, ...premiumArticles] : presentArticles;
-                 // Add premium articles for non-subscribed users, but they will be locked
+                 let baseArticles = isSubscribed ? [...presentArticles, ...premiumArticles] : presentArticles;
+                 // To show locked content, we add premium articles even for non-subscribed users
                  if(!isSubscribed) {
                     articlesForDay = [...presentArticles, ...premiumArticles];
+                 } else {
+                    articlesForDay = baseArticles;
                  }
             } else {
                 articlesForDay = (window.pastArticles && window.pastArticles[page - 2]) ? [...window.pastArticles[page - 2]] : [];
@@ -535,13 +540,13 @@
                 }); 
             }
             updateFavoriteIcons();
-            setupPagination(); // Re-setup pagination after filtering
+            setupPagination();
         } 
 
         function setupPagination() {
             if (!paginationContainer) return;
             paginationContainer.innerHTML = '';
-            const totalPages = 7; // Hardcoded to 7 for the 7-day archive feature
+            const totalPages = 7;
             const page = currentPage;
             
             const createButton = (text, pageNumber, isDisabled = false, isCurrent = false) => {
@@ -570,7 +575,7 @@
             const button = e.target.closest('.filter-button');
             if (!button) return;
             button.classList.toggle('active');
-            displayArticlesForPage(1); // Reset to page 1 when category changes
+            displayArticlesForPage(1);
         }
         
         function handleFavoriteClick(e) {
@@ -581,7 +586,7 @@
         async function updateBookmarksInFirestore(articleId, isAdding) {
             const user = auth.currentUser;
             if (!user) {
-                window.location.href = 'login.html'; // Redirect to login if not authenticated
+                window.location.href = 'login.html';
                 return;
             }
 
