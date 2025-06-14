@@ -102,7 +102,7 @@
                     <li class="flex items-center"><svg class="w-5 h-5 checkmark mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><strong>Linq AI Assistant</strong></li>
                 </ul>
                 <div class="mt-8 flex justify-center">
-                    <a id="upgrade-button" href="payment.html" class="h-[44px] text-center rounded-full font-semibold w-full bg-white text-black flex items-center justify-center transition hover:bg-gray-200">
+                    <a id="upgrade-button" href="square-payment.html" class="h-[44px] text-center rounded-full font-semibold w-full bg-white text-black flex items-center justify-center transition hover:bg-gray-200">
                        Upgrade to Linq+
                     </a>
                 </div>
@@ -144,7 +144,7 @@
                         } else {
                             // User is NOT subscribed
                             upgradeButton.textContent = 'Upgrade to Linq+';
-                            upgradeButton.href = 'payment.html';
+                            upgradeButton.href = 'square-payment.html';
                             freePlanButton.textContent = 'Your Current Plan';
                             freePlanButton.disabled = true;
                         }
@@ -152,11 +152,11 @@
                         console.error("Error getting user subscription status:", error);
                         // Default to non-subscribed state on error
                         upgradeButton.textContent = 'Upgrade to Linq+';
-                        upgradeButton.href = 'payment.html';
+                        upgradeButton.href = 'square-payment.html';
                     });
                 } else {
                     // User is not logged in
-                    const paymentPageUrl = 'payment.html';
+                    const paymentPageUrl = 'square-payment.html';
                     upgradeButton.textContent = 'Login to Upgrade';
                     upgradeButton.href = `login.html?redirect=${encodeURIComponent(paymentPageUrl)}`;
                 }
