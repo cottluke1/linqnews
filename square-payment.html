@@ -187,8 +187,7 @@
                 
                 const firebaseIdToken = await currentUser.getIdToken(true);
 
-                // **UPDATED with your permanent Firebase Function URL**
-                const functionUrl = 'https://us-central1-linq-b27a8.cloudfunctions.net/payments/api/pay';
+                const functionUrl = 'https://us-central1-linq-b27a8.cloudfunctions.net/api/pay';
                 
                 const response = await fetch(functionUrl, {
                     method: 'POST',
