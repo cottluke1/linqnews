@@ -53,7 +53,6 @@
             box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.3);
             background-color: rgba(0, 191, 255, 0.1);
         }
-        /* This is the container where Square will securely inject the credit card form fields */
         #card-container {
             background-color: rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -102,7 +101,6 @@
     </style>
 </head>
 <body>
-    <!-- ADDED: Close button in top-left corner -->
     <a href="index.html" class="absolute top-6 left-6 text-gray-400 hover:text-white transition-colors text-2xl font-bold" aria-label="Close">
         &times;
     </a>
@@ -112,23 +110,18 @@
         <div class="payment-form">
             <h2 class="text-2xl font-bold text-center mb-6">Subscribe to Linq+</h2>
             
-            <!-- Plan Selection -->
             <div class="space-y-4 mb-6">
                 <div id="plan-monthly" class="plan-option" onclick="selectPlan('monthly')">
                     <h3 class="font-bold">Linq+ Monthly</h3>
                     <p class="text-lg font-semibold">$9.99 <span class="text-sm font-normal text-gray-400">/ month</span></p>
                 </div>
                 <div id="plan-annual" class="plan-option selected" onclick="selectPlan('annual')">
-                    <!-- UPDATED: "Save over 70%" tag -->
                     <h3 class="font-bold">Linq+ Annual <span class="text-xs bg-cyan-500 text-white px-2 py-1 rounded-full ml-2">Save over 70%</span></h3>
-                    <!-- UPDATED: Pricing description -->
                     <p class="text-lg font-semibold">$2.99<span class="text-sm font-normal text-gray-400">/month (Billed annually)</span></p>
                 </div>
             </div>
 
-            <!-- Square Payment Form Container -->
             <form id="payment-form">
-                <!-- Square's Web Payments SDK will inject the card entry form here -->
                 <div id="card-container"></div>
                 <button id="card-button" class="pay-button mt-6" type="button">Pay</button>
             </form>
@@ -140,12 +133,12 @@
             </div>
         </div>
         <p class="text-center text-xs text-gray-500 mt-4">
-            By subscribing, you agree to our Terms of Service. Your subscription will auto-renew. You can cancel anytime from your profile.
+            By subscribing, you agree to our Terms of Service. Your subscription will auto-renew. You can cancel anytime.
         </p>
     </div>
 
     <script>
-        let selectedPlan = 'annual'; // Default to annual as it is pre-selected
+        let selectedPlan = 'annual';
 
         function selectPlan(plan) {
             selectedPlan = plan;
@@ -153,7 +146,6 @@
             document.getElementById('plan-annual').classList.toggle('selected', plan === 'annual');
         }
 
-        // Initialize Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
             authDomain: "linq-b27a8.firebaseapp.com",
@@ -167,12 +159,8 @@
         }
         const auth = firebase.auth();
 
-        // Main function to initialize Square and handle payments
         async function initializeCard(payments) {
-            // The card payment method is configured to require a postal code
-            const card = await payments.card({
-                postalCode: '12345' // A placeholder is fine, it will be rendered as an input
-            });
+            const card = await payments.card({ postalCode: '12345' });
             await card.attach('#card-container'); 
             return card;
         }
@@ -186,25 +174,23 @@
             cardButton.textContent = 'Processing...';
 
             try {
-                // First, check if a user is logged in
                 const currentUser = auth.currentUser;
                 if (!currentUser) {
                     throw new Error('You must be logged in to subscribe. Redirecting to login...');
                 }
 
-                // Tokenize the card details from the secure form
                 const tokenizationResult = await card.tokenize();
                 if (tokenizationResult.status !== 'OK') {
-                    // Extract the first error message for simplicity
                     const errorMessage = tokenizationResult.errors ? tokenizationResult.errors[0].message : "Invalid card details.";
                     throw new Error(errorMessage);
                 }
                 
-                // Get the Firebase ID token to authenticate the user on the server
                 const firebaseIdToken = await currentUser.getIdToken(true);
 
-                // Send the payment token and user token to your server
-                const response = await fetch('/api/pay', {
+                // **UPDATED with your Forwarded Address**
+                const serverUrl = 'https://cautious-space-broccoli-975rx55jj44jfx7qr-3000.app.github.dev';
+                
+                const response = await fetch(`${serverUrl}/api/pay`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -216,6 +202,11 @@
                     }),
                 });
 
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `Server responded with status: ${response.status}`);
+                }
+                
                 const data = await response.json();
 
                 if (data.success) {
@@ -239,11 +230,9 @@
             }
         }
 
-        // Entry point for the page logic
         document.addEventListener('DOMContentLoaded', async () => {
             const statusContainer = document.getElementById('payment-status-container');
             
-            // Check auth status immediately and update UI accordingly
             auth.onAuthStateChanged(async (user) => {
                 const cardButton = document.getElementById('card-button');
                 if (!user) {
@@ -257,10 +246,9 @@
                 }
             });
 
-            // Initialize the Square Payments SDK
             try {
-                const appId = 'sq0idp-17DmpOv5zxtsf55HujCS-g'; // Production Application ID
-                const locationId = 'L62NCZ5QQ6SWM'; // Production Location ID
+                const appId = 'sq0idp-17DmpOv5zxtsf55HujCS-g';
+                const locationId = 'L62NCZ5QQ6SWM';
                 const payments = Square.payments(appId, locationId);
                 const card = await initializeCard(payments);
 
@@ -274,7 +262,6 @@
                 statusContainer.style.display = 'block';
             }
         });
-
     </script>
 </body>
 </html>
