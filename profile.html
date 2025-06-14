@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
@@ -34,6 +34,10 @@
             flex-direction: column;
             min-height: 100vh;
         }
+        /* UPDATED: Header font and spacing */
+        #header-placeholder .text-3xl { font-family: 'Lexend', sans-serif; }
+        #header-placeholder .nav-link { font-family: 'Lexend', sans-serif; letter-spacing: -0.01em; }
+        
         main {
             padding-top: 80px;
             flex-grow: 1;
@@ -106,7 +110,7 @@
             object-fit: cover;
         }
        
-        .profile-info { flex-grow: 1; display: grid; grid-template-columns: 1fr; gap: 24px; } /* UPDATED: Single column grid */
+        .profile-info { flex-grow: 1; display: grid; grid-template-columns: 1fr; gap: 24px; }
         .info-item label {
             display: block; color: #A0A0A0; font-size: 0.9em;
             margin-bottom: 6px; font-weight: 500;
@@ -209,6 +213,10 @@
                             </div>
                             <div class="profile-info">
                                 <div class="info-item">
+                                    <label>Display Name</label>
+                                    <p id="profileDisplayName">N/A</p>
+                                </div>
+                                <div class="info-item">
                                     <label>Email Address</label>
                                     <p id="profileEmail">N/A</p>
                                 </div>
@@ -227,17 +235,17 @@
                             <h3>My Subscription</h3>
                         </div>
                         <div class="card-body">
-                            <p class="text-lg">Your current plan: <span id="current-plan-name" class="font-bold text-cyan-400">Free Plan</span></p>
-                            <p class="text-gray-400" id="subscription-status-text">You have access to basic news and community features.</p>
+                            <p class="text-lg">Your current plan: <span id="current-plan-name" class="font-bold text-cyan-400">Loading...</span></p>
+                            <p class="text-gray-400" id="subscription-status-text">Checking your subscription status.</p>
                             <p class="text-sm text-gray-500 mt-1" id="subscription-billing-cycle"></p>
                             
                             <div class="mt-6 flex flex-wrap gap-4" id="subscriptionActions">
-                                <a href="linqplus.html" class="btn btn-glass">See All Plans</a>
+                                <a id="manage-plan-button" href="linqplus.html" class="btn btn-glass">See All Plans</a>
                             </div>
 
                             <div id="cancel-info" class="mt-8 hidden">
-                                <p class="text-sm text-gray-400">To cancel your membership, please send an email to our support team from your registered email address.</p>
-                                <a href="mailto:support@linqnews.com?subject=Membership%20Cancellation%20Request" class="btn btn-clear mt-4">Cancel Membership</a>
+                                <p class="text-sm text-gray-400">To manage your subscription, please send an email to our support team from your registered email address.</p>
+                                <a href="mailto:support@linqnews.com?subject=Subscription%20Management%20Request" class="btn btn-clear mt-4">Contact Support</a>
                             </div>
                         </div>
                     </div>
@@ -295,20 +303,32 @@
     </footer>
 
     <script>
-        function onHeaderLoaded() {
-            // Header-specific logic can go here if needed
+        let unsubscribeUserListener = null;
+
+        function onHeaderLoaded(user) {
+            const authLink = document.getElementById('authLinkDesktopLogin');
+            const profileLink = document.getElementById('profileLinkDesktop');
+            const profilePic = document.getElementById('navProfilePic');
+            const logo = document.querySelector('a.text-3xl.font-bold.text-white');
+            if(logo) logo.classList.add('logo-font');
+            document.querySelectorAll('#header-placeholder .nav-link').forEach(link => link.classList.add('nav-link'));
+
+            if (user) {
+                if(authLink) authLink.classList.add('hidden');
+                if(profileLink) profileLink.classList.remove('hidden');
+                if (profilePic) {
+                    if (user.photoURL) profilePic.src = user.photoURL;
+                    else if (user.displayName) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
+                    else if (user.email) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
+                    else profilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
+                }
+            } else {
+                if(authLink) authLink.classList.remove('hidden');
+                if(profileLink) profileLink.classList.add('hidden');
+            }
         }
 
-        fetch('header.html')
-            .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
-            .then(data => {
-                document.getElementById('header-placeholder').innerHTML = data;
-                onHeaderLoaded(); 
-            })
-            .catch(error => console.error('Error fetching header:', error));
-
         document.addEventListener('DOMContentLoaded', function () {
-            // --- Firebase Initialization ---
             const firebaseConfig = {
                 apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
                 authDomain: "linq-b27a8.firebaseapp.com",
@@ -317,35 +337,41 @@
                 messagingSenderId: "1067901051826",
                 appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
             };
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            const authInstance = firebase.auth();
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            const auth = firebase.auth();
             const db = firebase.firestore();
 
-            // --- UI Elements ---
             const navTabs = document.querySelectorAll('.nav-tab');
             const contentSections = document.querySelectorAll('.content-section');
             const changePasswordForm = document.getElementById('changePasswordForm');
             const formMessage = document.getElementById('form-message');
 
-            // --- Auth State Change Handler ---
-            authInstance.onAuthStateChanged(user => {
-                const logoutButton = document.getElementById('logoutButton');
-                if (logoutButton) logoutButton.addEventListener('click', () => {
-                     authInstance.signOut().then(() => window.location.href = "login.html");
-                });
-                
+            auth.onAuthStateChanged(user => {
+                // Load header first, then handle user state
+                fetch('header.html')
+                    .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
+                    .then(data => {
+                        document.getElementById('header-placeholder').innerHTML = data;
+                        onHeaderLoaded(user); 
+                        const logoutButton = document.getElementById('logoutButton');
+                        if (logoutButton) logoutButton.addEventListener('click', () => auth.signOut());
+                    })
+                    .catch(error => console.error('Error fetching header:', error));
+
                 if (user) {
                     populateUserProfile(user);
-                    checkSubscriptionStatus(user);
+                    setupSubscriptionListener(user);
                 } else {
                     window.location.href = 'login.html';
                 }
             });
 
-            // --- Functions ---
+            auth.onAuthStateChanged(user => {
+                if(!user) window.location.href = 'login.html';
+            });
+            
             function populateUserProfile(user) {
+                document.getElementById('profileDisplayName').textContent = user.displayName || 'N/A';
                 document.getElementById('profileEmail').textContent = user.email || 'N/A';
                 if (user.metadata.creationTime) {
                     document.getElementById('profileJoinedDate').textContent = new Date(user.metadata.creationTime).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
@@ -354,42 +380,47 @@
                 if (user.photoURL) {
                     profileAvatarEl.src = user.photoURL;
                 } else {
-                    let initials = 'U';
-                    if (user.displayName) initials = user.displayName.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
-                    else if (user.email) initials = user.email.charAt(0).toUpperCase();
+                    let initials = user.displayName ? user.displayName.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() : (user.email ? user.email.charAt(0).toUpperCase() : 'U');
                     profileAvatarEl.src = `https://placehold.co/140x140/1A1A1A/FFFFFF?text=${initials}&font=inter`;
                 }
             }
 
-            function checkSubscriptionStatus(user) {
+            // **UPDATED: Function now uses a real-time onSnapshot listener**
+            function setupSubscriptionListener(user) {
+                if (unsubscribeUserListener) unsubscribeUserListener(); // Detach old listener if it exists
+
                 const userDocRef = db.collection('users').doc(user.uid);
-                userDocRef.get().then(doc => {
+                unsubscribeUserListener = userDocRef.onSnapshot(doc => {
                     const planNameEl = document.getElementById('current-plan-name');
                     const statusTextEl = document.getElementById('subscription-status-text');
                     const billingCycleEl = document.getElementById('subscription-billing-cycle');
                     const cancelInfoEl = document.getElementById('cancel-info');
+                    const managePlanButton = document.getElementById('manage-plan-button');
                     
                     if (doc.exists && doc.data().isSubscribed) {
                         const userData = doc.data();
-                        const planType = userData.subscriptionType || 'Premium'; // Default to Premium
-                        const billingType = userData.billingCycle || 'Annually'; // Default to Annually
+                        const planType = userData.subscriptionType || 'Premium';
+                        const billingType = userData.billingCycle || 'Annually';
                         planNameEl.textContent = `Linq+ ${planType.charAt(0).toUpperCase() + planType.slice(1)}`;
-                        statusTextEl.textContent = 'Your subscription is active.';
+                        statusTextEl.textContent = 'Your premium subscription is active.';
                         billingCycleEl.textContent = `Billed ${billingType}.`;
                         billingCycleEl.classList.remove('hidden');
                         cancelInfoEl.classList.remove('hidden');
+                        managePlanButton.textContent = 'Manage Subscription';
+
                     } else {
                         planNameEl.textContent = 'Free Plan';
                         statusTextEl.textContent = 'You have access to basic news and community features.';
                         billingCycleEl.classList.add('hidden');
                         cancelInfoEl.classList.add('hidden');
+                        managePlanButton.textContent = 'Upgrade to Linq+';
+                        managePlanButton.href = 'linqplus.html';
                     }
-                }).catch(error => {
-                    console.error("Error getting user subscription data:", error);
+                }, error => {
+                    console.error("Error with subscription listener:", error);
                 });
             }
             
-            // --- Tab Navigation ---
             function showSection(sectionId) {
                 contentSections.forEach(section => section.classList.remove('active-section'));
                 const targetSection = document.getElementById(sectionId);
@@ -419,13 +450,12 @@
             activateSectionFromHash();
             window.addEventListener('hashchange', activateSectionFromHash);
             
-            // --- Password Change Form ---
             if (changePasswordForm) {
                 changePasswordForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
                     formMessage.style.display = 'none';
                     
-                    const user = authInstance.currentUser;
+                    const user = auth.currentUser;
                     const currentPassword = document.getElementById('current-password').value;
                     const newPassword = document.getElementById('new-password').value;
                     const confirmPassword = document.getElementById('confirm-password').value;
@@ -436,6 +466,10 @@
                     }
                     if (newPassword !== confirmPassword) {
                         showFormMessage('New passwords do not match.', 'error');
+                        return;
+                    }
+                    if (newPassword.length < 6) {
+                        showFormMessage('New password must be at least 6 characters.', 'error');
                         return;
                     }
 
