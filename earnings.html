@@ -7,13 +7,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Using Lexend for header and Inter for body -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <style>
-        /* Base styles */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #000000;
@@ -24,16 +24,11 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
-        body.overflow-hidden {
-            overflow: hidden;
-        }
-
-        ::-webkit-scrollbar { width: 10px; height: 10px; }
-        ::-webkit-scrollbar-track { background: #1A1A1A; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
-        ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
         
-        /* Page Content Wrapper */
+        /* UPDATED: Header font and spacing */
+        #header-placeholder .text-3xl { font-family: 'Lexend', sans-serif; }
+        #header-placeholder .nav-link { font-family: 'Lexend', sans-serif; letter-spacing: -0.01em; }
+
         .page-content-wrapper {
             flex-grow: 1;
             padding-top: 80px;
@@ -43,214 +38,66 @@
             margin: 0 auto;
         }
 
-        /* Page Title Section */
-        .calendar-page-heading-container { 
-            text-align: center;
-            margin-bottom: 2.5rem;
-            padding: 0 1rem;
-        }
-        .calendar-page-title {
-            font-size: 2.75rem;
-            font-weight: 700;
-            color: #FFFFFF;
-        }
+        .calendar-page-title { font-size: 2.75rem; font-weight: 700; color: #FFFFFF; }
         .calendar-page-title .accent-text { color: #00BFFF; }
-        .calendar-page-subtitle {
-            font-size: 1.125rem;
-            color: #A0A0A0;
-            margin-top: 0.5rem;
-            font-weight: 400;
-        }
+        .calendar-page-subtitle { font-size: 1.125rem; color: #A0A0A0; margin-top: 0.5rem; font-weight: 400; }
 
-        /* Filters Bar */
-        .filters-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            padding: 1rem;
-            background-color: rgba(26, 26, 26, 0.7); 
-            backdrop-filter: blur(8px);
-            border-radius: 0.75rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid #282828;
-        }
-        .filter-group { display: flex; flex-direction: column; gap: 0.25rem; flex-grow: 1; min-width: 150px;}
-        .filter-group label { font-size: 0.8rem; color: #A0A0A0; margin-bottom: 0.25rem; }
-        .filter-select, .filter-input {
-            background-color: #121212;
-            border: 1px solid #333333;
-            color: #E0E0E0;
-            padding: 0.625rem 0.875rem;
-            border-radius: 0.375rem;
-            font-size: 0.9rem;
-            appearance: none; 
-        }
-        .filter-select {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%23A0A0A0' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 0.75rem center;
-            background-size: 1.25em;
-        }
-        .filter-select:focus, .filter-input:focus {
-            outline: none;
-            border-color: #00BFFF;
-            box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.2);
-        }
-
-        /* Sleek Button for Previous Earnings */
-        .previous-earnings-btn-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 2.5rem;
-        }
-        .previous-earnings-btn {
-            background-image: linear-gradient(to right, #007ACC, #00BFFF);
-            color: #FFFFFF;
-            font-weight: 500;
-            padding: 0.75rem 1.75rem;
-            border-radius: 0.5rem;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px -5px rgba(0, 150, 255, 0.4);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.95rem;
-            text-decoration: none;
-        }
-        .previous-earnings-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px -5px rgba(0, 150, 255, 0.6);
-            background-image: linear-gradient(to right, #006BB2, #00A9E0);
-        }
-         .previous-earnings-btn i {
-            font-size: 1rem;
-        }
-
-        /* Calendar Section Titles */
-        .calendar-section-title {
-            font-size: 1.75rem;
-            font-weight: 600;
-            color: #FFFFFF;
-            margin-top: 2.5rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid #333333;
-        }
-        .calendar-section-title .accent-text { color: #00BFFF; }
-
-        /* Earnings Call Card & Locked State */
         .earnings-card {
             background-color: #121212;
             border: 1px solid #282828;
             border-radius: 0.75rem;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
             transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-            box-shadow: 0 4px 15px -5px rgba(0,0,0,0.3);
-            position: relative; /* Needed for overlay */
+            position: relative;
         }
         .earnings-card:not(.locked):hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 25px -8px rgba(0, 191, 255, 0.25);
             border-color: #00BFFF;
         }
-        .earnings-card.locked > * {
+        /* Locked State styles */
+        .earnings-card.locked > .card-content {
              filter: blur(4px);
              pointer-events: none;
         }
-        .earnings-card.locked::after {
-            content: 'Upgrade to Linq+ to view';
-            position: absolute;
-            inset: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: rgba(0,0,0,0.6);
-            color: #FFFFFF;
-            font-weight: 600;
-            border-radius: 0.75rem;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .locked-overlay {
+            position: absolute; inset: 0; display: none; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(2px);
+            border-radius: 0.75rem; cursor: pointer;
         }
-        .earnings-card.locked:hover::after {
-            opacity: 1;
+        .earnings-card.locked .locked-overlay { display: flex; }
+        .locked-overlay-content { text-align: center; color: white; padding: 1rem;}
+        .locked-overlay-content h4 { font-size: 1.25rem; font-weight: 600; }
+        .locked-overlay-content p { color: #b0b0b0; margin-top: 0.5rem; margin-bottom: 1rem; }
+        .locked-overlay-content .upgrade-btn {
+            background: #00BFFF; color: white; padding: 0.5rem 1.5rem; border-radius: 99px;
+            text-decoration: none; font-weight: 500; transition: background-color 0.2s;
         }
-        
-        .card-header { display: flex; align-items: center; gap: 1rem; }
+        .locked-overlay-content .upgrade-btn:hover { background: #00A9E0; }
+
         .company-logo-placeholder {
-            width: 48px; height: 48px;
-            background-color: #282828;
-            border-radius: 50%;
+            width: 48px; height: 48px; background-color: #282828; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-weight: 600; font-size: 1.25rem; color: #00BFFF;
-            border: 2px solid #333333;
+            font-weight: 600; font-size: 1.25rem; color: #00BFFF; border: 2px solid #333333;
         }
-        .company-info h3 { font-size: 1.25rem; font-weight: 600; color: #FFFFFF; margin-bottom: 0.1rem;}
+        .company-info h3 { font-size: 1.25rem; font-weight: 600; color: #FFFFFF; }
         .company-info .ticker { font-size: 0.9rem; color: #A0A0A0; }
-        .earnings-details { display: flex; flex-direction: column; gap: 0.5rem; }
         .detail-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; color: #B0B0B0; }
         .detail-item i { color: #00BFFF; width: 16px; text-align: center; }
         .detail-label { font-weight: 500; color: #E0E0E0; margin-right: 0.25rem; }
-        .card-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
         .action-btn {
-            background-color: #1A1A1A;
-            color: #00BFFF;
-            border: 1px solid #00BFFF;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            font-size: 0.8rem;
-            font-weight: 500;
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            transition: background-color 0.2s ease, color 0.2s ease;
-            cursor: pointer;
+            background-color: #1A1A1A; color: #00BFFF; border: 1px solid #00BFFF;
+            padding: 0.5rem 1rem; border-radius: 0.375rem; font-size: 0.8rem;
+            font-weight: 500; display: inline-flex; align-items: center; gap: 0.5rem;
+            transition: background-color 0.2s ease, color 0.2s ease; cursor: pointer;
         }
         .action-btn:hover { background-color: #00BFFF; color: #FFFFFF; }
-        .action-btn i { font-size: 0.9rem; }
-        .action-btn.disabled-btn { 
-            background-color: #2a2a2a;
-            color: #707070;
-            border-color: #4a4a4a;
-            cursor: not-allowed;
-        }
-         .action-btn.disabled-btn:hover {
-            background-color: #2a2a2a;
-            color: #707070;
-        }
-
-        /* Footer */
+        
         .footer {
-            background-color: #080808;
-            color: #A0A0A0;
-            padding: 2.5rem 1rem;
-            border-top: 1px solid #1A1A1A;
-            text-align: center;
-            font-size: 0.875rem;
+            background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem;
+            border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem;
             margin-top: auto;
-        }
-        .footer a { color: #B0B0B0; transition: color 0.2s ease; }
-        .footer a:hover { color: #00BFFF; }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .calendar-page-title { font-size: 2.25rem; }
-            .calendar-page-subtitle { font-size: 1rem; }
-            .filters-bar { flex-direction: column; }
-            .filter-group { min-width: 100%; }
-            .earnings-card { padding: 1rem; }
-            .company-info h3 { font-size: 1.1rem; }
-            .card-actions { justify-content: flex-start; }
-            .page-content-wrapper { padding-top: 70px; }
-        }
-         @media (max-width: 480px) {
-            .calendar-page-title { font-size: 1.85rem;}
-            .calendar-page-subtitle { font-size: 0.9rem; }
-            .previous-earnings-btn { padding: 0.6rem 1.25rem; font-size: 0.9rem;}
         }
     </style>
 </head>
@@ -258,313 +105,223 @@
     <div id="header-placeholder"></div>
 
     <div class="page-content-wrapper px-4 sm:px-6 lg:px-8">
-        <div class="calendar-page-heading-container">
-            <h1 class="calendar-page-title">Energy Sector <span class="accent-text">Earnings Calendar</span></h1>
+        <div class="text-center mb-10">
+            <h1 class="calendar-page-title">Energy Sector <span class="accent-text">Earnings</span></h1>
             <p class="calendar-page-subtitle">Stay Ahead with Upcoming Energy Company Earnings Announcements</p>
         </div>
 
-        <div class="filters-bar">
-            <div class="filter-group">
-                <label for="date-range">Date Range</label>
-                <select id="date-range" class="filter-select">
-                    <option>All Upcoming</option>
-                    <option>Next 7 Days</option>
-                    <option>Next 30 Days</option>
-                    <option>This Quarter</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label for="sector">Sector</label>
-                <select id="sector" class="filter-select">
-                    <option>All Energy</option>
-                    <option>Oil & Gas E&P</option>
-                    <option>Midstream</option>
-                    <option>Oilfield Services</option>
-                    <option>Renewables</option>
-                    <option>Utilities</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label for="market-cap">Market Cap</label>
-                <select id="market-cap" class="filter-select">
-                    <option>All</option>
-                    <option>Large Cap (>$10B)</option>
-                    <option>Mid Cap ($2B-$10B)</option>
-                    <option>Small Cap (<$2B)</option>
-                </select>
-            </div>
-            <div class="filter-group flex-grow-[2]">
-                <label for="search-company">Search Company</label>
-                <input type="text" id="search-company" class="filter-input" placeholder="Enter ticker or name...">
-            </div>
-        </div>
-
-        <div class="previous-earnings-btn-container">
-            <a href="#" id="view-previous-earnings-btn" class="previous-earnings-btn">
-                <i class="fas fa-history"></i> View Previous Earnings Reports
-            </a>
-        </div>
-
         <div id="earnings-container">
-            <h2 class="calendar-section-title">Next <span class="accent-text">7 Days</span> (June 13 - June 20, 2025)</h2>
-            
-            <div class="earnings-card">
-                <div class="card-header">
-                    <div class="company-logo-placeholder"><span>XOM</span></div>
-                    <div class="company-info">
-                        <h3>ExxonMobil Corporation</h3>
-                        <p class="ticker">NYSE: XOM</p>
-                    </div>
-                </div>
-                <div class="earnings-details">
-                    <div class="detail-item"><i class="fas fa-calendar-alt"></i> <span class="detail-label">Date:</span> June 17, 2025</div>
-                    <div class="detail-item"><i class="fas fa-clock"></i> <span class="detail-label">Time:</span> 09:00 AM ET</div>
-                    <div class="detail-item"><i class="fas fa-chart-line"></i> <span class="detail-label">Period:</span> Q2 2025 Earnings</div>
-                </div>
-                <div class="card-actions">
-                    <button class="action-btn add-to-calendar-btn"
-                            data-company="ExxonMobil Corporation"
-                            data-ticker="XOM"
-                            data-date="2025-06-17"
-                            data-time="09:00"
-                            data-timezone="ET" 
-                            data-period="Q2 2025">
-                        <i class="fas fa-calendar-plus"></i> Add to Calendar
-                    </button>
-                    <button class="action-btn webcast-btn" data-webcast-url="https://corporate.exxonmobil.com/investors/events-and-presentations"><i class="fas fa-broadcast-tower"></i> Webcast</button>
-                    <button class="action-btn transcript-upcoming-btn"><i class="fas fa-file-alt"></i> Transcript</button>
-                </div>
-            </div>
-
-            <div class="earnings-card">
-                <div class="card-header">
-                    <div class="company-logo-placeholder"><span>NEE</span></div>
-                    <div class="company-info">
-                        <h3>NextEra Energy, Inc.</h3>
-                        <p class="ticker">NYSE: NEE</p>
-                    </div>
-                </div>
-                <div class="earnings-details">
-                    <div class="detail-item"><i class="fas fa-calendar-alt"></i> <span class="detail-label">Date:</span> June 18, 2025</div>
-                    <div class="detail-item"><i class="fas fa-clock"></i> <span class="detail-label">Time:</span> 10:00 AM ET</div>
-                    <div class="detail-item"><i class="fas fa-chart-line"></i> <span class="detail-label">Period:</span> Q2 2025 Earnings</div>
-                </div>
-                <div class="card-actions">
-                     <button class="action-btn add-to-calendar-btn"
-                            data-company="NextEra Energy, Inc."
-                            data-ticker="NEE"
-                            data-date="2025-06-18"
-                            data-time="10:00"
-                            data-timezone="ET"
-                            data-period="Q2 2025">
-                        <i class="fas fa-calendar-plus"></i> Add to Calendar
-                    </button>
-                    <button class="action-btn webcast-btn" data-webcast-url="https://www.investor.nexteraenergy.com/events-presentations"><i class="fas fa-broadcast-tower"></i> Webcast</button>
-                    <button class="action-btn transcript-upcoming-btn"><i class="fas fa-file-alt"></i> Transcript</button>
-                </div>
-            </div>
-
-            <h2 class="calendar-section-title">Upcoming This Month <span class="accent-text">(June 2025)</span></h2>
-             <div class="earnings-card">
-                <div class="card-header">
-                    <div class="company-logo-placeholder"><span>CVX</span></div>
-                    <div class="company-info">
-                        <h3>Chevron Corporation</h3>
-                        <p class="ticker">NYSE: CVX</p>
-                    </div>
-                </div>
-                <div class="earnings-details">
-                    <div class="detail-item"><i class="fas fa-calendar-alt"></i> <span class="detail-label">Date:</span> June 24, 2025</div>
-                    <div class="detail-item"><i class="fas fa-clock"></i> <span class="detail-label">Time:</span> 11:00 AM ET</div>
-                    <div class="detail-item"><i class="fas fa-chart-line"></i> <span class="detail-label">Period:</span> Q2 2025 Earnings</div>
-                </div>
-                <div class="card-actions">
-                    <button class="action-btn add-to-calendar-btn"
-                            data-company="Chevron Corporation"
-                            data-ticker="CVX"
-                            data-date="2025-06-24"
-                            data-time="11:00"
-                            data-timezone="ET"
-                            data-period="Q2 2025">
-                        <i class="fas fa-calendar-plus"></i> Add to Calendar
-                    </button>
-                    <button class="action-btn webcast-btn" data-webcast-url="https://www.chevron.com/investors/events-presentations"><i class="fas fa-broadcast-tower"></i> Webcast</button>
-                    <button class="action-btn transcript-upcoming-btn"><i class="fas fa-file-alt"></i> Transcript</button>
-                </div>
-            </div>
-            <div class="earnings-card">
-                <div class="card-header">
-                    <div class="company-logo-placeholder"><span>SLB</span></div>
-                    <div class="company-info">
-                        <h3>Schlumberger Limited</h3>
-                        <p class="ticker">NYSE: SLB</p>
-                    </div>
-                </div>
-                <div class="earnings-details">
-                    <div class="detail-item"><i class="fas fa-calendar-alt"></i> <span class="detail-label">Date:</span> June 27, 2025</div>
-                    <div class="detail-item"><i class="fas fa-clock"></i> <span class="detail-label">Time:</span> 08:30 AM ET</div>
-                    <div class="detail-item"><i class="fas fa-chart-line"></i> <span class="detail-label">Period:</span> Q2 2025 Earnings</div>
-                </div>
-                <div class="card-actions">
-                    <button class="action-btn add-to-calendar-btn"
-                            data-company="Schlumberger Limited"
-                            data-ticker="SLB"
-                            data-date="2025-06-27"
-                            data-time="08:30"
-                            data-timezone="ET"
-                            data-period="Q2 2025">
-                        <i class="fas fa-calendar-plus"></i> Add to Calendar
-                    </button>
-                    <button class="action-btn webcast-btn" data-webcast-url="https://investorcenter.slb.com/financial-information/quarterly-results"><i class="fas fa-broadcast-tower"></i> Webcast</button>
-                    <button class="action-btn transcript-upcoming-btn"><i class="fas fa-file-alt"></i> Transcript</button>
-                </div>
-            </div>
+             <!-- Earnings cards will be dynamically inserted here -->
         </div>
     </div>
 
     <footer class="footer">
-        <p>&copy; <span id="current-year"></span> Linq Energy Intelligence. Advanced AI for a Brighter Future.</p>
-        <nav class="text-xs space-x-3 mt-2">
-            <a href="#">Privacy Policy</a> |
-            <a href="#">Terms of Service</a> |
-            <a href="#">Contact Us</a> |
-            <a href="#">API Status</a>
-        </nav>
+        <p>&copy; <span id="current-year"></span> Linq Energy Intelligence.</p>
     </footer>
 
     <script>
+        // --- GLOBAL STATE & CONFIG ---
+        let isSubscribed = false;
+        let unsubscribeUserListener = null;
+        // ** RESTORED: The data for the earnings calls **
+        const earningsData = [
+            { company: "ExxonMobil Corporation", ticker: "XOM", date: "2025-06-17", time: "09:00 AM ET", period: "Q2 2025", webcastUrl: "https://corporate.exxonmobil.com/investors/events-and-presentations" },
+            { company: "NextEra Energy, Inc.", ticker: "NEE", date: "2025-06-18", time: "10:00 AM ET", period: "Q2 2025", webcastUrl: "https://www.investor.nexteraenergy.com/events-presentations" },
+            { company: "Chevron Corporation", ticker: "CVX", date: "2025-06-24", time: "11:00 AM ET", period: "Q2 2025", webcastUrl: "https://www.chevron.com/investors/events-presentations" },
+            { company: "Schlumberger Limited", ticker: "SLB", date: "2025-06-27", time: "08:30 AM ET", period: "Q2 2025", webcastUrl: "https://investorcenter.slb.com/financial-information/quarterly-results" },
+            { company: "ConocoPhillips", ticker: "COP", date: "2025-07-02", time: "12:00 PM ET", period: "Q2 2025", webcastUrl: "https://www.conocophillips.com/investors/events-and-presentations/" },
+            { company: "EOG Resources, Inc.", ticker: "EOG", date: "2025-07-08", time: "10:00 AM ET", period: "Q2 2025", webcastUrl: "https://investors.eogresources.com/events-and-presentations/default.aspx" }
+        ];
+
+        // --- FIREBASE SETUP ---
+        const firebaseConfig = { 
+            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+            authDomain: "linq-b27a8.firebaseapp.com",
+            projectId: "linq-b27a8",
+            storageBucket: "linq-b27a8.appspot.com",
+            messagingSenderId: "1067901051826",
+            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            let isSubscribed = false;
-
-            const firebaseConfig = { 
-                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-                authDomain: "linq-b27a8.firebaseapp.com",
-                projectId: "linq-b27a8",
-                storageBucket: "linq-b27a8.appspot.com",
-                messagingSenderId: "1067901051826",
-                appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-            };
-            if (!firebase.apps.length) { 
-                firebase.initializeApp(firebaseConfig);
-            }
-            const authInstance = firebase.auth();
-            const db = firebase.firestore();
-
-            function updateUIForSubscription() {
-                const earningsCards = document.querySelectorAll('.earnings-card');
-                const prevEarningsBtn = document.getElementById('view-previous-earnings-btn');
-
-                if (isSubscribed) {
-                    earningsCards.forEach(card => card.classList.remove('locked'));
-                    if (prevEarningsBtn) prevEarningsBtn.classList.remove('locked');
-                } else {
-                    earningsCards.forEach(card => card.classList.add('locked'));
-                    if (prevEarningsBtn) prevEarningsBtn.classList.add('locked');
-
-                    document.getElementById('earnings-container').addEventListener('click', (e) => {
-                         const card = e.target.closest('.earnings-card.locked');
-                         const btn = e.target.closest('.previous-earnings-btn.locked');
-                         if (card || btn) {
-                             window.location.href = 'linqplus.html';
-                         }
-                    });
-                }
-            }
-            
-            authInstance.onAuthStateChanged(async (user) => {
-                if (user) {
-                    try {
-                        const userDoc = await db.collection('users').doc(user.uid).get();
-                        isSubscribed = userDoc.exists && userDoc.data().isSubscribed === true;
-                    } catch (error) {
-                        console.error("Error checking subscription:", error);
-                        isSubscribed = false;
-                    }
-                } else {
-                    isSubscribed = false;
-                }
-                updateUIForSubscription();
-            });
-
             fetch('header.html') 
                 .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
                 .then(data => {
                     const headerPlaceholder = document.getElementById('header-placeholder');
                     if (headerPlaceholder) {
                         headerPlaceholder.innerHTML = data;
-                        initializeHeaderAuthLogic();
+                        auth.onAuthStateChanged(handleAuthStateChange);
                     }
                 })
                 .catch(error => console.error('Error fetching header:', error));
             
-            function initializeHeaderAuthLogic() {
-                 const authLink = document.getElementById('authLinkDesktopLogin');
-                 const profileLink = document.getElementById('profileLinkDesktop');
-                 const profilePic = document.getElementById('navProfilePic');
-                 authInstance.onAuthStateChanged(user => {
-                     if(user) {
-                         authLink.classList.add('hidden');
-                         profileLink.classList.remove('hidden');
-                         if(user.photoURL) profilePic.src = user.photoURL;
-                     } else {
-                         authLink.classList.remove('hidden');
-                         profileLink.classList.add('hidden');
-                     }
-                 });
-            }
-
             document.getElementById('current-year').textContent = new Date().getFullYear();
+        });
 
-            // Add to Calendar Button Functionality
-            document.querySelectorAll('.add-to-calendar-btn').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.stopPropagation(); // Prevent card click event when clicking button
-                    if (this.closest('.earnings-card.locked')) {
-                        window.location.href = 'linqplus.html';
-                        return;
+        // --- AUTH & SUBSCRIPTION LOGIC ---
+        function handleAuthStateChange(user) {
+            updateHeaderUI(user);
+            if (unsubscribeUserListener) unsubscribeUserListener();
+
+            if (user) {
+                unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
+                    isSubscribed = doc.exists && doc.data().isSubscribed === true;
+                    renderEarnings(); 
+                }, error => {
+                    console.error("Error with real-time listener:", error);
+                    isSubscribed = false;
+                    renderEarnings();
+                });
+            } else {
+                isSubscribed = false;
+                renderEarnings();
+            }
+        }
+
+        function updateHeaderUI(user) {
+            const authLink = document.getElementById('authLinkDesktopLogin');
+            const profileLink = document.getElementById('profileLinkDesktop');
+            const profilePic = document.getElementById('navProfilePic');
+            const logo = document.querySelector('.flex.items-center.space-x-4 > a.text-3xl.font-bold.text-white');
+            if(logo) logo.classList.add('logo-font');
+            
+            document.querySelectorAll('.hidden.md\\:flex.flex-1.justify-center.space-x-8 > a').forEach(link => {
+                link.classList.add('nav-link');
+            });
+
+
+            if (user) {
+                if(authLink) authLink.classList.add('hidden');
+                if(profileLink) profileLink.classList.remove('hidden');
+                
+                if (profilePic) {
+                    if (user.photoURL) {
+                        profilePic.src = user.photoURL;
+                    } else if (user.displayName) {
+                        profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
+                    } else if (user.email) {
+                        profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
+                    } else {
+                        profilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
                     }
+                }
+            } else {
+                if(authLink) authLink.classList.remove('hidden');
+                if(profileLink) profileLink.classList.add('hidden');
+            }
+        }
+        
+        // --- DYNAMIC RENDERING ---
+        function renderEarnings() {
+            const container = document.getElementById('earnings-container');
+            if (!container) return;
+            container.innerHTML = ''; // Clear previous content
 
-                    const company = this.dataset.company;
-                    const ticker = this.dataset.ticker;
-                    const date = this.dataset.date; 
-                    const time = this.dataset.time; 
-                    const timezone = this.dataset.timezone; 
-                    const period = this.dataset.period;
+            const groupedByDate = earningsData.reduce((acc, call) => {
+                const date = new Date(call.date).toDateString();
+                if (!acc[date]) acc[date] = [];
+                acc[date].push(call);
+                return acc;
+            }, {});
 
-                    const [year, month, day] = date.split('-').map(Number);
-                    const [hour, minute] = time.split(':').map(Number);
-                    
-                    let utcYear = year, utcMonth = month -1, utcDay = day, utcHour = hour;
-                    if (timezone === "ET") utcHour += 4; // Simple UTC conversion for example
+            Object.keys(groupedByDate).sort((a,b) => new Date(a) - new Date(b)).forEach(dateStr => {
+                const titleEl = document.createElement('h2');
+                titleEl.className = 'text-xl font-semibold text-white my-6 pb-2 border-b border-gray-700';
+                titleEl.textContent = new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                container.appendChild(titleEl);
 
-                    const startDateUtc = new Date(Date.UTC(utcYear, utcMonth, utcDay, utcHour, minute, 0));
-                    const endDateUtc = new Date(startDateUtc.getTime() + (60 * 60 * 1000));
-
-                    const formatDateToICS = d => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-                    
-                    const icsContent = [
-                        'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//LinqAI//EarningsCalendar//EN',
-                        'BEGIN:VEVENT',
-                        `UID:${formatDateToICS(new Date())}-${ticker}@linq.ai`, `DTSTAMP:${formatDateToICS(new Date())}`,
-                        `DTSTART:${formatDateToICS(startDateUtc)}`, `DTEND:${formatDateToICS(endDateUtc)}`,
-                        `SUMMARY:${ticker} ${period} Earnings Call`, `DESCRIPTION:${company} (${ticker}) ${period} earnings call.`,
-                        'END:VEVENT', 'END:VCALENDAR'
-                    ].join('\r\n');
-
-                    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(blob);
-                    link.download = `${ticker}_${period.replace(/\s+/g, '_')}_earnings.ics`;
-                    link.click();
-                    URL.revokeObjectURL(link.href);
+                groupedByDate[dateStr].forEach(call => {
+                    const card = createEarningsCard(call);
+                    container.appendChild(card);
                 });
             });
+        }
 
-            // Other button functionalities
-            document.querySelectorAll('.webcast-btn, .transcript-upcoming-btn').forEach(button => {
-                button.addEventListener('click', e => e.stopPropagation());
+        function createEarningsCard(call) {
+            const cardEl = document.createElement('div');
+            cardEl.className = 'earnings-card';
+            if (!isSubscribed) {
+                cardEl.classList.add('locked');
+            }
+            
+            const initials = call.ticker || call.company.substring(0, 3).toUpperCase();
+
+            cardEl.innerHTML = `
+                <div class="card-content flex flex-col gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="company-logo-placeholder"><span>${initials}</span></div>
+                        <div class="company-info">
+                            <h3>${call.company}</h3>
+                            <p class="ticker">${call.ticker}</p>
+                        </div>
+                    </div>
+                    <div class="earnings-details flex flex-col gap-2">
+                        <div class="detail-item"><i class="fas fa-calendar-alt"></i><span class="detail-label">Date:</span>${new Date(call.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
+                        <div class="detail-item"><i class="fas fa-clock"></i><span class="detail-label">Time:</span>${call.time}</div>
+                        <div class="detail-item"><i class="fas fa-chart-line"></i><span class="detail-label">Period:</span>${call.period}</div>
+                    </div>
+                    <div class="card-actions flex flex-wrap gap-3 mt-2">
+                        <button class="action-btn add-to-calendar-btn" data-company="${call.company}" data-ticker="${call.ticker}" data-date="${call.date}" data-time="${call.time}" data-timezone="ET" data-period="${call.period}">
+                            <i class="fas fa-calendar-plus"></i> Add to Calendar
+                        </button>
+                        <a href="${call.webcastUrl}" target="_blank" rel="noopener noreferrer" class="action-btn webcast-btn">
+                            <i class="fas fa-broadcast-tower"></i> Webcast
+                        </a>
+                    </div>
+                </div>
+                <div class="locked-overlay" onclick="location.href='linqplus.html'">
+                    <div class="locked-overlay-content">
+                        <h4>Linq+ Feature</h4>
+                        <p>Upgrade to view full earnings details.</p>
+                        <a href="linqplus.html" class="upgrade-btn">Go Premium</a>
+                    </div>
+                </div>`;
+
+            // Event listener for calendar button
+            cardEl.querySelector('.add-to-calendar-btn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (!isSubscribed) {
+                    window.location.href = 'linqplus.html';
+                    return;
+                }
+                const { company, ticker, date, time, timezone, period } = this.dataset;
+                const [year, month, day] = date.split('-').map(Number);
+                let [hour, minute] = time.match(/\d+/g).map(Number);
+                if(time.includes('PM') && hour !== 12) hour += 12;
+                if(time.includes('AM') && hour === 12) hour = 0;
+
+                let utcHour = timezone === "ET" ? hour + 4 : hour; 
+
+                const startDateUtc = new Date(Date.UTC(year, month - 1, day, utcHour, minute));
+                const endDateUtc = new Date(startDateUtc.getTime() + (60 * 60 * 1000));
+                
+                const formatDateToICS = d => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                
+                const icsContent = [
+                    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//LinqAI//EarningsCalendar//EN',
+                    'BEGIN:VEVENT',
+                    `UID:${formatDateToICS(new Date())}-${ticker}@linq.ai`, `DTSTAMP:${formatDateToICS(new Date())}`,
+                    `DTSTART:${formatDateToICS(startDateUtc)}`, `DTEND:${formatDateToICS(endDateUtc)}`,
+                    `SUMMARY:${ticker} ${period} Earnings Call`, `DESCRIPTION:${company} (${ticker}) ${period} earnings call. Link: ${call.webcastUrl}`,
+                    'END:VEVENT', 'END:VCALENDAR'
+                ].join('\r\n');
+
+                const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `${ticker}_${period.replace(/\s+/g, '_')}_earnings.ics`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             });
-        });
+
+            return cardEl;
+        }
+
     </script>
 </body>
 </html>
