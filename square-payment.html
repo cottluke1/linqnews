@@ -187,10 +187,10 @@
                 
                 const firebaseIdToken = await currentUser.getIdToken(true);
 
-                // **UPDATED with your Forwarded Address**
-                const serverUrl = 'https://cautious-space-broccoli-975rx55jj44jfx7qr-3000.app.github.dev';
+                // **UPDATED with your permanent Firebase Function URL**
+                const functionUrl = 'https://us-central1-linq-b27a8.cloudfunctions.net/payments/api/pay';
                 
-                const response = await fetch(`${serverUrl}/api/pay`, {
+                const response = await fetch(functionUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
