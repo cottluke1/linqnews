@@ -1,8 +1,3 @@
-// /js/headerManager.js
-// This script provides a centralized solution for managing the site's header,
-// including authentication state, mobile menu functionality, and active link highlighting.
-// It's designed to be included in every page to ensure a consistent user experience.
-
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. DEFINE CONSTANTS AND GET ELEMENTS ---
     const headerPlaceholder = document.getElementById('header-placeholder');
@@ -12,20 +7,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 2. INJECT REQUIRED CSS STYLES ---
-    // Since we removed styles from header.html, we inject them here to ensure they
-    // are always present when the header is loaded. This avoids needing to link a separate CSS file on every page.
     const styles = `
+        /* FIX: Added transition for opacity to solve the page-switch flash */
+        #header-placeholder nav {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
         .nav-link {
             font-size: 0.875rem; /* 14px */
             color: #D1D5DB; /* gray-300 */
             font-weight: 500;
-            transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+            transition: color 0.2s ease-in-out; /* Removed background-color transition */
             border-radius: 0.375rem; /* rounded-md */
         }
+        /* FIX: Removed the background-color change on hover */
         .nav-link:hover {
             color: #FFFFFF;
-            background-color: rgba(255, 255, 255, 0.05);
         }
+        /* The 'active' state now provides the background color */
         .nav-link.active {
             color: #FFFFFF;
             font-weight: 600;
@@ -67,8 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- 3. FETCH AND INJECT HEADER HTML ---
-    // We fetch the clean header.html fragment and inject it into the placeholder.
-    // The 'invisible' class keeps it hidden until the auth check is complete, preventing flicker.
     fetch('header.html')
         .then(response => {
             if (!response.ok) throw new Error('Network response was not ok for header.html');
@@ -76,11 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             headerPlaceholder.innerHTML = data;
-            const nav = headerPlaceholder.querySelector('nav');
-            if (nav) {
-                nav.classList.add('invisible'); // Keep it hidden initially
-            }
-            // Once the HTML is loaded, we can initialize the authentication and UI logic.
+            // Once the HTML is loaded, initialize auth and UI logic.
             initializeAuthAndUI();
         })
         .catch(error => {
@@ -91,16 +84,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 4. INITIALIZE AUTHENTICATION AND UI LOGIC ---
     function initializeAuthAndUI() {
-        // Ensure Firebase is initialized (assuming it's loaded on the page)
         if (typeof firebase === 'undefined') {
             console.error('Firebase is not loaded. Header cannot function correctly.');
             return;
         }
         const auth = firebase.auth();
 
-        // This is the core logic. It listens for changes in the user's login state.
         auth.onAuthStateChanged(user => {
-            // Get all the UI elements from the now-loaded header
             const nav = headerPlaceholder.querySelector('nav');
             const authLinkDesktop = document.getElementById('authLinkDesktopLogin');
             const profileLinkDesktop = document.getElementById('profileLinkDesktop');
@@ -113,26 +103,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (user) {
                 // --- USER IS LOGGED IN ---
-                // Show profile, hide login
                 authLinkDesktop.classList.add('hidden');
                 profileLinkDesktop.classList.remove('hidden');
-
-                // Update profile picture
                 const initials = (user.displayName || user.email || "U").charAt(0).toUpperCase();
                 navProfilePic.src = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-
-                // Update mobile menu for logged-in state
                 authLinkMobile.classList.add('hidden');
                 profileLinkMobile.classList.remove('hidden');
                 logoutButtonMobile.classList.remove('hidden');
-
             } else {
                 // --- USER IS LOGGED OUT ---
-                // Show login, hide profile
                 authLinkDesktop.classList.remove('hidden');
                 profileLinkDesktop.classList.add('hidden');
-
-                // Update mobile menu for logged-out state
                 authLinkMobile.classList.remove('hidden');
                 profileLinkMobile.classList.add('hidden');
                 logoutButtonMobile.classList.add('hidden');
@@ -152,23 +133,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // --- FINAL UI UPDATES ---
-            setActiveNavLink(); // Highlight the current page's link
+            setActiveNavLink(); 
             
-            // FIX: Reveal the header only AFTER the auth check is complete. This solves the flicker.
+            // FIX: Reveal the header with a fade-in AFTER the auth check is complete.
             if (nav) {
-                nav.classList.remove('invisible');
+                nav.style.opacity = '1';
             }
         });
     }
 
     // --- 5. UTILITY FUNCTIONS ---
     function setActiveNavLink() {
-        // This function adds the 'active' class to the correct nav link
         const currentPath = window.location.pathname.split("/").pop() || "index.html";
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
             link.classList.remove('active');
-            // Check if the link's href matches the current page's file name
             if (link.getAttribute('href') === currentPath) {
                 link.classList.add('active');
             }
