@@ -19,6 +19,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            overflow: hidden; 
         }
 
     
@@ -29,10 +30,9 @@
 
         .chat-container-wrapper {
             flex-grow: 1; display: flex; flex-direction: column; width: 100%;
-            max-width: 900px; margin: 0 auto; height: calc(100vh - 68px); 
-            overflow: hidden; 
+            max-width: 900px; margin: 0 auto; height: 100vh; 
         }
-        .chat-header-area { flex-shrink: 0; }
+        .chat-header-area { flex-shrink: 0; padding-top: 80px; }
         .page-heading-container { text-align: center; padding: 1.5rem 1rem 1rem 1rem; }
         .chat-page-title { font-size: 2.75rem; font-weight: 700; color: #FFFFFF; }
         .chat-page-title .accent-text { color: #00BFFF; }
@@ -137,6 +137,7 @@
     </style>
 </head>
 <body class="antialiased">
+    <!-- ✅ 1. Add Header Placeholder and Static Spacer -->
     <div style="height: 68px;" class="w-full bg-black border-b border-gray-800"></div>
     <div id="header-placeholder"></div>
 
@@ -160,9 +161,8 @@
 
         <div class="chat-input-area">
             <form id="chat-form" class="chat-input-form">
-                <!-- FIX: Removed the 'disabled' attribute from the input and button to allow interaction at all times -->
-                <input type="text" id="chat-input" class="chat-input" placeholder="Ask Linq AI..." autocomplete="off">
-                <button type="submit" id="send-button" class="send-button" aria-label="Send message">
+                <input type="text" id="chat-input" class="chat-input" placeholder="Ask Linq AI..." autocomplete="off" disabled>
+                <button type="submit" id="send-button" class="send-button" aria-label="Send message" disabled>
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </form>
@@ -184,7 +184,8 @@
         const chatInput = document.getElementById('chat-input');
         const sendButton = document.getElementById('send-button');
         const suggestedQuestionsContainer = document.getElementById('suggested-questions');
-        
+        // ✅ 2. The headerPlaceholder is now managed by headerManager.js
+
         let conversationHistory = [{
              role: 'system',
              content: 'You are Linq AI, a helpful and knowledgeable energy analyst. Provide concise, informative answers related to the energy sector, including oil, gas, renewables, and market trends. Keep responses to a few sentences unless asked for more detail.'
@@ -192,6 +193,7 @@
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
+            // ✅ 2. The fetch('header.html') block is removed.
             
             // This listener now only handles page-specific auth logic.
             auth.onAuthStateChanged(handleAuthStateChange);
@@ -203,49 +205,56 @@
 
         // --- AUTH & SUBSCRIPTION LOGIC ---
         function handleAuthStateChange(user) {
+            // ✅ 2. The updateHeaderUI function and call is removed.
             if (unsubscribeUserListener) unsubscribeUserListener();
 
             if (user) {
                 unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
                     isSubscribed = doc.exists && doc.data().isSubscribed === true;
+                    updateChatUI(isSubscribed);
                 }, error => {
                     console.error("Error with real-time listener:", error);
                     isSubscribed = false;
+                    updateChatUI(false);
                 });
             } else {
                 isSubscribed = false;
+                updateChatUI(false);
             }
         }
 
         // --- CHAT UI & LOGIC ---
-        // The updateChatUI function is no longer needed as the inputs are always enabled.
+        function updateChatUI(isUserSubscribed) {
+            chatInput.disabled = false;
+            sendButton.disabled = false;
+        
+            if (!isUserSubscribed) {
+                chatInput.placeholder = "Ask a question — limited response without upgrade";
+            } else {
+                chatInput.placeholder = "Ask Linq AI...";
+            }
+        }
+
 
         async function handleFormSubmit(event) {
             event.preventDefault();
-            const userMessage = chatInput.value.trim();
+            const currentUser = auth.currentUser;
+            if (!currentUser) {
+                addMessageToChat('Please <a href="login.html" class="underline">log in</a> to use Linq AI.', 'ai', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), true);
+                return;
+            }
+            if (!isSubscribed) {
+                const upgradeMessage = `Linq AI is a premium feature. To ask questions and get detailed energy analysis, please upgrade your account.<br><a href="linqplus.html" class="upgrade-button">Upgrade to Premium</a>`;
+                addMessageToChat(upgradeMessage, 'ai', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), true);
+                return;
+            }
 
+            const userMessage = chatInput.value.trim();
             if (userMessage) {
-                // Add the user's message to the chat immediately, regardless of status.
                 suggestedQuestionsContainer.style.display = 'none';
                 addMessageToChat(userMessage, 'user');
                 chatInput.value = '';
                 chatInput.focus();
-
-                const currentUser = auth.currentUser;
-                
-                // Now, check the user's status to determine the AI's response.
-                if (!currentUser) {
-                    addMessageToChat('Please <a href="login.html" class="underline">log in</a> to use Linq AI.', 'ai', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), true);
-                    return;
-                }
-
-                if (!isSubscribed) {
-                    const upgradeMessage = `Linq AI is a premium feature. To ask questions and get detailed energy analysis, please upgrade your account.<br><a href="linqplus.html" class="upgrade-button">Upgrade to Premium</a>`;
-                    addMessageToChat(upgradeMessage, 'ai', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), true);
-                    return;
-                }
-                
-                // If the user is logged in and subscribed, proceed to get a real AI response.
                 showTypingIndicator();
                 try {
                     const aiResponse = await getOpenAIResponse(userMessage);
@@ -327,6 +336,7 @@
         }
     </script>
     
+    <!-- ✅ 3. Add Firebase Init + Central Script -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
