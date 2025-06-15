@@ -11,7 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        /* REDUCED: Removed redundant header styles. Only page-specific styles remain. */
+        /* Page-specific styles for Community page */
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
             background-color: #000000;
@@ -116,7 +116,6 @@
             margin-left: 0.75rem; border: 1px solid rgba(0, 191, 255, 0.3);
         }
         
-        /* FIXED: Added styles to prevent flash of unstyled content for tweets */
         .twitter-tweet-container {
             margin-top: 1rem;
             background-color: transparent;
@@ -125,10 +124,10 @@
             border: none;
             display: flex;
             justify-content: center;
-            min-height: 120px; /* Reserve space to prevent layout shift */
+            min-height: 120px; 
         }
         .twitter-tweet-container.is-loading {
-            visibility: hidden; /* Hide the blockquote until the widget is ready */
+            visibility: hidden; 
         }
 
         .post-actions {
@@ -210,10 +209,9 @@
     </style>
 </head>
 <body class="antialiased">
-    <!-- ✅ 1. Add Static Header Spacer to Prevent Layout Jump -->
+    <!-- FIX: Added static placeholder to prevent layout jump -->
     <div style="height: 68px;" class="w-full bg-black border-b border-gray-800"></div>
-
-    <!-- ✅ 2. Add Header Placeholder -->
+    <!-- FIX: Renamed placeholder ID for consistency -->
     <div id="header-placeholder"></div>
 
     <main class="page-content-wrapper">
@@ -264,7 +262,6 @@
         let unsubscribeUserListener = null;
 
         // --- FIREBASE SETUP ---
-        // ✅ 3. This part is now handled by the centralized script block at the end of the body
         const db = firebase.firestore();
 
         // --- DATA ---
@@ -289,9 +286,6 @@
             { id: 'tweet2', url: 'https://twitter.com/JavierBlas/status/1933238166267572705', title: 'New CACTUS Trade: Crude Aspirations Crimp Trump’s Unilateral Strategy', meta: 'June 12, 2025 • Javier Blas (@JavierBlas)', category: 'Market Analysis', tweetContent: '<p lang="en" dir="ltr">From an oil industry insider: <br><br>“The new CACTUS Trade: Crude Aspirations Crimp Trump’s Unilateral Strategy”<br><br>(CACTUS is also the name of a pair of key oil pipelines in Texas) <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; Javier Blas (@JavierBlas) <a href="https://twitter.com/JavierBlas/status/1933238166267572705?ref_src=twsrc%5Etfw">June 12, 2025</a>' },
             { id: 'tweet1', url: 'https://twitter.com/IsraeliPM/status/1933244843624407170', title: 'PM Netanyahu\'s Remarks with Argentine President Milei', meta: 'June 12, 2025 • Prime Minister of Israel (@IsraeliPM)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">WATCH: Prime Minister Benjamin Netanyahu&#39;s remarks, today, at the signing of MOUs with Argentine President <a href="https://twitter.com/JMilei?ref_src=twsrc%5Etfw">@JMilei</a>.<br><br>&quot;We feel your heart, your connection to our people, to our land, to our state, and our eternal united city, Jerusalem.&quot;<a href="https://t.co/7wtikaq9GC">https://t.co/7wtikaq9GC</a> <a href="https://t.co/clKlE7t7DY">pic.twitter.com/clKlE7t7DY</a></p>&mdash; Prime Minister of Israel (@IsraeliPM) <a href="https://twitter.com/IsraeliPM/status/1933244843624407170?ref_src=twsrc%5Etfw">June 12, 2025</a>'}
         ];
-
-        // --- AUTH & HEADER LOGIC ---
-        // ✅ 3. This is now handled by headerManager.js. The old initializeHeaderAndAuth function has been removed.
 
         // --- DYNAMIC RENDERING & FILTERING ---
         function displayCommunityPostsPage(postsToDisplay) {
@@ -427,19 +421,8 @@
                     communityFavorites = [];
                     filterAndDisplayPosts();
                 }
-                // Also update the active nav link status
-                setActiveNavLink();
             });
         });
-        
-        // --- UTILITY FUNCTIONS ---
-        function setActiveNavLink() {
-            const currentPath = window.location.pathname.split("/").pop() || "index.html";
-            document.querySelectorAll('#header-placeholder a.nav-link').forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === currentPath) link.classList.add('active');
-            });
-        }
         
         function handleShareClick(button) {
             const postId = button.dataset.id;
@@ -454,12 +437,11 @@
         }
     </script>
     
-    <!-- ✅ 4. Add the Centralized Header Logic -->
+    <!-- FIX: Centralized script block for header and Firebase initialization -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script>
-        // Minimal Firebase init
         const firebaseConfig = {
             apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
             authDomain: "linq-b27a8.firebaseapp.com",
