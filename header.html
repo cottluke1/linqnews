@@ -1,43 +1,35 @@
-<!-- 
-  Updated Header Fragment
-  - This file now contains ONLY the <nav> element, making it a proper HTML fragment for injection.
-  - Removed <!DOCTYPE>, <html>, <head>, and <body> tags.
-  - Removed inline <style> and <script> blocks. All styling and logic will be handled by the parent page and a centralized 'headerManager.js'.
-  - Both desktop login (#authLinkDesktopLogin) and profile (#profileLinkDesktop) links are now hidden by default to prevent the "flicker" or "flash of unauthenticated content".
-  - Added a basic, responsive mobile menu structure that can be controlled by our JavaScript.
--->
-<nav class="fixed top-0 left-0 w-full z-[1000] shadow-md bg-black/80 backdrop-blur-sm border-b border-gray-800">
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-    <!-- Logo -->
-    <div class="flex-shrink-0">
+<nav class="fixed top-0 left-0 w-full z-[1000] bg-black/80 backdrop-blur-sm border-b border-gray-800">
+  <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center h-16">
+    
+    <!-- Left Side: Logo -->
+    <div class="absolute inset-y-0 left-0 flex items-center">
       <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
     </div>
 
-    <!-- Centered Nav Links (Desktop) -->
-    <div class="hidden md:flex flex-1 justify-center items-center space-x-2">
+    <!-- Center: Nav Links (Desktop) -->
+    <div class="hidden md:flex items-center space-x-2">
       <a href="index.html" class="nav-link px-3 py-2">News</a>
       <a href="community.html" class="nav-link px-3 py-2">Community</a>
       <a href="linqai.html" class="nav-link px-3 py-2">Linq AI</a>
-      <a href="previous_earnings.html" class="nav-link px-3 py-2">Earnings</a>
+      <a href="earnings.html" class="nav-link px-3 py-2">Earnings</a>
+      <a href="markets.html" class="nav-link px-3 py-2">Markets</a>
       <a href="favorites.html" class="nav-link px-3 py-2">Bookmarks</a>
     </div>
 
     <!-- Right Side: Auth and Premium Button -->
-    <div class="hidden md:flex items-center space-x-4">
+    <div class="absolute inset-y-0 right-0 hidden md:flex items-center space-x-4">
       <a href="linqplus.html" class="go-premium-btn">Go Premium</a>
-      
-      <!-- FIX: Both auth-related elements are hidden by default. The headerManager.js script will make the correct one visible. -->
       <a href="login.html" id="authLinkDesktopLogin" class="hidden nav-link-button">Login</a>
       <a href="profile.html" id="profileLinkDesktop" class="hidden" title="My Profile">
         <img id="navProfilePic" src="https://placehold.co/40x40/2C2F33/EAEAEA?text=U" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition">
       </a>
     </div>
 
-    <!-- Mobile Menu Button -->
-    <div class="md:hidden flex items-center">
-      <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none p-2 rounded-md">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-      </button>
+    <!-- Mobile Menu Button (remains in the main flow for right alignment on small screens) -->
+    <div class="md:hidden absolute inset-y-0 right-0 flex items-center">
+        <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none p-2 rounded-md">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+        </button>
     </div>
   </div>
 
@@ -47,7 +39,8 @@
       <a href="index.html" class="nav-link block">News</a>
       <a href="community.html" class="nav-link block">Community</a>
       <a href="linqai.html" class="nav-link block">Linq AI</a>
-      <a href="previous_earnings.html" class="nav-link block">Earnings</a>
+      <a href="earnings.html" class="nav-link block">Earnings</a>
+      <a href="markets.html" class="nav-link block">Markets</a>
       <a href="favorites.html" class="nav-link block">Bookmarks</a>
       <a href="linqplus.html" class="nav-link block font-semibold text-cyan-400">Go Premium</a>
       <hr class="border-gray-700 my-2">
