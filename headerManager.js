@@ -5,6 +5,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const headerPlaceholder = document.getElementById('header-placeholder');
     if (!headerPlaceholder) return; // Exit if the placeholder isn't found on the page.
 
+    // Function to set the active state on the correct navigation link.
+    function setActiveNavLink() {
+        const currentPath = window.location.pathname.split("/").pop() || "index.html";
+        // Query within the headerPlaceholder to ensure we only affect header links.
+        headerPlaceholder.querySelectorAll('a.nav-link').forEach(link => {
+            link.classList.remove('active');
+            const linkHref = link.getAttribute('href');
+            if (linkHref === currentPath) {
+                 link.classList.add('active');
+            }
+        });
+    }
+
     // Fetch the content of header.html.
     fetch('header.html')
         .then(res => {
@@ -50,6 +63,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Hide the profile link.
                     profileLink?.classList.add('hidden');
                 }
+
+                // After updating the UI, set the active navigation link.
+                setActiveNavLink();
 
                 // Make the navigation bar visible after the auth check is complete.
                 if (nav) {
