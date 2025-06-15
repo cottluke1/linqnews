@@ -31,25 +31,6 @@
         }
         body.overflow-hidden { overflow: hidden; }
 
-        /* Header Styles */
-        nav.fixed {
-            background-color: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(10px) saturate(150%);
-            -webkit-backdrop-filter: blur(10px) saturate(150%);
-            border-bottom: 1px solid #2F3336;
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
-        }
-        .nav-link {
-            transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
-            font-weight: 500; color: #B0B0B0; opacity: 0.8;
-            padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem;
-        }
-        .nav-link:hover { color: #FFFFFF; opacity: 1; background-color: rgba(255,255,255,0.05); }
-        .nav-link.active { color: #FFFFFF; opacity: 1; background-color: transparent; }
-        #authLinkDesktopLogin.nav-link-button {
-            background-color: #00BFFF; color: #FFFFFF !important; opacity: 1 !important; padding: 0.5rem 1rem;
-        }
-        #authLinkDesktopLogin.nav-link-button:hover { background-color: #00A9E0; opacity: 1; }
         
         /* Ticker Banner */
         .ticker-banner {
@@ -65,6 +46,12 @@
         .ticker-item .negative { color: #EF4444; }
 
         /* Hero Section */
+        .hero-section { background: transparent; padding: 5rem 1rem; text-align: center; }
+        .hero-title {
+            font-size: 3.8rem;
+            font-weight: 800; color: #E7E9EA;
+            margin: 0; text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3);
+        }
         .hero-title .accent-text { color: #00BFFF; }
         
         .section-title {
