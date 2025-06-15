@@ -137,11 +137,37 @@
             border-color: rgba(0, 191, 255, 0.4); transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(0, 191, 255, 0.2);
         }
+
+        /* Add styles to prevent header flicker and layout jumps */
+        .header-spacer {
+            height: 68px;
+            width: 100%;
+            background-color: #000000;
+            border-bottom: 1px solid #1F2937;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 40;
+        }
+        
+        .chat-container-wrapper {
+            padding-top: 68px; /* Match header height */
+        }
+        
+        /* Hide header placeholder until loaded */
+        #header-placeholder {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        #header-placeholder.loaded {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="antialiased">
-    <!-- Static header spacer to prevent layout jumps -->
-    <div style="height: 68px;" class="w-full bg-black border-b border-gray-800"></div>
+    <!-- Fixed header spacer -->
+    <div class="header-spacer"></div>
     <div id="header-placeholder"></div>
 
     <div class="chat-container-wrapper px-2 sm:px-4">
@@ -187,6 +213,7 @@
         const chatInput = document.getElementById('chat-input');
         const sendButton = document.getElementById('send-button');
         const suggestedQuestionsContainer = document.getElementById('suggested-questions');
+        const headerPlaceholder = document.getElementById('header-placeholder');
 
         let conversationHistory = [{
              role: 'system',
@@ -195,21 +222,25 @@
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Load header first
+            // Enable chat UI immediately
+            updateChatUI(false);
+            
+            // Initialize header
             fetch('header.html')
                 .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
                 .then(data => {
-                    const headerPlaceholder = document.getElementById('header-placeholder');
                     if (headerPlaceholder) {
                         headerPlaceholder.innerHTML = data;
+                        headerPlaceholder.classList.add('loaded');
+                        auth.onAuthStateChanged(handleAuthStateChange);
                     }
                 })
-                .catch(error => console.error('Error fetching header:', error));
+                .catch(error => {
+                    console.error('Error fetching header:', error);
+                    // Still enable chat UI even if header fails
+                    updateChatUI(false);
+                });
 
-            // Set up auth listener immediately
-            auth.onAuthStateChanged(handleAuthStateChange);
-
-            // Set up chat UI
             chatForm.addEventListener('submit', handleFormSubmit);
             suggestedQuestionsContainer.addEventListener('click', handleSuggestedQuestionClick);
             addMessageToChat("I'm Linq's AI Energy Analyst—here to answer your energy questions with the latest data and real insights. What's on your mind?", 'ai');
@@ -217,9 +248,7 @@
 
         // --- AUTH & SUBSCRIPTION LOGIC ---
         function handleAuthStateChange(user) {
-            // Make nav visible once auth is resolved
-            document.querySelector('nav')?.classList.remove('invisible');
-            
+            updateHeaderUI(user);
             if (unsubscribeUserListener) unsubscribeUserListener();
 
             if (user) {
@@ -236,6 +265,31 @@
                 updateChatUI(false);
             }
         }
+        
+        function updateHeaderUI(user) {
+            const authLink = document.getElementById('authLinkDesktopLogin');
+            const profileLink = document.getElementById('profileLinkDesktop');
+            const profilePic = document.getElementById('navProfilePic');
+            const logo = document.querySelector('a.text-3xl.font-bold.text-white');
+            
+            if(logo) logo.classList.add('logo-font');
+            document.querySelectorAll('#header-placeholder .nav-link').forEach(link => link.classList.add('nav-link'));
+
+            if (user) {
+                if(authLink) authLink.classList.add('hidden');
+                if(profileLink) profileLink.classList.remove('hidden');
+                
+                if (profilePic) {
+                    if (user.photoURL) profilePic.src = user.photoURL;
+                    else if (user.displayName) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
+                    else if (user.email) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
+                    else profilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
+                }
+            } else {
+                if(authLink) authLink.classList.remove('hidden');
+                if(profileLink) profileLink.classList.add('hidden');
+            }
+        }
 
         // --- CHAT UI & LOGIC ---
         function updateChatUI(isUserSubscribed) {
@@ -248,6 +302,7 @@
                 chatInput.placeholder = "Ask Linq AI...";
             }
         }
+
 
         async function handleFormSubmit(event) {
             event.preventDefault();
