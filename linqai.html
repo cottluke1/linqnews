@@ -19,7 +19,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            overflow: hidden; 
+            /* FIX: Removed overflow: hidden from the body to prevent it from cutting off content. */
         }
 
     
@@ -30,9 +30,10 @@
 
         .chat-container-wrapper {
             flex-grow: 1; display: flex; flex-direction: column; width: 100%;
-            max-width: 900px; margin: 0 auto; height: 100vh; 
+            max-width: 900px; margin: 0 auto; height: calc(100vh - 68px); /* FIX: Adjust height for the static spacer */
+            overflow: hidden; /* FIX: Added overflow hidden here to contain the chat layout properly */
         }
-        .chat-header-area { flex-shrink: 0; padding-top: 80px; }
+        .chat-header-area { flex-shrink: 0; /* REMOVED padding-top as it's no longer needed */ }
         .page-heading-container { text-align: center; padding: 1.5rem 1rem 1rem 1rem; }
         .chat-page-title { font-size: 2.75rem; font-weight: 700; color: #FFFFFF; }
         .chat-page-title .accent-text { color: #00BFFF; }
@@ -137,7 +138,6 @@
     </style>
 </head>
 <body class="antialiased">
-    <!-- ✅ 1. Add Header Placeholder and Static Spacer -->
     <div style="height: 68px;" class="w-full bg-black border-b border-gray-800"></div>
     <div id="header-placeholder"></div>
 
@@ -184,8 +184,7 @@
         const chatInput = document.getElementById('chat-input');
         const sendButton = document.getElementById('send-button');
         const suggestedQuestionsContainer = document.getElementById('suggested-questions');
-        // ✅ 2. The headerPlaceholder is now managed by headerManager.js
-
+        
         let conversationHistory = [{
              role: 'system',
              content: 'You are Linq AI, a helpful and knowledgeable energy analyst. Provide concise, informative answers related to the energy sector, including oil, gas, renewables, and market trends. Keep responses to a few sentences unless asked for more detail.'
@@ -193,7 +192,6 @@
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            // ✅ 2. The fetch('header.html') block is removed.
             
             // This listener now only handles page-specific auth logic.
             auth.onAuthStateChanged(handleAuthStateChange);
@@ -205,7 +203,6 @@
 
         // --- AUTH & SUBSCRIPTION LOGIC ---
         function handleAuthStateChange(user) {
-            // ✅ 2. The updateHeaderUI function and call is removed.
             if (unsubscribeUserListener) unsubscribeUserListener();
 
             if (user) {
@@ -336,7 +333,6 @@
         }
     </script>
     
-    <!-- ✅ 3. Add Firebase Init + Central Script -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
