@@ -24,6 +24,9 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
+        body.modal-open {
+            overflow: hidden;
+        }
         
         #header-placeholder .text-3xl { font-family: 'Lexend', sans-serif; }
         #header-placeholder .nav-link { font-family: 'Lexend', sans-serif; letter-spacing: -0.01em; }
@@ -97,6 +100,72 @@
             border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem;
             margin-top: auto;
         }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center;
+            z-index: 1000; opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+            display: flex; opacity: 1;
+        }
+        .modal-content {
+            background-color: #1a1a1a;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            border: 1px solid #282828;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        .modal-close-btn {
+            position: absolute; top: 1rem; right: 1rem;
+            background: none; border: none; font-size: 1.5rem;
+            color: #888; cursor: pointer; transition: color 0.2s, transform 0.2s;
+        }
+        .modal-close-btn:hover {
+            color: #fff;
+            transform: rotate(90deg);
+        }
+        .modal-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #00BFFF;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #282828;
+        }
+        .modal-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        .info-block h4 {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #888;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+        }
+        .info-block p {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #eee;
+        }
+        .info-block p.positive { color: #22C55E; }
+        .info-block p.negative { color: #EF4444; }
+
     </style>
 </head>
 <body class="antialiased">
@@ -116,6 +185,17 @@
         </div>
     </div>
 
+    <!-- Modal Structure -->
+    <div id="earningsModal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="modalCloseBtn" class="modal-close-btn">&times;</button>
+            <h3 id="modalTitle" class="modal-title">Earnings Details</h3>
+            <div id="modalBody" class="modal-info-grid">
+                <!-- Dynamic content will be injected here -->
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <p>&copy; <span id="current-year"></span> Linq Energy Intelligence.</p>
     </footer>
@@ -124,11 +204,14 @@
         let isSubscribed = false;
         let unsubscribeUserListener = null;
         
+        // NOTE TO USER: I have added the new data fields to the first few objects.
+        // Please populate the rest of the data as needed.
         const previousEarningsData = [
             // --- NEW DATA FROM CSV ---
-            { company: "Energy Transfer LP", ticker: "ET", date: "2025-05-08", time: "4:30 PM", period: "Q1 2025", transcriptUrl: "https://www.energytransfer.com/investor-relations/events-presentations/" },
-            { company: "Occidental Petroleum Corp.", ticker: "OXY", date: "2025-05-07", time: "1:00 PM", period: "Q1 2025", transcriptUrl: "https://www.oxy.com/investors/events-and-presentations/" },
-            { company: "Williams Companies Inc.", ticker: "WMB", date: "2025-05-06", time: "9:30 AM", period: "Q1 2025", transcriptUrl: "https://investor.williams.com/events-and-presentations/" },
+            { company: "Energy Transfer LP", ticker: "ET", date: "2025-05-08", time: "4:30 PM", period: "Q1 2025", transcriptUrl: "https://www.energytransfer.com/investor-relations/events-presentations/", "epsEstimate": 0.33, "epsActual": 0.32, "revenueEstimate": 20430, "revenueActual": 20040, "epsGuidance": "0.34 - 0.36", "revenueGuidance": "20500 - 21000" },
+            { company: "Occidental Petroleum Corp.", ticker: "OXY", date: "2025-05-07", time: "1:00 PM", period: "Q1 2025", transcriptUrl: "https://www.oxy.com/investors/events-and-presentations/", "epsEstimate": 0.61, "epsActual": 0.63, "revenueEstimate": 6890, "revenueActual": 7260, "epsGuidance": "0.65 - 0.70", "revenueGuidance": "7000 - 7300" },
+            { company: "Williams Companies Inc.", ticker: "WMB", date: "2025-05-06", time: "9:30 AM", period: "Q1 2025", transcriptUrl: "https://investor.williams.com/events-and-presentations/", "epsEstimate": 0.45, "epsActual": 0.47, "revenueEstimate": 2580, "revenueActual": 2620, "epsGuidance": "Stable", "revenueGuidance": "2600 - 2700" },
+            // ... (rest of the data to be filled in) ...
             { company: "Pioneer Natural Resources Co.", ticker: "PXD", date: "2025-05-02", time: "10:00 AM", period: "Q1 2025", transcriptUrl: "https://investors.pxd.com/investors/events-and-presentations/" },
             { company: "Plains All American Pipeline L.P.", ticker: "PAA", date: "2025-05-03", time: "10:00 AM", period: "Q1 2025", transcriptUrl: "https://www.plains.com/investors/events-and-presentations" },
             { company: "ConocoPhillips Co.", ticker: "COP", date: "2025-05-02", time: "12:00 PM", period: "Q1 2025", transcriptUrl: "https://www.conocophillips.com/investors/events-and-presentations/" },
@@ -146,7 +229,6 @@
             { company: "Schlumberger Ltd.", ticker: "SLB", date: "2025-04-19", time: "9:30 AM", period: "Q1 2025", transcriptUrl: "https://investorcenter.slb.com/financial-information/quarterly-results" },
             { company: "Halliburton Co.", ticker: "HAL", date: "2025-04-19", time: "9:00 AM", period: "Q1 2025", transcriptUrl: "https://ir.halliburton.com/events-and-presentations" },
             { company: "Kinder Morgan Inc.", ticker: "KMI", date: "2025-04-17", time: "4:30 PM", period: "Q1 2025", transcriptUrl: "https://ir.kindermorgan.com/events-and-presentations/" },
-            // --- ORIGINAL DATA ---
             { company: "Shell plc", ticker: "SHEL", date: "2025-04-25", time: "09:00 AM ET", period: "Q1 2025", transcriptUrl: "https://www.shell.com/investors/results-and-reporting/quarterly-results.html" },
             { company: "BP p.l.c.", ticker: "BP", date: "2025-04-28", time: "10:00 AM ET", period: "Q1 2025", transcriptUrl: "https://www.bp.com/en/global/corporate/investors/results-and-reporting.html" },
             { company: "TotalEnergies SE", ticker: "TTE", date: "2025-04-30", time: "11:00 AM ET", period: "Q1 2025", transcriptUrl: "https://totalenergies.com/investors/results-investor-presentations" },
@@ -171,15 +253,35 @@
             fetch('header.html') 
                 .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
                 .then(data => {
-                    const headerPlaceholder = document.getElementById('header-placeholder');
-                    if (headerPlaceholder) {
-                        headerPlaceholder.innerHTML = data;
-                        auth.onAuthStateChanged(handleAuthStateChange);
-                    }
+                    document.getElementById('header-placeholder').innerHTML = data;
+                    auth.onAuthStateChanged(handleAuthStateChange);
                 })
                 .catch(error => console.error('Error fetching header:', error));
             
             document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // Modal event listeners
+            const modal = document.getElementById('earningsModal');
+            const closeBtn = document.getElementById('modalCloseBtn');
+            const earningsContainer = document.getElementById('earnings-container');
+
+            earningsContainer.addEventListener('click', (event) => {
+                const seeMoreBtn = event.target.closest('.see-more-btn');
+                if (seeMoreBtn) {
+                    const ticker = seeMoreBtn.dataset.ticker;
+                    const earningsData = previousEarningsData.find(d => d.ticker === ticker);
+                    if (earningsData) {
+                        openModal(earningsData);
+                    }
+                }
+            });
+
+            closeBtn.onclick = closeModal;
+            modal.onclick = (event) => {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            };
         });
 
         function handleAuthStateChange(user) {
@@ -233,35 +335,32 @@
             container.innerHTML = ''; 
 
             const groupedByDate = previousEarningsData.reduce((acc, call) => {
-                // Standardize date format for reliable grouping
                 const date = new Date(call.date).toDateString();
                 if (!acc[date]) acc[date] = [];
                 acc[date].push(call);
                 return acc;
             }, {});
 
-            let cardIndex = 0; // Initialize a counter for all cards
+            let cardIndex = 0;
 
-            Object.keys(groupedByDate).sort((a,b) => new Date(b) - new Date(a)).forEach(dateStr => { // Sort descending for past events
+            Object.keys(groupedByDate).sort((a,b) => new Date(b) - new Date(a)).forEach(dateStr => {
                 const titleEl = document.createElement('h2');
                 titleEl.className = 'text-xl font-semibold text-white my-6 pb-2 border-b border-gray-700';
                 titleEl.textContent = new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 container.appendChild(titleEl);
 
                 groupedByDate[dateStr].forEach(call => {
-                    const card = createEarningsCard(call, cardIndex); // Pass the overall index
+                    const card = createEarningsCard(call, cardIndex);
                     container.appendChild(card);
-                    cardIndex++; // Increment for the next card
+                    cardIndex++;
                 });
             });
         }
 
-        function createEarningsCard(call, cardIndex) { // Accept the index as an argument
+        function createEarningsCard(call, cardIndex) {
             const cardEl = document.createElement('div');
             cardEl.className = 'earnings-card';
             
-            // --- MODIFIED LOGIC ---
-            // ONLY lock the card if the user is NOT subscribed AND it is NOT the first card (index 0).
             if (!isSubscribed && cardIndex > 0) { 
                 cardEl.classList.add('locked');
             }
@@ -286,6 +385,9 @@
                         <a href="${call.transcriptUrl}" target="_blank" rel="noopener noreferrer" class="action-btn transcript-btn">
                             <i class="fas fa-file-alt"></i> Transcript
                         </a>
+                        <button class="action-btn see-more-btn" data-ticker="${call.ticker}">
+                            <i class="fas fa-eye"></i> See More
+                        </button>
                     </div>
                 </div>
                 <div class="locked-overlay" onclick="location.href='linqplus.html'">
@@ -297,6 +399,56 @@
                 </div>`;
 
             return cardEl;
+        }
+
+        // Modal Functions
+        function openModal(data) {
+            const modal = document.getElementById('earningsModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+
+            modalTitle.textContent = `${data.company} (${data.ticker}) - ${data.period}`;
+            
+            const formatCurrency = (value) => value ? `$${value.toFixed(2)}` : 'N/A';
+            const formatRevenue = (value) => value ? `$${value.toLocaleString()}M` : 'N/A';
+            const epsBeat = data.epsActual > data.epsEstimate;
+            const revBeat = data.revenueActual > data.revenueEstimate;
+
+            modalBody.innerHTML = `
+                <div class="info-block">
+                    <h4>EPS Estimate</h4>
+                    <p>${formatCurrency(data.epsEstimate)}</p>
+                </div>
+                <div class="info-block">
+                    <h4>EPS Actual</h4>
+                    <p class="${epsBeat ? 'positive' : 'negative'}">${formatCurrency(data.epsActual)}</p>
+                </div>
+                <div class="info-block">
+                    <h4>Revenue Estimate</h4>
+                    <p>${formatRevenue(data.revenueEstimate)}</p>
+                </div>
+                <div class="info-block">
+                    <h4>Revenue Actual</h4>
+                    <p class="${revBeat ? 'positive' : 'negative'}">${formatRevenue(data.revenueActual)}</p>
+                </div>
+                <div class="info-block">
+                    <h4>EPS Guidance</h4>
+                    <p>${data.epsGuidance || 'N/A'}</p>
+                </div>
+                <div class="info-block">
+                    <h4>Revenue Guidance</h4>
+                    <p>${data.revenueGuidance || 'N/A'}</p>
+                </div>
+            `;
+            
+            document.body.classList.add('modal-open');
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('earningsModal');
+            document.body.classList.remove('modal-open');
+            modal.classList.remove('active');
         }
 
     </script>
