@@ -6,7 +6,7 @@
     <title>Linq - Access Your Account</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Firebase JS SDK -->
+    <!-- Firebase JS SDK (compat versions) -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
@@ -55,6 +55,7 @@
             width: 100%; font-weight: 600; font-size: 1rem;
             transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
             box-shadow: 0 4px 15px -5px rgba(0, 191, 255, 0.4);
+            cursor: pointer;
         }
         .auth-button:hover {
             background-color: #00A9E0; transform: translateY(-1px);
@@ -73,12 +74,11 @@
         .footer {
             background-color: #080808; color: #888888; padding: 2rem 1rem;
             border-top: 1px solid #222222; text-align: center;
-            margin-top: auto; /* Pushes footer to the bottom */
+            margin-top: auto;
         }
     </style>
 </head>
 <body class="antialiased">
-    <!-- FIX: Replaced the old div with a semantic header tag for our manager script -->
     <header id="header-placeholder"></header>
 
     <main class="auth-container">
@@ -92,7 +92,7 @@
                 <input type="password" id="login-password" placeholder="Password" required class="auth-input">
                 <button id="login-button" class="auth-button">Login</button>
                 <p class="text-center mt-6 text-sm">
-                    Don't have an account? <span class="toggle-link" onclick="showSignUp()">Sign Up</span>
+                    Don't have an account? <span class="toggle-link" id="show-signup-link">Sign Up</span>
                 </p>
                 <div class="flex items-center my-6">
                     <hr class="flex-grow border-gray-700">
@@ -107,12 +107,12 @@
             
             <!-- Signup Form -->
             <div id="signup-form" class="hidden">
-                <!-- FIX: Removed first and last name inputs -->
+                <input type="text" id="signup-name" placeholder="Full Name" required class="auth-input">
                 <input type="email" id="signup-email" placeholder="Email Address" required class="auth-input">
                 <input type="password" id="signup-password" placeholder="Create a Password" required class="auth-input">
-                <button id="signup-button" class="auth-button">Sign Up</button>
+                <button id="signup-button" class="auth-button">Create Account</button>
                 <p class="text-center mt-6 text-sm">
-                    Already have an account? <span class="toggle-link" onclick="showLogin()">Login</span>
+                    Already have an account? <span class="toggle-link" id="show-login-link">Login</span>
                 </p>
                 <div class="flex items-center my-6">
                     <hr class="flex-grow border-gray-700">
@@ -123,7 +123,6 @@
                     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" class="h-5 w-5">
                     Continue with Google
                 </button>
-                <!-- FIX: Removed the phone number button -->
             </div>
         </div>
     </main>
@@ -132,145 +131,136 @@
         <p class="text-xs">&copy; 2025 Linq Energy Intelligence. All Rights Reserved.</p>
     </footer>
 
-    <!-- Using modern ES6 modules for Firebase -->
-    <script type="module">
-        // Import specific functions to improve performance and code clarity
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-        import { 
-            getAuth, 
-            onAuthStateChanged,
-            createUserWithEmailAndPassword, 
-            signInWithEmailAndPassword, 
-            GoogleAuthProvider,
-            signInWithPopup 
-        } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-
-        // Initialize Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-            authDomain: "linq-b27a8.firebaseapp.com",
-            projectId: "linq-b27a8",
-            storageBucket: "linq-b27a8.appspot.com",
-            messagingSenderId: "1067901051826",
-            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-        };
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // --- DOM Elements ---
-        const loginForm = document.getElementById('login-form');
-        const signupForm = document.getElementById('signup-form');
-        const formTitle = document.getElementById('form-title');
-        const errorMessage = document.getElementById('error-message');
-
-        // --- Helper Functions ---
-        const showSignUp = () => {
-            loginForm.classList.add('hidden');
-            signupForm.classList.remove('hidden');
-            formTitle.textContent = "Create Account";
-            errorMessage.style.display = 'none';
-        };
-
-        const showLogin = () => {
-            signupForm.classList.add('hidden');
-            loginForm.classList.remove('hidden');
-            formTitle.textContent = "Login";
-            errorMessage.style.display = 'none';
-        };
-
-        // Make toggle functions globally accessible
-        window.showSignUp = showSignUp;
-        window.showLogin = showLogin;
-
-        // --- Authentication Logic ---
-        async function ensureUserDocument(user) {
-            const userRef = doc(db, "users", user.uid);
-            const userSnap = await getDoc(userRef);
-            if (!userSnap.exists()) {
-                await setDoc(userRef, {
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: user.displayName || null, // Will be null for email signup now
-                    createdAt: new Date().toISOString(),
-                    isSubscribed: false // Default subscription status
-                });
+    <!-- FIX: Reverted to a standard script tag and compat syntax to match the rest of the site -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Firebase Initialization ---
+            const firebaseConfig = {
+                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+                authDomain: "linq-b27a8.firebaseapp.com",
+                projectId: "linq-b27a8",
+                storageBucket: "linq-b27a8.appspot.com",
+                messagingSenderId: "1067901051826",
+                appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+            };
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
             }
-        }
-        
-        function getRedirectUrl() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get('redirect') || 'index.html'; // Default to index.html if no redirect is specified
-        }
+            const auth = firebase.auth();
+            const db = firebase.firestore();
 
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            await ensureUserDocument(user);
-            window.location.href = getRedirectUrl(); // Redirect after login/signup
-          }
-        });
+            // --- DOM Elements ---
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const formTitle = document.getElementById('form-title');
+            const errorMessage = document.getElementById('error-message');
 
-        // Event listener for login button
-        document.getElementById('login-button').addEventListener('click', async () => {
-            const email = document.getElementById("login-email").value;
-            const password = document.getElementById("login-password").value;
-            errorMessage.style.display = "none";
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                // onAuthStateChanged will handle the redirect
-            } catch (error) {
-                errorMessage.style.display = "block";
-                errorMessage.textContent = "Incorrect email or password.";
-                console.error("Login Error:", error);
-            }
-        });
+            // --- Form Toggling ---
+            document.getElementById('show-signup-link').addEventListener('click', () => {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                formTitle.textContent = "Create Account";
+                errorMessage.style.display = 'none';
+            });
+            document.getElementById('show-login-link').addEventListener('click', () => {
+                signupForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+                formTitle.textContent = "Login";
+                errorMessage.style.display = 'none';
+            });
 
-        // Event listener for signup button
-        document.getElementById('signup-button').addEventListener('click', async () => {
-            const email = document.getElementById("signup-email").value;
-            const password = document.getElementById("signup-password").value;
-            errorMessage.style.display = "none";
-        
-            if (password.length < 6) {
-                errorMessage.style.display = "block";
-                errorMessage.textContent = "Password must be at least 6 characters.";
-                return;
-            }
-            try {
-                await createUserWithEmailAndPassword(auth, email, password);
-                // onAuthStateChanged will handle user doc creation and redirect
-            } catch (error) {
-                errorMessage.style.display = "block";
-                if (error.code === 'auth/email-already-in-use') {
-                    errorMessage.textContent = "This email address is already in use.";
-                } else {
-                    errorMessage.textContent = "Sign up failed. Please try again.";
+            // --- Authentication Logic ---
+            async function ensureUserDocument(user) {
+                const userRef = db.collection("users").doc(user.uid);
+                const userSnap = await userRef.get();
+                if (!userSnap.exists) {
+                    await userRef.set({
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: user.displayName || null,
+                        createdAt: new Date().toISOString(),
+                        isSubscribed: false
+                    });
                 }
-                console.error("Sign Up Error:", error);
             }
+
+            function getRedirectUrl() {
+                const params = new URLSearchParams(window.location.search);
+                return params.get('redirect') || 'index.html';
+            }
+
+            auth.onAuthStateChanged(async (user) => {
+                if (user) {
+                    await ensureUserDocument(user);
+                    window.location.href = getRedirectUrl();
+                }
+            });
+
+            // --- Event Listeners ---
+            document.getElementById('login-button').addEventListener('click', () => {
+                const email = document.getElementById("login-email").value;
+                const password = document.getElementById("login-password").value;
+                errorMessage.style.display = "none";
+
+                auth.signInWithEmailAndPassword(email, password)
+                    .catch(error => {
+                        errorMessage.style.display = "block";
+                        errorMessage.textContent = "Incorrect email or password.";
+                        console.error("Login Error:", error);
+                    });
+            });
+
+            document.getElementById('signup-button').addEventListener('click', () => {
+                const name = document.getElementById("signup-name").value.trim();
+                const email = document.getElementById("signup-email").value;
+                const password = document.getElementById("signup-password").value;
+                errorMessage.style.display = "none";
+            
+                if (password.length < 6) {
+                    errorMessage.textContent = "Password must be at least 6 characters.";
+                    errorMessage.style.display = "block";
+                    return;
+                }
+                if (!name) {
+                    errorMessage.textContent = "Please enter your full name.";
+                    errorMessage.style.display = "block";
+                    return;
+                }
+
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then(userCredential => {
+                        return userCredential.user.updateProfile({
+                            displayName: name
+                        });
+                    })
+                    .catch(error => {
+                        errorMessage.style.display = "block";
+                        if (error.code === 'auth/email-already-in-use') {
+                            errorMessage.textContent = "This email address is already in use.";
+                        } else {
+                            errorMessage.textContent = "Sign up failed. Please try again.";
+                        }
+                        console.error("Sign Up Error:", error);
+                    });
+            });
+            
+            const handleGoogleLogin = () => {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                errorMessage.style.display = "none";
+                auth.signInWithPopup(provider)
+                    .catch(error => {
+                        errorMessage.style.display = "block";
+                        errorMessage.textContent = "Google sign-in failed. Please try again.";
+                        console.error("Google Sign-In Error:", error);
+                    });
+            };
+
+            document.getElementById('google-login-button').addEventListener('click', handleGoogleLogin);
+            document.getElementById('google-signup-button').addEventListener('click', handleGoogleLogin);
         });
-
-        // Google login handler
-        const handleGoogleLogin = async () => {
-            const provider = new GoogleAuthProvider();
-            errorMessage.style.display = "none";
-            try {
-                await signInWithPopup(auth, provider);
-                // onAuthStateChanged will handle the redirect
-            } catch (error) {
-                errorMessage.style.display = "block";
-                errorMessage.textContent = "Google sign-in failed. Please try again.";
-                console.error("Google Sign-In Error:", error);
-            }
-        };
-
-        // Attach Google login to both buttons
-        document.getElementById('google-login-button').addEventListener('click', handleGoogleLogin);
-        document.getElementById('google-signup-button').addEventListener('click', handleGoogleLogin);
     </script>
     
-    <!-- FIX: Centralized header manager script is now included -->
+    <!-- Centralized header manager script -->
     <script src="headerManager.js" defer></script>
 </body>
 </html>
