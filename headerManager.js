@@ -17,18 +17,17 @@ document.addEventListener('DOMContentLoaded', () => {
             font-size: 0.875rem; /* 14px */
             color: #D1D5DB; /* gray-300 */
             font-weight: 500;
-            transition: color 0.2s ease-in-out; /* Removed background-color transition */
+            transition: color 0.2s ease-in-out;
             border-radius: 0.375rem; /* rounded-md */
         }
-        /* FIX: Removed the background-color change on hover */
+        /* Hover state for any link */
         .nav-link:hover {
-            color: #FFFFFF;
+            color: #FFFFFF; /* Brighter text on hover */
         }
-        /* The 'active' state now provides the background color */
+        /* FIX: The 'active' state is now indicated by accent color, not a box. */
         .nav-link.active {
-            color: #FFFFFF;
+            color: #00BFFF; /* Cyan text for the active page */
             font-weight: 600;
-            background-color: rgba(0, 191, 255, 0.1);
         }
         .nav-link-button {
             font-size: 0.875rem;
@@ -135,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // --- FINAL UI UPDATES ---
             setActiveNavLink(); 
             
-            // FIX: Reveal the header with a fade-in AFTER the auth check is complete.
+            // Reveal the header with a fade-in AFTER the auth check is complete.
             if (nav) {
                 nav.style.opacity = '1';
             }
