@@ -10,6 +10,13 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    
+    <!-- Article Data Scripts -->
+    <script src="source_images.js?v=20250612v2" defer></script>
+    <script src="articles_present.js?v=20250612v2" defer></script>
+    <script src="articles_premium.js?v=20250612v2" defer></script>
+    <script src="articles_past.js?v=20250612v4" defer></script>
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -27,7 +34,6 @@
         ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
         ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
 
-        /* Styles for the dynamically loaded header.html */
         nav.fixed {
             background-color: rgba(10, 10, 10, 0.85) !important;
             backdrop-filter: blur(10px) saturate(150%) !important;
@@ -36,13 +42,6 @@
             position: fixed !important; top: 0 !important; left: 0 !important;
             width: 100% !important; z-index: 1000 !important; padding: 0.75rem 0 !important;
         }
-        nav.fixed .container {
-            display: flex !important; justify-content: space-between !important; align-items: center !important;
-            width: 100% !important; max-width: 1280px !important;
-            margin: 0 auto !important; padding: 0 1rem !important;
-        }
-        @media (min-width: 640px) { nav.fixed .container { padding: 0 1.5rem !important; } }
-        @media (min-width: 1024px) { nav.fixed .container { padding: 0 2rem !important; } }
         .nav-link {
             transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
             font-weight: 500; color: #B0B0B0; opacity: 0.8;
@@ -55,12 +54,10 @@
         }
         #authLinkDesktopLogin.nav-link-button:hover { background-color: #00A9E0; opacity: 1; }
         
-        /* End of Header specific styles */
-
         .page-content-wrapper {
             flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px;
             margin: 0 auto; padding-left: 1rem; padding-right: 1rem;
-            padding-top: 80px; /* Default, will be adjusted by JS */
+            padding-top: 80px; 
         }
         .page-main-title { 
             font-size: 2.5rem; font-weight: 700; color: #FFFFFF; margin-bottom: 1rem; text-align: center;
@@ -89,7 +86,6 @@
             border-bottom: 1px solid #374151;
         }
 
-        /* News Card Styling */
         .news-card {
             background-color: #0A0A0A; border-radius: 0.75rem; border: 1px solid #2D2D2D;
             box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.6); overflow: hidden;
@@ -108,7 +104,6 @@
         }
         .news-source-logo { max-width: 100%; max-height: 100%; object-fit: contain; }
         .news-content-wrapper { flex-grow: 1; display: flex; justify-content: space-between; align-items: flex-start; }
-        .news-text-content {}
         .news-title { font-size: 1.1rem; font-weight: 500; color: #FFFFFF; margin-bottom: 0.25rem; line-height: 1.3; }
         .news-title a { color: #FFFFFF; transition: color 0.2s ease; }
         .news-title a:hover { color: #00BFFF; }
@@ -130,11 +125,8 @@
              width: 1.5rem; height: 1.5rem;
         }
         .favorite-btn:hover { color: #00BFFF; transform: scale(1.15); }
-        .favorite-btn.favorited { color: #00BFFF; }
         .favorite-btn.favorited svg { fill: #00BFFF; stroke: #00BFFF; } 
 
-
-        /* Community Post Card Styling */
         .post-card {
             background-color: #121212; border: 1px solid #282828; border-radius: 0.75rem;
             padding: 1.75rem; margin-bottom: 1.5rem;
@@ -175,19 +167,6 @@
         .action-btn:hover { background-color: #1A1A1A; color: #00BFFF; border-color: #00BFFF; }
         .action-btn i { font-size: 1rem; }
 
-        .post-card .favorite-btn {
-            padding: 0.5rem;
-        }
-        .post-card .favorite-btn i.fas { display: none; }
-        .post-card .favorite-btn i.far { display: inline-block; } 
-        .post-card .favorite-btn.favorited i.fas { display: inline-block; color: #00BFFF;} 
-        .post-card .favorite-btn.favorited i.far { display: none; }
-        .post-card .favorite-btn.favorited {
-             color: #00BFFF;
-             border-color: #00BFFF;
-             background-color: rgba(0, 191, 255, 0.1); 
-        }
-
         .no-favorites-message, .auth-message {
             text-align: center; color: #A0A0A0; font-size: 1.1rem; padding: 3rem 1rem;
             background-color: #121212; border-radius: 0.5rem; border: 1px solid #2a2a2a;
@@ -200,34 +179,31 @@
             background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem;
             border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem; margin-top: auto;
         }
-        .footer a { color: #B0B0B0; transition: color 0.2s ease; }
-        .footer a:hover { color: #00BFFF; }
     </style>
 </head>
 <body class="antialiased">
     <div id="header-placeholder"></div>
 
     <main class="page-content-wrapper container mx-auto p-4 sm:p-6 lg:p-8">
-        <div id="favoritesPageContent"> <h1 class="page-main-title">Your <span class="accent-text">Bookmarks</span></h1>
+        <div id="favoritesPageContent" class="hidden"> 
+            <h1 class="page-main-title">Your <span class="accent-text">Bookmarks</span></h1>
 
             <div class="favorites-grid-container">
                 <div class="favorites-column" id="news-favorites-column">
                     <h2>News Articles</h2>
-                    <div id="newsFavoritesGrid">
-                        </div>
+                    <div id="newsFavoritesGrid"></div>
                 </div>
                 <div class="favorites-column" id="community-favorites-column">
                     <h2>Community Posts</h2>
-                    <div id="communityFavoritesGrid">
-                        </div>
+                    <div id="communityFavoritesGrid"></div>
                 </div>
             </div>
         </div>
 
-        <div id="authMessageContainer" class="hidden">
+        <div id="authMessageContainer">
             <h1 class="page-main-title">Your <span class="accent-text">Bookmarks</span></h1>
             <div id="authMessage" class="auth-message">
-                You must be logged in to view your bookmarks <a href="login.html" class="text-cyan-400 hover:underline">Login here</a>.
+                You must be logged in to view your bookmarks. <a href="login.html" class="text-cyan-400 hover:underline">Login here</a>.
             </div>
         </div>
     </main>
@@ -235,394 +211,218 @@
     <footer class="footer text-center">
         <div class="container mx-auto">
             <p class="mb-2 text-sm">&copy; <span id="current-year"></span> Linq Energy Intelligence. All Rights Reserved.</p>
-            <nav class="text-xs space-x-3 sm:space-x-4">
-                <a href="#">Terms of Service</a> |
-                <a href="#">Privacy Policy</a> |
-                <a href="#">Contact Support</a>
-            </nav>
         </div>
     </footer>
 
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
     <script>
-        // --- Function to Initialize and Run All Header Related Logic ---
-        function initializeHeaderAndAuth() {
-            // Get all necessary elements from the DOM *after* the header is loaded
-            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
-            const profileLinkDesktop = document.getElementById('profileLinkDesktop');
-            const navProfilePic = document.getElementById('navProfilePic');
-            
-            // Mobile and slide-out menu elements
-            const authLinkMobile = document.getElementById('authLinkMobile');
-            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
-            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile');
-            const earningsLinkMobile = document.getElementById('earningsLinkMobile');
-            const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
-            const menuOverlay = document.getElementById('menu-overlay');
-            const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
-            const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
-            const slideoutCloseButton = document.getElementById('slideout-close-button');
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-
-            // Firebase configuration
-            const firebaseConfig = {
-                apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-                authDomain: "linq-b27a8.firebaseapp.com",
-                projectId: "linq-b27a8",
-                storageBucket: "linq-b27a8.appspot.com",
-                messagingSenderId: "1067901051826",
-                appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-            };
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            const authInstance = firebase.auth();
-
-            authInstance.onAuthStateChanged(user => {
-                const favoritesPageContent = document.getElementById('favoritesPageContent');
-                const authMessageContainer = document.getElementById('authMessageContainer');
-
-                if (user) {
-                    // --- User is LOGGED IN ---
-                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
-                    if (profileLinkDesktop) profileLinkDesktop.classList.remove('hidden');
-
-                    if(navProfilePic) {
-                        if (user.photoURL) {
-                            navProfilePic.src = user.photoURL;
-                        } else if (user.displayName) {
-                             navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
-                        } else if (user.email) {
-                            navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
-                        } else {
-                            navProfilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
-                        }
-                    }
-
-                    // Mobile menu updates
-                    if (authLinkMobile) { authLinkMobile.textContent = "My Profile"; authLinkMobile.href = "profile.html"; }
-                    if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
-                    if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
-                    if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
-                    if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
-                    
-                    if(favoritesPageContent) favoritesPageContent.classList.remove('hidden');
-                    if(authMessageContainer) authMessageContainer.classList.add('hidden');
-                    displayFavoriteArticles();
-                    displayFavoriteCommunityPosts();
-
-                } else {
-                    // --- User is LOGGED OUT ---
-                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.remove('hidden');
-                    if (profileLinkDesktop) profileLinkDesktop.classList.add('hidden');
-                    
-                    // Mobile menu updates
-                    if (authLinkMobile) { authLinkMobile.textContent = "Login"; authLinkMobile.href = "login.html"; }
-                    if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
-                    if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
-                    if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
-                    if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
-                    if (desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
-                    
-                    if(favoritesPageContent) favoritesPageContent.classList.add('hidden');
-                    if(authMessageContainer) authMessageContainer.classList.remove('hidden');
-                }
-                setActiveNavLink();
-            });
-
-            function handleLogout(e) {
-                e.preventDefault();
-                if (desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
-                if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
-                authInstance.signOut().then(() => {
-                    window.location.href = 'index.html';
-                }).catch(error => console.error("Sign out error", error));
-            }
-
-            if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
-            if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
-
-            function setActiveNavLink() {
-                const currentPath = window.location.pathname.split("/").pop() || "index.html";
-                const navLinks = document.querySelectorAll('#header-placeholder nav.fixed a.nav-link, #header-placeholder #mobile-menu a.nav-link');
-
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    const linkHref = link.getAttribute('href');
-                    if (linkHref === currentPath) {
-                        link.classList.add('active');
-                    }
-                });
-            }
-
-            if (mobileMenuButton && mobileMenu) {
-                mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-            }
-
-            function openDesktopMenu() {
-                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.add('open');
-                if (menuOverlay) menuOverlay.classList.add('active');
-                document.body.classList.add('overflow-hidden');
-            }
-            function closeDesktopMenu() {
-                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open');
-                if (menuOverlay) menuOverlay.classList.remove('active');
-                document.body.classList.remove('overflow-hidden');
-            }
-            if (desktopHamburgerButton) {
-                desktopHamburgerButton.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    if (desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
-                    else openDesktopMenu();
-                });
-            }
-            if (menuOverlay) menuOverlay.addEventListener('click', closeDesktopMenu);
-            if (slideoutCloseButton) slideoutCloseButton.addEventListener('click', closeDesktopMenu);
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
-            });
-
-            setActiveNavLink();
-        }
-
-        fetch('header.html')
-        .then(response => {
-            if (!response.ok) throw new Error('Network response was not ok for header.html');
-            return response.text();
-        })
-        .then(data => {
-            const headerPlaceholder = document.getElementById('header-placeholder');
-            if (headerPlaceholder) {
-                headerPlaceholder.innerHTML = data;
-                initializeHeaderAndAuth();
-    
-                const fixedHeader = headerPlaceholder.querySelector('nav.fixed');
-                if (fixedHeader) {
-                    document.querySelector('.page-content-wrapper').style.paddingTop = (fixedHeader.offsetHeight + 20) + 'px';
-                }
-            } else {
-                console.error('Header placeholder element not found.');
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching header:', error);
-        });
-
-        document.getElementById('current-year').textContent = new Date().getFullYear();
-
-        const sourcePlaceholders = {
-            'Reuters': { bgColor: 'FF8000', textColor: 'FFFFFF', text: 'RTRS', logoUrl: '...' },
-            'Bloomberg': { bgColor: '000000', textColor: '007bff', text: 'BBG', logoUrl: '...' },
-            'CNBC': { bgColor: '000000', textColor: 'FFFFFF', text: 'CNBC', logoUrl: '...' },
-            'Forbes': { bgColor: '222222', textColor: 'ffffff', text: 'FRBS', logoUrl: '...' },
-            'BBC News': { bgColor: 'BB1919', textColor: 'FFFFFF', text: 'BBC', logoUrl: '...' },
-            'Seeking Alpha': { bgColor: 'F39200', textColor: '000000', text: 'SA', logoUrl: '...' },
-        };
-        const genericPlaceholderColors = ['00BFFF', '4B0082', '800080', 'FF1493', 'FF8C00', '20B2AA', 'DA70D6'];
-
-        const articlesData = [
-            { id: "1", category: 'Crude Oil', title: 'Oil Prices Surge Amid Supply Concerns', date: 'May 10, 2025', source: 'Reuters', link: '#', image: '...' },
-            { id: "2", category: 'Crude Oil', title: 'OPEC+ Extends Production Cuts', date: 'May 9, 2025', source: 'Bloomberg', link: '#', image: '...' },
-            { id: "3", category: 'Natural Gas', title: 'Global Demand for Crude Hits Record', date: 'May 10, 2025', source: 'CNBC', link: '#', image: '...' },
-            { id: "4", category: 'Petrochemicals', title: 'Petrochemical Demand Shifts with New Green Policies', date: 'May 8, 2025', source: 'Forbes', link: '#', image: '...' },
-            { id: "5", category: 'Power', title: 'Global Power Grids Under Strain from Extreme Weather Events', date: 'May 10, 2025', source: 'BBC News', link: '#', image: '...' },
-            { id: "6", category: 'Renewables', title: 'Solar Panel Efficiency Reaches New Heights, Driving Adoption', date: 'May 9, 2025', source: 'Seeking Alpha', link: '#', image: '...' },
-        ];
-
+        // --- GLOBAL STATE ---
         let newsFavorites = [];
         let communityFavorites = [];
+        let allNewsArticles = [];
+        let communityPosts = [];
+        let unsubscribeUserListener = null;
 
-        // Function to fetch user's bookmarks from Firestore
-        async function fetchUserBookmarks() {
-            const user = authInstance.currentUser;
-            if (!user) {
-                newsFavorites = [];
-                communityFavorites = [];
-                displayFavoriteArticles();
-                displayFavoriteCommunityPosts();
-                return;
-            }
+        // --- FIREBASE SETUP ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+            authDomain: "linq-b27a8.firebaseapp.com",
+            projectId: "linq-b27a8",
+            storageBucket: "linq-b27a8.appspot.com",
+            messagingSenderId: "1067901051826",
+            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const authInstance = firebase.auth();
+        const db = firebase.firestore();
 
-            try {
-                const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
-                if (userDoc.exists) {
-                    const data = userDoc.data();
-                    newsFavorites = data.bookmarks || [];
-                    communityFavorites = data.communityBookmarks || [];
-                } else {
-                    newsFavorites = [];
-                    communityFavorites = [];
-                }
-                displayFavoriteArticles();
-                displayFavoriteCommunityPosts();
-            } catch (error) {
-                console.error('Error fetching bookmarks:', error);
-                newsFavorites = [];
-                communityFavorites = [];
-                displayFavoriteArticles();
-                displayFavoriteCommunityPosts();
-            }
+        // --- DATA AGGREGATION ---
+        function aggregateData() {
+            // Aggregate all news articles into a single array for easy lookup
+            const present = window.presentDayArticles || [];
+            const premium = window.premiumArticles || [];
+            const past = (window.pastArticles || []).flat(); // Flatten nested arrays
+            allNewsArticles = [...present, ...premium, ...past];
+
+            // Community posts data (ensure it's available)
+            communityPosts = window.communityPostsDataPage || [
+                 { id: 'tweet19', url: 'https://twitter.com/DavidInglesTV/status/1933357784646758533', title: 'Oil Prices Up Most in Half Decade', meta: 'June 13, 2025 • David Ingles (@DavidInglesTV)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">Oil prices up the most in half decade. We were at $59 five weeks ago. $80 now in sight. Brent crude up over 10% <a href="https://t.co/g9sMWWWm3y">pic.twitter.com/g9sMWWWm3y</a></p>&mdash; David Ingles (@DavidInglesTV) <a href="https://twitter.com/DavidInglesTV/status/1933357784646758533?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
+                 { id: 'tweet1', url: 'https://twitter.com/IsraeliPM/status/1933244843624407170', title: 'PM Netanyahu\'s Remarks with Argentine President Milei', meta: 'June 12, 2025 • Prime Minister of Israel (@IsraeliPM)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">WATCH: Prime Minister Benjamin Netanyahu&#39;s remarks, today, at the signing of MOUs with Argentine President <a href="https://twitter.com/JMilei?ref_src=twsrc%5Etfw">@JMilei</a>.<br><br>&quot;We feel your heart, your connection to our people, to our land, to our state, and our eternal united city, Jerusalem.&quot;<a href="https://t.co/7wtikaq9GC">https://t.co/7wtikaq9GC</a> <a href="https://t.co/clKlE7t7DY">pic.twitter.com/clKlE7t7DY</a></p>&mdash; Prime Minister of Israel (@IsraeliPM) <a href="https://twitter.com/IsraeliPM/status/1933244843624407170?ref_src=twsrc%5Etfw">June 12, 2025</a>'}
+            ];
         }
 
-        // Function to update bookmarks in Firestore
-        async function updateBookmarks(articleId, type, isAdding) {
-            const user = authInstance.currentUser;
-            if (!user) {
-                return;
-            }
-
-            try {
-                const userRef = firebase.firestore().collection('users').doc(user.uid);
-                const field = type === 'news' ? 'bookmarks' : 'communityBookmarks';
-                const value = isAdding ? firebase.firestore.FieldValue.arrayUnion(articleId) : firebase.firestore.FieldValue.arrayRemove(articleId);
-                
-                await userRef.set({
-                    [field]: value
-                }, { merge: true });
-                
-                await fetchUserBookmarks(); // Refresh the bookmarks
-            } catch (error) {
-                console.error('Error updating bookmarks:', error);
-            }
-        }
-
-        async function toggleFavoriteOnFavoritesPage(articleId, type) {
-            const idStr = String(articleId);
-            const isAdding = type === 'news' ? !newsFavorites.includes(idStr) : !communityFavorites.includes(idStr);
-            await updateBookmarks(idStr, type, isAdding);
-        }
-
-        // Update the auth state change listener to fetch bookmarks
-        authInstance.onAuthStateChanged(user => {
-            if (user) {
-                fetchUserBookmarks();
-            } else {
-                newsFavorites = [];
-                communityFavorites = [];
-                displayFavoriteArticles();
-                displayFavoriteCommunityPosts();
-            }
-        });
-
-        function displayFavoriteArticles() {
-            const newsFavoritesGrid = document.getElementById('newsFavoritesGrid');
-            if (!newsFavoritesGrid) return;
-            newsFavoritesGrid.innerHTML = '';
-            const favoritedArticlesDetails = articlesData.filter(article => newsFavorites.includes(String(article.id)));
-
+        // --- UI & RENDERING ---
+        function displayFavoriteNews() {
+            const container = document.getElementById('newsFavoritesGrid');
+            if (!container) return;
+            container.innerHTML = '';
+            
+            const favoritedArticlesDetails = allNewsArticles.filter(article => newsFavorites.includes(String(article.id)));
+            
             if (favoritedArticlesDetails.length === 0) {
-            newsFavoritesGrid.innerHTML = `<p class="no-favorites-message col-span-full">You haven't bookmarked any news articles yet.<br><a href="index.html" class="text-cyan-400 hover:underline">Explore News</a></p>`;
+                container.innerHTML = `<p class="no-favorites-message">You haven't bookmarked any news articles yet.<br><a href="index.html" class="text-cyan-400 hover:underline">Explore News</a></p>`;
                 return;
             }
-            favoritedArticlesDetails.forEach((article, index) => {
+
+            favoritedArticlesDetails.forEach(article => {
                 const articleElement = document.createElement('div');
                 articleElement.className = 'news-card';
-
-                let imageUrl;
-                const sourceInfo = sourcePlaceholders[article.source];
-
-                if (article.image && article.image.trim() !== '' && article.image !== '...') {
-                    imageUrl = article.image;
-                }
-                else if (sourceInfo && sourceInfo.logoUrl && sourceInfo.logoUrl.trim() !== '' && !sourceInfo.logoUrl.startsWith('...')) {
-                    imageUrl = sourceInfo.logoUrl;
-                }
-                else {
-                    if (sourceInfo && sourceInfo.bgColor && sourceInfo.textColor && sourceInfo.text) {
-                        imageUrl = `https://placehold.co/50x50/${sourceInfo.bgColor}/${sourceInfo.textColor}?text=${encodeURIComponent(sourceInfo.text)}&font=Inter`;
-                    } else {
-                        const colorIndex = index % genericPlaceholderColors.length;
-                        const bgColor = genericPlaceholderColors[colorIndex];
-                        const textColor = 'FFFFFF';
-                        const sourceInitial = article.source ? encodeURIComponent(article.source.charAt(0).toUpperCase()) : 'N';
-                        imageUrl = `https://placehold.co/50x50/${bgColor}/${textColor}?text=${sourceInitial}&font=Inter`;
-                    }
-                }
+                const sourceInfo = window.sourceImageMap[article.source] || null;
+                const imageUrl = sourceInfo ? `https://placehold.co/50x50/cccccc/333333?text=${article.source.charAt(0)}` : 'https://placehold.co/50x50/cccccc/333333?text=N';
 
                 articleElement.innerHTML = `
-                    <div class="news-source-logo-container">
-                        <img src="${imageUrl}" alt="${article.source || 'Source'} Logo" class="news-source-logo" onerror="this.onerror=null; this.src='https://placehold.co/50x50/cccccc/333333?text=Err&font=Inter'; this.alt='Image error fallback';">
-                    </div>
+                    <div class="news-source-logo-container"><img src="${imageUrl}" alt="${article.source || 'Source'} Logo" class="news-source-logo"></div>
                     <div class="news-content-wrapper">
-                        <div class="news-text-content">
-                            <h3 class="news-title"><a href="${article.link || '#'}" target="_blank" rel="noopener noreferrer">${article.title || 'Untitled Article'}</a></h3>
+                        <div>
+                            <h3 class="news-title"><a href="${article.link || '#'}" target="_blank" rel="noopener noreferrer">${article.title || 'Untitled'}</a></h3>
                             <div class="news-meta-tags">
-                                <p class="news-meta">${article.date || 'N/A Date'} &bull; ${article.source || 'N/A Source'}</p>
+                                <p class="news-meta">${article.date || 'N/A'} &bull; ${article.source || 'N/A'}</p>
                                 <span class="news-tag">${article.category || 'General'}</span>
                             </div>
                         </div>
                         <div class="favorite-btn-area">
-                        <button class="favorite-btn favorited" data-id="${article.id}" data-type="news" aria-label="Unfavorite article">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" />
-                            </svg>
-                        </button>
+                            <button class="favorite-btn favorited" data-id="${article.id}" data-type="news" aria-label="Unfavorite article">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="currentColor"><path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" /></svg>
+                            </button>
                         </div>
                     </div>`;
-                newsFavoritesGrid.appendChild(articleElement);
+                container.appendChild(articleElement);
             });
-            addFavoriteButtonListeners();
         }
 
         function displayFavoriteCommunityPosts() {
-            const communityFavoritesGrid = document.getElementById('communityFavoritesGrid');
-            if (!communityFavoritesGrid) return;
-            communityFavoritesGrid.innerHTML = '';
-            const favoritedCommunityPosts = communityPostsDataPage.filter(post => communityFavorites.includes(String(post.id)));
+            const container = document.getElementById('communityFavoritesGrid');
+            if (!container) return;
+            container.innerHTML = '';
+            
+            const favoritedPostsDetails = communityPosts.filter(post => communityFavorites.includes(String(post.id)));
 
-            if (favoritedCommunityPosts.length === 0) {
-                communityFavoritesGrid.innerHTML = `<p class="no-favorites-message col-span-full">You haven't favorited any community posts yet.<br><a href="community.html" class="text-cyan-400 hover:underline">Explore Community</a></p>`;
+            if (favoritedPostsDetails.length === 0) {
+                container.innerHTML = `<p class="no-favorites-message">You haven't bookmarked any community posts yet.<br><a href="community.html" class="text-cyan-400 hover:underline">Explore Community</a></p>`;
                 return;
             }
-            favoritedCommunityPosts.forEach(post => {
+            favoritedPostsDetails.forEach(post => {
                 const postElement = document.createElement('article');
                 postElement.className = 'post-card';
-                postElement.setAttribute('data-id', post.id);
-                const tweetContentHTML = typeof post.tweetContent === 'string' && post.tweetContent !== '...' ? post.tweetContent : '<p>Could not load tweet content.</p>';
-
                 postElement.innerHTML = `
-                    <p class="post-title">${post.title || 'Untitled Post'}</p>
+                    <p class="post-title">${post.title || 'Untitled'}</p>
                     <p class="post-meta">${post.meta || 'N/A'} <span class="post-category-tag">${post.category || 'General'}</span></p>
                     <div class="twitter-tweet-container">
-                        <blockquote class="twitter-tweet" data-theme="dark" data-cards="hidden" data-conversation="none">${tweetContentHTML}</blockquote>
+                        <blockquote class="twitter-tweet" data-theme="dark" data-cards="hidden" data-conversation="none">${post.tweetContent || ''}</blockquote>
                     </div>
                     <div class="post-actions">
-                    <button class="action-btn favorite-btn favorited" data-id="${post.id}" data-type="community" aria-label="Toggle Favorite">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                            <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" />
-                        </svg>
-                    </button>
-                        <button class="action-btn share-btn" data-url="${post.url || '#'}" data-title="${post.title || 'Untitled Post'}">
-                            <i class="fas fa-share-alt"></i> Share
+                        <button class="action-btn favorite-btn favorited" data-id="${post.id}" data-type="community" aria-label="Unfavorite post">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="currentColor"><path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" /></svg>
                         </button>
-                        <span class="share-confirmation hidden" style="margin-left: auto; margin-right: 0.5rem;">Link copied!</span>
                     </div>`;
-                communityFavoritesGrid.appendChild(postElement);
+                container.appendChild(postElement);
             });
 
             if (window.twttr && window.twttr.widgets) {
-                window.twttr.widgets.load(communityFavoritesGrid);
+                window.twttr.widgets.load(container);
             }
-            addFavoriteButtonListeners();
         }
 
-        function addFavoriteButtonListeners() {
-            document.querySelectorAll('#newsFavoritesGrid .favorite-btn, #communityFavoritesGrid .favorite-btn').forEach(button => {
-                button.removeEventListener('click', handleUnfavoriteClick); // Prevent multiple listeners
-                button.addEventListener('click', handleUnfavoriteClick);
+        // --- BOOKMARKING LOGIC ---
+        async function toggleFavorite(articleId, type) {
+            const user = authInstance.currentUser;
+            if (!user) return; // Should not happen if UI is correct
+
+            const userRef = db.collection('users').doc(user.uid);
+            const field = type === 'news' ? 'bookmarks' : 'communityBookmarks';
+            
+            // On this page, clicking a bookmark only ever means removing it
+            await userRef.update({
+                [field]: firebase.firestore.FieldValue.arrayRemove(String(articleId))
+            }).catch(error => console.error(`Error removing ${type} bookmark:`, error));
+        }
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('header.html')
+                .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
+                .then(data => {
+                    document.getElementById('header-placeholder').innerHTML = data;
+                    // Now that header is loaded, initialize auth
+                    authInstance.onAuthStateChanged(handleAuthStateChange);
+                })
+                .catch(error => console.error('Error fetching header:', error));
+
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+            
+            // Wait for external article data to load, then aggregate it
+            const dataCheckInterval = setInterval(() => {
+                if (window.presentDayArticles && window.pastArticles) {
+                    clearInterval(dataCheckInterval);
+                    aggregateData();
+                    // Initial render might happen here or be triggered by auth state change
+                }
+            }, 100);
+
+            // Add single event listener for both columns
+            document.getElementById('favoritesPageContent').addEventListener('click', (event) => {
+                const button = event.target.closest('.favorite-btn');
+                if (button) {
+                    toggleFavorite(button.dataset.id, button.dataset.type);
+                }
             });
-        }
+        });
 
-        function handleUnfavoriteClick(event) {
-            const button = event.currentTarget;
-            const articleId = button.getAttribute('data-id');
-            const type = button.getAttribute('data-type'); // 'news' or 'community'
-            toggleFavoriteOnFavoritesPage(articleId, type);
+        function handleAuthStateChange(user) {
+            const headerPlaceholder = document.getElementById('header-placeholder');
+            const authLink = headerPlaceholder.querySelector('#authLinkDesktopLogin');
+            const profileLink = headerPlaceholder.querySelector('#profileLinkDesktop');
+            const profilePic = headerPlaceholder.querySelector('#navProfilePic');
+
+            const authMessageContainer = document.getElementById('authMessageContainer');
+            const favoritesPageContent = document.getElementById('favoritesPageContent');
+
+            if (user) {
+                // Update header
+                if (authLink) authLink.classList.add('hidden');
+                if (profileLink) profileLink.classList.remove('hidden');
+                if (profilePic) {
+                    if (user.photoURL) profilePic.src = user.photoURL;
+                    else if (user.displayName) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
+                    else profilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
+                }
+                
+                // Show content, hide message
+                authMessageContainer.classList.add('hidden');
+                favoritesPageContent.classList.remove('hidden');
+
+                // Attach listener for real-time updates
+                if (unsubscribeUserListener) unsubscribeUserListener();
+                unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        newsFavorites = data.bookmarks || [];
+                        communityFavorites = data.communityBookmarks || [];
+                    } else {
+                        newsFavorites = [];
+                        communityFavorites = [];
+                    }
+                    displayFavoriteNews();
+                    displayFavoriteCommunityPosts();
+                }, error => {
+                    console.error("Error fetching bookmarks:", error);
+                    newsFavorites = [];
+                    communityFavorites = [];
+                    displayFavoriteNews();
+                    displayFavoriteCommunityPosts();
+                });
+
+            } else {
+                // User is logged out
+                if (authLink) authLink.classList.remove('hidden');
+                if (profileLink) profileLink.classList.add('hidden');
+                if (unsubscribeUserListener) unsubscribeUserListener();
+
+                // Hide content, show login message
+                authMessageContainer.classList.remove('hidden');
+                favoritesPageContent.classList.add('hidden');
+            }
         }
     </script>
 </body>
