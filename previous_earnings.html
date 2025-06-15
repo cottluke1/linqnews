@@ -217,6 +217,8 @@
                 return acc;
             }, {});
 
+            let cardIndex = 0; // Initialize a counter for all cards
+
             Object.keys(groupedByDate).sort((a,b) => new Date(b) - new Date(a)).forEach(dateStr => { // Sort descending for past events
                 const titleEl = document.createElement('h2');
                 titleEl.className = 'text-xl font-semibold text-white my-6 pb-2 border-b border-gray-700';
@@ -224,16 +226,20 @@
                 container.appendChild(titleEl);
 
                 groupedByDate[dateStr].forEach(call => {
-                    const card = createEarningsCard(call);
+                    const card = createEarningsCard(call, cardIndex); // Pass the overall index
                     container.appendChild(card);
+                    cardIndex++; // Increment for the next card
                 });
             });
         }
 
-        function createEarningsCard(call) {
+        function createEarningsCard(call, cardIndex) { // Accept the index as an argument
             const cardEl = document.createElement('div');
             cardEl.className = 'earnings-card';
-            if (!isSubscribed) {
+            
+            // --- MODIFIED LOGIC ---
+            // ONLY lock the card if the user is NOT subscribed AND it is NOT the first card (index 0).
+            if (!isSubscribed && cardIndex > 0) { 
                 cardEl.classList.add('locked');
             }
             
