@@ -13,6 +13,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <style>
+        /* REDUCED: Removed redundant header styles. Only page-specific styles remain. */
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
             background-color: #000000;
@@ -32,112 +33,7 @@
         ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
         ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
 
-        /* Header Styles */
-        nav.fixed {
-            background-color: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(10px) saturate(150%);
-            -webkit-backdrop-filter: blur(10px) saturate(150%);
-            border-bottom: 1px solid #2F3336;
-            position: fixed; 
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000; 
-        }
-        .nav-link {
-            transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
-            font-weight: 500;
-            color: #B0B0B0;
-            opacity: 0.8;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-        }
-        .nav-link:hover {
-            color: #FFFFFF;
-            opacity: 1;
-            background-color: rgba(255,255,255,0.05);
-        }
-        .nav-link.active {
-            color: #FFFFFF;
-            opacity: 1;
-            background-color: transparent;
-        }
-        #authLinkDesktopLogin.nav-link-button {
-            background-color: #00BFFF;
-            color: #FFFFFF !important;
-            opacity: 1 !important;
-            padding: 0.5rem 1rem;
-        }
-        #authLinkDesktopLogin.nav-link-button:hover {
-            background-color: #00A9E0;
-            opacity: 1;
-        }
-        .profile-icon-placeholder {
-            width: 2.25rem;
-            height: 2.25rem;
-            background-color: #333;
-            border-radius: 50%;
-            display: inline-flex; align-items: center; justify-content: center;
-            cursor: pointer;
-            border: 2px solid #4A4A4A;
-        }
-        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; }
-        .profile-icon-placeholder:hover { border-color: #00BFFF; }
-        .desktop-hamburger-menu { position: relative; display: inline-block; }
-        .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;}
-        .desktop-hamburger-icon:hover { color: #FFFFFF; background-color: rgba(255,255,255,0.1); }
-        .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; }
-        .slide-out-panel {
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 320px;
-            height: 100vh;
-            background-color: #18181B;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.4);
-            z-index: 1001;
-            transform: translateX(100%);
-            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            padding: 1.5rem;
-            overflow-y: auto;
-            border-left: 1px solid #3F3F46;
-        }
-        .slide-out-panel.open { transform: translateX(0); }
-        .slide-out-panel-header {
-            display: flex; justify-content: flex-end; align-items: center;
-            padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #3F3F46;
-        }
-        .slide-out-panel-close-btn {
-            background: none; border: none; color: #A0A0A0; font-size: 1.875rem;
-            cursor: pointer; padding: 0.25rem; line-height: 1;
-            transition: color 0.2s ease, transform 0.2s ease;
-        }
-        .slide-out-panel-close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
-        .slide-out-panel-nav { flex-grow: 1; display: flex; flex-direction: column; }
-        .slide-out-panel a {
-            color: #D4D4D8; padding: 1rem 1.25rem; text-decoration: none; display: block;
-            font-size: 0.95rem; font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease;
-            border-left: 4px solid transparent; margin: 0.375rem 0; border-radius: 0.375rem;
-        }
-        .slide-out-panel a:hover { background-color: #27272A; color: #FFFFFF; border-left-color: #00BFFF; }
-        .slide-out-panel #logoutButtonSlideout {
-            color: #F87171 !important; margin-top: auto; padding-top: 1rem; border-top: 1px solid #3F3F46;
-        }
-        .slide-out-panel #logoutButtonSlideout:hover {
-            background-color: rgba(248, 113, 113, 0.1); color: #FECACA !important; border-left-color: #F87171;
-        }
-        #menu-overlay {
-            display: none; position: fixed; inset: 0;
-            background-color: rgba(0, 0, 0, 0.65); z-index: 1000;
-            opacity: 0; transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        #menu-overlay.active { display: block; opacity: 1; }
-        #mobile-menu .nav-link.active { color: #FFFFFF; background-color: rgba(0, 191, 255, 0.1); opacity: 1; }
-
+        /* Page Specific Styles */
         .page-header { text-align: center; margin-bottom: 2.5rem; }
         .page-title {
             font-size: 2.5rem;
@@ -180,7 +76,7 @@
             background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%);
             padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
             border: 1px solid #2a2a2a; position: sticky;
-            top: 100px; 
+            top: 100px;
         }
         .filter-title { font-size: 1.25rem; font-weight: 600; color: #E0E0E0; margin-bottom: 1.25rem; }
         .filter-button {
@@ -221,6 +117,8 @@
             border-radius: 1rem; font-size: 0.75rem; font-weight: 500;
             margin-left: 0.75rem; border: 1px solid rgba(0, 191, 255, 0.3);
         }
+        
+        /* FIXED: Added styles to prevent flash of unstyled content for tweets */
         .twitter-tweet-container {
             margin-top: 1rem;
             background-color: transparent;
@@ -229,7 +127,12 @@
             border: none;
             display: flex;
             justify-content: center;
+            min-height: 120px; /* Reserve space to prevent layout shift */
         }
+        .twitter-tweet-container.is-loading {
+            visibility: hidden; /* Hide the blockquote until the widget is ready */
+        }
+
         .post-actions {
             display: flex;
             justify-content: flex-end;
@@ -381,7 +284,7 @@
             { id: 'tweet14', url: 'https://twitter.com/Josh_Young_1/status/1933337112373293452', title: 'The Sound of "Experts" Deleting Bearish Oil Posts', meta: 'June 13, 2025 • Josh Young (@Josh_Young_1)', category: 'Market Analysis', tweetContent: '<p lang="en" dir="ltr">The sound of &quot;experts&quot; deleting bearish oil posts</p>&mdash; Josh Young (@Josh_Young_1) <a href="https://twitter.com/Josh_Young_1/status/1933337112373293452?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
             { id: 'tweet13', url: 'https://twitter.com/Rory_Johnston/status/1933369800035872980', title: 'Iran says Israel Attack Could Not Have Been Done Without US', meta: 'June 13, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">*IRAN SAYS ISRAEL ATTACK COULD NOT HAVE BEEN DONE WITHOUT US<br><br>*IRAN: US WILL BE HELD RESPONSIBLE FOR ISRAEL&#39;S ATTACK</p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1933369800035872980?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
             { id: 'tweet12', url: 'https://twitter.com/Rory_Johnston/status/1933356845143572942', title: 'Prompt Brent Timespread Rockets', meta: 'June 13, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">OH MY GOD<br><br>Prompt Brent timespread rockets to near $4/bbl.<br><br>We&#39;re talking 2022 Russian invasion levels. <a href="https://t.co/EiLj7A4rO7">pic.twitter.com/EiLj7A4rO7</a></p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1933356845143572942?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
-            { id: 'tweet11', url: 'https://twitter.com/Amena__Bakr/status/1933348851982680520', title: 'Oil Prices Surge on Israeli Strikes in Tehran', meta: 'June 13, 2025 • Amena Bakr (@Amena__Bakr)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">Reports of Israel attacking 6 military sites around Tehran pushed oil prices up by another 5 dollars <a href="https://twitter.com/hashtag/OOTT?src=hash&amp;ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://t.co/XxfnMwXNxy">pic.twitter.com/XxfnMwXNxy</a></p>&mdash; Amena Bakr (@Amena__Bakr) <a href="https://twitter.com/Amena__Bakr/status/1933348851982680520?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
+            { id: 'tweet11', url: 'https://twitter.com/Amena__Bakr/status/1933348851982680520', title: 'Oil Prices Surge on Israeli Strikes in Tehran', meta: 'June 13, 2025 • Amena Bakr (@Amena__Bakr)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">Reports of Israel attacking 6 military sites around Tehran pushed oil prices up by another 5 dollars <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://t.co/XxfnMwXNxy">pic.twitter.com/XxfnMwXNxy</a></p>&mdash; Amena Bakr (@Amena__Bakr) <a href="https://twitter.com/Amena__Bakr/status/1933348851982680520?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
             { id: 'tweet10', url: 'https://twitter.com/GasBuddyGuy/status/1933318569753763959', title: 'Oil Could Surge $5-$10/bbl on Iran Situation', meta: 'June 13, 2025 • Patrick De Haan (@GasBuddyGuy)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">Oil could surge $5-$10/bbl in the days ahead if the situation with Iran deteriorates amidst the summer driving season and rising oil demand..: this could be big.</p>&mdash; Patrick De Haan (@GasBuddyGuy) <a href="https://twitter.com/GasBuddyGuy/status/1933318569753763959?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
             { id: 'tweet9', url: 'https://twitter.com/Rory_Johnston/status/1933316954355532031', title: 'Crude Surging on Israeli Strike on Iran', meta: 'June 13, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">🚨 Crude surging $3+/bbl on Israeli strike on Iran.<br><br>Brent over $73/bbl <a href="https://t.co/gE72Dlcfxv">pic.twitter.com/gE72Dlcfxv</a></p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1933316954355532031?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
             { id: 'tweet8', url: 'https://twitter.com/WhiteHouse/status/1933328486669697508', title: 'Secretary of State Marco Rubio on Israeli Action Against Iran', meta: 'June 13, 2025 • The White House (@WhiteHouse)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">Statement from Secretary of State Marco Rubio<br><br>“Tonight, Israel took unilateral action against Iran. We are not involved in strikes against Iran and our top priority is protecting American forces in the region. Israel advised us that they believe this action was necessary for its… <a href="https://t.co/5FFesh3dkF">pic.twitter.com/5FFesh3dkF</a></p>&mdash; The White House (@WhiteHouse) <a href="https://twitter.com/WhiteHouse/status/1933328486669697508?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
@@ -446,7 +349,7 @@
                 postElement.innerHTML = `
                     <p class="post-title">${post.title || 'Untitled Post'}</p>
                     <p class="post-meta">${post.meta || 'N/A'} <span class="post-category-tag">${post.category || 'General'}</span></p>
-                    <div class="twitter-tweet-container">
+                    <div class="twitter-tweet-container is-loading">
                         <blockquote class="twitter-tweet" data-theme="dark" data-cards="hidden" data-conversation="none">${post.tweetContent || ''}</blockquote>
                     </div>
                     <div class="post-actions">
@@ -503,7 +406,7 @@
             // onSnapshot listener will handle the UI update automatically
         }
 
-        // --- EVENT LISTENERS & INITIALIZATION ---
+        // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             fetch('header.html')
                 .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
@@ -536,6 +439,21 @@
             twitterScript.async = true;
             twitterScript.charset = 'utf-8';
             document.body.appendChild(twitterScript);
+
+            // FIXED: Add event listener for Twitter's rendered event to fix FOUC
+            if (window.twttr) {
+                window.twttr.ready(twttr => {
+                    twttr.events.bind('rendered', function (event) {
+                        if (event.target) {
+                            const tweetContainer = event.target.closest('.twitter-tweet-container');
+                            if (tweetContainer) {
+                                tweetContainer.classList.remove('is-loading');
+                            }
+                        }
+                    });
+                });
+            }
+
 
             document.getElementById('postsContainerCommunity').addEventListener('click', function(event) {
                 const favoriteButton = event.target.closest('.favorite-btn');
