@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <style>
         /* REDUCED: Removed redundant header styles. Only page-specific styles remain. */
         body {
@@ -209,9 +212,7 @@
     </style>
 </head>
 <body class="antialiased">
-    <!-- Static header spacer to prevent layout jumps -->
-    <div style="height: 68px;" class="w-full bg-black border-b border-gray-800"></div>
-    <div id="header-placeholder"></div>
+    <div id="navbar"></div>
 
     <main class="page-content-wrapper">
         <header class="page-header">
@@ -253,31 +254,24 @@
         </nav>
     </footer>
 
-    <!-- Firebase and Header Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-    <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-        authDomain: "linq-b27a8.firebaseapp.com",
-        projectId: "linq-b27a8",
-        storageBucket: "linq-b27a8.appspot.com",
-        messagingSenderId: "1067901051826",
-        appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-      };
-      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    </script>
-    <script src="headerManager.js" defer></script>
-
-    <!-- Page-specific scripts -->
     <script>
         // --- GLOBAL STATE ---
         let communityFavorites = [];
         let unsubscribeUserListener = null;
 
-        // --- Firebase Initialization is now handled by the script block above ---
-        const auth = firebase.auth();
+        // --- FIREBASE SETUP ---
+        const firebaseConfigShared = {
+            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+            authDomain: "linq-b27a8.firebaseapp.com",
+            projectId: "linq-b27a8",
+            storageBucket: "linq-b27a8.appspot.com",
+            messagingSenderId: "1067901051826",
+            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfigShared);
+        }
+        const authInstance = firebase.auth();
         const db = firebase.firestore();
 
         // --- DATA ---
@@ -286,7 +280,7 @@
             { id: 'tweet18', url: 'https://twitter.com/marketplunger1/status/1933341930512953427', title: 'Crude Oil Knew.', meta: 'June 13, 2025 • Brandon Beylo (@marketplunger1)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">Crude oil knew.</p>&mdash; Brandon Beylo (@marketplunger1) <a href="https://twitter.com/marketplunger1/status/1933341930512953427?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
             { id: 'tweet17', url: 'https://twitter.com/Josh_Young_1/status/1933327432804618625', title: 'Got Oil?', meta: 'June 13, 2025 • Josh Young (@Josh_Young_1)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">Got oil? <a href="https://t.co/fcW53lCkB9">https://t.co/fcW53lCkB9</a></p>&mdash; Josh Young (@Josh_Young_1) <a href="https://twitter.com/Josh_Young_1/status/1933327432804618625?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
             { id: 'tweet16', url: 'https://twitter.com/anasalhajji/status/1933326226397040990', title: 'Israel Attacks Targets in Iran - Oil Prices Up 7%', meta: 'June 13, 2025 • Anas Alhajji (@anasalhajji)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">🔥🔥🔥Israel attacks targets in Iran... Oil prices increased by about 7% <a href="https://t.co/gjMgOIOeFm">pic.twitter.com/gjMgOIOeFm</a></p>&mdash; Anas Alhajji (@anasalhajji) <a href="https://twitter.com/anasalhajji/status/1933326226397040990?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
-            { id: 'tweet15', url: 'https://twitter.com/anasalhajji/status/1933354029297643953', title: 'WTI Up By About 13%', meta: 'June 13, 2025 • Anas Alhajji (@anasalhajji)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">💥💥WTI is up by about 13% <a href="https://t.co/6dIOwlDVzu">https://t.co/6dIOwlDVzu</a></p>&mdash; Anas Alhajji (@anasalhajji) <a href="https://twitter.com/anasalhajji/status/1933354029297643953?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
+            { id: 'tweet15', url: 'https://twitter.com/anasalhajji/status/1933354029297643953', title: 'WTI Up By About 13%', meta: 'June 13, 2025 • Anas Alhajji (@anasalhajji)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">💥�💥WTI is up by about 13% <a href="https://t.co/6dIOwlDVzu">https://t.co/6dIOwlDVzu</a></p>&mdash; Anas Alhajji (@anasalhajji) <a href="https://twitter.com/anasalhajji/status/1933354029297643953?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
             { id: 'tweet14', url: 'https://twitter.com/Josh_Young_1/status/1933337112373293452', title: 'The Sound of "Experts" Deleting Bearish Oil Posts', meta: 'June 13, 2025 • Josh Young (@Josh_Young_1)', category: 'Market Analysis', tweetContent: '<p lang="en" dir="ltr">The sound of &quot;experts&quot; deleting bearish oil posts</p>&mdash; Josh Young (@Josh_Young_1) <a href="https://twitter.com/Josh_Young_1/status/1933337112373293452?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
             { id: 'tweet13', url: 'https://twitter.com/Rory_Johnston/status/1933369800035872980', title: 'Iran says Israel Attack Could Not Have Been Done Without US', meta: 'June 13, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">*IRAN SAYS ISRAEL ATTACK COULD NOT HAVE BEEN DONE WITHOUT US<br><br>*IRAN: US WILL BE HELD RESPONSIBLE FOR ISRAEL&#39;S ATTACK</p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1933369800035872980?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
             { id: 'tweet12', url: 'https://twitter.com/Rory_Johnston/status/1933356845143572942', title: 'Prompt Brent Timespread Rockets', meta: 'June 13, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">OH MY GOD<br><br>Prompt Brent timespread rockets to near $4/bbl.<br><br>We&#39;re talking 2022 Russian invasion levels. <a href="https://t.co/EiLj7A4rO7">pic.twitter.com/EiLj7A4rO7</a></p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1933356845143572942?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
@@ -294,13 +288,13 @@
             { id: 'tweet10', url: 'https://twitter.com/GasBuddyGuy/status/1933318569753763959', title: 'Oil Could Surge $5-$10/bbl on Iran Situation', meta: 'June 13, 2025 • Patrick De Haan (@GasBuddyGuy)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">Oil could surge $5-$10/bbl in the days ahead if the situation with Iran deteriorates amidst the summer driving season and rising oil demand..: this could be big.</p>&mdash; Patrick De Haan (@GasBuddyGuy) <a href="https://twitter.com/GasBuddyGuy/status/1933318569753763959?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
             { id: 'tweet9', url: 'https://twitter.com/Rory_Johnston/status/1933316954355532031', title: 'Crude Surging on Israeli Strike on Iran', meta: 'June 13, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">🚨 Crude surging $3+/bbl on Israeli strike on Iran.<br><br>Brent over $73/bbl <a href="https://t.co/gE72Dlcfxv">pic.twitter.com/gE72Dlcfxv</a></p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1933316954355532031?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
             { id: 'tweet8', url: 'https://twitter.com/WhiteHouse/status/1933328486669697508', title: 'Secretary of State Marco Rubio on Israeli Action Against Iran', meta: 'June 13, 2025 • The White House (@WhiteHouse)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">Statement from Secretary of State Marco Rubio<br><br>“Tonight, Israel took unilateral action against Iran. We are not involved in strikes against Iran and our top priority is protecting American forces in the region. Israel advised us that they believe this action was necessary for its… <a href="https://t.co/5FFesh3dkF">pic.twitter.com/5FFesh3dkF</a></p>&mdash; The White House (@WhiteHouse) <a href="https://twitter.com/WhiteHouse/status/1933328486669697508?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
-            { id: 'tweet7', url: 'https://twitter.com/Rory_Johnston/status/1933323720073863382', title: 'US Aware of Strike Reports, No Involvement', meta: 'June 13, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">FT: "US official said Washington was "aware of the reports of strikes" and that "there was no US involvement or US assistance" to Israel during the operation."</p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1933323720073863382?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
+            { id: 'tweet7', url: 'https://twitter.com/Rory_Johnston/status/1933323720073863382', title: 'US Aware of Strike Reports, No Involvement', meta: 'June 13, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">FT: “US official said Washington was “aware of the reports of strikes” and that “there was no US involvement or US assistance” to Israel during the operation.”</p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1933323720073863382?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
             { id: 'tweet6', url: 'https://twitter.com/OilHeadlineNews/status/1933309259581690275', title: 'Israeli Attack on Iran Could Send Oil Prices Above $100', meta: 'June 12, 2025 • Energy Headline News (@OilHeadlineNews)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">An Israeli attack on Iran could send oil prices above $100 as tensions mount - CNBC</p>&mdash; Energy Headline News (@OilHeadlineNews) <a href="https://twitter.com/OilHeadlineNews/status/1933309259581690275?ref_src=twsrc%5Etfw">June 12, 2025</a>' },
             { id: 'tweet5', url: 'https://twitter.com/Amena__Bakr/status/1933201079761568005', title: 'Reaching a Deal with Iran Will Help on Oil Prices', meta: 'June 12, 2025 • Amena Bakr (@Amena__Bakr)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">Reaching a deal with Iran will help on that front <a href="https://twitter.com/hashtag/Trump?src=hash&ref_src=twsrc%5Etfw">#Trump</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://t.co/hStELUHwii">https://t.co/hStELUHwii</a></p>&mdash; Amena Bakr (@Amena__Bakr) <a href="https://twitter.com/Amena__Bakr/status/1933201079761568005?ref_src=twsrc%5Etfw">June 12, 2025</a>' },
             { id: 'tweet4', url: 'https://twitter.com/JavierBlas/status/1933185348839829763', title: 'Trump: Don\'t Like Oil Prices Have Gone Up', meta: 'June 12, 2025 • Javier Blas (@JavierBlas)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">TRUMP: DON&#39;T LIKE OIL PRICES HAVE GONE UP<br><br>(Yeah, that&#39;s the problem when energy traders hear chatter about someone thinking about bombing Iran: oil prices do tend to increase) <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; Javier Blas (@JavierBlas) <a href="https://twitter.com/JavierBlas/status/1933185348839829763?ref_src=twsrc%5Etfw">June 12, 2025</a>' },
             { id: 'tweet3', url: 'https://twitter.com/JavierBlas/status/1933188916909384163', title: 'US President Donald Trump Addresses Energy Secretary Chris Wright', meta: 'June 12, 2025 • Javier Blas (@JavierBlas)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">US President Donald Trump speaking at the White House today and referring directly to US Secretary of Energy Chris Wright (in the audience): <a href="https://t.co/0ASgiAAQTU">pic.twitter.com/0ASgiAAQTU</a></p>&mdash; Javier Blas (@JavierBlas) <a href="https://twitter.com/JavierBlas/status/1933188916909384163?ref_src=twsrc%5Etfw">June 12, 2025</a>' },
-            { id: 'tweet2', url: 'https://twitter.com/JavierBlas/status/1933238166267572705', title: 'New CACTUS Trade: Crude Aspirations Crimp Trump's Unilateral Strategy', meta: 'June 12, 2025 • Javier Blas (@JavierBlas)', category: 'Market Analysis', tweetContent: '<p lang="en" dir="ltr">From an oil industry insider: <br><br>"The new CACTUS Trade: Crude Aspirations Crimp Trump's Unilateral Strategy"<br><br>(CACTUS is also the name of a pair of key oil pipelines in Texas) <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; Javier Blas (@JavierBlas) <a href="https://twitter.com/JavierBlas/status/1933238166267572705?ref_src=twsrc%5Etfw">June 12, 2025</a>' },
-            { id: 'tweet1', url: 'https://twitter.com/IsraeliPM/status/1933244843624407170', title: 'PM Netanyahu's Remarks with Argentine President Milei', meta: 'June 12, 2025 • Prime Minister of Israel (@IsraeliPM)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">WATCH: Prime Minister Benjamin Netanyahu's remarks, today, at the signing of MOUs with Argentine President <a href="https://twitter.com/JMilei?ref_src=twsrc%5Etfw">@JMilei</a>.<br><br>&quot;We feel your heart, your connection to our people, to our land, to our state, and our eternal united city, Jerusalem.&quot;<a href="https://t.co/7wtikaq9GC">https://t.co/7wtikaq9GC</a> <a href="https://t.co/clKlE7t7DY">pic.twitter.com/clKlE7t7DY</a></p>&mdash; Prime Minister of Israel (@IsraeliPM) <a href="https://twitter.com/IsraeliPM/status/1933244843624407170?ref_src=twsrc%5Etfw">June 12, 2025</a>'}
+            { id: 'tweet2', url: 'https://twitter.com/JavierBlas/status/1933238166267572705', title: 'New CACTUS Trade: Crude Aspirations Crimp Trump’s Unilateral Strategy', meta: 'June 12, 2025 • Javier Blas (@JavierBlas)', category: 'Market Analysis', tweetContent: '<p lang="en" dir="ltr">From an oil industry insider: <br><br>“The new CACTUS Trade: Crude Aspirations Crimp Trump’s Unilateral Strategy”<br><br>(CACTUS is also the name of a pair of key oil pipelines in Texas) <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; Javier Blas (@JavierBlas) <a href="https://twitter.com/JavierBlas/status/1933238166267572705?ref_src=twsrc%5Etfw">June 12, 2025</a>' },
+            { id: 'tweet1', url: 'https://twitter.com/IsraeliPM/status/1933244843624407170', title: 'PM Netanyahu\'s Remarks with Argentine President Milei', meta: 'June 12, 2025 • Prime Minister of Israel (@IsraeliPM)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">WATCH: Prime Minister Benjamin Netanyahu&#39;s remarks, today, at the signing of MOUs with Argentine President <a href="https://twitter.com/JMilei?ref_src=twsrc%5Etfw">@JMilei</a>.<br><br>&quot;We feel your heart, your connection to our people, to our land, to our state, and our eternal united city, Jerusalem.&quot;<a href="https://t.co/7wtikaq9GC">https://t.co/7wtikaq9GC</a> <a href="https://t.co/clKlE7t7DY">pic.twitter.com/clKlE7t7DY</a></p>&mdash; Prime Minister of Israel (@IsraeliPM) <a href="https://twitter.com/IsraeliPM/status/1933244843624407170?ref_src=twsrc%5Etfw">June 12, 2025</a>'}
         ];
 
         // --- AUTH & HEADER LOGIC ---
@@ -330,7 +324,7 @@
                 if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
             }
             
-            function handleLogout(e) { e.preventDefault(); auth.signOut(); }
+            function handleLogout(e) { e.preventDefault(); authInstance.signOut(); }
             if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
             if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
 
@@ -392,7 +386,7 @@
 
         // --- BOOKMARKING ---
         async function toggleCommunityFavorite(postId) {
-            const user = auth.currentUser;
+            const user = authInstance.currentUser;
             if (!user) {
                 window.location.href = 'login.html';
                 return;
@@ -414,23 +408,29 @@
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            auth.onAuthStateChanged(user => {
-                initializeHeaderAndAuth(user);
-                if (unsubscribeUserListener) unsubscribeUserListener();
-                if (user) {
-                    unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
-                        communityFavorites = doc.exists ? doc.data().communityBookmarks || [] : [];
-                        filterAndDisplayPosts(); // Re-render with updated favorites
-                    }, err => {
-                        console.error("Error listening to community bookmarks:", err);
-                        communityFavorites = [];
-                        filterAndDisplayPosts();
+            fetch('header.html')
+                .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
+                .then(data => {
+                    document.getElementById('navbar').innerHTML = data;
+                    authInstance.onAuthStateChanged(user => {
+                        initializeHeaderAndAuth(user);
+                        if (unsubscribeUserListener) unsubscribeUserListener();
+                        if (user) {
+                            unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
+                                communityFavorites = doc.exists ? doc.data().communityBookmarks || [] : [];
+                                filterAndDisplayPosts(); // Re-render with updated favorites
+                            }, err => {
+                                console.error("Error listening to community bookmarks:", err);
+                                communityFavorites = [];
+                                filterAndDisplayPosts();
+                            });
+                        } else {
+                            communityFavorites = [];
+                            filterAndDisplayPosts();
+                        }
                     });
-                } else {
-                    communityFavorites = [];
-                    filterAndDisplayPosts();
-                }
-            });
+                })
+                .catch(error => console.error('Error fetching header:', error));
 
             document.getElementById('current-year-community').textContent = new Date().getFullYear();
 
@@ -453,6 +453,7 @@
                     });
                 });
             }
+
 
             document.getElementById('postsContainerCommunity').addEventListener('click', function(event) {
                 const favoriteButton = event.target.closest('.favorite-btn');
