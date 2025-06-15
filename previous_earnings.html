@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linq - Energy Earnings</title>
+    <title>Linq - Past Energy Earnings</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Using Lexend for header and Inter for body -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -23,117 +22,55 @@
             flex-direction: column;
             min-height: 100vh;
             overflow-x: hidden;
+            /* FIX: Added top padding to reserve space for the fixed header */
+            padding-top: 64px;
         }
-        
-    
-        .page-content-wrapper {
+        main.page-content-wrapper {
             flex-grow: 1;
-            padding-top: 80px;
+            /* FIX: Removed old padding-top which is now on the body */
             padding-bottom: 4rem;
             width: 100%;
             max-width: 1200px; 
             margin: 0 auto;
         }
-
         .calendar-page-title { font-size: 2.75rem; font-weight: 700; color: #FFFFFF; }
         .calendar-page-title .accent-text { color: #00BFFF; }
         .calendar-page-subtitle { font-size: 1.125rem; color: #A0A0A0; margin-top: 0.5rem; font-weight: 400; }
-
-        .earnings-card {
-            background-color: #121212;
-            border: 1px solid #282828;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-            position: relative;
-        }
-        .earnings-card:not(.locked):hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px -8px rgba(0, 191, 255, 0.25);
-            border-color: #00BFFF;
-        }
-        .earnings-card.locked > .card-content {
-             filter: blur(4px);
-             pointer-events: none;
-        }
-        .locked-overlay {
-            position: absolute; inset: 0; display: none; justify-content: center; align-items: center;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(2px);
-            border-radius: 0.75rem; cursor: pointer;
-        }
+        .earnings-card { background-color: #121212; border: 1px solid #282828; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1.5rem; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; position: relative; }
+        .earnings-card:not(.locked):hover { transform: translateY(-4px); box-shadow: 0 8px 25px -8px rgba(0, 191, 255, 0.25); border-color: #00BFFF; }
+        .earnings-card.locked > .card-content { filter: blur(4px); pointer-events: none; }
+        .locked-overlay { position: absolute; inset: 0; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.7); backdrop-filter: blur(2px); border-radius: 0.75rem; cursor: pointer; }
         .earnings-card.locked .locked-overlay { display: flex; }
         .locked-overlay-content { text-align: center; color: white; padding: 1rem;}
         .locked-overlay-content h4 { font-size: 1.25rem; font-weight: 600; }
         .locked-overlay-content p { color: #b0b0b0; margin-top: 0.5rem; margin-bottom: 1rem; }
-        .locked-overlay-content .upgrade-btn {
-            background: #00BFFF; color: white; padding: 0.5rem 1.5rem; border-radius: 99px;
-            text-decoration: none; font-weight: 500; transition: background-color 0.2s;
-        }
+        .locked-overlay-content .upgrade-btn { background: #00BFFF; color: white; padding: 0.5rem 1.5rem; border-radius: 99px; text-decoration: none; font-weight: 500; transition: background-color 0.2s; }
         .locked-overlay-content .upgrade-btn:hover { background: #00A9E0; }
-
-        .company-logo-placeholder {
-            width: 48px; height: 48px; background-color: #282828; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 600; font-size: 1.25rem; color: #00BFFF; border: 2px solid #333333;
-        }
+        .company-logo-placeholder { width: 48px; height: 48px; background-color: #282828; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1.25rem; color: #00BFFF; border: 2px solid #333333; }
         .company-info h3 { font-size: 1.25rem; font-weight: 600; color: #FFFFFF; }
         .company-info .ticker { font-size: 0.9rem; color: #A0A0A0; }
         .detail-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; color: #B0B0B0; }
         .detail-item i { color: #00BFFF; width: 16px; text-align: center; }
         .detail-label { font-weight: 500; color: #E0E0E0; margin-right: 0.25rem; }
-        .action-btn {
-            background-color: #1A1A1A; color: #00BFFF; border: 1px solid #00BFFF;
-            padding: 0.5rem 1rem; border-radius: 0.375rem; font-size: 0.8rem;
-            font-weight: 500; display: inline-flex; align-items: center; gap: 0.5rem;
-            transition: background-color 0.2s ease, color 0.2s ease; cursor: pointer;
-        }
+        .action-btn { background-color: #1A1A1A; color: #00BFFF; border: 1px solid #00BFFF; padding: 0.5rem 1rem; border-radius: 0.375rem; font-size: 0.8rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.5rem; transition: background-color 0.2s ease, color 0.2s ease; cursor: pointer; }
         .action-btn:hover { background-color: #00BFFF; color: #FFFFFF; }
-        
-        .footer {
-            background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem;
-            border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem;
-            margin-top: auto;
-        }
-
-        /* Inline Earnings Details Styles */
-        .earnings-details-inline {
-            border-top: 1px solid #282828;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.25rem;
-        }
-        @media (min-width: 640px) {
-            .earnings-details-inline {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-        .info-block-inline h4 {
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: #888;
-            margin-bottom: 0.25rem;
-            text-transform: uppercase;
-        }
-        .info-block-inline p {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #eee;
-        }
+        .footer { background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem; border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem; margin-top: auto; }
+        .earnings-details-inline { border-top: 1px solid #282828; margin-top: 1.5rem; padding-top: 1.5rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+        @media (min-width: 640px) { .earnings-details-inline { grid-template-columns: repeat(4, 1fr); } }
+        .info-block-inline h4 { font-size: 0.8rem; font-weight: 500; color: #888; margin-bottom: 0.25rem; text-transform: uppercase; }
+        .info-block-inline p { font-size: 1.1rem; font-weight: 600; color: #eee; }
         .info-block-inline p.positive { color: #22C55E; }
         .info-block-inline p.negative { color: #EF4444; }
-
     </style>
 </head>
 <body class="antialiased">
-    <div id="header-placeholder"></div>
+    <!-- FIX: Header placeholder is now a semantic header tag -->
+    <header id="header-placeholder"></header>
 
-    <div class="page-content-wrapper px-4 sm:px-6 lg:px-8">
+    <main class="page-content-wrapper px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-10 mt-10">
-            <h1 class="calendar-page-title">Energy Sector <span class="accent-text">Earnings</span></h1>
-            <p class="calendar-page-subtitle"></p>
+            <h1 class="calendar-page-title">Past Energy Sector <span class="accent-text">Earnings</span></h1>
+            <p class="calendar-page-subtitle">Historical earnings data and performance.</p>
             <a href="earnings.html" class="inline-block text-white font-bold py-3 px-6 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-cyan-500/50 transform hover:-translate-y-0.5">
                 View Upcoming Earnings
             </a>
@@ -142,39 +79,42 @@
         <div id="earnings-container">
              <!-- Earnings cards will be dynamically inserted here -->
         </div>
-    </div>
+    </main>
 
     <footer class="footer">
         <p>&copy; <span id="current-year"></span> Linq Energy Intelligence.</p>
     </footer>
 
     <script>
+        // --- GLOBAL STATE & CONFIG ---
         let isSubscribed = false;
         let unsubscribeUserListener = null;
         
-        const previousEarningsData = [
-            { "company": "Energy Transfer LP", "ticker": "ET", "date": "2025-05-08", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.energytransfer.com/wp-content/uploads/2025/05/ET-Q1-2025-Earnings-Presentation_Final.pdf?utm_source=chatgpt.com", "epsEstimate": 0.33, "epsActual": 0.32, "revenueEstimate": 20430, "revenueActual": 20040 },
-            { "company": "Occidental Petroleum Corp.", "ticker": "OXY", "date": "2025-05-07", "time": "1:00 PM", "period": "Q1 2025", "transcriptUrl": "https://www.oxy.com/news/news-releases/occidental-announces-1st-quarter-2025-results/?utm_source=chatgpt.com", "epsEstimate": 0.61, "epsActual": 0.63, "revenueEstimate": 6890, "revenueActual": 7260 },
-            { "company": "Williams Companies Inc.", "ticker": "WMB", "date": "2025-05-06", "time": "9:30 AM", "period": "Q1 2025", "transcriptUrl": "https://investor.williams.com/news-releases/news-release-details/williams-announces-strong-first-quarter-2025-results-and-raises", "epsEstimate": 0.45, "epsActual": 0.47, "revenueEstimate": 2580, "revenueActual": 2620 },
-            { "company": "Pioneer Natural Resources Co.", "ticker": "PXD", "date": "2025-05-02", "time": "10:00 AM", "period": "Q1 2025", "transcriptUrl": "https://investors.pxd.com/investors/events-and-presentations/", "epsEstimate": 4.67, "epsActual": 5.01, "revenueEstimate": 4890, "revenueActual": 4910 },
-            { "company": "Plains All American Pipeline L.P.", "ticker": "PAA", "date": "2025-05-03", "time": "10:00 AM", "period": "Q1 2025", "transcriptUrl": "https://www.plains.com/investors/events-and-presentations", "epsEstimate": 0.41, "epsActual": 0.39, "revenueEstimate": 12110, "revenueActual": 12450 },
-            { "company": "ConocoPhillips Co.", "ticker": "COP", "date": "2025-05-02", "time": "12:00 PM", "period": "Q1 2025", "transcriptUrl": "https://www.conocophillips.com/news-media/story/conocophillips-announces-first-quarter-2025-results-and-quarterly-dividend/?utm_source=chatgpt.com", "epsEstimate": 2.07, "epsActual": 2.03, "revenueEstimate": 13950, "revenueActual": 13340 },
-            { "company": "EOG Resources Inc.", "ticker": "EOG", "date": "2025-05-02", "time": "10:00 AM", "period": "Q1 2025", "transcriptUrl": "https://investors.eogresources.com/image/1Q_2025_Earnings_Press_Release.pdf?utm_source=chatgpt.com", "epsEstimate": 2.76, "epsActual": 2.82, "revenueEstimate": 5690, "revenueActual": 5460 },
-            { "company": "Cheniere Energy Inc.", "ticker": "LNG", "date": "2025-05-02", "time": "11:00 AM", "period": "Q1 2025", "transcriptUrl": "https://lngir.cheniere.com/news-events/press-releases/detail/318/cheniere-reports-first-quarter-2025-results-and-reconfirms?utm_source=chatgpt.com", "epsEstimate": 2.7, "epsActual": 2.08, "revenueEstimate": 4540, "revenueActual": 4310 },
-            { "company": "Devon Energy Corp.", "ticker": "DVN", "date": "2025-05-01", "time": "11:00 AM", "period": "Q1 2025", "transcriptUrl": "https://investor.williams.com/news-releases/news-release-details/williams-announces-strong-first-quarter-2025-results-and-raises", "epsEstimate": 1.1, "epsActual": 1.16, "revenueEstimate": 3610, "revenueActual": 3570 },
-            { "company": "Marathon Petroleum Corp.", "ticker": "MPC", "date": "2025-04-30", "time": "9:30 AM", "period": "Q1 2025", "transcriptUrl": "https://ir.marathonpetroleum.com/investor/news-releases/news-details/2025/Marathon-Petroleum-Corp--Reports-First-Quarter-2025-Results/default.aspx?utm_source=chatgpt.com", "epsEstimate": 2.58, "epsActual": 2.98, "revenueEstimate": 33960, "revenueActual": 32890 },
-            { "company": "Enterprise Products Partners L.P.", "ticker": "EPD", "date": "2025-04-30", "time": "10:00 AM", "period": "Q1 2025", "transcriptUrl": "https://ir.enterpriseproducts.com/news-releases/news-release-details/enterprise-reports-first-quarter-2025-earnings?utm_source=chatgpt.com", "epsEstimate": 0.63, "epsActual": 0.66, "revenueEstimate": 12850, "revenueActual": 12450 },
-            { "company": "ONEOK Inc.", "ticker": "OKE", "date": "2025-04-30", "time": "11:00 AM", "period": "Q1 2025", "transcriptUrl": "https://www.oneok.com/investors/events-and-presentations", "epsEstimate": 0.99, "epsActual": 1.09, "revenueEstimate": 4720, "revenueActual": 4560 },
-            { "company": "ExxonMobil Corp.", "ticker": "XOM", "date": "2025-04-26", "time": "8:30 AM", "period": "Q1 2025", "transcriptUrl": "https://investor.exxonmobil.com/news-events/ir-calendar/detail/20250502-1q-2025-earnings-call?utm_source=chatgpt.com", "epsEstimate": 2.2, "epsActual": 2.06, "revenueEstimate": 80110, "revenueActual": 83080 },
-            { "company": "Chevron Corp.", "ticker": "CVX", "date": "2025-04-26", "time": "11:00 AM", "period": "Q1 2025", "transcriptUrl": "https://chevroncorp.gcs-web.com/static-files/26ecd08e-3af0-43e0-a96e-63416947ae56?utm_source=chatgpt.com", "epsEstimate": 2.92, "epsActual": 2.97, "revenueEstimate": 49050, "revenueActual": 48720 },
-            { "company": "Phillips 66", "ticker": "PSX", "date": "2025-04-26", "time": "12:00 PM", "period": "Q1 2025", "transcriptUrl": "https://investor.phillips66.com/financial-information/news-releases/news-release-details/2025/Phillips-66-Reports-First-Quarter-Results/default.aspx?utm_source=chatgpt.com", "epsEstimate": 1.4, "epsActual": 1.02, "revenueEstimate": 34910, "revenueActual": 36470 },
-            { "company": "Valero Energy Corp.", "ticker": "VLO", "date": "2025-04-25", "time": "10:00 AM", "period": "Q1 2025", "transcriptUrl": "https://investor.williams.com/?utm_source=chatgpt.com", "epsEstimate": 2.58, "epsActual": 3.82, "revenueEstimate": 31390, "revenueActual": 31760 },
-            { "company": "Hess Corp.", "ticker": "HES", "date": "2025-04-24", "time": "10:00 AM", "period": "Q1 2025", "transcriptUrl": "https://investors.hess.com/static-files/a1b1a1b1-1b1a-1a1b-1a1b-1a1b1a1b1a1b", "epsEstimate": 1.63, "epsActual": 1.9, "revenueEstimate": 3080, "revenueActual": 3260 },
-            { "company": "Schlumberger Ltd.", "ticker": "SLB", "date": "2025-04-19", "time": "9:30 AM", "period": "Q1 2025", "transcriptUrl": "https://investorcenter.slb.com/news-releases/news-release-details/slb-announces-first-quarter-2025-results/?utm_source=chatgpt.com", "epsEstimate": 0.75, "epsActual": 0.74, "revenueEstimate": 8700, "revenueActual": 8710 },
-            { "company": "Halliburton Co.", "ticker": "HAL", "date": "2025-04-19", "time": "9:00 AM", "period": "Q1 2025", "transcriptUrl": "https://www.halliburton.com/en/about-us/press-release/halliburton-announces-first-quarter-2025-results?utm_source=chatgpt.com", "epsEstimate": 0.74, "epsActual": 0.76, "revenueEstimate": 5690, "revenueActual": 5800 },
-            { "company": "Kinder Morgan Inc.", "ticker": "KMI", "date": "2025-04-17", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://ir.kindermorgan.com/news/news-details/2025/Kinder-Morgan-Reports-First-Quarter-2025-Financial-Results/default.aspx?utm_source=chatgpt.com", "epsEstimate": 0.3, "epsActual": 0.33, "revenueEstimate": 3810, "revenueActual": 4310 }
-        ];
+        // --- DATA: Populated with a few examples as requested ---
+                const previousEarningsData = [
+                    { "company": "Energy Transfer LP", "ticker": "ET", "date": "2025-05-08", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.energytransfer.com/wp-content/uploads/2025/05/ET-Q1-2025-Earnings-Presentation_Final.pdf?utm_source=chatgpt.com", "epsEstimate": 0.33, "epsActual": 0.32, "revenueEstimate": 20430, "revenueActual": 20040 },
+                    { "company": "Occidental Petroleum Corp.", "ticker": "OXY", "date": "2025-05-07", "time": "1:00 PM", "period": "Q1 2025", "transcriptUrl": "https://www.oxy.com/news/news-releases/occidental-announces-1st-quarter-2025-results/?utm_source=chatgpt.com", "epsEstimate": 0.61, "epsActual": 0.63, "revenueEstimate": 6890, "revenueActual": 7260 },
+                    { "company": "Williams Companies Inc.", "ticker": "WMB", "date": "2025-05-06", "time": "9:30 AM", "period": "Q1 2025", "transcriptUrl": "https://investor.williams.com/news-releases/news-release-details/williams-announces-strong-first-quarter-2025-results-and-raises", "epsEstimate": 0.45, "epsActual": 0.47, "revenueEstimate": 2580, "revenueActual": 2620 },
+                    { "company": "Pioneer Natural Resources Co.", "ticker": "PXD", "date": "2025-05-02", "time": "10:00 AM", "period": "Q1 2025", "transcriptUrl": "https://investors.pxd.com/investors/events-and-presentations/", "epsEstimate": 4.67, "epsActual": 5.01, "revenueEstimate": 4890, "revenueActual": 4910 },
+                    { "company": "Plains All American Pipeline L.P.", "ticker": "PAA", "date": "2025-05-03", "time": "10:00 AM", "period": "Q1 2025", "transcriptUrl": "https://www.plains.com/investors/events-and-presentations", "epsEstimate": 0.41, "epsActual": 0.39, "revenueEstimate": 12110, "revenueActual": 12450 },
+                    { "company": "ConocoPhillips Co.", "ticker": "COP", "date": "2025-05-02", "time": "12:00 PM", "period": "Q1 2025", "transcriptUrl": "https://www.conocophillips.com/news-media/story/conocophillips-announces-first-quarter-2025-results-and-quarterly-dividend/?utm_source=chatgpt.com", "epsEstimate": 2.07, "epsActual": 2.03, "revenueEstimate": 13950, "revenueActual": 13340 },
+                    { "company": "EOG Resources Inc.", "ticker": "EOG", "date": "2025-05-02", "time": "10:00 AM", "period": "Q1 2025", "transcriptUrl": "https://investors.eogresources.com/image/1Q_2025_Earnings_Press_Release.pdf?utm_source=chatgpt.com", "epsEstimate": 2.76, "epsActual": 2.82, "revenueEstimate": 5690, "revenueActual": 5460 },
+                    { "company": "Cheniere Energy Inc.", "ticker": "LNG", "date": "2025-05-02", "time": "11:00 AM", "period": "Q1 2025", "transcriptUrl": "https://lngir.cheniere.com/news-events/press-releases/detail/318/cheniere-reports-first-quarter-2025-results-and-reconfirms?utm_source=chatgpt.com", "epsEstimate": 2.7, "epsActual": 2.08, "revenueEstimate": 4540, "revenueActual": 4310 },
+                    { "company": "Devon Energy Corp.", "ticker": "DVN", "date": "2025-05-01", "time": "11:00 AM", "period": "Q1 2025", "transcriptUrl": "https://investor.williams.com/news-releases/news-release-details/williams-announces-strong-first-quarter-2025-results-and-raises", "epsEstimate": 1.1, "epsActual": 1.16, "revenueEstimate": 3610, "revenueActual": 3570 },
+                    { "company": "Marathon Petroleum Corp.", "ticker": "MPC", "date": "2025-04-30", "time": "9:30 AM", "period": "Q1 2025", "transcriptUrl": "https://ir.marathonpetroleum.com/investor/news-releases/news-details/2025/Marathon-Petroleum-Corp--Reports-First-Quarter-2025-Results/default.aspx?utm_source=chatgpt.com", "epsEstimate": 2.58, "epsActual": 2.98, "revenueEstimate": 33960, "revenueActual": 32890 },
+                    { "company": "Enterprise Products Partners L.P.", "ticker": "EPD", "date": "2025-04-30", "time": "10:00 AM", "period": "Q1 2025", "transcriptUrl": "https://ir.enterpriseproducts.com/news-releases/news-release-details/enterprise-reports-first-quarter-2025-earnings?utm_source=chatgpt.com", "epsEstimate": 0.63, "epsActual": 0.66, "revenueEstimate": 12850, "revenueActual": 12450 },
+                    { "company": "ONEOK Inc.", "ticker": "OKE", "date": "2025-04-30", "time": "11:00 AM", "period": "Q1 2025", "transcriptUrl": "https://www.oneok.com/investors/events-and-presentations", "epsEstimate": 0.99, "epsActual": 1.09, "revenueEstimate": 4720, "revenueActual": 4560 },
+                    { "company": "ExxonMobil Corp.", "ticker": "XOM", "date": "2025-04-26", "time": "8:30 AM", "period": "Q1 2025", "transcriptUrl": "https://investor.exxonmobil.com/news-events/ir-calendar/detail/20250502-1q-2025-earnings-call?utm_source=chatgpt.com", "epsEstimate": 2.2, "epsActual": 2.06, "revenueEstimate": 80110, "revenueActual": 83080 },
+                    { "company": "Chevron Corp.", "ticker": "CVX", "date": "2025-04-26", "time": "11:00 AM", "period": "Q1 2025", "transcriptUrl": "https://chevroncorp.gcs-web.com/static-files/26ecd08e-3af0-43e0-a96e-63416947ae56?utm_source=chatgpt.com", "epsEstimate": 2.92, "epsActual": 2.97, "revenueEstimate": 49050, "revenueActual": 48720 },
+                    { "company": "Phillips 66", "ticker": "PSX", "date": "2025-04-26", "time": "12:00 PM", "period": "Q1 2025", "transcriptUrl": "https://investor.phillips66.com/financial-information/news-releases/news-release-details/2025/Phillips-66-Reports-First-Quarter-Results/default.aspx?utm_source=chatgpt.com", "epsEstimate": 1.4, "epsActual": 1.02, "revenueEstimate": 34910, "revenueActual": 36470 },
+                    { "company": "Valero Energy Corp.", "ticker": "VLO", "date": "2025-04-25", "time": "10:00 AM", "period": "Q1 2025", "transcriptUrl": "https://investor.williams.com/?utm_source=chatgpt.com", "epsEstimate": 2.58, "epsActual": 3.82, "revenueEstimate": 31390, "revenueActual": 31760 },
+                    { "company": "Hess Corp.", "ticker": "HES", "date": "2025-04-24", "time": "10:00 AM", "period": "Q1 2025", "transcriptUrl": "https://investors.hess.com/static-files/a1b1a1b1-1b1a-1a1b-1a1b-1a1b1a1b1a1b", "epsEstimate": 1.63, "epsActual": 1.9, "revenueEstimate": 3080, "revenueActual": 3260 },
+                    { "company": "Schlumberger Ltd.", "ticker": "SLB", "date": "2025-04-19", "time": "9:30 AM", "period": "Q1 2025", "transcriptUrl": "https://investorcenter.slb.com/news-releases/news-release-details/slb-announces-first-quarter-2025-results/?utm_source=chatgpt.com", "epsEstimate": 0.75, "epsActual": 0.74, "revenueEstimate": 8700, "revenueActual": 8710 },
+                    { "company": "Halliburton Co.", "ticker": "HAL", "date": "2025-04-19", "time": "9:00 AM", "period": "Q1 2025", "transcriptUrl": "https://www.halliburton.com/en/about-us/press-release/halliburton-announces-first-quarter-2025-results?utm_source=chatgpt.com", "epsEstimate": 0.74, "epsActual": 0.76, "revenueEstimate": 5690, "revenueActual": 5800 },
+                    { "company": "Kinder Morgan Inc.", "ticker": "KMI", "date": "2025-04-17", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://ir.kindermorgan.com/news/news-details/2025/Kinder-Morgan-Reports-First-Quarter-2025-Financial-Results/default.aspx?utm_source=chatgpt.com", "epsEstimate": 0.3, "epsActual": 0.33, "revenueEstimate": 3810, "revenueActual": 4310 }
+                ];
 
+        // --- FIREBASE SETUP ---
         const firebaseConfig = { 
             apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
             authDomain: "linq-b27a8.firebaseapp.com",
@@ -187,63 +127,35 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // --- PAGE-SPECIFIC INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            fetch('header.html') 
-                .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
-                .then(data => {
-                    document.getElementById('header-placeholder').innerHTML = data;
-                    auth.onAuthStateChanged(handleAuthStateChange);
-                })
-                .catch(error => console.error('Error fetching header:', error));
+            // FIX: Removed header fetching and related auth logic.
+            
+            // Listen for auth changes to decide if content should be locked
+            auth.onAuthStateChanged(user => {
+                if (unsubscribeUserListener) unsubscribeUserListener();
+
+                if (user) {
+                    unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
+                        isSubscribed = doc.exists && doc.data().isSubscribed === true;
+                        renderEarnings(); 
+                    }, error => {
+                        console.error("Error with real-time listener:", error);
+                        isSubscribed = false;
+                        renderEarnings();
+                    });
+                } else {
+                    isSubscribed = false;
+                    renderEarnings();
+                }
+            });
             
             document.getElementById('current-year').textContent = new Date().getFullYear();
         });
 
-        function handleAuthStateChange(user) {
-            updateHeaderUI(user);
-            if (unsubscribeUserListener) unsubscribeUserListener();
+        // --- FIX: handleAuthStateChange and updateHeaderUI functions are now REMOVED ---
 
-            if (user) {
-                unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
-                    isSubscribed = doc.exists && doc.data().isSubscribed === true;
-                    renderEarnings(); 
-                }, error => {
-                    console.error("Error with real-time listener:", error);
-                    isSubscribed = false;
-                    renderEarnings();
-                });
-            } else {
-                isSubscribed = false;
-                renderEarnings();
-            }
-        }
-
-        function updateHeaderUI(user) {
-            const authLink = document.getElementById('authLinkDesktopLogin');
-            const profileLink = document.getElementById('profileLinkDesktop');
-            const profilePic = document.getElementById('navProfilePic');
-            
-            if (user) {
-                if(authLink) authLink.classList.add('hidden');
-                if(profileLink) profileLink.classList.remove('hidden');
-                
-                if (profilePic) {
-                    if (user.photoURL) {
-                        profilePic.src = user.photoURL;
-                    } else if (user.displayName) {
-                        profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
-                    } else if (user.email) {
-                        profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
-                    } else {
-                        profilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
-                    }
-                }
-            } else {
-                if(authLink) authLink.classList.remove('hidden');
-                if(profileLink) profileLink.classList.add('hidden');
-            }
-        }
-        
+        // --- All page-specific rendering functions remain unchanged ---
         function renderEarnings() {
             const container = document.getElementById('earnings-container');
             if (!container) return;
@@ -276,13 +188,13 @@
             const cardEl = document.createElement('div');
             cardEl.className = 'earnings-card';
             
+            // Only lock cards after the first one for non-subscribed users
             if (!isSubscribed && cardIndex > 0) { 
                 cardEl.classList.add('locked');
             }
             
             const initials = call.ticker || call.company.substring(0, 3).toUpperCase();
             
-            // --- Determine Beat/Miss/Met Status ---
             const formatCurrency = (value) => (typeof value === 'number') ? `$${value.toFixed(2)}` : 'N/A';
             const formatRevenue = (value) => (typeof value === 'number') ? `$${value.toLocaleString()}M` : 'N/A';
             
@@ -300,7 +212,6 @@
                 else if (call.revenueActual < call.revenueEstimate) { revStatus = 'Miss'; revClass = 'negative'; }
             }
 
-            // Create details HTML only if data exists
             const hasDetails = typeof call.epsEstimate === 'number';
             const detailsHTML = hasDetails ? `
                 <div class="earnings-details-inline">
@@ -328,9 +239,7 @@
                         <h4>Revenue Beat/Miss</h4>
                         <p class="${revClass}">${revStatus}</p>
                     </div>
-                </div>
-            ` : '';
-
+                </div>` : '';
 
             cardEl.innerHTML = `
                 <div class="card-content flex flex-col gap-4">
@@ -346,9 +255,7 @@
                         <div class="detail-item"><i class="fas fa-clock"></i><span class="detail-label">Time:</span>${call.time}</div>
                         <div class="detail-item"><i class="fas fa-chart-line"></i><span class="detail-label">Period:</span>${call.period}</div>
                     </div>
-                    
                     ${detailsHTML}
-
                     <div class="card-actions flex flex-wrap gap-3 mt-2">
                         <a href="${call.transcriptUrl}" target="_blank" rel="noopener noreferrer" class="action-btn transcript-btn">
                             <i class="fas fa-file-alt"></i> Transcript
@@ -358,14 +265,15 @@
                 <div class="locked-overlay" onclick="location.href='linqplus.html'">
                     <div class="locked-overlay-content">
                         <h4>Premium Feature</h4>
-                        <p>Upgrade to view full earnings details.</p>
+                        <p>Upgrade to view full earnings details and archive.</p>
                         <a href="linqplus.html" class="upgrade-btn">Go Premium</a>
                     </div>
                 </div>`;
-
             return cardEl;
         }
-
     </script>
+    
+    <!-- FIX: Centralized header script is now included at the end of the body -->
+    <script src="headerManager.js" defer></script>
 </body>
 </html>
