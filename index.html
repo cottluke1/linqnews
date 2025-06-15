@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -23,14 +23,35 @@
     <style>
         html { scroll-behavior: smooth; }
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
             background-color: #000000;
             background-image: radial-gradient(ellipse 40% 20% at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
             color: #E7E9EA;
+            font-weight: 400;
         }
-        #header-placeholder .text-3xl { font-family: 'Lexend', sans-serif; }
-        #header-placeholder .nav-link { font-family: 'Lexend', sans-serif; letter-spacing: -0.01em; }
+        body.overflow-hidden { overflow: hidden; }
+
+        /* Header Styles */
+        nav.fixed {
+            background-color: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(10px) saturate(150%);
+            -webkit-backdrop-filter: blur(10px) saturate(150%);
+            border-bottom: 1px solid #2F3336;
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+        }
+        .nav-link {
+            transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+            font-weight: 500; color: #B0B0B0; opacity: 0.8;
+            padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem;
+        }
+        .nav-link:hover { color: #FFFFFF; opacity: 1; background-color: rgba(255,255,255,0.05); }
+        .nav-link.active { color: #FFFFFF; opacity: 1; background-color: transparent; }
+        #authLinkDesktopLogin.nav-link-button {
+            background-color: #00BFFF; color: #FFFFFF !important; opacity: 1 !important; padding: 0.5rem 1rem;
+        }
+        #authLinkDesktopLogin.nav-link-button:hover { background-color: #00A9E0; opacity: 1; }
         
+        /* Ticker Banner */
         .ticker-banner {
             background: #121212; color: #A0A0A0; padding: 0.625rem 0;
             overflow: hidden; white-space: nowrap; position: relative;
@@ -43,9 +64,12 @@
         .ticker-item .positive { color: #22C55E; }
         .ticker-item .negative { color: #EF4444; }
 
+        /* Hero Section */
+        .hero-section { background: transparent; padding: 5rem 1rem; text-align: center; }
         .hero-title {
-            font-size: 2.8rem; font-weight: 800; color: #E7E9EA;
-            text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3);
+            font-size: 2.8rem;
+            font-weight: 800; color: #E7E9EA;
+            margin: 0; text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3);
         }
         .hero-title .accent-text { color: #00BFFF; }
         
@@ -54,6 +78,7 @@
             padding-bottom: 0.75rem; border-bottom: 1px solid #2F3336;
         }
 
+        /* --- News Card & Locked State (Updated Design) --- */
         .news-card {
             background-color: transparent; border-radius: 0.75rem; border: 1px solid #2F3336;
             box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.6); overflow: hidden;
@@ -63,90 +88,107 @@
         }
         .news-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.2); border-color: #5a6268; }
         
-        .news-card.premium-highlight:not(.locked) { border-color: rgba(0, 191, 255, 0.7); }
-        .news-card.premium-highlight:not(.locked):hover { box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.25); }
-        .news-card.locked .news-card-content { filter: blur(4px); pointer-events: none; }
+        /* UPDATED: Changed from gold to a platinum blue color */
+        .news-card.premium-highlight:not(.locked) {
+            border-color: rgba(0, 191, 255, 0.7); /* Platinum Blue Border */
+        }
+        .news-card.premium-highlight:not(.locked):hover {
+            box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.25);
+        }
+        
+        .news-card.locked .news-card-content { 
+            filter: blur(4px);
+            pointer-events: none;
+        }
         
         .locked-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; align-items: center; justify-content: center; z-index: 10;
-            padding: 1rem; opacity: 0; transition: opacity 0.3s ease-in-out;
-            cursor: pointer; background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.8) 100%);
+            padding: 1rem; opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            cursor: pointer;
+            background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.8) 100%);
         }
         .news-card.locked:hover .locked-overlay { opacity: 1; }
+        
         .locked-content {
-            display: flex; align-items: center; width: 100%; gap: 1.5rem;
-            transform: translateY(10px); transition: transform 0.3s ease; padding-left: 66px;
+            display: flex; align-items: center;
+            width: 100%;
+            gap: 1.5rem;
+            transform: translateY(10px); 
+            transition: transform 0.3s ease;
+            padding-left: 66px;
         }
         .news-card.locked:hover .locked-content { transform: translateY(0); }
+        
         .locked-text-content { text-align: left; flex-grow: 1; }
         .locked-title { font-size: 1.1rem; font-weight: 600; color: #E7E9EA; line-height: 1.3; margin-bottom: 0.25rem; }
         .locked-text { color: #b0b0b0; font-size: 0.8rem; }
         
         .go-premium-button {
-            flex-shrink: 0; background: rgba(255, 255, 255, 0.05);
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgb(59 130 246); color: #FFFFFF; font-weight: 500; font-size: 0.875rem;
-            padding: 0.6rem 1.25rem; border-radius: 0.375rem; transition: all 0.2s ease;
+            border: 1px solid rgb(59 130 246);
+            color: #FFFFFF; font-weight: 500; font-size: 0.875rem;
+            padding: 0.6rem 1.25rem; border-radius: 0.375rem;
+            transition: all 0.2s ease;
             box-shadow: 0 0 15px -5px rgb(59 130 246 / 0.5);
         }
         .locked-overlay:hover .go-premium-button { transform: scale(1.03); background-color: rgba(59, 130, 246, 0.2); }
         
         .side-lock-icon {
-            position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
-            color: #6E767D; z-index: 5; transition: color 0.3s ease;
+            position: absolute; right: 1rem; top: 50%;
+            transform: translateY(-50%);
+            color: #6E767D; z-index: 5;
+            transition: color 0.3s ease;
         }
-        .news-card.locked:hover .side-lock-icon { color: #a7aeb4; }
+        .news-card.locked:hover .side-lock-icon {
+            color: #a7aeb4;
+        }
         
         .news-card-content { display: flex; flex-grow: 1; align-items: center; width: 100%; transition: filter 0.3s ease; }
         .news-source-logo-container { flex-shrink: 0; margin-right: 1rem; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 0.375rem; background-color: #1a1a1a;}
         .news-source-logo { max-width: 100%; max-height: 100%; object-fit: contain; }
         .news-content-wrapper { flex-grow: 1; display: flex; justify-content: space-between; align-items: center; }
+        .news-text-content {}
         .news-title { font-size: 1.1rem; font-weight: 500; color: #E7E9EA; margin-bottom: 0.25rem; line-height: 1.3; }
         .news-title a { color: #E7E9EA; transition: color 0.2s ease; }
         .news-title a:hover { color: #00BFFF; }
+        .news-meta-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
         .news-meta { font-size: 0.75rem; color: #6E767D; }
         .news-tag {
             background-color: rgba(0, 191, 255, 0.15); color: #00BFFF; padding: 0.25rem 0.6rem;
-            border-radius: 9999px; font-size: 0.65rem; font-weight: 500; display: inline-block; border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 9999px; font-size: 0.65rem; font-weight: 500;
+            display: inline-block; border: 1px solid rgba(0, 191, 255, 0.3);
         }
         .favorite-btn-area { flex-shrink: 0; margin-left: 1rem; }
         .news-card.locked .favorite-btn-area { padding-right: 2rem; }
         
         .filter-panel {
-            background-color: #121212;
-            padding: 1.5rem; 
-            border-radius: 0.75rem;
-            border: 1px solid #282828;
-            position: sticky; 
-            top: 94px;
+            background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%);
+            padding: 2rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
+            border: 1px solid #2a2a2a; position: sticky; top: 94px;
         }
-        .filter-title { 
-            font-size: 1.25rem; 
-            font-weight: 600; 
-            color: #E0E0E0; 
-            margin-bottom: 1.25rem; 
-        }
+        .filter-title { font-size: 1.25rem; font-weight: 600; color: #E0E0E0; margin-bottom: 1.25rem; }
         .filter-button {
-            display: block; width: 100%; text-align: center;
-            padding: 0.75rem 1rem; margin-bottom: 0.75rem;
-            border-radius: 0.5rem;
-            color: #B0B0B0; font-weight: 500; transition: all 0.2s ease;
-            background-color: #1A1A1A;
-            border: 1px solid #333333;
+            display: block; width: 100%; text-align: left; padding: 0.75rem 1rem; margin-bottom: 0.5rem;
+            border-radius: 0.375rem; color: #B0B0B0; font-weight: 500; transition: all 0.2s ease;
+            background-color: #1A1A1A; border: 1px solid #333333;
         }
-        .filter-button:hover { 
-            background-color: #2a2a2a;
-            border-color: #4a4a4a;
-            color: #FFFFFF;
+        .filter-button:hover { background-color: rgba(0, 191, 255, 0.1); color: #FFFFFF; border-color: rgba(0, 191, 255, 0.5); }
+        .filter-button.active { background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; font-weight: 600; border-color: #00BFFF; }
+        
+        .search-container { position: relative; display: flex; align-items: center;}
+        .search-input {
+            width: 100%; padding: 0.875rem 1.125rem 0.875rem 2.75rem; background-color: #1A1A1A;
+            border: 1px solid #333333; border-radius: 0.5rem; font-size: 0.9rem; color: #E0E0E0;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease; line-height: normal; height: auto;
         }
-        .filter-button.active { 
-            background-color: #00BFFF;
-            color: #FFFFFF; 
-            font-weight: 600; 
-            border-color: #00BFFF;
-        }
-
+        .search-input::placeholder { color: #666666; }
+        .search-input:focus { outline: none; border-color: #00BFFF; box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3); background-color: #1F1F1F; }
+        .search-container svg { position: absolute; left: 0.875rem; width: 1.1rem; height: 1.1rem; color: #A0A0A0; pointer-events: none; }
+        
         .favorite-btn {
             width: 2rem; height: 2rem; color: #888888; cursor: pointer; transition: color 0.2s ease, transform 0.2s ease;
             background: none; border: none; padding: 0.25rem; display: inline-flex; align-items: center; justify-content: center;
@@ -156,18 +198,47 @@
         .favorite-btn.favorited svg { fill: #00BFFF; stroke: #00BFFF; }
 
 		.pagination-container { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin-top: 3rem; padding: 1rem; gap: 0.5rem;}
-		.pagination-btn {
+		.pagination-btn, .pagination-ellipsis {
 			background-color: rgba(26, 26, 26, 0.7); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
 			border: 1px solid #333333; color: #B0B0B0; font-weight: 500; border-radius: 0.5rem;
-			min-width: 2.75rem; height: 2.75rem; transition: all 0.2s ease; display: inline-flex;
-            align-items: center; justify-content: center; cursor: pointer;
+			padding: 0.5rem 1rem;
+            min-width: 2.75rem; height: 2.75rem; transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
 		}
 		.pagination-btn:hover:not(:disabled) { background-color: rgba(0, 191, 255, 0.15); border-color: rgba(0, 191, 255, 0.7); color: #FFFFFF; transform: translateY(-2px); }
 		.pagination-btn.active {
 			background-color: rgb(0, 191, 255); color: #FFFFFF; border-color: #00BFFF; font-weight: 600;
 			box-shadow: 0 0 15px -2px rgba(0, 191, 255, 0.5);
 		}
-        .pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .pagination-ellipsis {
+            cursor: default;
+            background-color: transparent;
+            border-color: transparent;
+        }
+        
+        .footer { background-color: #080808; color: #888888; padding: 3rem 1rem; margin-top: 4rem; border-top: 1px solid #222222; }
+        .terms-privacy-content {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background-color: rgba(22, 22, 22, 0.9); backdrop-filter: blur(10px) saturate(150%);
+            -webkit-backdrop-filter: blur(10px) saturate(150%); padding: 2.5rem; border-radius: 0.75rem;
+            max-height: 85vh; overflow-y: auto; box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7);
+            z-index: 100; color: #E0E0E0; border: 1px solid rgba(0, 191, 255, 0.3);
+            max-width: 700px; width: 90%;
+        }
+        .terms-privacy-content h2 { font-size: 1.75rem; font-weight: 600; color: #FFFFFF; margin-bottom: 1.5rem; border-bottom: 1px solid #00BFFF; padding-bottom: 0.75rem; }
+        .terms-privacy-content p { margin-bottom: 1rem; line-height: 1.7; color: #C0C0C0; }
+        .terms-privacy-content strong { color: #00BFFF; font-weight: 600; }
+        .terms-privacy-content a { color: #00BFFF; text-decoration: underline; transition: color 0.2s ease; }
+        .terms-privacy-content a:hover { color: #00A9E0; }
+        .close-btn { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 1.75rem; cursor: pointer; color: #A0A0A0; transition: color 0.2s ease, transform 0.2s ease; line-height: 1; }
+        .close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
     </style>
 </head>
 <body class="antialiased">
@@ -177,23 +248,21 @@
       <div class="ticker-content" id="tickerContent"></div>
     </div>
 
-    <header class="hero-section pt-16 pb-12 text-center">
+    <header class="hero-section">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <h1 class="hero-title">Your <span class="accent-text">Linq</span> to Energy News</h1>
         </div>
     </header>
 
-    <main id="main-content" class="container mx-auto p-4 sm:p-6 lg:p-8">
+    <main id="main-content" class="container mx-auto p-4 sm:p-6 lg:p-8 mt-10">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-10">
             <div class="lg:col-span-9" id="news">
                 <section>
                     <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-8">
                         <h2 id="sectionDateTitle" class="section-title !mb-3 sm:!mb-0 !border-none">Latest News</h2>
-                        <div class="relative w-full sm:w-auto sm:max-w-xs">
-                            <input type="search" id="searchInput" placeholder="Search news..." class="w-full pl-10 pr-4 py-2 bg-[#1A1A1A] border border-[#333333] rounded-md focus:border-cyan-400 focus:ring-cyan-400 focus:ring-opacity-50 focus:outline-none">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                            </div>
+                        <div class="relative w-full sm:w-auto sm:max-w-xs search-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            <input type="search" id="searchInput" placeholder="Search news..." class="search-input !mb-0 pl-10">
                         </div>
                     </div>
                     <div class="space-y-6" id="newsGrid"></div>
@@ -201,7 +270,7 @@
                 </section>
             </div>
             <aside class="lg:col-span-3 space-y-8">
-                <div class="filter-panel">
+                <div class="filter-panel p-6">
                     <h3 class="filter-title">Filter by Category</h3>
                     <div id="categoryList" class="space-y-3">
                         <button class="filter-button" data-category="Crude Oil">Crude Oil</button>
@@ -216,14 +285,32 @@
             </aside>
         </div>
     </main>
-    
-    <script>
-        // --- CONFIG & STATE ---
-        let isSubscribed = false; 
-        let favorites = []; // Holds news article bookmark IDs
-        let currentPage = 1;
-        let unsubscribeUserListener = null;
 
+    <footer class="footer text-center">
+        <div class="container mx-auto">
+            <p class="text-sm">&copy; 2025 Linq. All rights reserved.</p>
+            <p class="text-xs mt-1">
+                <a href="#terms" onclick="showTermsModal(event)" class="hover:text-sky-400 transition-colors">Terms of Service</a> |
+                <a href="#privacy" onclick="showPrivacyModal(event)" class="hover:text-sky-400 transition-colors">Privacy Policy</a>
+            </p>
+        </div>
+    </footer>
+
+    <div id="termsContent" class="terms-privacy-content"><span class="close-btn" onclick="closeTermsModal()">×</span><h2>Terms of Service</h2><p>Welcome to Linq... (Your full terms content here)</p></div>
+    <div id="privacyContent" class="terms-privacy-content"><span class="close-btn" onclick="closePrivacyModal()">×</span><h2>Privacy Policy</h2><p>At Linq, we are committed... (Your full privacy policy content here)</p></div>
+
+    <script>
+        // --- CONFIGURATION & GLOBAL STATE ---
+        let isSubscribed = false; 
+        let favorites = []; 
+        let currentPage = 1;
+        let allDaysData = [];
+        let unsubscribeUserListener = null; // To hold the listener function
+
+        const FINNHUB_API_KEY = 'cprdj2pr01qjjs4st2e0cprdj2pr01qjjs4st2eg'; 
+        const DISPLAY_SYMBOLS = {'OANDA:USD_JPY':'JPY','OANDA:USD_CNY':'CNY','OANDA:EUR_USD':'EUR','OANDA:GBP_USD':'GBP','CL1:COM':'WTI CRUDE','CO1:COM':'BRENT CRUDE','RB1:COM':'RBOB GASOLINE','HO1:COM':'HEATING OIL','NG1:COM':'NATURAL GAS','TMUBMUSD02Y':'US 2YR YIELD','TMUBMUSD05Y':'US 5YR YIELD','TMUBMUSD10Y':'US 10YR YIELD','^GSPC':'S&P 500','^DJI':'DOW 30','^IXIC':'NASDAQ','DXY':'US DOLLAR IDX'};
+        const TICKER_ITEMS_TO_SHOW = ['OANDA:EUR_USD','OANDA:GBP_USD','OANDA:USD_JPY','OANDA:USD_CNY','CO1:COM','CL1:COM','NG1:COM','RB1:COM','HO1:COM','TMUBMUSD02Y','TMUBMUSD05Y','TMUBMUSD10Y','^GSPC','^DJI','^IXIC','DXY'];
+        
         // --- Firebase Initialization ---
         const firebaseConfig = {
             apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
@@ -243,29 +330,66 @@
         const categoryList = document.getElementById('categoryList');
         const paginationContainer = document.getElementById('paginationContainer');
         const sectionDateTitle = document.getElementById('sectionDateTitle');
+        const mainContent = document.getElementById('main-content');
         const headerPlaceholder = document.getElementById('header-placeholder');
 
-        // --- AUTH & DATA HANDLING ---
+        // --- MAIN INITIALIZATION LOGIC ---
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('header.html')
+                .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
+                .then(data => {
+                    headerPlaceholder.innerHTML = data;
+                    auth.onAuthStateChanged(handleAuthStateChange);
+                }).catch(error => console.error('Error fetching header:', error));
+            
+            // Set up one-time event listeners
+            categoryList.addEventListener('click', handleCategoryFilter);
+            searchInput.addEventListener('input', () => displayArticlesForPage(1));
+            newsGrid.addEventListener('click', handleFavoriteClick);
+            window.addEventListener('resize', adjustLayoutForHeader);
+
+            updateTickerBanner();
+        });
+        
         function handleAuthStateChange(user) {
-            updateHeaderUI(user);
-            if (unsubscribeUserListener) unsubscribeUserListener();
+            const authLink = document.getElementById('authLinkDesktopLogin');
+            const profileLink = document.getElementById('profileLinkDesktop');
+            const profilePic = document.getElementById('navProfilePic');
+            
+            // Detach any previous listener to prevent memory leaks on user change
+            if (unsubscribeUserListener) {
+                unsubscribeUserListener();
+                unsubscribeUserListener = null;
+            }
 
             if (user) {
-                // Listen for real-time changes to the user's document in Firestore
+                if(authLink) authLink.classList.add('hidden');
+                if(profileLink) profileLink.classList.remove('hidden');
+                
+                if (profilePic) {
+                    if (user.photoURL) profilePic.src = user.photoURL;
+                    else if (user.displayName) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
+                    else if (user.email) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
+                    else profilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
+                }
+
+                // **UPDATED**: Use onSnapshot for real-time updates
                 unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
+                    console.log("Real-time user data updated.");
                     isSubscribed = doc.exists && doc.data().isSubscribed === true;
-                    // Update local favorites array with data from Firestore
                     favorites = doc.exists ? doc.data().bookmarks || [] : [];
-                    initializeAppLogic(); // Re-render the UI with the new data
+                    initializeAppLogic(); // Re-initialize the app logic with new user status
                 }, error => {
                     console.error("Error with real-time listener:", error);
-                    isSubscribed = false; 
+                    isSubscribed = false;
                     favorites = [];
                     initializeAppLogic();
                 });
-            } else {
-                // User is logged out
-                isSubscribed = false; 
+
+            } else { // User is logged out
+                if(authLink) authLink.classList.remove('hidden');
+                if(profileLink) profileLink.classList.add('hidden');
+                isSubscribed = false;
                 favorites = [];
                 initializeAppLogic();
             }
@@ -274,46 +398,81 @@
         function initializeAppLogic() { 
             const presentArticles = window.presentDayArticles || [];
             const premiumArticles = window.premiumArticles || [];
-            const pastArticles = window.pastArticles || [];
             
-            // Combine all articles into a daily structure
-            const todayArticles = [...presentArticles, ...premiumArticles];
-            window.allDaysData = [todayArticles, ...pastArticles];
+            const todayArticles = isSubscribed ? [...presentArticles, ...premiumArticles] : presentArticles;
+            allDaysData = [todayArticles].concat(window.pastArticles || []);
             
-            // Render the current page
             displayArticlesForPage(currentPage);
+            adjustLayoutForHeader();
         }
 
-        function updateHeaderUI(user) {
-            const authLink = document.getElementById('authLinkDesktopLogin');
-            const profileLink = document.getElementById('profileLinkDesktop');
-            const profilePic = document.getElementById('navProfilePic');
-            
-            if (user) {
-                if(authLink) authLink.classList.add('hidden');
-                if(profileLink) profileLink.classList.remove('hidden');
-                if (profilePic) {
-                    if (user.photoURL) profilePic.src = user.photoURL;
-                    else if (user.displayName) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
-                    else if (user.email) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
-                    else profilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
-                }
-            } else {
-                if(authLink) authLink.classList.remove('hidden');
-                if(profileLink) profileLink.classList.add('hidden');
+        function adjustLayoutForHeader() {
+            const header = document.querySelector('nav.fixed');
+            const tickerBanner = document.querySelector('.ticker-banner');
+            if (header && tickerBanner) {
+                requestAnimationFrame(() => {
+                    const headerHeight = header.offsetHeight;
+                    tickerBanner.style.marginTop = `${headerHeight}px`;
+                });
             }
         }
         
-        // --- RENDERING ---
+        async function updateTickerBanner() {
+            // Unchanged from previous version
+            const tickerContent = document.getElementById('tickerContent');
+            if (!tickerContent || !FINNHUB_API_KEY) return;
+            let contentHTML = '';
+            for (const symbol of TICKER_ITEMS_TO_SHOW) {
+                try {
+                    const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`);
+                    const data = await response.json();
+                    if (data && data.c !== undefined) {
+                        const change = data.d;
+                        const changePercent = data.dp;
+                        const changeClass = change >= 0 ? 'positive' : 'negative';
+                        const sign = change >= 0 ? '+' : '';
+                        const displayName = DISPLAY_SYMBOLS[symbol] || symbol;
+                        contentHTML += `<div class="ticker-item">${displayName}: ${data.c.toFixed(2)} <span class="${changeClass}">(${sign}${change.toFixed(2)} / ${sign}${changePercent.toFixed(2)}%)</span></div>`;
+                    }
+                } catch (error) {
+                    console.error('Error fetching ticker data for', symbol, error);
+                }
+            }
+            tickerContent.innerHTML = contentHTML.repeat(10);
+        }
+
+        function getPageDateInfo(page) {
+            const today = new Date('2025-06-12T12:00:00Z');
+            if (page === 1) return { title: 'Latest News', date: today };
+            const dateForPage = new Date(today);
+            dateForPage.setDate(today.getDate() - (page - 1));
+            const dayName = dateForPage.toLocaleDateString('en-US', { weekday: 'long' });
+            const dateString = dateForPage.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+            return { title: `${dayName}, ${dateString}`, date: dateForPage };
+        }
+        
         function displayArticlesForPage(page) {
             currentPage = page;
             if(!newsGrid) return;
             newsGrid.innerHTML = ''; 
+            const pageInfo = getPageDateInfo(page);
+            sectionDateTitle.textContent = pageInfo.title;
+
+            let articlesForDay;
+            if (page === 1) {
+                 const presentArticles = window.presentDayArticles || [];
+                 const premiumArticles = window.premiumArticles || [];
+                 let baseArticles = isSubscribed ? [...presentArticles, ...premiumArticles] : presentArticles;
+                 // To show locked content, we add premium articles even for non-subscribed users
+                 if(!isSubscribed) {
+                    articlesForDay = [...presentArticles, ...premiumArticles];
+                 } else {
+                    articlesForDay = baseArticles;
+                 }
+            } else {
+                articlesForDay = (window.pastArticles && window.pastArticles[page - 2]) ? [...window.pastArticles[page - 2]] : [];
+            }
             
-            // Determine articles for the current page
-            let articlesForDay = (window.allDaysData && window.allDaysData[page - 1]) ? [...window.allDaysData[page - 1]] : [];
-            
-            // Filter articles based on search and category
             const searchQuery = searchInput.value.toLowerCase();
             const activeCategoryBtns = document.querySelectorAll('#categoryList .filter-button.active');
             const activeCategories = Array.from(activeCategoryBtns).map(btn => btn.dataset.category);
@@ -326,14 +485,12 @@
                 filteredArticles = filteredArticles.filter(a => a.title.toLowerCase().includes(searchQuery) || (a.source && a.source.toLowerCase().includes(searchQuery)));
             }
             
-            // Render the filtered articles
             if (filteredArticles.length === 0 ) { 
-                newsGrid.innerHTML = `<p class="text-center text-gray-500 col-span-full">No articles found.</p>`; 
+                newsGrid.innerHTML = `<p class="text-center text-gray-500 col-span-full">No articles found for your criteria on this day.</p>`; 
             } else {
                 filteredArticles.forEach(article => { 
                     const isPremiumArticle = article.premium === true;
                     const isPastPage = page > 1;
-                    // An article is locked if it's premium or old, and the user is not subscribed
                     const shouldBeLocked = !isSubscribed && (isPremiumArticle || isPastPage);
 
                     const articleElement = document.createElement('article'); 
@@ -341,153 +498,135 @@
                     if (shouldBeLocked) articleElement.classList.add('locked'); 
                     if (isPremiumArticle && !shouldBeLocked) articleElement.classList.add('premium-highlight');
 
-                    const isFavorited = favorites.includes(String(article.id));
+                    const safeSourceImageMap = window.sourceImageMap || {};
+                    const sourceInitial = (article.source && article.source.length > 0) ? article.source.charAt(0) : 'N';
+                    const imageUrl = safeSourceImageMap[article.source] || `https://placehold.co/50/2a2a2a/ffffff?text=${sourceInitial}`;
                     
-                    const sourceInfo = window.sourceImageMap[article.source] || null;
-                    const imageUrl = sourceInfo ? `https://placehold.co/50x50/cccccc/333333?text=${article.source.charAt(0)}` : 'https://placehold.co/50x50/cccccc/333333?text=N';
+                    const overlayText = isPastPage 
+                        ? { title: 'Access 7-Day Archive', text: 'Go premium to unlock past news.' }
+                        : { title: 'Unlock Premium Content', text: 'Subscribe to get instant access.' };
 
-                    articleElement.innerHTML = `
-                        <div class="news-card-content">
-                            <div class="news-source-logo-container">
-                                <img src="${imageUrl}" alt="${article.source} Logo" class="news-source-logo" onerror="this.onerror=null; this.src='https://placehold.co/50x50/cccccc/333333?text=Err';">
-                            </div>
-                            <div class="news-content-wrapper">
-                                <div>
-                                    <h3 class="news-title"><a href="${shouldBeLocked ? '#' : article.link}" ${shouldBeLocked ? '' : 'target="_blank" rel="noopener noreferrer"'}>${article.title}</a></h3>
-                                    <div class="flex items-center gap-2 mt-1">
-                                        <p class="news-meta">${article.date} &bull; ${article.source}</p>
-                                        <span class="news-tag">${article.category}</span>
-                                    </div>
-                                </div>
-                                <div class="favorite-btn-area">
-                                    <button class="favorite-btn ${isFavorited ? 'favorited' : ''}" data-id="${article.id}" aria-label="Toggle Favorite">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" /></svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        ${shouldBeLocked ? `
-                        <div class="locked-overlay" onclick="window.location.href='linqplus.html'">
+                    const lockedOverlayHTML = `
+                        <a href="linqplus.html" class="locked-overlay">
                             <div class="locked-content">
                                 <div class="locked-text-content">
-                                    <h4 class="locked-title">Linq+ Content</h4>
-                                    <p class="locked-text">Unlock this article and more with a premium subscription.</p>
+                                    <h4 class="locked-title">${overlayText.title}</h4>
+                                    <p class="locked-text">${overlayText.text}</p>
                                 </div>
                                 <button class="go-premium-button">Go Premium</button>
                             </div>
-                        </div>
-                        <div class="side-lock-icon"><i class="fas fa-lock"></i></div>
-                        ` : ''}
-                    `;
+                        </a>`;
+
+                    const sideLockIconHTML = `<div class="side-lock-icon"><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd" /></svg></div>`;
+
+                    articleElement.innerHTML = ` 
+                        ${shouldBeLocked ? lockedOverlayHTML + sideLockIconHTML : ''} 
+                        <div class="news-card-content"> 
+                            <div class="news-source-logo-container"><img src="${imageUrl}" alt="${article.source || 'News'}" class="news-source-logo" onerror="this.src='https://placehold.co/50/cccccc/333333?text=Err';"></div> 
+                            <div class="news-content-wrapper"> 
+                                <div class="news-text-content"> 
+                                    <h3 class="news-title"><a href="${shouldBeLocked ? 'linqplus.html' : article.link}" target="_blank" rel="noopener noreferrer">${article.title}</a></h3> 
+                                    <div class="news-meta-tags"> 
+                                        <p class="news-meta">${new Date(article.date).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})} &bull; ${article.source || 'N/A'}</p> 
+                                        <span class="news-tag">${article.category || 'General'}</span> 
+                                    </div> 
+                                </div> 
+                                <div class="favorite-btn-area"> 
+                                    <button class="favorite-btn" data-id="${article.id}" aria-label="Toggle Favorite"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" /></svg></button> 
+                                </div>
+                            </div> 
+                        </div>`; 
                     newsGrid.appendChild(articleElement); 
                 }); 
             }
-            updatePagination();
+            updateFavoriteIcons();
+            setupPagination();
         } 
 
-        // --- BOOKMARKING ---
-        function handleFavoriteClick(e) {
-            const favButton = e.target.closest('.favorite-btn');
-            if (favButton) {
-                toggleFavorite(favButton.dataset.id);
-            }
-        }
-
-        async function toggleFavorite(articleId) {
-            const user = auth.currentUser;
-            if (!user) {
-                window.location.href = 'login.html'; // Redirect to login if not signed in
-                return;
-            }
-            const idStr = String(articleId);
-            const isCurrentlyFavorited = favorites.includes(idStr);
+        function setupPagination() {
+            if (!paginationContainer) return;
+            paginationContainer.innerHTML = '';
+            const totalPages = 7;
+            const page = currentPage;
             
-            // Update Firestore
-            const userRef = db.collection('users').doc(user.uid);
-            const updateData = {
-                bookmarks: isCurrentlyFavorited 
-                    ? firebase.firestore.FieldValue.arrayRemove(idStr) 
-                    : firebase.firestore.FieldValue.arrayUnion(idStr)
+            const createButton = (text, pageNumber, isDisabled = false, isCurrent = false) => {
+                const btn = document.createElement('button');
+                btn.className = 'pagination-btn';
+                btn.innerHTML = text;
+                btn.disabled = isDisabled;
+                if (isCurrent) btn.classList.add('active');
+                btn.addEventListener('click', () => {
+                    if (pageNumber) {
+                        displayArticlesForPage(pageNumber);
+                        mainContent.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+                return btn;
             };
-            await userRef.set(updateData, { merge: true }).catch(error => {
-                console.error("Firestore bookmark update failed:", error);
-                // Optionally, show an error to the user
-            });
-            // The onSnapshot listener will automatically update the UI.
+
+            paginationContainer.appendChild(createButton('&larr;', page - 1, page === 1));
+            for (let i = 1; i <= totalPages; i++) {
+                paginationContainer.appendChild(createButton(i, i, false, i === page));
+            }
+            paginationContainer.appendChild(createButton('&rarr;', page + 1, page === totalPages));
         }
 
-        function updateFavoriteIcons() {
-            // This function is implicitly handled by the main render function (displayArticlesForPage)
-            // which now rebuilds the cards based on the latest `favorites` array.
-            // This keeps the logic simpler and ensures the UI is always in sync with the state.
-        }
-        
-        // --- OTHER UI ---
         function handleCategoryFilter(e) {
             const button = e.target.closest('.filter-button');
             if (!button) return;
             button.classList.toggle('active');
-            displayArticlesForPage(1); // Go back to page 1 on filter change
+            displayArticlesForPage(1);
+        }
+        
+        function handleFavoriteClick(e) {
+            const favButton = e.target.closest('.favorite-btn');
+            if (favButton) toggleFavorite(favButton.dataset.id);
         }
 
-        function updatePagination() {
-            if(!paginationContainer) return;
-            paginationContainer.innerHTML = '';
-            const totalPages = (window.allDaysData || []).length;
-
-            // Previous Button
-            const prevButton = document.createElement('button');
-            prevButton.innerHTML = '&laquo;';
-            prevButton.className = 'pagination-btn';
-            prevButton.disabled = currentPage === 1;
-            prevButton.onclick = () => displayArticlesForPage(currentPage - 1);
-            paginationContainer.appendChild(prevButton);
-
-            // Page Number Buttons
-            for(let i=1; i<=totalPages; i++){
-                const pageButton = document.createElement('button');
-                pageButton.textContent = i;
-                pageButton.className = 'pagination-btn' + (i === currentPage ? ' active' : '');
-                pageButton.onclick = () => displayArticlesForPage(i);
-                paginationContainer.appendChild(pageButton);
+        async function updateBookmarksInFirestore(articleId, isAdding) {
+            const user = auth.currentUser;
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
             }
-            
-            // Next Button
-            const nextButton = document.createElement('button');
-            nextButton.innerHTML = '&raquo;';
-            nextButton.className = 'pagination-btn';
-            nextButton.disabled = currentPage === totalPages;
-            nextButton.onclick = () => displayArticlesForPage(currentPage + 1);
-            paginationContainer.appendChild(nextButton);
+
+            const userRef = db.collection('users').doc(user.uid);
+            const updateData = {
+                bookmarks: isAdding 
+                    ? firebase.firestore.FieldValue.arrayUnion(articleId) 
+                    : firebase.firestore.FieldValue.arrayRemove(articleId)
+            };
+
+            try {
+                await userRef.set(updateData, { merge: true });
+            } catch (error) {
+                console.error('Error updating bookmarks:', error);
+            }
         }
 
-        // --- INITIALIZATION ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // This function waits until external JS files for articles are loaded
-            function waitForDataAndInitialize() {
-                if (window.presentDayArticles && window.premiumArticles && window.pastArticles && window.sourceImageMap) {
-                    // Data is ready, now we can initialize the auth-dependent logic
-                    auth.onAuthStateChanged(handleAuthStateChange);
-                } else {
-                    // Data not ready, check again in a moment
-                    setTimeout(waitForDataAndInitialize, 100);
-                }
+        async function toggleFavorite(articleId) {
+            const idStr = String(articleId);
+            const isFavorited = favorites.includes(idStr);
+            if (isFavorited) {
+                favorites = favorites.filter(id => id !== idStr);
+            } else {
+                favorites.push(idStr);
             }
+            updateFavoriteIcons();
+            await updateBookmarksInFirestore(idStr, !isFavorited);
+        }
 
-            // Fetch header first
-            fetch('header.html')
-                .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
-                .then(data => {
-                    headerPlaceholder.innerHTML = data;
-                    waitForDataAndInitialize(); // Start checking for data after header is in place
-                }).catch(error => console.error('Error fetching header:', error));
-            
-            // Setup one-time listeners that don't depend on auth/article data
-            categoryList.addEventListener('click', handleCategoryFilter);
-            searchInput.addEventListener('input', () => displayArticlesForPage(1));
-            newsGrid.addEventListener('click', handleFavoriteClick);
-        });
-
+        function updateFavoriteIcons() {
+            document.querySelectorAll('.favorite-btn').forEach(button => {
+                const isFavorited = favorites.includes(String(button.dataset.id));
+                button.classList.toggle('favorited', isFavorited);
+            });
+        }
+        
+        function showTermsModal(event) { event.preventDefault(); document.getElementById('termsContent').style.display = 'block'; }
+        function closeTermsModal() { document.getElementById('termsContent').style.display = 'none'; }
+        function showPrivacyModal(event) { event.preventDefault(); document.getElementById('privacyContent').style.display = 'block'; }
+        function closePrivacyModal() { document.getElementById('privacyContent').style.display = 'none'; }
     </script>
 </body>
 </html>
