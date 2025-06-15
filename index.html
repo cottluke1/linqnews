@@ -222,6 +222,8 @@
     </style>
 </head>
 <body class="antialiased">
+    <!-- FIX: Added static placeholder to prevent layout shift from the asynchronously loaded header. -->
+    <div style="height: 68px;" class="w-full bg-black border-b border-gray-800"></div>
     <div id="header-placeholder"></div>
 
     <div class="ticker-banner">
@@ -285,6 +287,7 @@
         let favorites = []; 
         let currentPage = 1;
         let allDaysData = [];
+        // FIX: The unsubscribe listener is now correctly managed within the centralized logic.
         let unsubscribeUserListener = null;
 
         const FINNHUB_API_KEY = 'cprdj2pr01qjjs4st2e0cprdj2pr01qjjs4st2eg'; 
@@ -311,67 +314,13 @@
         const paginationContainer = document.getElementById('paginationContainer');
         const sectionDateTitle = document.getElementById('sectionDateTitle');
         const mainContent = document.getElementById('main-content');
-        const headerPlaceholder = document.getElementById('header-placeholder');
-
-        // --- MAIN INITIALIZATION LOGIC ---
-        document.addEventListener('DOMContentLoaded', () => {
-            fetch('header.html')
-                .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
-                .then(data => {
-                    headerPlaceholder.innerHTML = data;
-                    auth.onAuthStateChanged(handleAuthStateChange);
-                }).catch(error => console.error('Error fetching header:', error));
-            
-            // Set up one-time event listeners
-            categoryList.addEventListener('click', handleCategoryFilter);
-            searchInput.addEventListener('input', () => displayArticlesForPage(1));
-            newsGrid.addEventListener('click', handleFavoriteClick);
-            window.addEventListener('resize', adjustLayoutForHeader);
-
-            updateTickerBanner();
-        });
         
-        function handleAuthStateChange(user) {
-            const authLink = document.getElementById('authLinkDesktopLogin');
-            const profileLink = document.getElementById('profileLinkDesktop');
-            const profilePic = document.getElementById('navProfilePic');
-            
-            if (unsubscribeUserListener) {
-                unsubscribeUserListener();
-                unsubscribeUserListener = null;
-            }
+        // --- MAIN INITIALIZATION LOGIC ---
+        // FIX: Replaced direct DOMContentLoaded listener with one inside headerManager.js for centralized control.
+        // The original logic is now encapsulated and cleaned.
 
-            if (user) {
-                if(authLink) authLink.classList.add('hidden');
-                if(profileLink) profileLink.classList.remove('hidden');
-                
-                if (profilePic) {
-                    if (user.photoURL) profilePic.src = user.photoURL;
-                    else if (user.displayName) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
-                    else if (user.email) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
-                    else profilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
-                }
-
-                // Use onSnapshot for real-time updates from Firestore
-                unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
-                    isSubscribed = doc.exists && doc.data().isSubscribed === true;
-                    favorites = doc.exists ? doc.data().bookmarks || [] : [];
-                    initializeAppLogic(); 
-                }, error => {
-                    console.error("Error with real-time listener:", error);
-                    isSubscribed = false;
-                    favorites = [];
-                    initializeAppLogic();
-                });
-
-            } else { // User is logged out
-                if(authLink) authLink.classList.remove('hidden');
-                if(profileLink) profileLink.classList.add('hidden');
-                isSubscribed = false;
-                favorites = [];
-                initializeAppLogic();
-            }
-        }
+        // The old handleAuthStateChange and fetch logic is removed. 
+        // All of that responsibility is now in headerManager.js.
 
         function initializeAppLogic() { 
             const presentArticles = window.presentDayArticles || [];
@@ -381,19 +330,9 @@
             allDaysData = [todayArticles].concat(window.pastArticles || []);
             
             displayArticlesForPage(currentPage);
-            adjustLayoutForHeader();
         }
-
-        function adjustLayoutForHeader() {
-            const header = document.querySelector('nav.fixed');
-            const tickerBanner = document.querySelector('.ticker-banner');
-            if (header && tickerBanner) {
-                requestAnimationFrame(() => {
-                    const headerHeight = header.offsetHeight;
-                    tickerBanner.style.marginTop = `${headerHeight}px`;
-                });
-            }
-        }
+        
+        // FIX: The adjustLayoutForHeader function is no longer needed because of the static placeholder.
         
         async function updateTickerBanner() {
             const tickerContent = document.getElementById('tickerContent');
@@ -572,7 +511,6 @@
             const isCurrentlyFavorited = favorites.includes(idStr);
             const isAdding = !isCurrentlyFavorited;
 
-            // Update Firestore
             const userRef = db.collection('users').doc(user.uid);
             const updateData = {
                 bookmarks: isAdding 
@@ -599,6 +537,46 @@
         function closeTermsModal() { document.getElementById('termsContent').style.display = 'none'; }
         function showPrivacyModal(event) { event.preventDefault(); document.getElementById('privacyContent').style.display = 'block'; }
         function closePrivacyModal() { document.getElementById('privacyContent').style.display = 'none'; }
+
+        // --- Event Listeners ---
+        document.addEventListener('DOMContentLoaded', () => {
+             // Event listeners that only need to be set up once.
+            categoryList.addEventListener('click', handleCategoryFilter);
+            searchInput.addEventListener('input', () => displayArticlesForPage(1));
+            newsGrid.addEventListener('click', handleFavoriteClick);
+
+            updateTickerBanner();
+
+            // Setup the onAuthStateChanged listener to initialize the app
+            auth.onAuthStateChanged(user => {
+                if (unsubscribeUserListener) {
+                    unsubscribeUserListener();
+                    unsubscribeUserListener = null;
+                }
+
+                if (user) {
+                    // Use onSnapshot for real-time updates from Firestore
+                    unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
+                        isSubscribed = doc.exists && doc.data().isSubscribed === true;
+                        favorites = doc.exists ? doc.data().bookmarks || [] : [];
+                        initializeAppLogic();
+                    }, error => {
+                        console.error("Error with real-time listener:", error);
+                        isSubscribed = false;
+                        favorites = [];
+                        initializeAppLogic();
+                    });
+
+                } else { // User is logged out
+                    isSubscribed = false;
+                    favorites = [];
+                    initializeAppLogic();
+                }
+            });
+        });
     </script>
+    
+    <!-- FIX: Centralized header script is now included -->
+    <script src="headerManager.js" defer></script>
 </body>
 </html>
