@@ -137,37 +137,10 @@
             border-color: rgba(0, 191, 255, 0.4); transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(0, 191, 255, 0.2);
         }
-
-        /* Add styles to prevent header flicker and layout jumps */
-        .header-spacer {
-            height: 68px;
-            width: 100%;
-            background-color: #000000;
-            border-bottom: 1px solid #1F2937;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 40;
-        }
-        
-        .chat-container-wrapper {
-            padding-top: 68px; /* Match header height */
-        }
-        
-        /* Hide header placeholder until loaded */
-        #header-placeholder {
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        #header-placeholder.loaded {
-            opacity: 1;
-        }
     </style>
 </head>
 <body class="antialiased">
-    <!-- Fixed header spacer -->
-    <div class="header-spacer"></div>
+
     <div id="header-placeholder"></div>
 
     <div class="chat-container-wrapper px-2 sm:px-4">
@@ -204,6 +177,15 @@
         let unsubscribeUserListener = null;
 
         // --- Firebase Initialization ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+            authDomain: "linq-b27a8.firebaseapp.com",
+            projectId: "linq-b27a8",
+            storageBucket: "linq-b27a8.appspot.com",
+            messagingSenderId: "1067901051826",
+            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
@@ -222,24 +204,15 @@
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Enable chat UI immediately
-            updateChatUI(false);
-            
-            // Initialize header
-            fetch('header.html')
+            fetch('header.html') 
                 .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
                 .then(data => {
                     if (headerPlaceholder) {
                         headerPlaceholder.innerHTML = data;
-                        headerPlaceholder.classList.add('loaded');
                         auth.onAuthStateChanged(handleAuthStateChange);
                     }
                 })
-                .catch(error => {
-                    console.error('Error fetching header:', error);
-                    // Still enable chat UI even if header fails
-                    updateChatUI(false);
-                });
+                .catch(error => console.error('Error fetching header:', error));
 
             chatForm.addEventListener('submit', handleFormSubmit);
             suggestedQuestionsContainer.addEventListener('click', handleSuggestedQuestionClick);
@@ -404,21 +377,5 @@
             }
         }
     </script>
-
-    <!-- Firebase & Header Loader -->
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-            authDomain: "linq-b27a8.firebaseapp.com",
-            projectId: "linq-b27a8",
-            storageBucket: "linq-b27a8.appspot.com",
-            messagingSenderId: "1067901051826",
-            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-        };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    </script>
-    <script src="headerManager.js" defer></script>
 </body>
 </html>
