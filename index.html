@@ -7,6 +7,866 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Firebase Libraries -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    
+    <!-- Article Data Scripts -->
+    <script src="source_images.js?v=20250612v2" defer></script>
+    <script src="articles_present.js?v=20250612v2" defer></script>
+    <script src="articles_premium.js?v=20250612v2" defer></script>
+    <script src="articles_past.js?v=20250612v4" defer></script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            background-image: radial-gradient(ellipse 40% 20% at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
+            color: #E7E9EA;
+        }
+        
+        .ticker-banner {
+            background: #121212; color: #A0A0A0; padding: 0.625rem 0;
+            overflow: hidden; white-space: nowrap; position: relative;
+            width: 100%; z-index: 35; font-size: 0.8rem; line-height: 1.3;
+            border-bottom: 1px solid #282828;
+        }
+        .ticker-content { display: inline-block; white-space: nowrap; animation: ticker-scroll 300s linear infinite; }
+        @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        .ticker-item { display: inline-block; margin-right: 1.75rem; }
+        .ticker-item .positive { color: #22C55E; }
+        .ticker-item .negative { color: #EF4444; }
+
+        .hero-title {
+            font-size: 3.5rem; font-weight: 800; color: #E7E9EA;
+            text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3);
+        }
+        .hero-title .accent-text { color: #00BFFF; }
+        
+        .section-title {
+            font-size: 1.75rem; font-weight: 700; color: #E7E9EA; margin-bottom: 2rem;
+            padding-bottom: 0.75rem; border-bottom: 1px solid #2F3336;
+        }
+
+        .news-card {
+            background-color: transparent; border-radius: 0.75rem; border: 1px solid #2F3336;
+            box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.6); overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            margin-bottom: 1.5rem; display: flex; align-items: center; padding: 1rem;
+            position: relative;
+        }
+        .news-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.2); border-color: #5a6268; }
+        
+        .news-card.premium-highlight:not(.locked) { border-color: rgba(0, 191, 255, 0.7); }
+        .news-card.premium-highlight:not(.locked):hover { box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.25); }
+        .news-card.locked .news-card-content { filter: blur(4px); pointer-events: none; }
+        
+        .locked-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center; z-index: 10;
+            padding: 1rem; opacity: 0; transition: opacity 0.3s ease-in-out;
+            cursor: pointer; background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.8) 100%);
+        }
+        .news-card.locked:hover .locked-overlay { opacity: 1; }
+        .locked-content {
+            display: flex; align-items: center; width: 100%; gap: 1.5rem;
+            transform: translateY(10px); transition: transform 0.3s ease; padding-left: 66px;
+        }
+        .news-card.locked:hover .locked-content { transform: translateY(0); }
+        .locked-text-content { text-align: left; flex-grow: 1; }
+        .locked-title { font-size: 1.1rem; font-weight: 600; color: #E7E9EA; line-height: 1.3; margin-bottom: 0.25rem; }
+        .locked-text { color: #b0b0b0; font-size: 0.8rem; }
+        
+        .go-premium-button {
+            flex-shrink: 0; background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgb(59 130 246); color: #FFFFFF; font-weight: 500; font-size: 0.875rem;
+            padding: 0.6rem 1.25rem; border-radius: 0.375rem; transition: all 0.2s ease;
+            box-shadow: 0 0 15px -5px rgb(59 130 246 / 0.5);
+        }
+        .locked-overlay:hover .go-premium-button { transform: scale(1.03); background-color: rgba(59, 130, 246, 0.2); }
+        
+        .side-lock-icon {
+            position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+            color: #6E767D; z-index: 5; transition: color 0.3s ease;
+        }
+        .news-card.locked:hover .side-lock-icon { color: #a7aeb4; }
+        
+        .news-card-content { display: flex; flex-grow: 1; align-items: center; width: 100%; transition: filter 0.3s ease; }
+        .news-source-logo-container { flex-shrink: 0; margin-right: 1rem; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 0.375rem; background-color: #1a1a1a;}
+        .news-source-logo { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .news-content-wrapper { flex-grow: 1; display: flex; justify-content: space-between; align-items: center; }
+        .news-title { font-size: 1.1rem; font-weight: 500; color: #E7E9EA; margin-bottom: 0.25rem; line-height: 1.3; }
+        .news-title a { color: #E7E9EA; transition: color 0.2s ease; }
+        .news-title a:hover { color: #00BFFF; }
+        .news-meta { font-size: 0.75rem; color: #6E767D; }
+        .news-tag {
+            background-color: rgba(0, 191, 255, 0.15); color: #00BFFF; padding: 0.25rem 0.6rem;
+            border-radius: 9999px; font-size: 0.65rem; font-weight: 500; display: inline-block; border: 1px solid rgba(0, 191, 255, 0.3);
+        }
+        .favorite-btn-area { flex-shrink: 0; margin-left: 1rem; }
+        .news-card.locked .favorite-btn-area { padding-right: 2rem; }
+        
+        .filter-panel {
+            background-color: #121212;
+            padding: 1.5rem; 
+            border-radius: 0.75rem;
+            border: 1px solid #282828;
+            position: sticky; 
+            top: 94px;
+        }
+        .filter-title { 
+            font-size: 1.25rem; 
+            font-weight: 600; 
+            color: #E0E0E0; 
+            margin-bottom: 1.25rem; 
+        }
+        .filter-button {
+            display: block; width: 100%; text-align: center;
+            padding: 0.75rem 1rem; margin-bottom: 0.75rem;
+            border-radius: 0.5rem;
+            color: #B0B0B0; font-weight: 500; transition: all 0.2s ease;
+            background-color: #1A1A1A;
+            border: 1px solid #333333;
+        }
+        .filter-button:hover { 
+            background-color: #2a2a2a;
+            border-color: #4a4a4a;
+            color: #FFFFFF;
+        }
+        .filter-button.active { 
+            background-color: #00BFFF;
+            color: #FFFFFF; 
+            font-weight: 600; 
+            border-color: #00BFFF;
+        }
+
+        .favorite-btn {
+            width: 2rem; height: 2rem; color: #888888; cursor: pointer; transition: color 0.2s ease, transform 0.2s ease;
+            background: none; border: none; padding: 0.25rem; display: inline-flex; align-items: center; justify-content: center;
+        }
+        .favorite-btn:hover { color: #00BFFF; transform: scale(1.15); }
+        .favorite-btn svg { width: 100%; height: 100%; stroke-width: 1.5; stroke: currentColor; fill: none; }
+        .favorite-btn.favorited svg { fill: #00BFFF; stroke: #00BFFF; }
+
+		.pagination-container { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin-top: 3rem; padding: 1rem; gap: 0.5rem;}
+		.pagination-btn {
+			background-color: rgba(26, 26, 26, 0.7); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+			border: 1px solid #333333; color: #B0B0B0; font-weight: 500; border-radius: 0.5rem;
+			min-width: 2.75rem; height: 2.75rem; transition: all 0.2s ease; display: inline-flex;
+            align-items: center; justify-content: center; cursor: pointer;
+		}
+		.pagination-btn:hover:not(:disabled) { background-color: rgba(0, 191, 255, 0.15); border-color: rgba(0, 191, 255, 0.7); color: #FFFFFF; transform: translateY(-2px); }
+		.pagination-btn.active {
+			background-color: rgb(0, 191, 255); color: #FFFFFF; border-color: #00BFFF; font-weight: 600;
+			box-shadow: 0 0 15px -2px rgba(0, 191, 255, 0.5);
+		}
+        .pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    </style>
+</head>
+<body class="antialiased">
+    <div id="header-placeholder"></div>
+
+    <div class="ticker-banner">
+      <div class="ticker-content" id="tickerContent"></div>
+    </div>
+
+    <header class="hero-section pt-16 pb-12 text-center">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="hero-title">Your <span class="accent-text">Linq</span> to Energy News</h1>
+        </div>
+    </header>
+
+    <main id="main-content" class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-10">
+            <div class="lg:col-span-9" id="news">
+                <section>
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-8">
+                        <h2 id="sectionDateTitle" class="section-title !mb-3 sm:!mb-0 !border-none">Latest News</h2>
+                        <div class="relative w-full sm:w-auto sm:max-w-xs">
+                            <input type="search" id="searchInput" placeholder="Search news..." class="w-full pl-10 pr-4 py-2 bg-[#1A1A1A] border border-[#333333] rounded-md focus:border-cyan-400 focus:ring-cyan-400 focus:ring-opacity-50 focus:outline-none">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-6" id="newsGrid"></div>
+                    <div id="paginationContainer" class="pagination-container"></div>
+                </section>
+            </div>
+            <aside class="lg:col-span-3 space-y-8">
+                <div class="filter-panel">
+                    <h3 class="filter-title">Filter by Category</h3>
+                    <div id="categoryList" class="space-y-3">
+                        <button class="filter-button" data-category="Crude Oil">Crude Oil</button>
+                        <button class="filter-button" data-category="Natural Gas">Natural Gas</button>
+                        <button class="filter-button" data-category="Petrochemicals">Petrochemicals</button>
+                        <button class="filter-button" data-category="Power">Power</button>
+                        <button class="filter-button" data-category="Renewables">Renewables</button>
+                        <button class="filter-button" data-category="Company News">Company News</button>
+                        <button class="filter-button" data-category="Earnings">Earnings</button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+    
+    <script>
+        // --- CONFIG & STATE ---
+        let isSubscribed = false; 
+        let favorites = []; // Holds news article bookmark IDs
+        let currentPage = 1;
+        let unsubscribeUserListener = null;
+
+        // --- Firebase Initialization ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+            authDomain: "linq-b27a8.firebaseapp.com",
+            projectId: "linq-b27a8",
+            storageBucket: "linq-b27a8.appspot.com",
+            messagingSenderId: "1067901051826",
+            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // --- DOM ELEMENTS ---
+        const newsGrid = document.getElementById('newsGrid');
+        const searchInput = document.getElementById('searchInput');
+        const categoryList = document.getElementById('categoryList');
+        const paginationContainer = document.getElementById('paginationContainer');
+        const sectionDateTitle = document.getElementById('sectionDateTitle');
+        const headerPlaceholder = document.getElementById('header-placeholder');
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('header.html')
+                .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
+                .then(data => {
+                    headerPlaceholder.innerHTML = data;
+                    auth.onAuthStateChanged(handleAuthStateChange);
+                }).catch(error => console.error('Error fetching header:', error));
+            
+            // Setup one-time listeners
+            categoryList.addEventListener('click', handleCategoryFilter);
+            searchInput.addEventListener('input', () => displayArticlesForPage(1));
+            newsGrid.addEventListener('click', handleFavoriteClick);
+        });
+        
+        // --- AUTH & DATA HANDLING ---
+        function handleAuthStateChange(user) {
+            updateHeaderUI(user);
+            if (unsubscribeUserListener) unsubscribeUserListener();
+
+            if (user) {
+                unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
+                    isSubscribed = doc.exists && doc.data().isSubscribed === true;
+                    favorites = doc.exists ? doc.data().bookmarks || [] : [];
+                    initializeAppLogic();
+                }, error => {
+                    console.error("Error with real-time listener:", error);
+                    isSubscribed = false; favorites = [];
+                    initializeAppLogic();
+                });
+            } else {
+                isSubscribed = false; favorites = [];
+                initializeAppLogic();
+            }
+        }
+
+        function initializeAppLogic() { 
+            const presentArticles = window.presentDayArticles || [];
+            const premiumArticles = window.premiumArticles || [];
+            const pastArticles = window.pastArticles || [];
+            
+            const todayArticles = isSubscribed ? [...presentArticles, ...premiumArticles] : presentArticles;
+            window.allDaysData = [todayArticles, ...pastArticles];
+            
+            displayArticlesForPage(currentPage);
+        }
+
+        function updateHeaderUI(user) {
+            const authLink = document.getElementById('authLinkDesktopLogin');
+            const profileLink = document.getElementById('profileLinkDesktop');
+            const profilePic = document.getElementById('navProfilePic');
+            
+            if (user) {
+                if(authLink) authLink.classList.add('hidden');
+                if(profileLink) profileLink.classList.remove('hidden');
+                if (profilePic) {
+                    if (user.photoURL) profilePic.src = user.photoURL;
+                    else if (user.displayName) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
+                    else if (user.email) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
+                    else profilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
+                }
+            } else {
+                if(authLink) authLink.classList.remove('hidden');
+                if(profileLink) profileLink.classList.add('hidden');
+            }
+        }
+        
+        // --- RENDERING ---
+        function displayArticlesForPage(page) {
+            currentPage = page;
+            if(!newsGrid) return;
+            newsGrid.innerHTML = ''; 
+            
+            let articlesForDay;
+            if (page === 1) {
+                 const presentArticles = window.presentDayArticles || [];
+                 const premiumArticles = window.premiumArticles || [];
+                 articlesForDay = isSubscribed ? [...presentArticles, ...premiumArticles] : [...presentArticles, ...premiumArticles.map(a => ({...a, isLocked: true}))];
+            } else {
+                articlesForDay = (window.allDaysData && window.allDaysData[page - 1]) ? [...window.allDaysData[page - 1]] : [];
+            }
+            
+            const searchQuery = searchInput.value.toLowerCase();
+            const activeCategoryBtns = document.querySelectorAll('#categoryList .filter-button.active');
+            const activeCategories = Array.from(activeCategoryBtns).map(btn => btn.dataset.category);
+
+            let filteredArticles = articlesForDay;
+            if (activeCategories.length > 0) {
+                filteredArticles = filteredArticles.filter(a => activeCategories.includes(a.category));
+            }
+            if (searchQuery) {
+                filteredArticles = filteredArticles.filter(a => a.title.toLowerCase().includes(searchQuery) || (a.source && a.source.toLowerCase().includes(searchQuery)));
+            }
+            
+            if (filteredArticles.length === 0 ) { 
+                newsGrid.innerHTML = `<p class="text-center text-gray-500 col-span-full">No articles found.</p>`; 
+            } else {
+                filteredArticles.forEach(article => { 
+                    const isPremiumArticle = article.premium === true;
+                    const isPastPage = page > 1;
+                    const shouldBeLocked = !isSubscribed && (isPremiumArticle || isPastPage || article.isLocked);
+
+                    const articleElement = document.createElement('article'); 
+                    articleElement.className = 'news-card'; 
+                    if (shouldBeLocked) articleElement.classList.add('locked'); 
+                    if (isPremiumArticle && !shouldBeLocked) articleElement.classList.add('premium-highlight');
+                    
+                    newsGrid.appendChild(articleElement); 
+                }); 
+            }
+            updateFavoriteIcons();
+            setupPagination();
+        } 
+
+        // --- BOOKMARKING ---
+        function handleFavoriteClick(e) {
+            const favButton = e.target.closest('.favorite-btn');
+            if (favButton) toggleFavorite(favButton.dataset.id);
+        }
+
+        async function toggleFavorite(articleId) {
+            const user = auth.currentUser;
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            const idStr = String(articleId);
+            const isCurrentlyFavorited = favorites.includes(idStr);
+            
+            const userRef = db.collection('users').doc(user.uid);
+            const updateData = {
+                bookmarks: isCurrentlyFavorited 
+                    ? firebase.firestore.FieldValue.arrayRemove(idStr) 
+                    : firebase.firestore.FieldValue.arrayUnion(idStr)
+            };
+            await userRef.set(updateData, { merge: true });
+        }
+
+        function updateFavoriteIcons() {
+            document.querySelectorAll('.favorite-btn').forEach(button => {
+                const articleId = button.dataset.id;
+                button.classList.toggle('favorited', favorites.includes(String(articleId)));
+            });
+        }
+        
+        // --- OTHER UI ---
+        function handleCategoryFilter(e) {
+            const button = e.target.closest('.filter-button');
+            if (!button) return;
+            button.classList.toggle('active');
+            displayArticlesForPage(1);
+        }
+
+        function setupPagination() {
+             const totalPages = (window.allDaysData || []).length;
+             const paginationContainer = document.getElementById('paginationContainer');
+             if (!paginationContainer) return;
+             paginationContainer.innerHTML = '';
+
+             const createButton = (text, pageNumber, isDisabled = false, isCurrent = false) => {
+                const btn = document.createElement('button');
+                btn.className = 'pagination-btn';
+                if(isCurrent) btn.classList.add('active');
+                btn.innerHTML = text;
+                btn.disabled = isDisabled;
+                btn.onclick = () => {
+                    if(!isDisabled) {
+                        displayArticlesForPage(pageNumber);
+                        // FIXED: Scroll to the news section, not main-content
+                        document.getElementById('news').scrollIntoView({ behavior: 'smooth' });
+                    }
+                };
+                return btn;
+             }
+
+             paginationContainer.appendChild(createButton('&laquo;', currentPage - 1, currentPage === 1));
+             for(let i=1; i <= totalPages; i++){
+                paginationContainer.appendChild(createButton(i, i, false, i === currentPage));
+             }
+             paginationContainer.appendChild(createButton('&raquo;', currentPage + 1, currentPage === totalPages));
+        }
+        
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linq - Your Energy News</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Firebase Libraries -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    
+    <!-- Article Data Scripts -->
+    <script src="source_images.js?v=20250612v2" defer></script>
+    <script src="articles_present.js?v=20250612v2" defer></script>
+    <script src="articles_premium.js?v=20250612v2" defer></script>
+    <script src="articles_past.js?v=20250612v4" defer></script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            background-image: radial-gradient(ellipse 40% 20% at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
+            color: #E7E9EA;
+        }
+        
+        .ticker-banner {
+            background: #121212; color: #A0A0A0; padding: 0.625rem 0;
+            overflow: hidden; white-space: nowrap; position: relative;
+            width: 100%; z-index: 35; font-size: 0.8rem; line-height: 1.3;
+            border-bottom: 1px solid #282828;
+        }
+        .ticker-content { display: inline-block; white-space: nowrap; animation: ticker-scroll 300s linear infinite; }
+        @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        .ticker-item { display: inline-block; margin-right: 1.75rem; }
+        .ticker-item .positive { color: #22C55E; }
+        .ticker-item .negative { color: #EF4444; }
+
+        .hero-title {
+            font-size: 2.8rem; font-weight: 800; color: #E7E9EA;
+            text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3);
+        }
+        .hero-title .accent-text { color: #00BFFF; }
+        
+        .section-title {
+            font-size: 1.75rem; font-weight: 700; color: #E7E9EA; margin-bottom: 2rem;
+            padding-bottom: 0.75rem; border-bottom: 1px solid #2F3336;
+        }
+
+        .news-card {
+            background-color: transparent; border-radius: 0.75rem; border: 1px solid #2F3336;
+            box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.6); overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            margin-bottom: 1.5rem; display: flex; align-items: center; padding: 1rem;
+            position: relative;
+        }
+        .news-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.2); border-color: #5a6268; }
+        
+        .news-card.premium-highlight:not(.locked) { border-color: rgba(0, 191, 255, 0.7); }
+        .news-card.premium-highlight:not(.locked):hover { box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.25); }
+        .news-card.locked .news-card-content { filter: blur(4px); pointer-events: none; }
+        
+        .locked-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center; z-index: 10;
+            padding: 1rem; opacity: 0; transition: opacity 0.3s ease-in-out;
+            cursor: pointer; background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.8) 100%);
+        }
+        .news-card.locked:hover .locked-overlay { opacity: 1; }
+        .locked-content {
+            display: flex; align-items: center; width: 100%; gap: 1.5rem;
+            transform: translateY(10px); transition: transform 0.3s ease; padding-left: 66px;
+        }
+        .news-card.locked:hover .locked-content { transform: translateY(0); }
+        .locked-text-content { text-align: left; flex-grow: 1; }
+        .locked-title { font-size: 1.1rem; font-weight: 600; color: #E7E9EA; line-height: 1.3; margin-bottom: 0.25rem; }
+        .locked-text { color: #b0b0b0; font-size: 0.8rem; }
+        
+        .go-premium-button {
+            flex-shrink: 0; background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgb(59 130 246); color: #FFFFFF; font-weight: 500; font-size: 0.875rem;
+            padding: 0.6rem 1.25rem; border-radius: 0.375rem; transition: all 0.2s ease;
+            box-shadow: 0 0 15px -5px rgb(59 130 246 / 0.5);
+        }
+        .locked-overlay:hover .go-premium-button { transform: scale(1.03); background-color: rgba(59, 130, 246, 0.2); }
+        
+        .side-lock-icon {
+            position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+            color: #6E767D; z-index: 5; transition: color 0.3s ease;
+        }
+        .news-card.locked:hover .side-lock-icon { color: #a7aeb4; }
+        
+        .news-card-content { display: flex; flex-grow: 1; align-items: center; width: 100%; transition: filter 0.3s ease; }
+        .news-source-logo-container { flex-shrink: 0; margin-right: 1rem; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 0.375rem; background-color: #1a1a1a;}
+        .news-source-logo { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .news-content-wrapper { flex-grow: 1; display: flex; justify-content: space-between; align-items: center; }
+        .news-title { font-size: 1.1rem; font-weight: 500; color: #E7E9EA; margin-bottom: 0.25rem; line-height: 1.3; }
+        .news-title a { color: #E7E9EA; transition: color 0.2s ease; }
+        .news-title a:hover { color: #00BFFF; }
+        .news-meta { font-size: 0.75rem; color: #6E767D; }
+        .news-tag {
+            background-color: rgba(0, 191, 255, 0.15); color: #00BFFF; padding: 0.25rem 0.6rem;
+            border-radius: 9999px; font-size: 0.65rem; font-weight: 500; display: inline-block; border: 1px solid rgba(0, 191, 255, 0.3);
+        }
+        .favorite-btn-area { flex-shrink: 0; margin-left: 1rem; }
+        .news-card.locked .favorite-btn-area { padding-right: 2rem; }
+        
+        .filter-panel {
+            background-color: #121212;
+            padding: 1.5rem; 
+            border-radius: 0.75rem;
+            border: 1px solid #282828;
+            position: sticky; 
+            top: 94px;
+        }
+        .filter-title { 
+            font-size: 1.25rem; 
+            font-weight: 600; 
+            color: #E0E0E0; 
+            margin-bottom: 1.25rem; 
+        }
+        .filter-button {
+            display: block; width: 100%; text-align: center;
+            padding: 0.75rem 1rem; margin-bottom: 0.75rem;
+            border-radius: 0.5rem;
+            color: #B0B0B0; font-weight: 500; transition: all 0.2s ease;
+            background-color: #1A1A1A;
+            border: 1px solid #333333;
+        }
+        .filter-button:hover { 
+            background-color: #2a2a2a;
+            border-color: #4a4a4a;
+            color: #FFFFFF;
+        }
+        .filter-button.active { 
+            background-color: #00BFFF;
+            color: #FFFFFF; 
+            font-weight: 600; 
+            border-color: #00BFFF;
+        }
+
+        .favorite-btn {
+            width: 2rem; height: 2rem; color: #888888; cursor: pointer; transition: color 0.2s ease, transform 0.2s ease;
+            background: none; border: none; padding: 0.25rem; display: inline-flex; align-items: center; justify-content: center;
+        }
+        .favorite-btn:hover { color: #00BFFF; transform: scale(1.15); }
+        .favorite-btn svg { width: 100%; height: 100%; stroke-width: 1.5; stroke: currentColor; fill: none; }
+        .favorite-btn.favorited svg { fill: #00BFFF; stroke: #00BFFF; }
+
+		.pagination-container { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin-top: 3rem; padding: 1rem; gap: 0.5rem;}
+		.pagination-btn {
+			background-color: rgba(26, 26, 26, 0.7); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+			border: 1px solid #333333; color: #B0B0B0; font-weight: 500; border-radius: 0.5rem;
+			min-width: 2.75rem; height: 2.75rem; transition: all 0.2s ease; display: inline-flex;
+            align-items: center; justify-content: center; cursor: pointer;
+		}
+		.pagination-btn:hover:not(:disabled) { background-color: rgba(0, 191, 255, 0.15); border-color: rgba(0, 191, 255, 0.7); color: #FFFFFF; transform: translateY(-2px); }
+		.pagination-btn.active {
+			background-color: rgb(0, 191, 255); color: #FFFFFF; border-color: #00BFFF; font-weight: 600;
+			box-shadow: 0 0 15px -2px rgba(0, 191, 255, 0.5);
+		}
+        .pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    </style>
+</head>
+<body class="antialiased">
+    <div id="header-placeholder"></div>
+
+    <div class="ticker-banner">
+      <div class="ticker-content" id="tickerContent"></div>
+    </div>
+
+    <header class="hero-section pt-16 pb-12 text-center">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="hero-title">Your <span class="accent-text">Linq</span> to Energy News</h1>
+        </div>
+    </header>
+
+    <main id="main-content" class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-10">
+            <div class="lg:col-span-9" id="news">
+                <section>
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-8">
+                        <h2 id="sectionDateTitle" class="section-title !mb-3 sm:!mb-0 !border-none">Latest News</h2>
+                        <div class="relative w-full sm:w-auto sm:max-w-xs">
+                            <input type="search" id="searchInput" placeholder="Search news..." class="w-full pl-10 pr-4 py-2 bg-[#1A1A1A] border border-[#333333] rounded-md focus:border-cyan-400 focus:ring-cyan-400 focus:ring-opacity-50 focus:outline-none">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-6" id="newsGrid"></div>
+                    <div id="paginationContainer" class="pagination-container"></div>
+                </section>
+            </div>
+            <aside class="lg:col-span-3 space-y-8">
+                <div class="filter-panel">
+                    <h3 class="filter-title">Filter by Category</h3>
+                    <div id="categoryList" class="space-y-3">
+                        <button class="filter-button" data-category="Crude Oil">Crude Oil</button>
+                        <button class="filter-button" data-category="Natural Gas">Natural Gas</button>
+                        <button class="filter-button" data-category="Petrochemicals">Petrochemicals</button>
+                        <button class="filter-button" data-category="Power">Power</button>
+                        <button class="filter-button" data-category="Renewables">Renewables</button>
+                        <button class="filter-button" data-category="Company News">Company News</button>
+                        <button class="filter-button" data-category="Earnings">Earnings</button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+    
+    <script>
+        // --- CONFIG & STATE ---
+        let isSubscribed = false; 
+        let favorites = []; // Holds news article bookmark IDs
+        let currentPage = 1;
+        let unsubscribeUserListener = null;
+
+        // --- Firebase Initialization ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+            authDomain: "linq-b27a8.firebaseapp.com",
+            projectId: "linq-b27a8",
+            storageBucket: "linq-b27a8.appspot.com",
+            messagingSenderId: "1067901051826",
+            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // --- DOM ELEMENTS ---
+        const newsGrid = document.getElementById('newsGrid');
+        const searchInput = document.getElementById('searchInput');
+        const categoryList = document.getElementById('categoryList');
+        const paginationContainer = document.getElementById('paginationContainer');
+        const sectionDateTitle = document.getElementById('sectionDateTitle');
+        const headerPlaceholder = document.getElementById('header-placeholder');
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('header.html')
+                .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
+                .then(data => {
+                    headerPlaceholder.innerHTML = data;
+                    auth.onAuthStateChanged(handleAuthStateChange);
+                }).catch(error => console.error('Error fetching header:', error));
+            
+            // Setup one-time listeners
+            categoryList.addEventListener('click', handleCategoryFilter);
+            searchInput.addEventListener('input', () => displayArticlesForPage(1));
+            newsGrid.addEventListener('click', handleFavoriteClick);
+        });
+        
+        // --- AUTH & DATA HANDLING ---
+        function handleAuthStateChange(user) {
+            updateHeaderUI(user);
+            if (unsubscribeUserListener) unsubscribeUserListener();
+
+            if (user) {
+                unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
+                    isSubscribed = doc.exists && doc.data().isSubscribed === true;
+                    favorites = doc.exists ? doc.data().bookmarks || [] : [];
+                    initializeAppLogic();
+                }, error => {
+                    console.error("Error with real-time listener:", error);
+                    isSubscribed = false; favorites = [];
+                    initializeAppLogic();
+                });
+            } else {
+                isSubscribed = false; favorites = [];
+                initializeAppLogic();
+            }
+        }
+
+        function initializeAppLogic() { 
+            const presentArticles = window.presentDayArticles || [];
+            const premiumArticles = window.premiumArticles || [];
+            const pastArticles = window.pastArticles || [];
+            
+            const todayArticles = isSubscribed ? [...presentArticles, ...premiumArticles] : presentArticles;
+            window.allDaysData = [todayArticles, ...pastArticles];
+            
+            displayArticlesForPage(currentPage);
+        }
+
+        function updateHeaderUI(user) {
+            const authLink = document.getElementById('authLinkDesktopLogin');
+            const profileLink = document.getElementById('profileLinkDesktop');
+            const profilePic = document.getElementById('navProfilePic');
+            
+            if (user) {
+                if(authLink) authLink.classList.add('hidden');
+                if(profileLink) profileLink.classList.remove('hidden');
+                if (profilePic) {
+                    if (user.photoURL) profilePic.src = user.photoURL;
+                    else if (user.displayName) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
+                    else if (user.email) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
+                    else profilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
+                }
+            } else {
+                if(authLink) authLink.classList.remove('hidden');
+                if(profileLink) profileLink.classList.add('hidden');
+            }
+        }
+        
+        // --- RENDERING ---
+        function displayArticlesForPage(page) {
+            currentPage = page;
+            if(!newsGrid) return;
+            newsGrid.innerHTML = ''; 
+            
+            let articlesForDay;
+            if (page === 1) {
+                 const presentArticles = window.presentDayArticles || [];
+                 const premiumArticles = window.premiumArticles || [];
+                 articlesForDay = isSubscribed ? [...presentArticles, ...premiumArticles] : [...presentArticles, ...premiumArticles.map(a => ({...a, isLocked: true}))];
+            } else {
+                articlesForDay = (window.allDaysData && window.allDaysData[page - 1]) ? [...window.allDaysData[page - 1]] : [];
+            }
+            
+            const searchQuery = searchInput.value.toLowerCase();
+            const activeCategoryBtns = document.querySelectorAll('#categoryList .filter-button.active');
+            const activeCategories = Array.from(activeCategoryBtns).map(btn => btn.dataset.category);
+
+            let filteredArticles = articlesForDay;
+            if (activeCategories.length > 0) {
+                filteredArticles = filteredArticles.filter(a => activeCategories.includes(a.category));
+            }
+            if (searchQuery) {
+                filteredArticles = filteredArticles.filter(a => a.title.toLowerCase().includes(searchQuery) || (a.source && a.source.toLowerCase().includes(searchQuery)));
+            }
+            
+            if (filteredArticles.length === 0 ) { 
+                newsGrid.innerHTML = `<p class="text-center text-gray-500 col-span-full">No articles found.</p>`; 
+            } else {
+                filteredArticles.forEach(article => { 
+                    const isPremiumArticle = article.premium === true;
+                    const isPastPage = page > 1;
+                    const shouldBeLocked = !isSubscribed && (isPremiumArticle || isPastPage || article.isLocked);
+
+                    const articleElement = document.createElement('article'); 
+                    articleElement.className = 'news-card'; 
+                    if (shouldBeLocked) articleElement.classList.add('locked'); 
+                    if (isPremiumArticle && !shouldBeLocked) articleElement.classList.add('premium-highlight');
+                    
+                    newsGrid.appendChild(articleElement); 
+                }); 
+            }
+            updateFavoriteIcons();
+            setupPagination();
+        } 
+
+        // --- BOOKMARKING ---
+        function handleFavoriteClick(e) {
+            const favButton = e.target.closest('.favorite-btn');
+            if (favButton) toggleFavorite(favButton.dataset.id);
+        }
+
+        async function toggleFavorite(articleId) {
+            const user = auth.currentUser;
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            const idStr = String(articleId);
+            const isCurrentlyFavorited = favorites.includes(idStr);
+            
+            const userRef = db.collection('users').doc(user.uid);
+            const updateData = {
+                bookmarks: isCurrentlyFavorited 
+                    ? firebase.firestore.FieldValue.arrayRemove(idStr) 
+                    : firebase.firestore.FieldValue.arrayUnion(idStr)
+            };
+            await userRef.set(updateData, { merge: true });
+        }
+
+        function updateFavoriteIcons() {
+            document.querySelectorAll('.favorite-btn').forEach(button => {
+                const articleId = button.dataset.id;
+                button.classList.toggle('favorited', favorites.includes(String(articleId)));
+            });
+        }
+        
+        // --- OTHER UI ---
+        function handleCategoryFilter(e) {
+            const button = e.target.closest('.filter-button');
+            if (!button) return;
+            button.classList.toggle('active');
+            displayArticlesForPage(1);
+        }
+
+        function setupPagination() {
+             const totalPages = (window.allDaysData || []).length;
+             const paginationContainer = document.getElementById('paginationContainer');
+             if (!paginationContainer) return;
+             paginationContainer.innerHTML = '';
+
+             const createButton = (text, pageNumber, isDisabled = false, isCurrent = false) => {
+                const btn = document.createElement('button');
+                btn.className = 'pagination-btn';
+                if(isCurrent) btn.classList.add('active');
+                btn.innerHTML = text;
+                btn.disabled = isDisabled;
+                btn.onclick = () => {
+                    if(!isDisabled) {
+                        displayArticlesForPage(pageNumber);
+                        // FIXED: Scroll to the news section, not main-content
+                        document.getElementById('news').scrollIntoView({ behavior: 'smooth' });
+                    }
+                };
+                return btn;
+             }
+
+             paginationContainer.appendChild(createButton('&laquo;', currentPage - 1, currentPage === 1));
+             for(let i=1; i <= totalPages; i++){
+                paginationContainer.appendChild(createButton(i, i, false, i === currentPage));
+             }
+             paginationContainer.appendChild(createButton('&raquo;', currentPage + 1, currentPage === totalPages));
+        }
+        
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linq - Your Energy News</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <!-- Firebase Libraries -->
