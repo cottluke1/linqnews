@@ -26,65 +26,7 @@
         ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
 
         /* Header Styles (from community.html, assuming header.html provides structure) */
-        nav.fixed {
-            background-color: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(10px) saturate(150%);
-            -webkit-backdrop-filter: blur(10px) saturate(150%);
-            border-bottom: 1px solid #222222;
-        }
-        .nav-link {
-            transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
-            font-weight: 500; color: #B0B0B0; opacity: 0.8;
-            padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem;
-        }
-        .nav-link:hover { color: #FFFFFF; opacity: 1; background-color: rgba(255,255,255,0.05); }
-        .nav-link.active { color: #FFFFFF; opacity: 1; background-color: transparent; }
-        #authLinkDesktopLogin.nav-link-button {
-            background-color: #00BFFF; color: #FFFFFF !important; opacity: 1 !important; padding: 0.5rem 1rem;
-        }
-        #authLinkDesktopLogin.nav-link-button:hover { background-color: #00A9E0; opacity: 1; }
-        .profile-icon-placeholder {
-            width: 2.25rem; height: 2.25rem; background-color: #333; border-radius: 50%;
-            display: inline-flex; align-items: center; justify-content: center;
-            cursor: pointer; border: 2px solid #4A4A4A;
-        }
-        .profile-icon-placeholder svg { width: 1.25rem; height: 1.25rem; color: #B0B0B0; }
-        .profile-icon-placeholder:hover { border-color: #00BFFF; }
-        .desktop-hamburger-icon { cursor: pointer; padding: 0.375rem; color: #B0B0B0; border-radius: 0.25rem;}
-        .desktop-hamburger-icon:hover { color: #FFFFFF; background-color: rgba(255,255,255,0.1); }
-        .desktop-hamburger-icon svg { width: 1.5rem; height: 1.5rem; }
-        .slide-out-panel {
-            display: flex; flex-direction: column; position: fixed; top: 0; right: 0;
-            width: 320px; height: 100vh; background-color: #18181B;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.4); z-index: 1001;
-            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            padding: 1.5rem; overflow-y: auto; border-left: 1px solid #3F3F46;
-        }
-        .slide-out-panel.open { transform: translateX(0); }
-        .slide-out-panel-header {
-            display: flex; justify-content: flex-end; align-items: center;
-            padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #3F3F46;
-        }
-        .slide-out-panel-close-btn {
-            background: none; border: none; color: #A0A0A0; font-size: 1.875rem;
-            cursor: pointer; padding: 0.25rem; line-height: 1;
-            transition: color 0.2s ease, transform 0.2s ease;
-        }
-        .slide-out-panel-close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
-        .slide-out-panel-nav { flex-grow: 1; display: flex; flex-direction: column; }
-        .slide-out-panel a {
-            color: #D4D4D8; padding: 1rem 1.25rem; text-decoration: none; display: block;
-            font-size: 0.95rem; font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease;
-            border-left: 4px solid transparent; margin: 0.375rem 0; border-radius: 0.375rem;
-        }
-        .slide-out-panel a:hover { background-color: #27272A; color: #FFFFFF; border-left-color: #00BFFF; }
-        .slide-out-panel #logoutButtonSlideout {
-            color: #F87171 !important; margin-top: auto; padding-top: 1rem; border-top: 1px solid #3F3F46;
-        }
-        .slide-out-panel #logoutButtonSlideout:hover {
-            background-color: rgba(248, 113, 113, 0.1); color: #FECACA !important; border-left-color: #F87171;
-        }
+        
         #menu-overlay {
             display: none; position: fixed; inset: 0;
             background-color: rgba(0, 0, 0, 0.65); z-index: 1000;
