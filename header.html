@@ -1,110 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Linq Header Fixed</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Firebase scripts -->
-  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
-  <script>
-    // Initialize Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-      authDomain: "linq-b27a8.firebaseapp.com",
-      projectId: "linq-b27a8",
-      storageBucket: "linq-b27a8.firebasestorage.app",
-      messagingSenderId: "1067901051826",
-      appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-    };
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-  </script>
-  <style>
-    /* This CSS is now included directly in the header file 
-      to ensure consistent styling across all pages. 
-    */
-    .nav-link {
-        font-size: 0.875rem; /* 14px */
-        color: #FFFFFF; /* White text */
-        font-weight: 500;
-        transition: color 0.2s ease-in-out, opacity 0.2s ease-in-out;
-        opacity: 0.8;
-    }
-    .nav-link:hover {
-        opacity: 1;
-    }
-    .nav-link.active {
-        color: #FFFFFF;
-        font-weight: 600;
-        opacity: 1;
-    }
-    /*
-      Modern, sleek, pill-shaped "Go Premium" button style.
-    */
-    .go-premium-btn {
-        font-size: 0.875rem; /* text-sm */
-        font-weight: 600; /* font-semibold */
-        background-color: #000000; /* Black background */
-        color: #FFFFFF; /* White text */
-        padding: 0.5rem 1rem; /* py-2 px-4 */
-        border-radius: 9999px; /* rounded-full */
-        border: 1px solid #FFFFFF; /* White border */
-        transition: background-color 0.3s ease, transform 0.2s ease;
-        display: inline-block;
-        text-decoration: none;
-    }
-    .go-premium-btn:hover {
-        background-color: #333333; /* Darker grey on hover */
-        transform: scale(1.05);
-    }
-    /*
-      Styling for the Login button.
-    */
-    #authLinkDesktopLogin {
-        font-size: 0.875rem;
-        font-weight: 500;
-        background-color: #00BFFF;
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 0.375rem; /* rounded-md */
-        transition: background-color 0.2s ease;
-    }
-    #authLinkDesktopLogin:hover {
-        background-color: #00A9E0;
-    }
-  </style>
-</head>
-<body>
-  <nav class="fixed top-0 left-0 w-full z-[1000] shadow-md py-3 bg-black border-b border-gray-800">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-      <!-- Logo -->
+<!-- 
+  Updated Header Fragment
+  - This file now contains ONLY the <nav> element, making it a proper HTML fragment for injection.
+  - Removed <!DOCTYPE>, <html>, <head>, and <body> tags.
+  - Removed inline <style> and <script> blocks. All styling and logic will be handled by the parent page and a centralized 'headerManager.js'.
+  - Both desktop login (#authLinkDesktopLogin) and profile (#profileLinkDesktop) links are now hidden by default to prevent the "flicker" or "flash of unauthenticated content".
+  - Added a basic, responsive mobile menu structure that can be controlled by our JavaScript.
+-->
+<nav class="fixed top-0 left-0 w-full z-[1000] shadow-md bg-black/80 backdrop-blur-sm border-b border-gray-800">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+    <!-- Logo -->
+    <div class="flex-shrink-0">
       <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
-      <!-- Centered Nav Links -->
-      <div class="hidden md:flex flex-1 justify-center items-center space-x-8">
-        <a href="index.html" class="nav-link">News</a>
-        <a href="community.html" class="nav-link">Community</a>
-        <a href="linqai.html" class="nav-link">Linq AI</a>
-        <a href="previous_earnings.html" class="nav-link">Earnings</a>
-        <a href="favorites.html" class="nav-link">Bookmarks</a>
-        <a href="linqplus.html" class="go-premium-btn">Go Premium</a>
-      </div>
-      <!-- Right: Login/Profile -->
-      <div class="flex items-center space-x-3">
-        <!-- The login button is now hidden by default to prevent flashing -->
-        <a href="login.html" id="authLinkDesktopLogin" class="hidden">
-          Login
-        </a>
-        <!-- The profile link is hidden by default and will be shown by the main page's script -->
-        <a href="profile.html" id="profileLinkDesktop" class="hidden" title="My Profile">
-          <img id="navProfilePic"
-            src="https://placehold.co/40x40/2C2F33/EAEAEA?text=U"
-            alt="User"
-            class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition"
-            onerror="this.src='https://placehold.co/40x40/2C2F33/EAEAEA?text=U';">
-        </a>
-      </div>
     </div>
-  </nav>
-  <!-- No script is needed in this file anymore -->
-</body>
-</html>
+
+    <!-- Centered Nav Links (Desktop) -->
+    <div class="hidden md:flex flex-1 justify-center items-center space-x-2">
+      <a href="index.html" class="nav-link px-3 py-2">News</a>
+      <a href="community.html" class="nav-link px-3 py-2">Community</a>
+      <a href="linqai.html" class="nav-link px-3 py-2">Linq AI</a>
+      <a href="earnings.html" class="nav-link px-3 py-2">Earnings</a>
+      <a href="markets.html" class="nav-link px-3 py-2">Markets</a>
+      <a href="favorites.html" class="nav-link px-3 py-2">Bookmarks</a>
+    </div>
+
+    <!-- Right Side: Auth and Premium Button -->
+    <div class="hidden md:flex items-center space-x-4">
+      <a href="linqplus.html" class="go-premium-btn">Go Premium</a>
+      
+      <!-- FIX: Both auth-related elements are hidden by default. The headerManager.js script will make the correct one visible. -->
+      <a href="login.html" id="authLinkDesktopLogin" class="hidden nav-link-button">Login</a>
+      <a href="profile.html" id="profileLinkDesktop" class="hidden" title="My Profile">
+        <img id="navProfilePic" src="https://placehold.co/40x40/2C2F33/EAEAEA?text=U" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition">
+      </a>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <div class="md:hidden flex items-center">
+      <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none p-2 rounded-md">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu (Collapsible) -->
+  <div id="mobile-menu" class="md:hidden hidden bg-black border-t border-gray-800">
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <a href="index.html" class="nav-link block">News</a>
+      <a href="community.html" class="nav-link block">Community</a>
+      <a href="linqai.html" class="nav-link block">Linq AI</a>
+      <a href="earnings.html" class="nav-link block">Earnings</a>
+      <a href="markets.html" class="nav-link block">Markets</a>
+      <a href="favorites.html" class="nav-link block">Bookmarks</a>
+      <a href="linqplus.html" class="nav-link block font-semibold text-cyan-400">Go Premium</a>
+      <hr class="border-gray-700 my-2">
+      <a href="login.html" id="authLinkMobile" class="nav-link block">Login</a>
+      <a href="profile.html" id="profileLinkMobile" class="nav-link hidden">My Profile</a>
+      <a href="#" id="logoutButtonMobile" class="nav-link block text-red-400 hidden">Logout</a>
+    </div>
+  </div>
+</nav>
