@@ -125,12 +125,34 @@
         let unsubscribeUserListener = null;
         
         const previousEarningsData = [
-            { company: "Shell plc", ticker: "SHEL", date: "2025-04-25", time: "09:00 AM ET", period: "Q1 2025", webcastUrl: "https://www.shell.com/investors/results-and-reporting/quarterly-results.html", transcriptUrl: "https://www.shell.com/investors/results-and-reporting/quarterly-results.html" },
-            { company: "BP p.l.c.", ticker: "BP", date: "2025-04-28", time: "10:00 AM ET", period: "Q1 2025", webcastUrl: "https://www.bp.com/en/global/corporate/investors/results-and-reporting.html", transcriptUrl: "https://www.bp.com/en/global/corporate/investors/results-and-reporting.html" },
-            { company: "TotalEnergies SE", ticker: "TTE", date: "2025-04-30", time: "11:00 AM ET", period: "Q1 2025", webcastUrl: "https://totalenergies.com/investors/results-investor-presentations", transcriptUrl: "https://totalenergies.com/investors/results-investor-presentations" },
-            { company: "Halliburton Company", ticker: "HAL", date: "2025-05-02", time: "08:30 AM ET", period: "Q1 2025", webcastUrl: "https://ir.halliburton.com/events-and-presentations", transcriptUrl: "https://ir.halliburton.com/events-and-presentations" },
-            { company: "Pioneer Natural Resources", ticker: "PXD", date: "2025-05-05", time: "12:00 PM ET", period: "Q1 2025", webcastUrl: "https://investors.pxd.com/investors/events-and-presentations/", transcriptUrl: "https://investors.pxd.com/investors/events-and-presentations/" },
-            { company: "Occidental Petroleum", ticker: "OXY", date: "2025-05-07", time: "10:00 AM ET", period: "Q1 2025", webcastUrl: "https://www.oxy.com/investors/events-and-presentations/", transcriptUrl: "https://www.oxy.com/investors/events-and-presentations/" }
+            // --- NEW DATA FROM CSV ---
+            { company: "Energy Transfer LP", ticker: "ET", date: "2025-05-08", time: "4:30 PM", period: "Q1 2025", transcriptUrl: "https://www.energytransfer.com/investor-relations/events-presentations/" },
+            { company: "Occidental Petroleum Corp.", ticker: "OXY", date: "2025-05-07", time: "1:00 PM", period: "Q1 2025", transcriptUrl: "https://www.oxy.com/investors/events-and-presentations/" },
+            { company: "Williams Companies Inc.", ticker: "WMB", date: "2025-05-06", time: "9:30 AM", period: "Q1 2025", transcriptUrl: "https://investor.williams.com/events-and-presentations/" },
+            { company: "Pioneer Natural Resources Co.", ticker: "PXD", date: "2025-05-02", time: "10:00 AM", period: "Q1 2025", transcriptUrl: "https://investors.pxd.com/investors/events-and-presentations/" },
+            { company: "Plains All American Pipeline L.P.", ticker: "PAA", date: "2025-05-03", time: "10:00 AM", period: "Q1 2025", transcriptUrl: "https://www.plains.com/investors/events-and-presentations" },
+            { company: "ConocoPhillips Co.", ticker: "COP", date: "2025-05-02", time: "12:00 PM", period: "Q1 2025", transcriptUrl: "https://www.conocophillips.com/investors/events-and-presentations/" },
+            { company: "EOG Resources Inc.", ticker: "EOG", date: "2025-05-02", time: "10:00 AM", period: "Q1 2025", transcriptUrl: "https://investors.eogresources.com/events-and-presentations/default.aspx" },
+            { company: "Cheniere Energy Inc.", ticker: "LNG", date: "2025-05-02", time: "11:00 AM", period: "Q1 2025", transcriptUrl: "https://www.cheniere.com/investors/events-presentations" },
+            { company: "Devon Energy Corp.", ticker: "DVN", date: "2025-05-01", time: "11:00 AM", period: "Q1 2025", transcriptUrl: "https://investors.devon.com/investors/events-and-presentations/default.aspx" },
+            { company: "Marathon Petroleum Corp.", ticker: "MPC", date: "2025-04-30", time: "9:30 AM", period: "Q1 2025", transcriptUrl: "https://www.marathonpetroleum.com/Investors/Events-and-Presentations/" },
+            { company: "Enterprise Products Partners L.P.", ticker: "EPD", date: "2025-04-30", time: "10:00 AM", period: "Q1 2025", transcriptUrl: "http://www.enterpriseproducts.com/investors/events-presentations" },
+            { company: "ONEOK Inc.", ticker: "OKE", date: "2025-04-30", time: "11:00 AM", period: "Q1 2025", transcriptUrl: "https://www.oneok.com/investors/events-and-presentations" },
+            { company: "ExxonMobil Corp.", ticker: "XOM", date: "2025-04-26", time: "8:30 AM", period: "Q1 2025", transcriptUrl: "https://corporate.exxonmobil.com/investors/events-and-presentations" },
+            { company: "Chevron Corp.", ticker: "CVX", date: "2025-04-26", time: "11:00 AM", period: "Q1 2025", transcriptUrl: "https://www.chevron.com/investors/events-presentations" },
+            { company: "Phillips 66", ticker: "PSX", date: "2025-04-26", time: "12:00 PM", period: "Q1 2025", transcriptUrl: "https://www.phillips66.com/investors/events-and-presentations" },
+            { company: "Valero Energy Corp.", ticker: "VLO", date: "2025-04-25", time: "10:00 AM", period: "Q1 2025", transcriptUrl: "http://www.valero.com/en-us/investors/events-and-presentations" },
+            { company: "Hess Corp.", ticker: "HES", date: "2025-04-24", time: "10:00 AM", period: "Q1 2025", transcriptUrl: "https://investors.hess.com/static-files/a1b1a1b1-1b1a-1a1b-1a1b-1a1b1a1b1a1b" },
+            { company: "Schlumberger Ltd.", ticker: "SLB", date: "2025-04-19", time: "9:30 AM", period: "Q1 2025", transcriptUrl: "https://investorcenter.slb.com/financial-information/quarterly-results" },
+            { company: "Halliburton Co.", ticker: "HAL", date: "2025-04-19", time: "9:00 AM", period: "Q1 2025", transcriptUrl: "https://ir.halliburton.com/events-and-presentations" },
+            { company: "Kinder Morgan Inc.", ticker: "KMI", date: "2025-04-17", time: "4:30 PM", period: "Q1 2025", transcriptUrl: "https://ir.kindermorgan.com/events-and-presentations/" },
+            // --- ORIGINAL DATA ---
+            { company: "Shell plc", ticker: "SHEL", date: "2025-04-25", time: "09:00 AM ET", period: "Q1 2025", transcriptUrl: "https://www.shell.com/investors/results-and-reporting/quarterly-results.html" },
+            { company: "BP p.l.c.", ticker: "BP", date: "2025-04-28", time: "10:00 AM ET", period: "Q1 2025", transcriptUrl: "https://www.bp.com/en/global/corporate/investors/results-and-reporting.html" },
+            { company: "TotalEnergies SE", ticker: "TTE", date: "2025-04-30", time: "11:00 AM ET", period: "Q1 2025", transcriptUrl: "https://totalenergies.com/investors/results-investor-presentations" },
+            { company: "Halliburton Company", ticker: "HAL", date: "2025-05-02", time: "08:30 AM ET", period: "Q1 2025", transcriptUrl: "https://ir.halliburton.com/events-and-presentations" },
+            { company: "Pioneer Natural Resources", ticker: "PXD", date: "2025-05-05", time: "12:00 PM ET", period: "Q1 2025", transcriptUrl: "https://investors.pxd.com/investors/events-and-presentations/" },
+            { company: "Occidental Petroleum", ticker: "OXY", date: "2025-05-07", time: "10:00 AM ET", period: "Q1 2025", transcriptUrl: "https://www.oxy.com/investors/events-and-presentations/" }
         ];
 
         const firebaseConfig = { 
@@ -211,6 +233,7 @@
             container.innerHTML = ''; 
 
             const groupedByDate = previousEarningsData.reduce((acc, call) => {
+                // Standardize date format for reliable grouping
                 const date = new Date(call.date).toDateString();
                 if (!acc[date]) acc[date] = [];
                 acc[date].push(call);
@@ -262,9 +285,6 @@
                     <div class="card-actions flex flex-wrap gap-3 mt-2">
                         <a href="${call.transcriptUrl}" target="_blank" rel="noopener noreferrer" class="action-btn transcript-btn">
                             <i class="fas fa-file-alt"></i> Transcript
-                        </a>
-                        <a href="${call.webcastUrl}" target="_blank" rel="noopener noreferrer" class="action-btn webcast-btn">
-                            <i class="fas fa-broadcast-tower"></i> Webcast
                         </a>
                     </div>
                 </div>
