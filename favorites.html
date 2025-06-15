@@ -27,25 +27,24 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            /* FIX: Added top padding to prevent content from jumping down */
-            padding-top: 64px;
         }
         body.overflow-hidden { overflow: hidden; }
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #1A1A1A; }
         ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
         ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
+
     
+        
         .page-content-wrapper {
             flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px;
             margin: 0 auto; padding-left: 1rem; padding-right: 1rem;
-            /* FIX: Removed old padding-top which is now on the body */
+            padding-top: 120px; 
         }
         .page-main-title { 
             font-size: 2.5rem; font-weight: 700; color: #FFFFFF; margin-bottom: 1rem; text-align: center;
             text-shadow: 0px 2px 8px rgba(0, 191, 255, 0.25);
-            /* FIX: Added top margin for more space below the header */
-            margin-top: 2.5rem; 
+            margin-top: 4rem;
         }
         .page-main-title .accent-text { color: #00BFFF; }
 
@@ -69,10 +68,22 @@
             border-bottom: 1px solid #374151;
         }
 
-        /* All other page-specific styles for cards, buttons, etc. remain unchanged */
-        .news-card { background-color: #0A0A0A; border-radius: 0.75rem; border: 1px solid #2D2D2D; box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.6); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; margin-bottom: 1.5rem; display: flex; align-items: center; padding: 1rem; }
-        .news-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.2); border-color: #00BFFF; }
-        .news-source-logo-container { flex-shrink: 0; margin-right: 1rem; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 0.375rem; background-color: #18181b; }
+        .news-card {
+            background-color: #0A0A0A; border-radius: 0.75rem; border: 1px solid #2D2D2D;
+            box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.6); overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            margin-bottom: 1.5rem; display: flex; align-items: center; padding: 1rem;
+        }
+        .news-card:hover {
+            transform: translateY(-4px); box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.2);
+            border-color: #00BFFF;
+        }
+        .news-source-logo-container {
+            flex-shrink: 0; margin-right: 1rem; width: 50px; height: 50px;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; border-radius: 0.375rem;
+            background-color: #18181b; 
+        }
         .news-source-logo { max-width: 100%; max-height: 100%; object-fit: contain; }
         .news-content-wrapper { flex-grow: 1; display: flex; justify-content: space-between; align-items: flex-start; }
         .news-title { font-size: 1.1rem; font-weight: 500; color: #FFFFFF; margin-bottom: 0.25rem; line-height: 1.3; }
@@ -80,37 +91,88 @@
         .news-title a:hover { color: #00BFFF; }
         .news-meta-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
         .news-meta { font-size: 0.75rem; color: #888888; }
-        .news-tag { background-color: rgba(0, 191, 255, 0.15); color: #00BFFF; padding: 0.25rem 0.6rem; border-radius: 9999px; font-size: 0.65rem; font-weight: 500; display: inline-block; border: 1px solid rgba(0, 191, 255, 0.3); }
+        .news-tag {
+            background-color: rgba(0, 191, 255, 0.15); color: #00BFFF; padding: 0.25rem 0.6rem;
+            border-radius: 9999px; font-size: 0.65rem; font-weight: 500;
+            display: inline-block; border: 1px solid rgba(0, 191, 255, 0.3);
+        }
         .favorite-btn-area { flex-shrink: 0; margin-left: 1rem; }
-        .favorite-btn { color: #777777; cursor: pointer; transition: color 0.2s ease, transform 0.2s ease; background: none; border: none; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
-        .news-card .favorite-btn { width: 1.5rem; height: 1.5rem; }
+        .favorite-btn { 
+            color: #777777; cursor: pointer;
+            transition: color 0.2s ease, transform 0.2s ease; background: none;
+            border: none; padding: 0; display: inline-flex;
+            align-items: center; justify-content: center;
+        }
+        .news-card .favorite-btn {
+             width: 1.5rem; height: 1.5rem;
+        }
         .favorite-btn:hover { color: #00BFFF; transform: scale(1.15); }
         .favorite-btn.favorited svg { fill: #00BFFF; stroke: #00BFFF; } 
-        .post-card { background-color: #121212; border: 1px solid #282828; border-radius: 0.75rem; padding: 1.75rem; margin-bottom: 1.5rem; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; box-shadow: 0 4px 15px -5px rgba(0,0,0,0.4); display: flex; flex-direction: column; }
-        .post-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(0, 191, 255, 0.2); border-color: #00BFFF; }
-        .post-card .favorite-btn { width: 2.25rem; height: 2.25rem; }
+
+        .post-card {
+            background-color: #121212; border: 1px solid #282828; border-radius: 0.75rem;
+            padding: 1.75rem; margin-bottom: 1.5rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            box-shadow: 0 4px 15px -5px rgba(0,0,0,0.4); display: flex; flex-direction: column;
+        }
+        .post-card:hover {
+            transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(0, 191, 255, 0.2);
+            border-color: #00BFFF;
+        }
+        .post-card .favorite-btn {
+            width: 2.25rem; height: 2.25rem;
+        }
         .post-title { font-size: 1.375rem; font-weight: 600; color: #FFFFFF; margin: 0 0 0.75rem; line-height: 1.4; }
-        .post-meta { font-size: 0.875rem; color: #A0A0A0; margin: 0 0 1rem; font-weight: 400; display: flex; align-items: center; flex-wrap: wrap; }
-        .post-category-tag { background-color: rgba(0, 191, 255, 0.15); color: #00BFFF; padding: 0.3rem 0.875rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 500; margin-left: 0.75rem; border: 1px solid rgba(0, 191, 255, 0.3); }
-        .twitter-tweet-container { margin-top: 1rem; background-color: transparent; border-radius: 0.5rem; padding: 0; border: none; }
-        .post-actions { display: flex; justify-content: flex-end; align-items: center; margin-top: 1.5rem; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid #282828; }
-        .action-btn { background-color: transparent; border: 1px solid #333333; color: #A0A0A0; border-radius: 0.375rem; padding: 0.5rem 0.75rem; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .post-meta {
+            font-size: 0.875rem; color: #A0A0A0; margin: 0 0 1rem; font-weight: 400;
+            display: flex; align-items: center; flex-wrap: wrap;
+        }
+        .post-category-tag {
+            background-color: rgba(0, 191, 255, 0.15); color: #00BFFF; padding: 0.3rem 0.875rem;
+            border-radius: 1rem; font-size: 0.75rem; font-weight: 500;
+            margin-left: 0.75rem; border: 1px solid rgba(0, 191, 255, 0.3);
+        }
+        .twitter-tweet-container {
+            margin-top: 1rem;
+            background-color: transparent; 
+            border-radius: 0.5rem; 
+            padding: 0;
+            border: none;
+        }
+        .post-actions {
+            display: flex; justify-content: flex-end; align-items: center;
+            margin-top: 1.5rem; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid #282828;
+        }
+        .action-btn { 
+            background-color: transparent; border: 1px solid #333333; color: #A0A0A0;
+            border-radius: 0.375rem; padding: 0.5rem 0.75rem; font-size: 0.875rem;
+            font-weight: 500; cursor: pointer; transition: all 0.2s ease;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+        }
         .action-btn:hover { background-color: #1A1A1A; color: #00BFFF; border-color: #00BFFF; }
         .action-btn i { font-size: 1rem; }
-        .no-favorites-message, .auth-message { text-align: center; color: #A0A0A0; font-size: 1.1rem; padding: 3rem 1rem; background-color: #121212; border-radius: 0.5rem; border: 1px solid #2a2a2a; margin-top: 2rem; }
+
+        .no-favorites-message, .auth-message {
+            text-align: center; color: #A0A0A0; font-size: 1.1rem; padding: 3rem 1rem;
+            background-color: #121212; border-radius: 0.5rem; border: 1px solid #2a2a2a;
+            margin-top: 2rem;
+        }
         .auth-message a { color: #00BFFF; text-decoration: underline;}
         .auth-message a:hover { color: #00A9E0;}
-        .footer { background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem; border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem; margin-top: auto; }
+
+        .footer {
+            background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem;
+            border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem; margin-top: auto;
+        }
     </style>
 </head>
 <body class="antialiased">
-    <!-- FIX: Updated to a semantic header placeholder -->
-    <header id="header-placeholder"></header>
+    <div id="header-placeholder"></div>
 
     <main class="page-content-wrapper container mx-auto p-4 sm:p-6 lg:p-8">
-        <!-- FIX: Both content sections are hidden by default to prevent flashing -->
         <div id="favoritesPageContent" class="hidden"> 
             <h1 class="page-main-title">Your <span class="accent-text">Bookmarks</span></h1>
+
             <div class="favorites-grid-container">
                 <div class="favorites-column" id="news-favorites-column">
                     <h2>News Articles</h2>
@@ -123,9 +185,9 @@
             </div>
         </div>
 
-        <div id="authMessageContainer" class="hidden">
+        <div id="authMessageContainer">
             <h1 class="page-main-title">Your <span class="accent-text">Bookmarks</span></h1>
-            <div class="auth-message">
+            <div id="authMessage" class="auth-message">
                 You must be logged in to view your bookmarks. <a href="login.html" class="text-cyan-400 hover:underline">Login here</a>.
             </div>
         </div>
@@ -160,34 +222,43 @@
         const authInstance = firebase.auth();
         const db = firebase.firestore();
 
-        // --- DATA AGGREGATION (Unchanged) ---
+        // --- DATA AGGREGATION ---
         function aggregateData() {
+            // Aggregate all news articles into a single array for easy lookup
             const present = window.presentDayArticles || [];
             const premium = window.premiumArticles || [];
-            const past = (window.pastArticles || []).flat();
+            const past = (window.pastArticles || []).flat(); // Flatten nested arrays
             allNewsArticles = [...present, ...premium, ...past];
+
+            // Community posts data (ensure it's available)
             communityPosts = window.communityPostsDataPage || [
                  { id: 'tweet19', url: 'https://twitter.com/DavidInglesTV/status/1933357784646758533', title: 'Oil Prices Up Most in Half Decade', meta: 'June 13, 2025 • David Ingles (@DavidInglesTV)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">Oil prices up the most in half decade. We were at $59 five weeks ago. $80 now in sight. Brent crude up over 10% <a href="https://t.co/g9sMWWWm3y">pic.twitter.com/g9sMWWWm3y</a></p>&mdash; David Ingles (@DavidInglesTV) <a href="https://twitter.com/DavidInglesTV/status/1933357784646758533?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
                  { id: 'tweet1', url: 'https://twitter.com/IsraeliPM/status/1933244843624407170', title: 'PM Netanyahu\'s Remarks with Argentine President Milei', meta: 'June 12, 2025 • Prime Minister of Israel (@IsraeliPM)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">WATCH: Prime Minister Benjamin Netanyahu&#39;s remarks, today, at the signing of MOUs with Argentine President <a href="https://twitter.com/JMilei?ref_src=twsrc%5Etfw">@JMilei</a>.<br><br>&quot;We feel your heart, your connection to our people, to our land, to our state, and our eternal united city, Jerusalem.&quot;<a href="https://t.co/7wtikaq9GC">https://t.co/7wtikaq9GC</a> <a href="https://t.co/clKlE7t7DY">pic.twitter.com/clKlE7t7DY</a></p>&mdash; Prime Minister of Israel (@IsraeliPM) <a href="https://twitter.com/IsraeliPM/status/1933244843624407170?ref_src=twsrc%5Etfw">June 12, 2025</a>'}
             ];
         }
 
-        // --- All page-specific UI, rendering, and bookmarking logic remains unchanged ---
+        // --- UI & RENDERING ---
         function displayFavoriteNews() {
             const container = document.getElementById('newsFavoritesGrid');
             if (!container) return;
             container.innerHTML = '';
+            
             const favoritedArticlesDetails = allNewsArticles.filter(article => newsFavorites.includes(String(article.id)));
+            
             if (favoritedArticlesDetails.length === 0) {
                 container.innerHTML = `<p class="no-favorites-message">You haven't bookmarked any news articles yet.<br><a href="index.html" class="text-cyan-400 hover:underline">Explore News</a></p>`;
                 return;
             }
+
             favoritedArticlesDetails.forEach(article => {
                 const articleElement = document.createElement('div');
                 articleElement.className = 'news-card';
+                
+                // FIXED: Correctly use sourceImageMap to get the logo URL
                 const safeSourceImageMap = window.sourceImageMap || {};
                 const sourceInitial = (article.source && article.source.length > 0) ? article.source.charAt(0) : 'N';
                 const imageUrl = safeSourceImageMap[article.source] || `https://placehold.co/50/2a2a2a/ffffff?text=${sourceInitial}`;
+
                 articleElement.innerHTML = `
                     <div class="news-source-logo-container"><img src="${imageUrl}" alt="${article.source || 'Source'} Logo" class="news-source-logo"></div>
                     <div class="news-content-wrapper">
@@ -207,11 +278,14 @@
                 container.appendChild(articleElement);
             });
         }
+
         function displayFavoriteCommunityPosts() {
             const container = document.getElementById('communityFavoritesGrid');
             if (!container) return;
             container.innerHTML = '';
+            
             const favoritedPostsDetails = communityPosts.filter(post => communityFavorites.includes(String(post.id)));
+
             if (favoritedPostsDetails.length === 0) {
                 container.innerHTML = `<p class="no-favorites-message">You haven't bookmarked any community posts yet.<br><a href="community.html" class="text-cyan-400 hover:underline">Explore Community</a></p>`;
                 return;
@@ -232,38 +306,44 @@
                     </div>`;
                 container.appendChild(postElement);
             });
+
             if (window.twttr && window.twttr.widgets) {
                 window.twttr.widgets.load(container);
             }
         }
+
+        // --- BOOKMARKING LOGIC ---
         async function toggleFavorite(articleId, type) {
             const user = authInstance.currentUser;
             if (!user) return; 
+
             const userRef = db.collection('users').doc(user.uid);
             const field = type === 'news' ? 'bookmarks' : 'communityBookmarks';
+            
             await userRef.update({
                 [field]: firebase.firestore.FieldValue.arrayRemove(String(articleId))
             }).catch(error => console.error(`Error removing ${type} bookmark:`, error));
         }
-        // --- END of Unchanged Functions ---
 
-        // --- PAGE-SPECIFIC INITIALIZATION ---
+        // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            // FIX: Removed header-related fetch and auth logic from here.
-            
+            fetch('header.html')
+                .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
+                .then(data => {
+                    document.getElementById('header-placeholder').innerHTML = data;
+                    authInstance.onAuthStateChanged(handleAuthStateChange);
+                })
+                .catch(error => console.error('Error fetching header:', error));
+
             document.getElementById('current-year').textContent = new Date().getFullYear();
             
-            // Ensures data scripts are loaded before we try to use them
             const dataCheckInterval = setInterval(() => {
-                if (window.presentDayArticles && window.pastArticles && window.communityPostsDataPage) {
+                if (window.presentDayArticles && window.pastArticles) {
                     clearInterval(dataCheckInterval);
                     aggregateData();
-                    // Now that data is ready, set up the auth listener
-                    setupAuthListener();
                 }
             }, 100);
 
-            // Set up event listener for the unfavorite buttons
             document.getElementById('favoritesPageContent').addEventListener('click', (event) => {
                 const button = event.target.closest('.favorite-btn');
                 if (button) {
@@ -272,48 +352,56 @@
             });
         });
 
-        // FIX: Moved auth logic into its own function for clarity
-        function setupAuthListener() {
+        function handleAuthStateChange(user) {
+            const headerPlaceholder = document.getElementById('header-placeholder');
+            const authLink = headerPlaceholder.querySelector('#authLinkDesktopLogin');
+            const profileLink = headerPlaceholder.querySelector('#profileLinkDesktop');
+            const profilePic = headerPlaceholder.querySelector('#navProfilePic');
+
             const authMessageContainer = document.getElementById('authMessageContainer');
             const favoritesPageContent = document.getElementById('favoritesPageContent');
 
-            authInstance.onAuthStateChanged(user => {
-                if (unsubscribeUserListener) unsubscribeUserListener();
-                
-                if (user) {
-                    // User is logged in, show the bookmarks content
-                    authMessageContainer.classList.add('hidden');
-                    favoritesPageContent.classList.remove('hidden');
-
-                    // Set up the real-time listener for their bookmarks
-                    unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
-                        if (doc.exists) {
-                            const data = doc.data();
-                            newsFavorites = data.bookmarks || [];
-                            communityFavorites = data.communityBookmarks || [];
-                        } else {
-                            newsFavorites = [];
-                            communityFavorites = [];
-                        }
-                        // Re-render both sections whenever bookmarks change
-                        displayFavoriteNews();
-                        displayFavoriteCommunityPosts();
-                    }, error => {
-                        console.error("Error fetching bookmarks:", error);
-                        newsFavorites = []; communityFavorites = [];
-                        displayFavoriteNews(); displayFavoriteCommunityPosts();
-                    });
-
-                } else {
-                    // User is logged out, show the login message
-                    favoritesPageContent.classList.add('hidden');
-                    authMessageContainer.classList.remove('hidden');
+            if (user) {
+                if (authLink) authLink.classList.add('hidden');
+                if (profileLink) profileLink.classList.remove('hidden');
+                if (profilePic) {
+                    if (user.photoURL) profilePic.src = user.photoURL;
+                    else if (user.displayName) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
+                    else profilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
                 }
-            });
+                
+                authMessageContainer.classList.add('hidden');
+                favoritesPageContent.classList.remove('hidden');
+
+                if (unsubscribeUserListener) unsubscribeUserListener();
+                unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        newsFavorites = data.bookmarks || [];
+                        communityFavorites = data.communityBookmarks || [];
+                    } else {
+                        newsFavorites = [];
+                        communityFavorites = [];
+                    }
+                    displayFavoriteNews();
+                    displayFavoriteCommunityPosts();
+                }, error => {
+                    console.error("Error fetching bookmarks:", error);
+                    newsFavorites = [];
+                    communityFavorites = [];
+                    displayFavoriteNews();
+                    displayFavoriteCommunityPosts();
+                });
+
+            } else {
+                if (authLink) authLink.classList.remove('hidden');
+                if (profileLink) profileLink.classList.add('hidden');
+                if (unsubscribeUserListener) unsubscribeUserListener();
+
+                authMessageContainer.classList.remove('hidden');
+                favoritesPageContent.classList.add('hidden');
+            }
         }
     </script>
-    
-    <!-- FIX: Centralized header script is now included at the end of the body -->
-    <script src="headerManager.js" defer></script>
 </body>
 </html>
