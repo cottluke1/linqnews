@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
@@ -107,7 +106,7 @@
             border: 4px solid rgba(255, 255, 255, 0.1);
             object-fit: cover;
         }
-       
+        
         .profile-info { flex-grow: 1; display: grid; grid-template-columns: 1fr; gap: 24px; }
         .info-item label {
             display: block; color: #A0A0A0; font-size: 0.9em;
@@ -211,10 +210,6 @@
                             </div>
                             <div class="profile-info">
                                 <div class="info-item">
-                                    <label>Display Name</label>
-                                    <p id="profileDisplayName">N/A</p>
-                                </div>
-                                <div class="info-item">
                                     <label>Email Address</label>
                                     <p id="profileEmail">N/A</p>
                                 </div>
@@ -229,24 +224,24 @@
 
                 <div id="subscription" class="content-section">
                      <div class="card glass-ui">
-                        <div class="card-header">
-                            <h3>My Subscription</h3>
-                        </div>
-                        <div class="card-body">
-                            <p class="text-lg">Your current plan: <span id="current-plan-name" class="font-bold text-cyan-400">Loading...</span></p>
-                            <p class="text-gray-400" id="subscription-status-text">Checking your subscription status.</p>
-                            <p class="text-sm text-gray-500 mt-1" id="subscription-billing-cycle"></p>
-                            
-                            <div class="mt-6 flex flex-wrap gap-4" id="subscriptionActions">
-                                <a id="manage-plan-button" href="linqplus.html" class="btn btn-glass">See All Plans</a>
-                            </div>
+                         <div class="card-header">
+                             <h3>My Subscription</h3>
+                         </div>
+                         <div class="card-body">
+                             <p class="text-lg">Your current plan: <span id="current-plan-name" class="font-bold text-cyan-400">Loading...</span></p>
+                             <p class="text-gray-400" id="subscription-status-text">Checking your subscription status.</p>
+                             <p class="text-sm text-gray-500 mt-1" id="subscription-billing-cycle"></p>
+                             
+                             <div class="mt-6 flex flex-wrap gap-4" id="subscriptionActions">
+                                 <a id="upgrade-plan-button" href="linqplus.html" class="btn btn-glass">Upgrade to Premium</a>
+                             </div>
 
-                            <div id="cancel-info" class="mt-8 hidden">
-                                <p class="text-sm text-gray-400">To manage your subscription, please send an email to our support team from your registered email address.</p>
-                                <a href="mailto:support@linqnews.com?subject=Subscription%20Management%20Request" class="btn btn-clear mt-4">Contact Support</a>
-                            </div>
-                        </div>
-                    </div>
+                             <div id="premium-manage-info" class="mt-8 hidden">
+                                 <p class="text-gray-300">To cancel or change your plan, please contact our support team.</p>
+                                 <a href="mailto:support@linqnews.com?subject=Subscription%20Change%20Request" class="btn btn-glass mt-4">Contact Us</a>
+                             </div>
+                         </div>
+                     </div>
                 </div>
 
                 <div id="security" class="content-section">
@@ -369,7 +364,7 @@
             });
             
             function populateUserProfile(user) {
-                document.getElementById('profileDisplayName').textContent = user.displayName || 'N/A';
+                // document.getElementById('profileDisplayName').textContent = user.displayName || 'N/A'; // REMOVED
                 document.getElementById('profileEmail').textContent = user.email || 'N/A';
                 if (user.metadata.creationTime) {
                     document.getElementById('profileJoinedDate').textContent = new Date(user.metadata.creationTime).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
@@ -383,7 +378,7 @@
                 }
             }
 
-            // **UPDATED: Function now uses a real-time onSnapshot listener**
+            // **UPDATED: Function now uses a real-time onSnapshot listener and shows/hides elements based on premium status**
             function setupSubscriptionListener(user) {
                 if (unsubscribeUserListener) unsubscribeUserListener(); // Detach old listener if it exists
 
@@ -392,27 +387,32 @@
                     const planNameEl = document.getElementById('current-plan-name');
                     const statusTextEl = document.getElementById('subscription-status-text');
                     const billingCycleEl = document.getElementById('subscription-billing-cycle');
-                    const cancelInfoEl = document.getElementById('cancel-info');
-                    const managePlanButton = document.getElementById('manage-plan-button');
+                    const premiumManageInfoEl = document.getElementById('premium-manage-info');
+                    const subscriptionActionsEl = document.getElementById('subscriptionActions');
                     
                     if (doc.exists && doc.data().isSubscribed) {
+                        // User IS premium
                         const userData = doc.data();
                         const planType = userData.subscriptionType || 'Premium';
                         const billingType = userData.billingCycle || 'Annually';
-                        planNameEl.textContent = `Premium ${planType.charAt(0).toUpperCase() + planType.slice(1)}`;
+                        planNameEl.textContent = `Premium`;
                         statusTextEl.textContent = 'Your premium subscription is active.';
                         billingCycleEl.textContent = `Billed ${billingType}.`;
                         billingCycleEl.classList.remove('hidden');
-                        cancelInfoEl.classList.remove('hidden');
-                        managePlanButton.textContent = 'Manage Subscription';
+                        
+                        // Show premium management info and hide the upgrade button
+                        premiumManageInfoEl.classList.remove('hidden');
+                        subscriptionActionsEl.classList.add('hidden');
 
                     } else {
+                        // User is NOT premium
                         planNameEl.textContent = 'Free Plan';
                         statusTextEl.textContent = 'You have access to basic news and community features.';
                         billingCycleEl.classList.add('hidden');
-                        cancelInfoEl.classList.add('hidden');
-                        managePlanButton.textContent = 'Upgrade to Premium';
-                        managePlanButton.href = 'linqplus.html';
+                        
+                        // Hide premium management info and show the upgrade button
+                        premiumManageInfoEl.classList.add('hidden');
+                        subscriptionActionsEl.classList.remove('hidden');
                     }
                 }, error => {
                     console.error("Error with subscription listener:", error);
@@ -466,8 +466,8 @@
                         showFormMessage('New passwords do not match.', 'error');
                         return;
                     }
-                    if (newPassword.length < 6) {
-                        showFormMessage('New password must be at least 6 characters.', 'error');
+                    if (newPassword.length < 8) {
+                        showFormMessage('New password must be at least 8 characters.', 'error');
                         return;
                     }
 
