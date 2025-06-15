@@ -9,9 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    
     <style>
         /* REDUCED: Removed redundant header styles. Only page-specific styles remain. */
         body {
@@ -212,7 +210,11 @@
     </style>
 </head>
 <body class="antialiased">
-    <div id="navbar"></div>
+    <!-- ✅ 1. Add Static Header Spacer to Prevent Layout Jump -->
+    <div style="height: 68px;" class="w-full bg-black border-b border-gray-800"></div>
+
+    <!-- ✅ 2. Add Header Placeholder -->
+    <div id="header-placeholder"></div>
 
     <main class="page-content-wrapper">
         <header class="page-header">
@@ -254,24 +256,15 @@
         </nav>
     </footer>
 
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
     <script>
         // --- GLOBAL STATE ---
         let communityFavorites = [];
         let unsubscribeUserListener = null;
 
         // --- FIREBASE SETUP ---
-        const firebaseConfigShared = {
-            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-            authDomain: "linq-b27a8.firebaseapp.com",
-            projectId: "linq-b27a8",
-            storageBucket: "linq-b27a8.appspot.com",
-            messagingSenderId: "1067901051826",
-            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-        };
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfigShared);
-        }
-        const authInstance = firebase.auth();
+        // ✅ 3. This part is now handled by the centralized script block at the end of the body
         const db = firebase.firestore();
 
         // --- DATA ---
@@ -298,38 +291,7 @@
         ];
 
         // --- AUTH & HEADER LOGIC ---
-        function initializeHeaderAndAuth(user) {
-            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
-            const profileLinkDesktop = document.getElementById('profileLinkDesktop');
-            const navProfilePic = document.getElementById('navProfilePic');
-            const authLinkMobile = document.getElementById('authLinkMobile');
-            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-            const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
-            
-            if (user) {
-                if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
-                if (profileLinkDesktop) profileLinkDesktop.classList.remove('hidden');
-                if (navProfilePic) {
-                    if (user.photoURL) navProfilePic.src = user.photoURL;
-                    else if (user.displayName) navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
-                    else if (user.email) navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
-                    else navProfilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
-                }
-                if (authLinkMobile) { authLinkMobile.textContent = "My Profile"; authLinkMobile.href = "profile.html"; }
-                if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
-            } else {
-                if (authLinkDesktopLogin) authLinkDesktopLogin.classList.remove('hidden');
-                if (profileLinkDesktop) profileLinkDesktop.classList.add('hidden');
-                if (authLinkMobile) { authLinkMobile.textContent = "Login"; authLinkMobile.href = "login.html"; }
-                if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
-            }
-            
-            function handleLogout(e) { e.preventDefault(); authInstance.signOut(); }
-            if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
-            if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
-
-            setActiveNavLink();
-        }
+        // ✅ 3. This is now handled by headerManager.js. The old initializeHeaderAndAuth function has been removed.
 
         // --- DYNAMIC RENDERING & FILTERING ---
         function displayCommunityPostsPage(postsToDisplay) {
@@ -386,7 +348,7 @@
 
         // --- BOOKMARKING ---
         async function toggleCommunityFavorite(postId) {
-            const user = authInstance.currentUser;
+            const user = firebase.auth().currentUser;
             if (!user) {
                 window.location.href = 'login.html';
                 return;
@@ -403,35 +365,10 @@
             await userRef.set(updateData, { merge: true }).catch(error => {
                 console.error("Firestore community bookmark update failed:", error);
             });
-            // onSnapshot listener will handle the UI update automatically
         }
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            fetch('header.html')
-                .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
-                .then(data => {
-                    document.getElementById('navbar').innerHTML = data;
-                    authInstance.onAuthStateChanged(user => {
-                        initializeHeaderAndAuth(user);
-                        if (unsubscribeUserListener) unsubscribeUserListener();
-                        if (user) {
-                            unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
-                                communityFavorites = doc.exists ? doc.data().communityBookmarks || [] : [];
-                                filterAndDisplayPosts(); // Re-render with updated favorites
-                            }, err => {
-                                console.error("Error listening to community bookmarks:", err);
-                                communityFavorites = [];
-                                filterAndDisplayPosts();
-                            });
-                        } else {
-                            communityFavorites = [];
-                            filterAndDisplayPosts();
-                        }
-                    });
-                })
-                .catch(error => console.error('Error fetching header:', error));
-
             document.getElementById('current-year-community').textContent = new Date().getFullYear();
 
             const twitterScript = document.createElement('script');
@@ -440,7 +377,6 @@
             twitterScript.charset = 'utf-8';
             document.body.appendChild(twitterScript);
 
-            // FIXED: Add event listener for Twitter's rendered event to fix FOUC
             if (window.twttr) {
                 window.twttr.ready(twttr => {
                     twttr.events.bind('rendered', function (event) {
@@ -453,7 +389,6 @@
                     });
                 });
             }
-
 
             document.getElementById('postsContainerCommunity').addEventListener('click', function(event) {
                 const favoriteButton = event.target.closest('.favorite-btn');
@@ -475,12 +410,32 @@
             });
 
             document.getElementById('searchInputCommunity').addEventListener('input', filterAndDisplayPosts);
+
+            // This listener now correctly initializes the rest of the page logic
+            firebase.auth().onAuthStateChanged(user => {
+                if (unsubscribeUserListener) unsubscribeUserListener();
+                if (user) {
+                    unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
+                        communityFavorites = doc.exists ? doc.data().communityBookmarks || [] : [];
+                        filterAndDisplayPosts();
+                    }, err => {
+                        console.error("Error listening to community bookmarks:", err);
+                        communityFavorites = [];
+                        filterAndDisplayPosts();
+                    });
+                } else {
+                    communityFavorites = [];
+                    filterAndDisplayPosts();
+                }
+                // Also update the active nav link status
+                setActiveNavLink();
+            });
         });
         
         // --- UTILITY FUNCTIONS ---
         function setActiveNavLink() {
             const currentPath = window.location.pathname.split("/").pop() || "index.html";
-            document.querySelectorAll('#navbar a.nav-link').forEach(link => {
+            document.querySelectorAll('#header-placeholder a.nav-link').forEach(link => {
                 link.classList.remove('active');
                 if (link.getAttribute('href') === currentPath) link.classList.add('active');
             });
@@ -498,5 +453,24 @@
             }).catch(err => console.error('Failed to copy share link:', err));
         }
     </script>
+    
+    <!-- ✅ 4. Add the Centralized Header Logic -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script>
+        // Minimal Firebase init
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+            authDomain: "linq-b27a8.firebaseapp.com",
+            projectId: "linq-b27a8",
+            storageBucket: "linq-b27a8.appspot.com",
+            messagingSenderId: "1067901051826",
+            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    </script>
+    <script src="headerManager.js" defer></script>
+
 </body>
 </html>
