@@ -266,16 +266,16 @@
 
         // --- CHAT UI & LOGIC ---
         function updateChatUI(isUserSubscribed) {
-            const isEnabled = isUserSubscribed;
-            chatInput.disabled = !isEnabled;
-            sendButton.disabled = !isEnabled;
-            
-            if (!isEnabled) {
-                chatInput.placeholder = "Upgrade to Premium to use Linq AI";
+            chatInput.disabled = false;
+            sendButton.disabled = false;
+        
+            if (!isUserSubscribed) {
+                chatInput.placeholder = "Ask a question — limited response without upgrade";
             } else {
                 chatInput.placeholder = "Ask Linq AI...";
             }
         }
+
 
         async function handleFormSubmit(event) {
             event.preventDefault();
