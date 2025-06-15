@@ -88,9 +88,8 @@
         }
         .news-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.2); border-color: #5a6268; }
         
-        /* UPDATED: Changed from gold to a platinum blue color */
         .news-card.premium-highlight:not(.locked) {
-            border-color: rgba(0, 191, 255, 0.7); /* Platinum Blue Border */
+            border-color: rgba(0, 191, 255, 0.7); 
         }
         .news-card.premium-highlight:not(.locked):hover {
             box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.25);
@@ -305,7 +304,7 @@
         let favorites = []; 
         let currentPage = 1;
         let allDaysData = [];
-        let unsubscribeUserListener = null; // To hold the listener function
+        let unsubscribeUserListener = null;
 
         const FINNHUB_API_KEY = 'cprdj2pr01qjjs4st2e0cprdj2pr01qjjs4st2eg'; 
         const DISPLAY_SYMBOLS = {'OANDA:USD_JPY':'JPY','OANDA:USD_CNY':'CNY','OANDA:EUR_USD':'EUR','OANDA:GBP_USD':'GBP','CL1:COM':'WTI CRUDE','CO1:COM':'BRENT CRUDE','RB1:COM':'RBOB GASOLINE','HO1:COM':'HEATING OIL','NG1:COM':'NATURAL GAS','TMUBMUSD02Y':'US 2YR YIELD','TMUBMUSD05Y':'US 5YR YIELD','TMUBMUSD10Y':'US 10YR YIELD','^GSPC':'S&P 500','^DJI':'DOW 30','^IXIC':'NASDAQ','DXY':'US DOLLAR IDX'};
@@ -356,7 +355,6 @@
             const profileLink = document.getElementById('profileLinkDesktop');
             const profilePic = document.getElementById('navProfilePic');
             
-            // Detach any previous listener to prevent memory leaks on user change
             if (unsubscribeUserListener) {
                 unsubscribeUserListener();
                 unsubscribeUserListener = null;
@@ -373,12 +371,11 @@
                     else profilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
                 }
 
-                // **UPDATED**: Use onSnapshot for real-time updates
+                // Use onSnapshot for real-time updates from Firestore
                 unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
-                    console.log("Real-time user data updated.");
                     isSubscribed = doc.exists && doc.data().isSubscribed === true;
                     favorites = doc.exists ? doc.data().bookmarks || [] : [];
-                    initializeAppLogic(); // Re-initialize the app logic with new user status
+                    initializeAppLogic(); 
                 }, error => {
                     console.error("Error with real-time listener:", error);
                     isSubscribed = false;
@@ -418,7 +415,6 @@
         }
         
         async function updateTickerBanner() {
-            // Unchanged from previous version
             const tickerContent = document.getElementById('tickerContent');
             if (!tickerContent || !FINNHUB_API_KEY) return;
             let contentHTML = '';
@@ -463,11 +459,10 @@
                  const presentArticles = window.presentDayArticles || [];
                  const premiumArticles = window.premiumArticles || [];
                  let baseArticles = isSubscribed ? [...presentArticles, ...premiumArticles] : presentArticles;
-                 // To show locked content, we add premium articles even for non-subscribed users
                  if(!isSubscribed) {
-                    articlesForDay = [...presentArticles, ...premiumArticles];
+                     articlesForDay = [...presentArticles, ...premiumArticles];
                  } else {
-                    articlesForDay = baseArticles;
+                     articlesForDay = baseArticles;
                  }
             } else {
                 articlesForDay = (window.pastArticles && window.pastArticles[page - 2]) ? [...window.pastArticles[page - 2]] : [];
@@ -580,40 +575,36 @@
         
         function handleFavoriteClick(e) {
             const favButton = e.target.closest('.favorite-btn');
-            if (favButton) toggleFavorite(favButton.dataset.id);
+            if (favButton) {
+                toggleFavorite(favButton.dataset.id);
+            }
         }
 
-        async function updateBookmarksInFirestore(articleId, isAdding) {
+        async function toggleFavorite(articleId) {
             const user = auth.currentUser;
             if (!user) {
                 window.location.href = 'login.html';
                 return;
             }
+            
+            const idStr = String(articleId);
+            const isCurrentlyFavorited = favorites.includes(idStr);
+            const isAdding = !isCurrentlyFavorited;
 
+            // Update Firestore
             const userRef = db.collection('users').doc(user.uid);
             const updateData = {
                 bookmarks: isAdding 
-                    ? firebase.firestore.FieldValue.arrayUnion(articleId) 
-                    : firebase.firestore.FieldValue.arrayRemove(articleId)
+                    ? firebase.firestore.FieldValue.arrayUnion(idStr) 
+                    : firebase.firestore.FieldValue.arrayRemove(idStr)
             };
 
             try {
                 await userRef.set(updateData, { merge: true });
+                // The onSnapshot listener will handle the UI update automatically.
             } catch (error) {
                 console.error('Error updating bookmarks:', error);
             }
-        }
-
-        async function toggleFavorite(articleId) {
-            const idStr = String(articleId);
-            const isFavorited = favorites.includes(idStr);
-            if (isFavorited) {
-                favorites = favorites.filter(id => id !== idStr);
-            } else {
-                favorites.push(idStr);
-            }
-            updateFavoriteIcons();
-            await updateBookmarksInFirestore(idStr, !isFavorited);
         }
 
         function updateFavoriteIcons() {
