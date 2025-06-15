@@ -399,7 +399,7 @@
                         const userData = doc.data();
                         const planType = userData.subscriptionType || 'Premium';
                         const billingType = userData.billingCycle || 'Annually';
-                        planNameEl.textContent = `Linq+ ${planType.charAt(0).toUpperCase() + planType.slice(1)}`;
+                        planNameEl.textContent = `Premium ${planType.charAt(0).toUpperCase() + planType.slice(1)}`;
                         statusTextEl.textContent = 'Your premium subscription is active.';
                         billingCycleEl.textContent = `Billed ${billingType}.`;
                         billingCycleEl.classList.remove('hidden');
