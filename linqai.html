@@ -19,7 +19,6 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            /* FIX: Removed overflow: hidden from the body to prevent it from cutting off content. */
         }
 
     
@@ -30,10 +29,10 @@
 
         .chat-container-wrapper {
             flex-grow: 1; display: flex; flex-direction: column; width: 100%;
-            max-width: 900px; margin: 0 auto; height: calc(100vh - 68px); /* FIX: Adjust height for the static spacer */
-            overflow: hidden; /* FIX: Added overflow hidden here to contain the chat layout properly */
+            max-width: 900px; margin: 0 auto; height: calc(100vh - 68px); 
+            overflow: hidden; 
         }
-        .chat-header-area { flex-shrink: 0; /* REMOVED padding-top as it's no longer needed */ }
+        .chat-header-area { flex-shrink: 0; }
         .page-heading-container { text-align: center; padding: 1.5rem 1rem 1rem 1rem; }
         .chat-page-title { font-size: 2.75rem; font-weight: 700; color: #FFFFFF; }
         .chat-page-title .accent-text { color: #00BFFF; }
@@ -161,8 +160,9 @@
 
         <div class="chat-input-area">
             <form id="chat-form" class="chat-input-form">
-                <input type="text" id="chat-input" class="chat-input" placeholder="Ask Linq AI..." autocomplete="off" disabled>
-                <button type="submit" id="send-button" class="send-button" aria-label="Send message" disabled>
+                <!-- FIX: Removed the 'disabled' attribute from the input and button to allow interaction at all times -->
+                <input type="text" id="chat-input" class="chat-input" placeholder="Ask Linq AI..." autocomplete="off">
+                <button type="submit" id="send-button" class="send-button" aria-label="Send message">
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </form>
@@ -208,50 +208,44 @@
             if (user) {
                 unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
                     isSubscribed = doc.exists && doc.data().isSubscribed === true;
-                    updateChatUI(isSubscribed);
                 }, error => {
                     console.error("Error with real-time listener:", error);
                     isSubscribed = false;
-                    updateChatUI(false);
                 });
             } else {
                 isSubscribed = false;
-                updateChatUI(false);
             }
         }
 
         // --- CHAT UI & LOGIC ---
-        function updateChatUI(isUserSubscribed) {
-            chatInput.disabled = false;
-            sendButton.disabled = false;
-        
-            if (!isUserSubscribed) {
-                chatInput.placeholder = "Ask a question — limited response without upgrade";
-            } else {
-                chatInput.placeholder = "Ask Linq AI...";
-            }
-        }
-
+        // The updateChatUI function is no longer needed as the inputs are always enabled.
 
         async function handleFormSubmit(event) {
             event.preventDefault();
-            const currentUser = auth.currentUser;
-            if (!currentUser) {
-                addMessageToChat('Please <a href="login.html" class="underline">log in</a> to use Linq AI.', 'ai', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), true);
-                return;
-            }
-            if (!isSubscribed) {
-                const upgradeMessage = `Linq AI is a premium feature. To ask questions and get detailed energy analysis, please upgrade your account.<br><a href="linqplus.html" class="upgrade-button">Upgrade to Premium</a>`;
-                addMessageToChat(upgradeMessage, 'ai', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), true);
-                return;
-            }
-
             const userMessage = chatInput.value.trim();
+
             if (userMessage) {
+                // Add the user's message to the chat immediately, regardless of status.
                 suggestedQuestionsContainer.style.display = 'none';
                 addMessageToChat(userMessage, 'user');
                 chatInput.value = '';
                 chatInput.focus();
+
+                const currentUser = auth.currentUser;
+                
+                // Now, check the user's status to determine the AI's response.
+                if (!currentUser) {
+                    addMessageToChat('Please <a href="login.html" class="underline">log in</a> to use Linq AI.', 'ai', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), true);
+                    return;
+                }
+
+                if (!isSubscribed) {
+                    const upgradeMessage = `Linq AI is a premium feature. To ask questions and get detailed energy analysis, please upgrade your account.<br><a href="linqplus.html" class="upgrade-button">Upgrade to Premium</a>`;
+                    addMessageToChat(upgradeMessage, 'ai', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), true);
+                    return;
+                }
+                
+                // If the user is logged in and subscribed, proceed to get a real AI response.
                 showTypingIndicator();
                 try {
                     const aiResponse = await getOpenAIResponse(userMessage);
