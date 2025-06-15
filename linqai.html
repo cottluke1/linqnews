@@ -9,10 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- Firebase Libraries -->
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -140,7 +136,8 @@
     </style>
 </head>
 <body class="antialiased">
-
+    <!-- Static header spacer to prevent layout jumps -->
+    <div style="height: 68px;" class="w-full bg-black border-b border-gray-800"></div>
     <div id="header-placeholder"></div>
 
     <div class="chat-container-wrapper px-2 sm:px-4">
@@ -177,15 +174,6 @@
         let unsubscribeUserListener = null;
 
         // --- Firebase Initialization ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-            authDomain: "linq-b27a8.firebaseapp.com",
-            projectId: "linq-b27a8",
-            storageBucket: "linq-b27a8.appspot.com",
-            messagingSenderId: "1067901051826",
-            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-        };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
@@ -195,7 +183,6 @@
         const chatInput = document.getElementById('chat-input');
         const sendButton = document.getElementById('send-button');
         const suggestedQuestionsContainer = document.getElementById('suggested-questions');
-        const headerPlaceholder = document.getElementById('header-placeholder');
 
         let conversationHistory = [{
              role: 'system',
@@ -204,16 +191,6 @@
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            fetch('header.html') 
-                .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
-                .then(data => {
-                    if (headerPlaceholder) {
-                        headerPlaceholder.innerHTML = data;
-                        auth.onAuthStateChanged(handleAuthStateChange);
-                    }
-                })
-                .catch(error => console.error('Error fetching header:', error));
-
             chatForm.addEventListener('submit', handleFormSubmit);
             suggestedQuestionsContainer.addEventListener('click', handleSuggestedQuestionClick);
             addMessageToChat("I'm Linq's AI Energy Analyst—here to answer your energy questions with the latest data and real insights. What's on your mind?", 'ai');
@@ -221,7 +198,6 @@
 
         // --- AUTH & SUBSCRIPTION LOGIC ---
         function handleAuthStateChange(user) {
-            updateHeaderUI(user);
             if (unsubscribeUserListener) unsubscribeUserListener();
 
             if (user) {
@@ -238,31 +214,6 @@
                 updateChatUI(false);
             }
         }
-        
-        function updateHeaderUI(user) {
-            const authLink = document.getElementById('authLinkDesktopLogin');
-            const profileLink = document.getElementById('profileLinkDesktop');
-            const profilePic = document.getElementById('navProfilePic');
-            const logo = document.querySelector('a.text-3xl.font-bold.text-white');
-            
-            if(logo) logo.classList.add('logo-font');
-            document.querySelectorAll('#header-placeholder .nav-link').forEach(link => link.classList.add('nav-link'));
-
-            if (user) {
-                if(authLink) authLink.classList.add('hidden');
-                if(profileLink) profileLink.classList.remove('hidden');
-                
-                if (profilePic) {
-                    if (user.photoURL) profilePic.src = user.photoURL;
-                    else if (user.displayName) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
-                    else if (user.email) profilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
-                    else profilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
-                }
-            } else {
-                if(authLink) authLink.classList.remove('hidden');
-                if(profileLink) profileLink.classList.add('hidden');
-            }
-        }
 
         // --- CHAT UI & LOGIC ---
         function updateChatUI(isUserSubscribed) {
@@ -275,7 +226,6 @@
                 chatInput.placeholder = "Ask Linq AI...";
             }
         }
-
 
         async function handleFormSubmit(event) {
             event.preventDefault();
@@ -377,5 +327,21 @@
             }
         }
     </script>
+
+    <!-- Firebase & Header Loader -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+            authDomain: "linq-b27a8.firebaseapp.com",
+            projectId: "linq-b27a8",
+            storageBucket: "linq-b27a8.appspot.com",
+            messagingSenderId: "1067901051826",
+            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    </script>
+    <script src="headerManager.js" defer></script>
 </body>
 </html>
