@@ -11,10 +11,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <style>
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-            /* UPDATED: Black background with a smaller white spotlight */
             background-color: #000000;
             background-image: radial-gradient(ellipse 35% 15% at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
             color: #E7E9EA;
@@ -38,11 +38,11 @@
             backdrop-filter: blur(10px) saturate(150%);
             -webkit-backdrop-filter: blur(10px) saturate(150%);
             border-bottom: 1px solid #2F3336;
-            position: fixed; /* Ensure header is fixed */
+            position: fixed; 
             top: 0;
             left: 0;
             width: 100%;
-            z-index: 1000; /* High z-index */
+            z-index: 1000; 
         }
         .nav-link {
             transition: color 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
@@ -138,7 +138,6 @@
         #menu-overlay.active { display: block; opacity: 1; }
         #mobile-menu .nav-link.active { color: #FFFFFF; background-color: rgba(0, 191, 255, 0.1); opacity: 1; }
 
-        /* Page Specific Styles */
         .page-header { text-align: center; margin-bottom: 2.5rem; }
         .page-title {
             font-size: 2.5rem;
@@ -181,7 +180,7 @@
             background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%);
             padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4);
             border: 1px solid #2a2a2a; position: sticky;
-            top: 100px; /* Adjust this based on header height */
+            top: 100px; 
         }
         .filter-title { font-size: 1.25rem; font-weight: 600; color: #E0E0E0; margin-bottom: 1.25rem; }
         .filter-button {
@@ -247,12 +246,10 @@
             display: inline-flex; align-items: center; gap: 0.5rem;
         }
         .action-btn:hover { background-color: #1A1A1A; color: #00BFFF; border-color: #00BFFF; }
-        .action-btn i { font-size: 1rem; } /* For Font Awesome icons like share */
+        .action-btn i { font-size: 1rem; }
 
-        /* Favorite button styles for SVG Bookmark Icon */
         .favorite-btn {
-            width: 2.25rem; /* MODIFIED: Increased size */
-            height: 2.25rem; /* MODIFIED: Increased size */
+            width: 2.25rem; height: 2.25rem; 
             color: #888888;
             cursor: pointer;
             transition: color 0.2s ease, transform 0.2s ease;
@@ -278,10 +275,6 @@
             fill: #00BFFF;
             stroke: #00BFFF;
         }
-        .post-actions .favorite-btn {
-            padding: 0.4rem; /* MODIFIED: Adjusted padding for larger icon */
-        }
-
 
         .share-confirmation {
             display: none;
@@ -301,7 +294,7 @@
         .page-content-wrapper {
             flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px;
             margin: 0 auto; padding-left: 1rem; padding-right: 1rem;
-            padding-top: 80px; /* Initial padding for fixed header */
+            padding-top: 80px; 
         }
         .community-main-grid { display: flex; flex-wrap: wrap; gap: 2rem; }
         .posts-section { flex: 3; min-width: 0; order: 1; }
@@ -316,8 +309,7 @@
     </style>
 </head>
 <body class="antialiased">
-    <div id="navbar">
-        </div>
+    <div id="navbar"></div>
 
     <main class="page-content-wrapper">
         <header class="page-header">
@@ -331,8 +323,7 @@
                     <input type="text" id="searchInputCommunity" placeholder="Search community posts..." class="search-input">
                 </div>
 
-                <div id="postsContainerCommunity" class="space-y-8">
-                    </div>
+                <div id="postsContainerCommunity" class="space-y-8"></div>
             </section>
 
             <aside class="filter-section-wrapper">
@@ -361,179 +352,27 @@
     </footer>
 
     <script>
-        // --- Function to Initialize and Run All Header Related Logic ---
-        function initializeHeaderAndAuth() {
-            // Get all necessary elements from the DOM *after* the header is loaded
-            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
-            const profileLinkDesktop = document.getElementById('profileLinkDesktop');
-            const navProfilePic = document.getElementById('navProfilePic');
+        // --- GLOBAL STATE ---
+        let communityFavorites = [];
+        let unsubscribeUserListener = null;
 
-            // Mobile and slide-out menu elements
-            const authLinkMobile = document.getElementById('authLinkMobile');
-            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
-            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile');
-            const earningsLinkMobile = document.getElementById('earningsLinkMobile');
-            const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
-            const menuOverlay = document.getElementById('menu-overlay');
-            const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
-            const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
-            const slideoutCloseButton = document.getElementById('slideout-close-button');
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-
-            // Firebase configuration
-            if (!firebase.apps.length) {
-                const firebaseConfigShared = {
-                    apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-                    authDomain: "linq-b27a8.firebaseapp.com",
-                    projectId: "linq-b27a8",
-                    storageBucket: "linq-b27a8.appspot.com",
-                    messagingSenderId: "1067901051826",
-                    appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-                };
-                firebase.initializeApp(firebaseConfigShared);
-            }
-            const authInstance = firebase.auth();
-
-            authInstance.onAuthStateChanged(user => {
-                if (user) {
-                    // --- User is LOGGED IN ---
-                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
-                    if (profileLinkDesktop) profileLinkDesktop.classList.remove('hidden');
-
-                    if(navProfilePic) {
-                        if (user.photoURL) {
-                            navProfilePic.src = user.photoURL;
-                        } else if (user.displayName) {
-                            navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
-                        } else if (user.email) {
-                            navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
-                        } else {
-                            navProfilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
-                        }
-                    }
-
-                    // Mobile menu updates
-                    if (authLinkMobile) { authLinkMobile.textContent = "My Profile"; authLinkMobile.href = "profile.html"; }
-                    if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
-                    if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
-                    if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
-                    if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
-                } else {
-                    // --- User is LOGGED OUT ---
-                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.remove('hidden');
-                    if (profileLinkDesktop) profileLinkDesktop.classList.add('hidden');
-                    
-                    // Mobile menu updates
-                    if (authLinkMobile) { authLinkMobile.textContent = "Login"; authLinkMobile.href = "login.html"; }
-                    if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
-                    if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
-                    if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
-                    if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
-                    if (desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
-                }
-                setActiveNavLink();
-            });
-
-            function handleLogout(e) {
-                e.preventDefault();
-                if (desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
-                if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
-                authInstance.signOut().catch(error => console.error("Sign out error", error));
-            }
-
-            if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
-            if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
-
-            function setActiveNavLink() {
-                const currentPath = window.location.pathname.split("/").pop() || "index.html";
-                const navLinks = document.querySelectorAll('#navbar nav.fixed a.nav-link, #navbar #mobile-menu a.nav-link');
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    const linkHref = link.getAttribute('href');
-                    if (linkHref === currentPath || ((currentPath === "index.html" || currentPath === "") && linkHref === "index.html")) {
-                        link.classList.add('active');
-                    }
-                });
-            }
-
-            if (mobileMenuButton && mobileMenu) {
-                mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-            }
-
-            function openDesktopMenu() {
-                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.add('open');
-                if (menuOverlay) menuOverlay.classList.add('active');
-                document.body.classList.add('overflow-hidden');
-            }
-            function closeDesktopMenu() {
-                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open');
-                if (menuOverlay) menuOverlay.classList.remove('active');
-                document.body.classList.remove('overflow-hidden');
-            }
-            if (desktopHamburgerButton) {
-                desktopHamburgerButton.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    if (desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
-                    else openDesktopMenu();
-                });
-            }
-            if (menuOverlay) menuOverlay.addEventListener('click', closeDesktopMenu);
-            if (slideoutCloseButton) slideoutCloseButton.addEventListener('click', closeDesktopMenu);
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && desktopSlideOutMenu?.classList.contains('open')) closeDesktopMenu();
-            });
-
-            setActiveNavLink();
+        // --- FIREBASE SETUP ---
+        const firebaseConfigShared = {
+            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+            authDomain: "linq-b27a8.firebaseapp.com",
+            projectId: "linq-b27a8",
+            storageBucket: "linq-b27a8.appspot.com",
+            messagingSenderId: "1067901051826",
+            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfigShared);
         }
+        const authInstance = firebase.auth();
+        const db = firebase.firestore();
 
-        function adjustMainContentPadding() {
-            const header = document.querySelector('nav.fixed');
-            const pageContentWrapper = document.querySelector('.page-content-wrapper');
-            const filterSectionWrapper = document.querySelector('.filter-section-wrapper');
-
-            if (header && pageContentWrapper) {
-                const headerHeight = header.offsetHeight;
-                pageContentWrapper.style.paddingTop = `${headerHeight + 20}px`;
-
-                if (filterSectionWrapper && window.innerWidth >= 1024) {
-                    const filterPanel = filterSectionWrapper.querySelector('.filter-panel');
-                    if (filterPanel) {
-                        filterPanel.style.top = `${headerHeight + 20}px`;
-                    }
-                }
-            }
-        }
-
-
-        fetch('header.html')
-            .then(response => {
-                if (!response.ok) throw new Error('Network response was not ok for header.html');
-                return response.text();
-            })
-            .then(data => {
-                const navbarElement = document.getElementById('navbar');
-                if (navbarElement) {
-                    navbarElement.innerHTML = data;
-                    initializeHeaderAndAuth();
-                    requestAnimationFrame(() => setTimeout(adjustMainContentPadding, 0));
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching header:', error);
-            });
-
-        document.getElementById('current-year-community').textContent = new Date().getFullYear();
-
-        const twitterScriptCommunity = document.createElement('script');
-        twitterScriptCommunity.src = 'https://platform.twitter.com/widgets.js';
-        twitterScriptCommunity.async = true;
-        twitterScriptCommunity.charset = 'utf-8';
-        document.body.appendChild(twitterScriptCommunity);
-
+        // --- DATA ---
         const communityPostsDataPage = [
-            // Newest posts first
             { id: 'tweet19', url: 'https://twitter.com/DavidInglesTV/status/1933357784646758533', title: 'Oil Prices Up Most in Half Decade', meta: 'June 13, 2025 • David Ingles (@DavidInglesTV)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">Oil prices up the most in half decade. We were at $59 five weeks ago. $80 now in sight. Brent crude up over 10% <a href="https://t.co/g9sMWWWm3y">pic.twitter.com/g9sMWWWm3y</a></p>&mdash; David Ingles (@DavidInglesTV) <a href="https://twitter.com/DavidInglesTV/status/1933357784646758533?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
             { id: 'tweet18', url: 'https://twitter.com/marketplunger1/status/1933341930512953427', title: 'Crude Oil Knew.', meta: 'June 13, 2025 • Brandon Beylo (@marketplunger1)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">Crude oil knew.</p>&mdash; Brandon Beylo (@marketplunger1) <a href="https://twitter.com/marketplunger1/status/1933341930512953427?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
             { id: 'tweet17', url: 'https://twitter.com/Josh_Young_1/status/1933327432804618625', title: 'Got Oil?', meta: 'June 13, 2025 • Josh Young (@Josh_Young_1)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">Got oil? <a href="https://t.co/fcW53lCkB9">https://t.co/fcW53lCkB9</a></p>&mdash; Josh Young (@Josh_Young_1) <a href="https://twitter.com/Josh_Young_1/status/1933327432804618625?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
@@ -548,18 +387,52 @@
             { id: 'tweet8', url: 'https://twitter.com/WhiteHouse/status/1933328486669697508', title: 'Secretary of State Marco Rubio on Israeli Action Against Iran', meta: 'June 13, 2025 • The White House (@WhiteHouse)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">Statement from Secretary of State Marco Rubio<br><br>“Tonight, Israel took unilateral action against Iran. We are not involved in strikes against Iran and our top priority is protecting American forces in the region. Israel advised us that they believe this action was necessary for its… <a href="https://t.co/5FFesh3dkF">pic.twitter.com/5FFesh3dkF</a></p>&mdash; The White House (@WhiteHouse) <a href="https://twitter.com/WhiteHouse/status/1933328486669697508?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
             { id: 'tweet7', url: 'https://twitter.com/Rory_Johnston/status/1933323720073863382', title: 'US Aware of Strike Reports, No Involvement', meta: 'June 13, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">FT: “US official said Washington was “aware of the reports of strikes” and that “there was no US involvement or US assistance” to Israel during the operation.”</p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1933323720073863382?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
             { id: 'tweet6', url: 'https://twitter.com/OilHeadlineNews/status/1933309259581690275', title: 'Israeli Attack on Iran Could Send Oil Prices Above $100', meta: 'June 12, 2025 • Energy Headline News (@OilHeadlineNews)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">An Israeli attack on Iran could send oil prices above $100 as tensions mount - CNBC</p>&mdash; Energy Headline News (@OilHeadlineNews) <a href="https://twitter.com/OilHeadlineNews/status/1933309259581690275?ref_src=twsrc%5Etfw">June 12, 2025</a>' },
-            { id: 'tweet5', url: 'https://twitter.com/Amena__Bakr/status/1933201079761568005', title: 'Reaching a Deal with Iran Will Help on Oil Prices', meta: 'June 12, 2025 • Amena Bakr (@Amena__Bakr)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">Reaching a deal with Iran will help on that front <a href="https://twitter.com/hashtag/Trump?src=hash&amp;ref_src=twsrc%5Etfw">#Trump</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&amp;ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://t.co/hStELUHwii">https://t.co/hStELUHwii</a></p>&mdash; Amena Bakr (@Amena__Bakr) <a href="https://twitter.com/Amena__Bakr/status/1933201079761568005?ref_src=twsrc%5Etfw">June 12, 2025</a>' },
-            { id: 'tweet4', url: 'https://twitter.com/JavierBlas/status/1933185348839829763', title: 'Trump: Don\'t Like Oil Prices Have Gone Up', meta: 'June 12, 2025 • Javier Blas (@JavierBlas)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">TRUMP: DON&#39;T LIKE OIL PRICES HAVE GONE UP<br><br>(Yeah, that&#39;s the problem when energy traders hear chatter about someone thinking about bombing Iran: oil prices do tend to increase) <a href="https://twitter.com/hashtag/OOTT?src=hash&amp;ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; Javier Blas (@JavierBlas) <a href="https://twitter.com/JavierBlas/status/1933185348839829763?ref_src=twsrc%5Etfw">June 12, 2025</a>' },
+            { id: 'tweet5', url: 'https://twitter.com/Amena__Bakr/status/1933201079761568005', title: 'Reaching a Deal with Iran Will Help on Oil Prices', meta: 'June 12, 2025 • Amena Bakr (@Amena__Bakr)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">Reaching a deal with Iran will help on that front <a href="https://twitter.com/hashtag/Trump?src=hash&ref_src=twsrc%5Etfw">#Trump</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://t.co/hStELUHwii">https://t.co/hStELUHwii</a></p>&mdash; Amena Bakr (@Amena__Bakr) <a href="https://twitter.com/Amena__Bakr/status/1933201079761568005?ref_src=twsrc%5Etfw">June 12, 2025</a>' },
+            { id: 'tweet4', url: 'https://twitter.com/JavierBlas/status/1933185348839829763', title: 'Trump: Don\'t Like Oil Prices Have Gone Up', meta: 'June 12, 2025 • Javier Blas (@JavierBlas)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">TRUMP: DON&#39;T LIKE OIL PRICES HAVE GONE UP<br><br>(Yeah, that&#39;s the problem when energy traders hear chatter about someone thinking about bombing Iran: oil prices do tend to increase) <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; Javier Blas (@JavierBlas) <a href="https://twitter.com/JavierBlas/status/1933185348839829763?ref_src=twsrc%5Etfw">June 12, 2025</a>' },
             { id: 'tweet3', url: 'https://twitter.com/JavierBlas/status/1933188916909384163', title: 'US President Donald Trump Addresses Energy Secretary Chris Wright', meta: 'June 12, 2025 • Javier Blas (@JavierBlas)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">US President Donald Trump speaking at the White House today and referring directly to US Secretary of Energy Chris Wright (in the audience): <a href="https://t.co/0ASgiAAQTU">pic.twitter.com/0ASgiAAQTU</a></p>&mdash; Javier Blas (@JavierBlas) <a href="https://twitter.com/JavierBlas/status/1933188916909384163?ref_src=twsrc%5Etfw">June 12, 2025</a>' },
-            { id: 'tweet2', url: 'https://twitter.com/JavierBlas/status/1933238166267572705', title: 'New CACTUS Trade: Crude Aspirations Crimp Trump’s Unilateral Strategy', meta: 'June 12, 2025 • Javier Blas (@JavierBlas)', category: 'Market Analysis', tweetContent: '<p lang="en" dir="ltr">From an oil industry insider: <br><br>“The new CACTUS Trade: Crude Aspirations Crimp Trump’s Unilateral Strategy”<br><br>(CACTUS is also the name of a pair of key oil pipelines in Texas) <a href="https://twitter.com/hashtag/OOTT?src=hash&amp;ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; Javier Blas (@JavierBlas) <a href="https://twitter.com/JavierBlas/status/1933238166267572705?ref_src=twsrc%5Etfw">June 12, 2025</a>' },
+            { id: 'tweet2', url: 'https://twitter.com/JavierBlas/status/1933238166267572705', title: 'New CACTUS Trade: Crude Aspirations Crimp Trump’s Unilateral Strategy', meta: 'June 12, 2025 • Javier Blas (@JavierBlas)', category: 'Market Analysis', tweetContent: '<p lang="en" dir="ltr">From an oil industry insider: <br><br>“The new CACTUS Trade: Crude Aspirations Crimp Trump’s Unilateral Strategy”<br><br>(CACTUS is also the name of a pair of key oil pipelines in Texas) <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; Javier Blas (@JavierBlas) <a href="https://twitter.com/JavierBlas/status/1933238166267572705?ref_src=twsrc%5Etfw">June 12, 2025</a>' },
             { id: 'tweet1', url: 'https://twitter.com/IsraeliPM/status/1933244843624407170', title: 'PM Netanyahu\'s Remarks with Argentine President Milei', meta: 'June 12, 2025 • Prime Minister of Israel (@IsraeliPM)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">WATCH: Prime Minister Benjamin Netanyahu&#39;s remarks, today, at the signing of MOUs with Argentine President <a href="https://twitter.com/JMilei?ref_src=twsrc%5Etfw">@JMilei</a>.<br><br>&quot;We feel your heart, your connection to our people, to our land, to our state, and our eternal united city, Jerusalem.&quot;<a href="https://t.co/7wtikaq9GC">https://t.co/7wtikaq9GC</a> <a href="https://t.co/clKlE7t7DY">pic.twitter.com/clKlE7t7DY</a></p>&mdash; Prime Minister of Israel (@IsraeliPM) <a href="https://twitter.com/IsraeliPM/status/1933244843624407170?ref_src=twsrc%5Etfw">June 12, 2025</a>'}
         ];
 
-        const postsContainerCommunity = document.getElementById('postsContainerCommunity');
-        let communityFavoritesPage = JSON.parse(localStorage.getItem('linqCommunityFavoritesV1')) || [];
+        // --- AUTH & HEADER LOGIC ---
+        function initializeHeaderAndAuth(user) {
+            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
+            const profileLinkDesktop = document.getElementById('profileLinkDesktop');
+            const navProfilePic = document.getElementById('navProfilePic');
+            const authLinkMobile = document.getElementById('authLinkMobile');
+            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
+            const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
+            
+            if (user) {
+                if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
+                if (profileLinkDesktop) profileLinkDesktop.classList.remove('hidden');
+                if (navProfilePic) {
+                    if (user.photoURL) navProfilePic.src = user.photoURL;
+                    else if (user.displayName) navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.displayName.charAt(0).toUpperCase()}`;
+                    else if (user.email) navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
+                    else navProfilePic.src = 'https://placehold.co/40x40/2C2F33/EAEAEA?text=U';
+                }
+                if (authLinkMobile) { authLinkMobile.textContent = "My Profile"; authLinkMobile.href = "profile.html"; }
+                if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
+            } else {
+                if (authLinkDesktopLogin) authLinkDesktopLogin.classList.remove('hidden');
+                if (profileLinkDesktop) profileLinkDesktop.classList.add('hidden');
+                if (authLinkMobile) { authLinkMobile.textContent = "Login"; authLinkMobile.href = "login.html"; }
+                if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+            }
+            
+            function handleLogout(e) { e.preventDefault(); authInstance.signOut(); }
+            if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
+            if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
 
+            setActiveNavLink();
+        }
+
+        // --- DYNAMIC RENDERING & FILTERING ---
         function displayCommunityPostsPage(postsToDisplay) {
+            const postsContainerCommunity = document.getElementById('postsContainerCommunity');
             if (!postsContainerCommunity) return;
+
             postsContainerCommunity.innerHTML = '';
             if (postsToDisplay.length === 0) {
                 postsContainerCommunity.innerHTML = '<p class="text-center text-gray-500 py-8">No posts match your current filters.</p>';
@@ -568,174 +441,144 @@
             postsToDisplay.forEach(post => {
                 const postElement = document.createElement('article');
                 postElement.className = 'post-card';
-                postElement.setAttribute('data-category', post.category);
-                postElement.setAttribute('data-id', post.id);
-                const tweetHTML = typeof post.tweetContent === 'string' ? post.tweetContent : '<p>Error loading tweet content.</p>';
+                const isFavorited = communityFavorites.includes(String(post.id));
 
                 postElement.innerHTML = `
                     <p class="post-title">${post.title || 'Untitled Post'}</p>
                     <p class="post-meta">${post.meta || 'N/A'} <span class="post-category-tag">${post.category || 'General'}</span></p>
                     <div class="twitter-tweet-container">
-                        <blockquote class="twitter-tweet" data-theme="dark" data-cards="hidden" data-conversation="none">
-                            ${tweetHTML}
-                        </blockquote>
+                        <blockquote class="twitter-tweet" data-theme="dark" data-cards="hidden" data-conversation="none">${post.tweetContent || ''}</blockquote>
                     </div>
                     <div class="post-actions">
                         <span class="share-confirmation hidden" style="margin-right: auto;">Linq copied!</span>
-                        <button class="action-btn favorite-btn" data-id="${post.id}" aria-label="Toggle Favorite">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" />
-                            </svg>
+                        <button class="action-btn favorite-btn ${isFavorited ? 'favorited' : ''}" data-id="${post.id}" aria-label="Toggle Favorite">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" /></svg>
                         </button>
-                        <button class="action-btn share-btn" data-id="${post.id}" data-title="${post.title || 'Untitled Post'}">
-                            <i class="fas fa-share-alt"></i>
-                        </button>
+                        <button class="action-btn share-btn" data-id="${post.id}" data-title="${post.title || 'Untitled Post'}"><i class="fas fa-share-alt"></i></button>
                     </div>
                 `;
                 postsContainerCommunity.appendChild(postElement);
             });
 
-            if (window.twttr && window.twttr.widgets) {
-                window.twttr.widgets.load(postsContainerCommunity);
-            } else {
-                console.log("Twitter widgets API not ready when attempting to load posts.");
-            }
-            updateCommunityFavoriteIconsPage();
-            addPostActionListenersPage();
+            if (window.twttr && window.twttr.widgets) window.twttr.widgets.load(postsContainerCommunity);
         }
 
-        function filterCommunityPostsPage() {
-            const searchInput = document.getElementById('searchInputCommunity');
-            const searchQuery = searchInput ? searchInput.value.toLowerCase().trim() : "";
-            const activeCategoryButtons = document.querySelectorAll('#categoryFiltersCommunity .filter-button.active');
-            const selectedCategories = Array.from(activeCategoryButtons).map(btn => btn.getAttribute('data-category'));
-
+        function filterAndDisplayPosts() {
+            const searchQuery = document.getElementById('searchInputCommunity').value.toLowerCase().trim();
+            const activeCategories = Array.from(document.querySelectorAll('#categoryFiltersCommunity .filter-button.active')).map(btn => btn.dataset.category);
+            
             let filteredPosts = communityPostsDataPage;
-
-            if (selectedCategories.length > 0) {
-                filteredPosts = filteredPosts.filter(post => selectedCategories.includes(post.category));
+            if (activeCategories.length > 0) {
+                filteredPosts = filteredPosts.filter(post => activeCategories.includes(post.category));
             }
-
             if (searchQuery) {
                 filteredPosts = filteredPosts.filter(post =>
                     (post.title && post.title.toLowerCase().includes(searchQuery)) ||
                     (post.meta && post.meta.toLowerCase().includes(searchQuery)) ||
-                    (post.tweetContent && post.tweetContent.toLowerCase().includes(searchQuery)) ||
                     (post.category && post.category.toLowerCase().includes(searchQuery))
                 );
             }
             displayCommunityPostsPage(filteredPosts);
         }
 
-
-        function toggleCommunityFavoritePage(postId) {
-            const index = communityFavoritesPage.indexOf(postId);
-            if (index > -1) {
-                communityFavoritesPage.splice(index, 1);
-            } else {
-                communityFavoritesPage.push(postId);
+        // --- BOOKMARKING ---
+        async function toggleCommunityFavorite(postId) {
+            const user = authInstance.currentUser;
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
             }
-            localStorage.setItem('linqCommunityFavoritesV1', JSON.stringify(communityFavoritesPage));
-            updateCommunityFavoriteIconsPage();
-        }
+            const idStr = String(postId);
+            const isCurrentlyFavorited = communityFavorites.includes(idStr);
 
-        function updateCommunityFavoriteIconsPage() {
-            document.querySelectorAll('#postsContainerCommunity .favorite-btn').forEach(button => {
-                const postId = button.getAttribute('data-id');
-                const isFavorited = communityFavoritesPage.includes(postId);
-                if (isFavorited) {
-                    button.classList.add('favorited');
-                } else {
-                    button.classList.remove('favorited');
-                }
+            const userRef = db.collection('users').doc(user.uid);
+            const updateData = {
+                communityBookmarks: isCurrentlyFavorited 
+                    ? firebase.firestore.FieldValue.arrayRemove(idStr) 
+                    : firebase.firestore.FieldValue.arrayUnion(idStr)
+            };
+            await userRef.set(updateData, { merge: true }).catch(error => {
+                console.error("Firestore community bookmark update failed:", error);
             });
+            // onSnapshot listener will handle the UI update automatically
         }
 
-        function addPostActionListenersPage() {
-            document.querySelectorAll('#postsContainerCommunity .favorite-btn').forEach(button => {
-                button.removeEventListener('click', handleCommunityFavoriteClickPage);
-                button.addEventListener('click', handleCommunityFavoriteClickPage);
-            });
-            document.querySelectorAll('#postsContainerCommunity .share-btn').forEach(button => {
-                button.removeEventListener('click', handleShareClickPage);
-                button.addEventListener('click', handleShareClickPage);
-            });
-        }
-        function handleCommunityFavoriteClickPage(event) {
-            const button = event.currentTarget;
-            const postId = button.getAttribute('data-id');
-            toggleCommunityFavoritePage(postId);
-        }
-
-        function handleShareClickPage(event) {
-            const button = event.currentTarget;
-            const postId = button.getAttribute('data-id');
-            const title = button.getAttribute('data-title');
-            const sharePageRelativeUrl = `share.html?postId=${postId}`;
-            const currentPath = window.location.pathname;
-            const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
-            const fullLinqPostUrl = new URL(sharePageRelativeUrl, window.location.origin + basePath).href;
-
-            console.log("Attempting to copy share link:", fullLinqPostUrl);
-
-            const confirmation = button.closest('.post-actions')?.querySelector('.share-confirmation');
-
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(fullLinqPostUrl).then(() => {
-                    if(confirmation) {
-                        confirmation.textContent = 'Linq link copied!';
-                        confirmation.style.display = 'inline';
-                    }
-                    setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2500);
-                }).catch(err => {
-                    console.error('Failed to copy Linq link:', err);
-                    if(confirmation) {
-                        confirmation.textContent = 'Copy failed!';
-                        confirmation.style.display = 'inline';
-                    }
-                    setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2500);
-                });
-            } else {
-                console.warn('Clipboard API not available.');
-                if(confirmation) {
-                    confirmation.textContent = 'Copy not supported.';
-                    confirmation.style.display = 'inline';
-                }
-                setTimeout(() => { if(confirmation) confirmation.style.display = 'none'; }, 2500);
-            }
-        }
-
-
+        // --- EVENT LISTENERS & INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            displayCommunityPostsPage(communityPostsDataPage);
+            fetch('header.html')
+                .then(response => response.ok ? response.text() : Promise.reject('Header fetch failed'))
+                .then(data => {
+                    document.getElementById('navbar').innerHTML = data;
+                    authInstance.onAuthStateChanged(user => {
+                        initializeHeaderAndAuth(user);
+                        if (unsubscribeUserListener) unsubscribeUserListener();
+                        if (user) {
+                            unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
+                                communityFavorites = doc.exists ? doc.data().communityBookmarks || [] : [];
+                                filterAndDisplayPosts(); // Re-render with updated favorites
+                            }, err => {
+                                console.error("Error listening to community bookmarks:", err);
+                                communityFavorites = [];
+                                filterAndDisplayPosts();
+                            });
+                        } else {
+                            communityFavorites = [];
+                            filterAndDisplayPosts();
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching header:', error));
 
-            const categoryFilterButtonsPage = document.querySelectorAll('#categoryFiltersCommunity .filter-button');
-            categoryFilterButtonsPage.forEach(button => {
-                button.addEventListener('click', function() {
-                    this.classList.toggle('active');
-                    filterCommunityPostsPage();
+            document.getElementById('current-year-community').textContent = new Date().getFullYear();
+
+            const twitterScript = document.createElement('script');
+            twitterScript.src = 'https://platform.twitter.com/widgets.js';
+            twitterScript.async = true;
+            twitterScript.charset = 'utf-8';
+            document.body.appendChild(twitterScript);
+
+            document.getElementById('postsContainerCommunity').addEventListener('click', function(event) {
+                const favoriteButton = event.target.closest('.favorite-btn');
+                if (favoriteButton) {
+                    toggleCommunityFavorite(favoriteButton.dataset.id);
+                    return;
+                }
+                const shareButton = event.target.closest('.share-btn');
+                if (shareButton) {
+                    handleShareClick(shareButton);
+                }
+            });
+
+            document.querySelectorAll('#categoryFiltersCommunity .filter-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    button.classList.toggle('active');
+                    filterAndDisplayPosts();
                 });
             });
 
-            const searchInputElementPage = document.getElementById('searchInputCommunity');
-            if (searchInputElementPage) {
-                searchInputElementPage.addEventListener('input', filterCommunityPostsPage);
-            }
-
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    adjustMainContentPadding();
-                },0);
-            });
-            window.addEventListener('resize', () => {
-                requestAnimationFrame(() => {
-                    setTimeout(() => {
-                        adjustMainContentPadding();
-                    },0);
-                });
-            });
+            document.getElementById('searchInputCommunity').addEventListener('input', filterAndDisplayPosts);
         });
+        
+        // --- UTILITY FUNCTIONS ---
+        function setActiveNavLink() {
+            const currentPath = window.location.pathname.split("/").pop() || "index.html";
+            document.querySelectorAll('#navbar a.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPath) link.classList.add('active');
+            });
+        }
+        
+        function handleShareClick(button) {
+            const postId = button.dataset.id;
+            const shareUrl = `${window.location.origin}${window.location.pathname.replace('community.html', 'share.html')}?postId=${postId}`;
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                const confirmation = button.closest('.post-actions').querySelector('.share-confirmation');
+                if(confirmation) {
+                    confirmation.style.display = 'inline';
+                    setTimeout(() => { confirmation.style.display = 'none'; }, 2500);
+                }
+            }).catch(err => console.error('Failed to copy share link:', err));
+        }
     </script>
 </body>
 </html>
