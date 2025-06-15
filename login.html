@@ -6,6 +6,10 @@
     <title>Linq - Access Your Account</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Firebase JS SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -14,24 +18,20 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            /* FIX: Add top padding to the body to prevent content from hiding behind the fixed header */
+            padding-top: 64px;
         }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #1A1A1A; }
-        ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
-        ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
-
-        
         .auth-container {
             flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 2rem;
         }
         .auth-form-wrapper {
-            background-color: rgba(22, 22, 22, 0.8); /* Darker, slightly transparent card */
+            background-color: rgba(22, 22, 22, 0.8);
             backdrop-filter: blur(12px) saturate(160%);
             -webkit-backdrop-filter: blur(12px) saturate(160%);
-            padding: 2.5rem; /* Increased padding */
-            border-radius: 0.75rem; /* 12px */
+            padding: 2.5rem;
+            border-radius: 0.75rem;
             box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255,255,255,0.05);
-            border: 1px solid rgba(0, 191, 255, 0.2); /* Subtle accent border */
+            border: 1px solid rgba(0, 191, 255, 0.2);
             width: 100%;
             max-width: 420px;
         }
@@ -39,10 +39,10 @@
             font-size: 1.8rem; font-weight: 700; color: #FFFFFF; margin-bottom: 2rem; text-align: center;
             text-shadow: 0px 1px 5px rgba(0, 191, 255, 0.2);
         }
-        .auth-input { /* Themed input */
-            width: 100%; padding: 0.875rem 1.125rem; /* 14px 18px */
-            background-color: #1A1A1A; border: 1px solid #333333; border-radius: 0.375rem; /* 6px */
-            margin-bottom: 1.25rem; /* More space */ font-size: 0.9rem; color: #E0E0E0;
+        .auth-input {
+            width: 100%; padding: 0.875rem 1.125rem;
+            background-color: #1A1A1A; border: 1px solid #333333; border-radius: 0.375rem;
+            margin-bottom: 1.25rem; font-size: 0.9rem; color: #E0E0E0;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
         .auth-input::placeholder { color: #666666; }
@@ -50,7 +50,7 @@
             outline: none; border-color: #00BFFF;
             box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3); background-color: #1F1F1F;
         }
-        .auth-button { /* Themed button */
+        .auth-button {
             background-color: #00BFFF; color: #FFFFFF; padding: 0.875rem 1.5rem; border-radius: 0.375rem;
             width: 100%; font-weight: 600; font-size: 1rem;
             transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
@@ -60,229 +60,176 @@
             background-color: #00A9E0; transform: translateY(-1px);
             box-shadow: 0 6px 20px -5px rgba(0, 191, 255, 0.5);
         }
-        .toggle-link {
-            color: #00BFFF; cursor: pointer; transition: color 0.2s ease; font-weight: 500;
-        }
+        .toggle-link { color: #00BFFF; cursor: pointer; transition: color 0.2s ease; font-weight: 500; }
         .toggle-link:hover { color: #00A9E0; text-decoration: underline;}
         .error-message {
-            color: #EF4444; /* Brighter Red for errors */
-            font-size: 0.8rem; text-align: center;
+            color: #EF4444; font-size: 0.8rem; text-align: center;
             margin-bottom: 1rem; padding: 0.5rem;
             background-color: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: 0.375rem;
-            display: none; /* Hidden by default */
+            display: none;
         }
-        .footer { /* Consistent */ }
-        /* ... (footer styles from index.html) ... */
-         .footer {
-            background-color: #080808; color: #888888; padding: 2rem 1rem; /* Reduced padding for login page */
+        .footer {
+            background-color: #080808; color: #888888; padding: 2rem 1rem;
             border-top: 1px solid #222222; text-align: center;
+            margin-top: auto; /* Pushes footer to the bottom */
         }
-        .footer a { color: #A0A0A0; transition: color 0.2s ease; }
-        .footer a:hover { color: #00BFFF; }
-
-        /* Terms and Privacy Modals - Themed */
-        /* ... (modal styles from index.html) ... */
-         .terms-privacy-content {
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background-color: rgba(22, 22, 22, 0.9); backdrop-filter: blur(10px) saturate(150%); -webkit-backdrop-filter: blur(10px) saturate(150%);
-            padding: 2.5rem; border-radius: 0.75rem; max-height: 85vh; overflow-y: auto;
-            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7); z-index: 100; color: #E0E0E0;
-            border: 1px solid rgba(0, 191, 255, 0.3); max-width: 700px; width: 90%;
-        }
-        .terms-privacy-content h2 { font-size: 1.75rem; font-weight: 700; color: #FFFFFF; margin-bottom: 1.5rem; border-bottom: 1px solid #00BFFF; padding-bottom: 0.75rem; }
-        .terms-privacy-content p { margin-bottom: 1rem; line-height: 1.7; color: #C0C0C0; }
-        .terms-privacy-content strong { color: #00BFFF; font-weight: 600; }
-        .terms-privacy-content a { color: #00BFFF; text-decoration: underline; transition: color 0.2s ease; }
-        .terms-privacy-content a:hover { color: #00A9E0; }
-        .close-btn {
-            position: absolute; top: 1.5rem; right: 1.5rem; font-size: 1.75rem; cursor: pointer;
-            color: #A0A0A0; transition: color 0.2s ease, transform 0.2s ease; line-height: 1;
-        }
-        .close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
     </style>
 </head>
 <body class="antialiased">
-    <div id="header-placeholder"></div>
-    <script>
-      fetch('header.html')
-        .then(response => response.text())
-        .then(data => {
-          document.getElementById('header-placeholder').innerHTML = data;
-          if (typeof initializeHeaderAndAuth === 'function') initializeHeaderAndAuth();
-        });
-    </script>
+    <!-- FIX: Replaced the old div with a semantic header tag for our manager script -->
+    <header id="header-placeholder"></header>
 
     <main class="auth-container">
         <div class="auth-form-wrapper">
             <h2 id="form-title" class="form-title">Login</h2>
             <p id="error-message" class="error-message"></p>
 
-        <div id="login-form">
-            <input type="email" id="login-email" placeholder="Email Address" required class="auth-input">
-            <input type="password" id="login-password" placeholder="Password" required class="auth-input">
-            <button onclick="handleLogin()" class="auth-button">Login</button>
-        
-            <p class="text-center mt-6 text-sm">
-                Don't have an account? <span class="toggle-link" onclick="showSignUp()">Sign Up</span>
-            </p>
-        
-            <div class="flex items-center my-6">
-                <hr class="flex-grow border-gray-700">
-                <span class="px-3 text-gray-500 text-sm uppercase">or</span>
-                <hr class="flex-grow border-gray-700">
+            <!-- Login Form -->
+            <div id="login-form">
+                <input type="email" id="login-email" placeholder="Email Address" required class="auth-input">
+                <input type="password" id="login-password" placeholder="Password" required class="auth-input">
+                <button id="login-button" class="auth-button">Login</button>
+                <p class="text-center mt-6 text-sm">
+                    Don't have an account? <span class="toggle-link" onclick="showSignUp()">Sign Up</span>
+                </p>
+                <div class="flex items-center my-6">
+                    <hr class="flex-grow border-gray-700">
+                    <span class="px-3 text-gray-500 text-sm uppercase">or</span>
+                    <hr class="flex-grow border-gray-700">
+                </div>
+                <button id="google-login-button" class="auth-button bg-white text-black flex items-center justify-center gap-3 hover:bg-gray-100 transition">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" class="h-5 w-5">
+                    Continue with Google
+                </button>
             </div>
-        
-            <button onclick="handleGoogleLogin()" class="auth-button bg-white text-black flex items-center justify-center gap-3 hover:bg-gray-100 transition mb-3">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" class="h-5 w-5">
-                Continue with Google
-            </button>
-        
-            <button onclick="handlePhoneLogin()" class="auth-button bg-white text-black flex items-center justify-center gap-3 hover:bg-gray-100 transition">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M3 5a2 2 0 012-2h3l1 5-2 2c1.333 2.667 3.333 4.667 6 6l2-2 5 1v3a2 2 0 01-2 2h-1c-7.732 0-14-6.268-14-14V5z"/>
-                </svg>
-                Continue with phone
-            </button>
-        </div>
-        
-    <div id="signup-form" class="hidden">
-            <div class="flex gap-4">
-                <input type="text" id="signup-first-name" placeholder="First Name" required class="auth-input flex-1 min-w-0" />
-                <input type="text" id="signup-last-name" placeholder="Last Name" required class="auth-input flex-1 min-w-0" />
-            </div>
-            <input type="email" id="signup-email" placeholder="Email Address" required class="auth-input">
-            <input type="password" id="signup-password" placeholder="Password" required class="auth-input">
-            <button onclick="handleSignUp()" class="auth-button">Sign Up</button>
-        
-            <p class="text-center mt-6 text-sm">
-                Already have an account? <span class="toggle-link" onclick="showLogin()">Login</span>
-            </p>
-        
-            <!-- OR separator -->
-            <div class="flex items-center my-6">
-                <hr class="flex-grow border-gray-700">
-                <span class="px-3 text-gray-500 text-sm uppercase">or</span>
-                <hr class="flex-grow border-gray-700">
-            </div>
-        
-            <button onclick="handleGoogleLogin()" class="auth-button bg-white text-black flex items-center justify-center gap-3 hover:bg-gray-100 transition mb-3">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" class="h-5 w-5">
-                Continue with Google
-            </button>
-        
-            <button onclick="handlePhoneLogin()" class="auth-button bg-white text-black flex items-center justify-center gap-3 hover:bg-gray-100 transition">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M3 5a2 2 0 012-2h3l1 5-2 2c1.333 2.667 3.333 4.667 6 6l2-2 5 1v3a2 2 0 01-2 2h-1c-7.732 0-14-6.268-14-14V5z"/>
-                </svg>
-                Continue with phone
-            </button>
+            
+            <!-- Signup Form -->
+            <div id="signup-form" class="hidden">
+                <!-- FIX: Removed first and last name inputs -->
+                <input type="email" id="signup-email" placeholder="Email Address" required class="auth-input">
+                <input type="password" id="signup-password" placeholder="Create a Password" required class="auth-input">
+                <button id="signup-button" class="auth-button">Sign Up</button>
+                <p class="text-center mt-6 text-sm">
+                    Already have an account? <span class="toggle-link" onclick="showLogin()">Login</span>
+                </p>
+                <div class="flex items-center my-6">
+                    <hr class="flex-grow border-gray-700">
+                    <span class="px-3 text-gray-500 text-sm uppercase">or</span>
+                    <hr class="flex-grow border-gray-700">
+                </div>
+                <button id="google-signup-button" class="auth-button bg-white text-black flex items-center justify-center gap-3 hover:bg-gray-100 transition">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" class="h-5 w-5">
+                    Continue with Google
+                </button>
+                <!-- FIX: Removed the phone number button -->
             </div>
         </div>
     </main>
 
     <footer class="footer">
-        <p class="mb-1 text-xs">&copy; 2025 Linq Energy Intelligence. All Rights Reserved.</p>
-        <nav class="text-xs space-x-3">
-            <a href="#terms" onclick="showTerms(event)">Terms of Service</a> |
-            <a href="#privacy" onclick="showPrivacy(event)">Privacy Policy</a>
-        </nav>
+        <p class="text-xs">&copy; 2025 Linq Energy Intelligence. All Rights Reserved.</p>
     </footer>
 
-    <div id="termsContent" class="terms-privacy-content">
-        <span class="close-btn" onclick="closeTerms()">×</span>
-        <h2>Terms of Service</h2>
-        <p>Welcome to Linq. By accessing or using our website, you agree to comply with and be bound by the following terms and conditions...</p>
-        {/* ... full terms from index.html ... */}
-        <p>For the most current version, please contact us at <a href="mailto:support@linq.com">support@linq.com</a>.</p>
-    </div>
-
-    <div id="privacyContent" class="terms-privacy-content">
-        <span class="close-btn" onclick="closePrivacy()">×</span>
-        <h2>Privacy Policy</h2>
-        <p>At Linq, we are committed to protecting your privacy. This policy outlines how we collect, use, and safeguard your information.</p>
-        {/* ... full policy from index.html ... */}
-        <p>For questions, contact us at <a href="mailto:support@linq.com">support@linq.com</a>.</p>
-    </div>
-
-
+    <!-- Using modern ES6 modules for Firebase -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
-        import { GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js"; //
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
+        // Import specific functions to improve performance and code clarity
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged,
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            GoogleAuthProvider,
+            signInWithPopup 
+        } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
+        // Initialize Firebase
         const firebaseConfig = {
-            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk", //
-            authDomain: "linq-b27a8.firebaseapp.com", //
-            projectId: "linq-b27a8", //
-            storageBucket: "linq-b27a8.firebasestorage.app", //
-            messagingSenderId: "1067901051826", //
-            appId: "1:1067901051826:web:44452d1339cdbe2af07aab" //
+            apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
+            authDomain: "linq-b27a8.firebaseapp.com",
+            projectId: "linq-b27a8",
+            storageBucket: "linq-b27a8.appspot.com",
+            messagingSenderId: "1067901051826",
+            appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
         };
-
-        const app = initializeApp(firebaseConfig); //
-        const auth = getAuth(app); //
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Helper function to create user document if it doesn't exist
+        // --- DOM Elements ---
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const formTitle = document.getElementById('form-title');
+        const errorMessage = document.getElementById('error-message');
+
+        // --- Helper Functions ---
+        const showSignUp = () => {
+            loginForm.classList.add('hidden');
+            signupForm.classList.remove('hidden');
+            formTitle.textContent = "Create Account";
+            errorMessage.style.display = 'none';
+        };
+
+        const showLogin = () => {
+            signupForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+            formTitle.textContent = "Login";
+            errorMessage.style.display = 'none';
+        };
+
+        // Make toggle functions globally accessible
+        window.showSignUp = showSignUp;
+        window.showLogin = showLogin;
+
+        // --- Authentication Logic ---
         async function ensureUserDocument(user) {
             const userRef = doc(db, "users", user.uid);
             const userSnap = await getDoc(userRef);
             if (!userSnap.exists()) {
                 await setDoc(userRef, {
+                    uid: user.uid,
                     email: user.email,
-                    displayName: user.displayName || null,
-                    createdAt: new Date().toISOString()
+                    displayName: user.displayName || null, // Will be null for email signup now
+                    createdAt: new Date().toISOString(),
+                    isSubscribed: false // Default subscription status
                 });
             }
         }
+        
+        function getRedirectUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('redirect') || 'index.html'; // Default to index.html if no redirect is specified
+        }
 
-        onAuthStateChanged(auth, async (user) => { //
-          const fromLogin = window.location.pathname.includes("login");
-          if (user && fromLogin) {
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
             await ensureUserDocument(user);
-            window.location.href = "index.html"; // Redirect to index or a profile page
+            window.location.href = getRedirectUrl(); // Redirect after login/signup
           }
         });
 
-        window.handleLogin = async () => {
+        // Event listener for login button
+        document.getElementById('login-button').addEventListener('click', async () => {
             const email = document.getElementById("login-email").value;
             const password = document.getElementById("login-password").value;
-            const errorMessage = document.getElementById("error-message");
-            errorMessage.style.display = "none"; // Hide error message initially
-
+            errorMessage.style.display = "none";
             try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                await ensureUserDocument(userCredential.user);
-                window.location.href = "index.html"; // Or profile.html
+                await signInWithEmailAndPassword(auth, email, password);
+                // onAuthStateChanged will handle the redirect
             } catch (error) {
                 errorMessage.style.display = "block";
-                switch (error.code) {
-                    case "auth/invalid-email":
-                        errorMessage.textContent = "Invalid email format."; break;
-                    case "auth/user-disabled":
-                        errorMessage.textContent = "This account has been disabled."; break;
-                    case "auth/user-not-found":
-                        errorMessage.textContent = "No user found with this email."; break;
-                    case "auth/wrong-password":
-                        errorMessage.textContent = "Incorrect password."; break;
-                    case "auth/invalid-credential":
-                         errorMessage.textContent = "Incorrect email or password."; break;
-                    default:
-                        errorMessage.textContent = "Login failed. Please try again."; // Generic error
-                }
+                errorMessage.textContent = "Incorrect email or password.";
                 console.error("Login Error:", error);
             }
-        };
+        });
 
-        window.handleSignUp = async () => {
-            const firstName = document.getElementById("signup-first-name").value.trim();
-            const lastName = document.getElementById("signup-last-name").value.trim();
+        // Event listener for signup button
+        document.getElementById('signup-button').addEventListener('click', async () => {
             const email = document.getElementById("signup-email").value;
             const password = document.getElementById("signup-password").value;
-            const errorMessage = document.getElementById("error-message");
             errorMessage.style.display = "none";
         
             if (password.length < 6) {
@@ -290,96 +237,40 @@
                 errorMessage.textContent = "Password must be at least 6 characters.";
                 return;
             }
-            if (!firstName || !lastName) {
-                errorMessage.style.display = "block";
-                errorMessage.textContent = "Please enter your first and last name.";
-                return;
-            }
-        
             try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-        
-                // ✅ Update user's displayName to full name (first + last)
-                await user.updateProfile({
-                    displayName: `${firstName} ${lastName}`
-                });
-        
-                // Force reload of user object so displayName is available everywhere
-                await auth.currentUser.reload();
-                
-                // Create user document in Firestore
-                await ensureUserDocument(user);
-        
-                window.location.href = "index.html"; // Redirect after successful signup
+                await createUserWithEmailAndPassword(auth, email, password);
+                // onAuthStateChanged will handle user doc creation and redirect
             } catch (error) {
                 errorMessage.style.display = "block";
-                switch (error.code) {
-                    case "auth/invalid-email":
-                        errorMessage.textContent = "Invalid email format."; break;
-                    case "auth/email-already-in-use":
-                        errorMessage.textContent = "This email address is already in use."; break;
-                    case "auth/weak-password":
-                        errorMessage.textContent = "Password is too weak. Please choose a stronger one."; break;
-                    default:
-                        errorMessage.textContent = "Sign up failed. Please try again.";
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage.textContent = "This email address is already in use.";
+                } else {
+                    errorMessage.textContent = "Sign up failed. Please try again.";
                 }
                 console.error("Sign Up Error:", error);
             }
-        };
+        });
 
-        window.handleGoogleLogin = async () => {
-        const provider = new GoogleAuthProvider();
-        const errorMessage = document.getElementById("error-message");
-        errorMessage.style.display = "none";
-    
-        try {
-            const userCredential = await signInWithPopup(auth, provider);
-            await ensureUserDocument(userCredential.user);
-            window.location.href = "index.html"; // redirect on success
-        } catch (error) {
-            errorMessage.style.display = "block";
-            switch (error.code) {
-                case "auth/popup-closed-by-user":
-                    errorMessage.textContent = "Google sign-in was canceled.";
-                    break;
-                case "auth/network-request-failed":
-                    errorMessage.textContent = "Network error. Check your connection.";
-                    break;
-                default:
-                    errorMessage.textContent = "Google sign-in failed. Please try again.";
+        // Google login handler
+        const handleGoogleLogin = async () => {
+            const provider = new GoogleAuthProvider();
+            errorMessage.style.display = "none";
+            try {
+                await signInWithPopup(auth, provider);
+                // onAuthStateChanged will handle the redirect
+            } catch (error) {
+                errorMessage.style.display = "block";
+                errorMessage.textContent = "Google sign-in failed. Please try again.";
+                console.error("Google Sign-In Error:", error);
             }
-            console.error("Google Sign-In Error:", error);
-        }
-    };
-        window.handlePhoneLogin = () => {
-            alert("Phone login not yet implemented.");
-            // You can implement Firebase Phone Auth here using RecaptchaVerifier and signInWithPhoneNumber
         };
 
-        window.showSignUp = () => {
-            document.getElementById("login-form").classList.add("hidden");
-            document.getElementById("signup-form").classList.remove("hidden");
-            document.getElementById("form-title").textContent = "Create Account";
-            document.getElementById("error-message").style.display = "none";
-        };
-
-        window.showLogin = () => {
-            document.getElementById("signup-form").classList.add("hidden");
-            document.getElementById("login-form").classList.remove("hidden");
-            document.getElementById("form-title").textContent = "Login";
-            document.getElementById("error-message").style.display = "none";
-        };
-
-        // Modal functions (copied from index.html for consistency)
-        window.showTerms = (event) => { event.preventDefault(); document.getElementById('termsContent').style.display = 'block'; };
-        window.closeTerms = () => { document.getElementById('termsContent').style.display = 'none'; };
-        window.showPrivacy = (event) => { event.preventDefault(); document.getElementById('privacyContent').style.display = 'block'; };
-        window.closePrivacy = () => { document.getElementById('privacyContent').style.display = 'none'; };
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('termsContent')) closeTerms();
-            if (event.target == document.getElementById('privacyContent')) closePrivacy();
-        };
+        // Attach Google login to both buttons
+        document.getElementById('google-login-button').addEventListener('click', handleGoogleLogin);
+        document.getElementById('google-signup-button').addEventListener('click', handleGoogleLogin);
     </script>
+    
+    <!-- FIX: Centralized header manager script is now included -->
+    <script src="headerManager.js" defer></script>
 </body>
 </html>
