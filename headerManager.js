@@ -1,3 +1,8 @@
+// /js/headerManager.js
+// This script provides a centralized solution for managing the site's header,
+// including authentication state, mobile menu functionality, and active link highlighting.
+// It's designed to be included in every page to ensure a consistent user experience.
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. DEFINE CONSTANTS AND GET ELEMENTS ---
     const headerPlaceholder = document.getElementById('header-placeholder');
@@ -8,25 +13,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 2. INJECT REQUIRED CSS STYLES ---
     const styles = `
-        /* FIX: Added transition for opacity to solve the page-switch flash */
-        #header-placeholder nav {
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
+        /* FIX: Removed the opacity/transition rule that caused the fade-in effect. */
         .nav-link {
             font-size: 0.875rem; /* 14px */
             color: #D1D5DB; /* gray-300 */
             font-weight: 500;
             transition: color 0.2s ease-in-out;
             border-radius: 0.375rem; /* rounded-md */
+            padding: 0.5rem 0.75rem; /* Added padding for better spacing */
         }
-        /* Hover state for any link */
         .nav-link:hover {
             color: #FFFFFF; /* Brighter text on hover */
         }
-        /* FIX: The 'active' state is now indicated by accent color, not a box. */
+        /* FIX: The 'active' state is now indicated by white text. */
         .nav-link.active {
-            color: #00BFFF; /* Cyan text for the active page */
+            color: #FFFFFF; /* White text for the active page */
             font-weight: 600;
         }
         .nav-link-button {
@@ -90,7 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const auth = firebase.auth();
 
         auth.onAuthStateChanged(user => {
-            const nav = headerPlaceholder.querySelector('nav');
             const authLinkDesktop = document.getElementById('authLinkDesktopLogin');
             const profileLinkDesktop = document.getElementById('profileLinkDesktop');
             const navProfilePic = document.getElementById('navProfilePic');
@@ -133,11 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // --- FINAL UI UPDATES ---
             setActiveNavLink(); 
-            
-            // Reveal the header with a fade-in AFTER the auth check is complete.
-            if (nav) {
-                nav.style.opacity = '1';
-            }
+            // FIX: Removed the line that controlled the fade-in.
         });
     }
 
