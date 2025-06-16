@@ -15,7 +15,7 @@
     <script src="community_posts.js" defer></script>
     
     <style>
-        /* FIX: Force scrollbar to prevent layout shift */
+        /* FIX: Force scrollbar to prevent layout shift between pages */
         html {
             overflow-y: scroll;
         }
@@ -32,7 +32,7 @@
             padding-top: 64px;
         }
         .page-content-wrapper { flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px; margin: 0 auto; padding-left: 1rem; padding-right: 1rem; }
-        /* FIX: Added margin-top for more space */
+        /* FIX: Added top margin for more space below header */
         .page-header { text-align: center; margin-bottom: 2.5rem; margin-top: 2rem; }
         .page-title { font-size: 2.5rem; font-weight: 800; color: #E7E9EA; margin: 0 0 1rem 0; text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3); }
         .page-title .accent-text { color: #00BFFF; }
@@ -41,6 +41,9 @@
         .search-input { width: 100%; padding: 0.875rem 1rem; background-color: #1A1A1A; border: 1px solid #333333; border-radius: 0.5rem; font-size: 1rem; color: #E0E0E0; transition: border-color 0.2s ease, box-shadow 0.2s ease; line-height: normal; height: 3rem; }
         .search-input::placeholder { color: #777777; }
         .search-input:focus { border-color: #00BFFF; outline: none; box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.25); }
+        .community-main-grid { display: flex; flex-wrap: wrap; gap: 2rem; }
+        /* FIX: Swapped order to put filters on the right */
+        .posts-section { flex: 3; min-width: 0; order: 1; }
         .filter-section-wrapper { flex: 1; min-width: 280px; order: 2; }
         .filter-panel { background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%); padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4); border: 1px solid #2a2a2a; position: sticky; top: 80px; }
         .filter-title { font-size: 1.25rem; font-weight: 600; color: #E0E0E0; margin-bottom: 1.25rem; }
@@ -68,8 +71,9 @@
         .footer a:hover { color: #00BFFF; }
         @media (max-width: 1023px) {
             .community-main-grid { flex-direction: column; }
-            .posts-section, .filter-section-wrapper { flex: none; width: 100%; }
-            .filter-panel { position: static; order: 0; margin-bottom: 2rem; top: auto; }
+            .posts-section { order: 1; } /* Posts appear first on mobile */
+            .filter-section-wrapper { order: 2; flex: none; width: 100%; }
+            .filter-panel { position: static; margin-bottom: 2rem; top: auto; }
         }
     </style>
 </head>
@@ -212,7 +216,6 @@
 
         function handleShareClick(button) {
             const postId = button.dataset.id;
-            // FIX: Correctly construct the share URL using the base origin.
             const shareUrl = `${window.location.origin}/linqnews/share.html?postId=${postId}`;
             navigator.clipboard.writeText(shareUrl).then(() => {
                 const confirmation = button.closest('.post-actions').querySelector('.share-confirmation');
@@ -223,7 +226,6 @@
             }).catch(err => console.error('Failed to copy share link:', err));
         }
 
-        // --- PAGE INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             authInstance.onAuthStateChanged(user => {
                 if (unsubscribeUserListener) unsubscribeUserListener();
