@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             headerPlaceholder.innerHTML = data;
-            // FIX: Initialize all functionality AFTER the header is loaded.
             initializeHeaderFunctionality();
         })
         .catch(error => {
@@ -50,10 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const auth = firebase.auth();
         
-        // --- Setup Event Listeners Immediately ---
         setupEventListeners(auth);
         
-        // --- Then, handle the auth-dependent UI ---
         auth.onAuthStateChanged(user => {
             updateAuthUI(user);
         });
@@ -63,23 +60,19 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupEventListeners(auth) {
         const currentPath = window.location.pathname.split("/").pop() || "index.html";
 
-        // Use event delegation on the header placeholder for efficiency and reliability
         headerPlaceholder.addEventListener('click', (event) => {
-            const target = event.target.closest('a, button'); // Find the clicked link or button
+            const target = event.target.closest('a, button');
             if (!target) return;
 
-            // Prevent page reload if clicking the link for the current page
             if (target.matches('.nav-link') && target.getAttribute('href') === currentPath) {
                 event.preventDefault();
             }
 
-            // Handle mobile menu toggle
             if (target.id === 'mobile-menu-button') {
                 const mobileMenu = document.getElementById('mobile-menu');
                 if (mobileMenu) mobileMenu.classList.toggle('hidden');
             }
 
-            // Handle mobile logout
             if (target.id === 'logoutButtonMobile') {
                 event.preventDefault();
                 auth.signOut();
@@ -96,7 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const profileLinkMobile = document.getElementById('profileLinkMobile');
         const logoutButtonMobile = document.getElementById('logoutButtonMobile');
 
-        // Ensure elements exist before trying to modify them
         if (!authLinkDesktop || !profileLinkDesktop || !navProfilePic) return;
 
         if (user) {
@@ -104,25 +96,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const initials = (user.displayName || user.email || "U").charAt(0).toUpperCase();
             const photoSrc = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
             
-            // Preload the image to prevent the placeholder flash
             const image = new Image();
             image.src = photoSrc;
 
+            // FIX: Implement the user's suggested preloading fix
             image.onload = () => {
-                // This code runs ONLY after the image is fully downloaded.
                 navProfilePic.src = image.src;
-                // Now that the image is ready, show the profile link and hide the login button.
+                navProfilePic.style.display = 'block'; // Only show after it's fully loaded
                 profileLinkDesktop.classList.remove('hidden');
                 authLinkDesktop.classList.add('hidden');
             };
             image.onerror = () => {
-                // Fallback in case the user's photoURL is broken
                 navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+                navProfilePic.style.display = 'block'; // Show the fallback image
                 profileLinkDesktop.classList.remove('hidden');
                 authLinkDesktop.classList.add('hidden');
             };
 
-            // Update mobile menu
             authLinkMobile.classList.add('hidden');
             profileLinkMobile.classList.remove('hidden');
             logoutButtonMobile.classList.remove('hidden');
@@ -130,12 +120,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // --- USER IS LOGGED OUT ---
             profileLinkDesktop.classList.add('hidden');
             authLinkDesktop.classList.remove('hidden');
+            navProfilePic.style.display = 'none'; // Ensure image is hidden on logout
             authLinkMobile.classList.remove('hidden');
             profileLinkMobile.classList.add('hidden');
             logoutButtonMobile.classList.add('hidden');
         }
         
-        // Style the active nav link regardless of auth state
         setActiveNavLink();
     }
     
