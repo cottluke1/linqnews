@@ -49,30 +49,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const auth = firebase.auth();
         const db = firebase.firestore();
-        let unsubscribeUserListener = null; // To clean up the Firestore listener
+        let unsubscribeUserListener = null;
 
+        // FIX: Immediately restore cached avatar from localStorage if available
+        const cachedPhoto = localStorage.getItem('navProfileURL');
+        if (cachedPhoto) {
+            const profileLinkDesktop = document.getElementById('profileLinkDesktop');
+            const authLinkDesktop = document.getElementById('authLinkDesktopLogin');
+            if (profileLinkDesktop && authLinkDesktop) {
+                profileLinkDesktop.innerHTML = `<img id="navProfilePic" src="${cachedPhoto}" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition">`;
+                profileLinkDesktop.classList.remove('hidden');
+                authLinkDesktop.classList.add('hidden');
+            }
+        }
+        
         setupEventListeners(auth);
         
         auth.onAuthStateChanged(user => {
-            // Clean up any previous listener to prevent memory leaks
             if (unsubscribeUserListener) {
                 unsubscribeUserListener();
                 unsubscribeUserListener = null;
             }
 
             if (user) {
-                // User is logged in, set up a real-time listener on their Firestore document
                 unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
                     const userData = doc.exists ? doc.data() : {};
-                    // Pass both auth user object and Firestore data to the UI function
                     updateAuthUI(user, userData);
                 }, error => {
                     console.error("Error listening to user document:", error);
-                    // Fallback to auth data if Firestore fails
                     updateAuthUI(user, {});
                 });
             } else {
-                // User is logged out
                 updateAuthUI(null, null);
             }
         });
@@ -94,6 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (target.id === 'logoutButtonMobile') {
                 event.preventDefault();
+                // FIX: Clear localStorage on logout
+                localStorage.removeItem('navProfileURL');
                 auth.signOut();
             }
         });
@@ -110,12 +119,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!authLinkDesktop || !profileLinkDesktop) return;
 
         if (user) {
-            // --- USER IS LOGGED IN ---
             const name = (userData?.displayName || user.displayName || user.email || "U");
             const initials = name.charAt(0).toUpperCase();
-            // Prioritize Firestore URL, then Auth URL, then placeholder
             const photoSrc = userData?.photoURL || user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
             
+            // FIX: Save the definitive image source to localStorage
+            localStorage.setItem('navProfileURL', photoSrc);
+
+            // This logic will still run to ensure the image is the most up-to-date version
             const image = new Image();
             image.src = photoSrc;
 
@@ -137,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
             profileLinkMobile.classList.remove('hidden');
             logoutButtonMobile.classList.remove('hidden');
         } else {
-            // --- USER IS LOGGED OUT ---
+            // User is logged out
             profileLinkDesktop.classList.add('hidden');
             authLinkDesktop.classList.remove('hidden');
             profileLinkDesktop.innerHTML = '<img id="navProfilePic" style="display:none;" src="" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition">';
