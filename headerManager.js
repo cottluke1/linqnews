@@ -94,35 +94,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const initials = (user.displayName || user.email || "U").charAt(0).toUpperCase();
             const photoSrc = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
             
-            // Get existing image or create new one
-            let profileImg = document.getElementById('navProfilePic');
-            if (!profileImg) {
-                profileImg = document.createElement('img');
-                profileImg.id = 'navProfilePic';
-                profileImg.alt = 'User';
-                profileImg.className = 'rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition';
-                profileLinkDesktop.appendChild(profileImg);
-            }
-
-            // Make sure the image is visible
-            profileImg.style.display = 'block';
-            profileImg.style.opacity = '0.5';
-            
-            // Load image with error handling
             const image = new Image();
-            image.onload = () => {
-                profileImg.src = image.src;
-                profileImg.style.opacity = '1';
-                profileLinkDesktop.classList.remove('hidden');
-                authLinkDesktop.classList.add('hidden');
-            };
-            image.onerror = () => {
-                profileImg.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-                profileImg.style.opacity = '1';
-                profileLinkDesktop.classList.remove('hidden');
-                authLinkDesktop.classList.add('hidden');
-            };
             image.src = photoSrc;
+
+            // FIX: This function now clears the container and appends a brand new image.
+            const createImage = (imgSrc) => {
+                // First, completely clear the container to prevent any old nodes from lingering.
+                profileLinkDesktop.innerHTML = ''; 
+
+                const newImg = document.createElement('img');
+                newImg.id = 'navProfilePic';
+                newImg.src = imgSrc;
+                newImg.alt = 'User';
+                newImg.className = 'rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition';
+                
+                // Append the new, fully loaded image and make the container visible.
+                profileLinkDesktop.appendChild(newImg);
+                profileLinkDesktop.classList.remove('hidden');
+                authLinkDesktop.classList.add('hidden');
+            };
+
+            image.onload = () => createImage(image.src);
+            image.onerror = () => createImage(`https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`);
 
             authLinkMobile.classList.add('hidden');
             profileLinkMobile.classList.remove('hidden');
