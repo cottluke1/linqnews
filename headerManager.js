@@ -1,3 +1,7 @@
+// /js/headerManager.js
+// This script provides a centralized solution for managing the site's header,
+// including authentication state, mobile menu functionality, and active link highlighting.
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. DEFINE CONSTANTS AND GET ELEMENTS ---
     const headerPlaceholder = document.getElementById('header-placeholder');
@@ -44,35 +48,50 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         const auth = firebase.auth();
-        
+        const db = firebase.firestore();
+        let unsubscribeUserListener = null; // To clean up the Firestore listener
+
         setupEventListeners(auth);
         
         auth.onAuthStateChanged(user => {
-            updateAuthUI(user);
+            // Clean up any previous listener to prevent memory leaks
+            if (unsubscribeUserListener) {
+                unsubscribeUserListener();
+                unsubscribeUserListener = null;
+            }
+
+            if (user) {
+                // User is logged in, set up a real-time listener on their Firestore document
+                unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
+                    const userData = doc.exists ? doc.data() : {};
+                    // Pass both auth user object and Firestore data to the UI function
+                    updateAuthUI(user, userData);
+                }, error => {
+                    console.error("Error listening to user document:", error);
+                    // Fallback to auth data if Firestore fails
+                    updateAuthUI(user, {});
+                });
+            } else {
+                // User is logged out
+                updateAuthUI(null, null);
+            }
         });
     }
 
-    // --- 5. SETUP STATIC EVENT LISTENERS (using Event Delegation) ---
+    // --- 5. SETUP STATIC EVENT LISTENERS ---
     function setupEventListeners(auth) {
         const currentPath = window.location.pathname.split("/").pop().split("?")[0] || "index.html";
-
         headerPlaceholder.addEventListener('click', (event) => {
             const target = event.target.closest('a, button');
             if (!target) return;
-
             const targetHrefRaw = target.getAttribute('href');
             if (target.matches('.nav-link') && targetHrefRaw) {
                 const targetHref = targetHrefRaw.split("?")[0];
-                if (targetHref === currentPath) {
-                    event.preventDefault();
-                }
+                if (targetHref === currentPath) event.preventDefault();
             }
-
             if (target.id === 'mobile-menu-button') {
-                const mobileMenu = document.getElementById('mobile-menu');
-                if (mobileMenu) mobileMenu.classList.toggle('hidden');
+                document.getElementById('mobile-menu')?.classList.toggle('hidden');
             }
-
             if (target.id === 'logoutButtonMobile') {
                 event.preventDefault();
                 auth.signOut();
@@ -81,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 6. UPDATE UI BASED ON AUTH STATE ---
-    function updateAuthUI(user) {
+    function updateAuthUI(user, userData) {
         const authLinkDesktop = document.getElementById('authLinkDesktopLogin');
         const profileLinkDesktop = document.getElementById('profileLinkDesktop');
         const authLinkMobile = document.getElementById('authLinkMobile');
@@ -91,38 +110,37 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!authLinkDesktop || !profileLinkDesktop) return;
 
         if (user) {
-            const initials = (user.displayName || user.email || "U").charAt(0).toUpperCase();
-            const photoSrc = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+            // --- USER IS LOGGED IN ---
+            const name = (userData?.displayName || user.displayName || user.email || "U");
+            const initials = name.charAt(0).toUpperCase();
+            // Prioritize Firestore URL, then Auth URL, then placeholder
+            const photoSrc = userData?.photoURL || user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
             
             const image = new Image();
             image.src = photoSrc;
 
-            // FIX: This function now clears the container and appends a brand new image.
             const createImage = (imgSrc) => {
-                // First, completely clear the container to prevent any old nodes from lingering.
                 profileLinkDesktop.innerHTML = ''; 
-
                 const newImg = document.createElement('img');
                 newImg.id = 'navProfilePic';
                 newImg.src = imgSrc;
-                newImg.alt = 'User';
+                newImg.alt = user.displayName || 'User Avatar';
                 newImg.className = 'rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition';
-                
-                // Append the new, fully loaded image and make the container visible.
                 profileLinkDesktop.appendChild(newImg);
                 profileLinkDesktop.classList.remove('hidden');
                 authLinkDesktop.classList.add('hidden');
             };
-
             image.onload = () => createImage(image.src);
             image.onerror = () => createImage(`https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`);
-
+            
             authLinkMobile.classList.add('hidden');
             profileLinkMobile.classList.remove('hidden');
             logoutButtonMobile.classList.remove('hidden');
         } else {
+            // --- USER IS LOGGED OUT ---
             profileLinkDesktop.classList.add('hidden');
             authLinkDesktop.classList.remove('hidden');
+            profileLinkDesktop.innerHTML = '<img id="navProfilePic" style="display:none;" src="" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition">';
             authLinkMobile.classList.remove('hidden');
             profileLinkMobile.classList.add('hidden');
             logoutButtonMobile.classList.add('hidden');
@@ -139,9 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const linkHrefRaw = link.getAttribute('href');
             if (linkHrefRaw) {
                 const linkHref = linkHrefRaw.split("?")[0];
-                if (linkHref === currentPath) {
-                    link.classList.add('active');
-                }
+                if (linkHref === currentPath) link.classList.add('active');
             }
         });
     }
