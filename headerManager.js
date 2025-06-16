@@ -1,7 +1,3 @@
-// /js/headerManager.js
-// This script provides a centralized solution for managing the site's header,
-// including authentication state, mobile menu functionality, and active link highlighting.
-
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. DEFINE CONSTANTS AND GET ELEMENTS ---
     const headerPlaceholder = document.getElementById('header-placeholder');
@@ -58,19 +54,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 5. SETUP STATIC EVENT LISTENERS (using Event Delegation) ---
     function setupEventListeners(auth) {
-        // FIX: Normalize the current path to handle root URLs, query params, etc.
         const currentPath = window.location.pathname.split("/").pop().split("?")[0] || "index.html";
 
         headerPlaceholder.addEventListener('click', (event) => {
             const target = event.target.closest('a, button');
             if (!target) return;
 
-            // FIX: Normalize the target link's href before comparison.
             const targetHrefRaw = target.getAttribute('href');
             if (target.matches('.nav-link') && targetHrefRaw) {
                 const targetHref = targetHrefRaw.split("?")[0];
                 if (targetHref === currentPath) {
-                    event.preventDefault(); // Stop the browser from navigating
+                    event.preventDefault();
                 }
             }
 
@@ -90,37 +84,45 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateAuthUI(user) {
         const authLinkDesktop = document.getElementById('authLinkDesktopLogin');
         const profileLinkDesktop = document.getElementById('profileLinkDesktop');
-        const navProfilePic = document.getElementById('navProfilePic');
         const authLinkMobile = document.getElementById('authLinkMobile');
         const profileLinkMobile = document.getElementById('profileLinkMobile');
         const logoutButtonMobile = document.getElementById('logoutButtonMobile');
 
-        if (!authLinkDesktop || !profileLinkDesktop || !navProfilePic) return;
+        if (!authLinkDesktop || !profileLinkDesktop) return;
 
         if (user) {
             const initials = (user.displayName || user.email || "U").charAt(0).toUpperCase();
             const photoSrc = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+            
             const image = new Image();
             image.src = photoSrc;
-            image.onload = () => {
-                navProfilePic.src = image.src;
-                navProfilePic.style.display = 'block';
+
+            // FIX: This function now clears the container and appends a brand new image.
+            const createImage = (imgSrc) => {
+                // First, completely clear the container to prevent any old nodes from lingering.
+                profileLinkDesktop.innerHTML = ''; 
+
+                const newImg = document.createElement('img');
+                newImg.id = 'navProfilePic';
+                newImg.src = imgSrc;
+                newImg.alt = 'User';
+                newImg.className = 'rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition';
+                
+                // Append the new, fully loaded image and make the container visible.
+                profileLinkDesktop.appendChild(newImg);
                 profileLinkDesktop.classList.remove('hidden');
                 authLinkDesktop.classList.add('hidden');
             };
-            image.onerror = () => {
-                navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-                navProfilePic.style.display = 'block';
-                profileLinkDesktop.classList.remove('hidden');
-                authLinkDesktop.classList.add('hidden');
-            };
+
+            image.onload = () => createImage(image.src);
+            image.onerror = () => createImage(`https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`);
+
             authLinkMobile.classList.add('hidden');
             profileLinkMobile.classList.remove('hidden');
             logoutButtonMobile.classList.remove('hidden');
         } else {
             profileLinkDesktop.classList.add('hidden');
             authLinkDesktop.classList.remove('hidden');
-            navProfilePic.style.display = 'none';
             authLinkMobile.classList.remove('hidden');
             profileLinkMobile.classList.add('hidden');
             logoutButtonMobile.classList.add('hidden');
@@ -130,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- 7. UTILITY FUNCTION ---
     function setActiveNavLink() {
-        // FIX: Normalize the current path here as well for consistency.
         const currentPath = window.location.pathname.split("/").pop().split("?")[0] || "index.html";
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
