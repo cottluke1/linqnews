@@ -1,8 +1,3 @@
-// /js/headerManager.js
-// This script provides a centralized solution for managing the site's header,
-// including authentication state, mobile menu functionality, and active link highlighting.
-// It's designed to be included in every page to ensure a consistent user experience.
-
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. DEFINE CONSTANTS AND GET ELEMENTS ---
     const headerPlaceholder = document.getElementById('header-placeholder');
@@ -19,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
             font-weight: 500;
             transition: color 0.2s ease-in-out;
             border-radius: 0.375rem; /* rounded-md */
-            padding: 0.5rem 0.75rem;
+            /* FIX: Removed padding from CSS to rely solely on Tailwind classes in header.html, ensuring consistency. */
         }
         .nav-link:hover {
             color: #FFFFFF; /* Brighter text on hover */
@@ -99,16 +94,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (user) {
                 // --- USER IS LOGGED IN ---
-                
-                // FIX: First, update the image source while its container is still hidden.
                 const initials = (user.displayName || user.email || "U").charAt(0).toUpperCase();
-                navProfilePic.src = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+                const photoSrc = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+
+                // FIX: Preload the image to prevent flash.
+                const image = new Image();
+                image.src = photoSrc;
                 
-                // Second, hide the login button.
-                authLinkDesktop.classList.add('hidden');
+                image.onload = () => {
+                    // This code runs ONLY after the image is fully downloaded.
+                    navProfilePic.src = image.src;
+                    authLinkDesktop.classList.add('hidden');
+                    profileLinkDesktop.classList.remove('hidden'); // Show the container now.
+                };
                 
-                // Finally, show the fully prepared profile picture link. This prevents the flash.
-                profileLinkDesktop.classList.remove('hidden');
+                image.onerror = () => {
+                    // Fallback in case the user's photoURL is broken
+                    navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+                    authLinkDesktop.classList.add('hidden');
+                    profileLinkDesktop.classList.remove('hidden');
+                };
 
                 // Update mobile menu for logged-in state
                 authLinkMobile.classList.add('hidden');
@@ -136,8 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     auth.signOut();
                 });
             }
-
-            // --- FINAL UI UPDATES ---
             setActiveNavLink(); 
         });
     }
