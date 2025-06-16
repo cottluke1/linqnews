@@ -1,8 +1,3 @@
-// /js/headerManager.js
-// This script provides a centralized solution for managing the site's header,
-// including authentication state, mobile menu functionality, and active link highlighting.
-// It's designed to be included in every page to ensure a consistent user experience.
-
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. DEFINE CONSTANTS AND GET ELEMENTS ---
     const headerPlaceholder = document.getElementById('header-placeholder');
@@ -13,19 +8,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 2. INJECT REQUIRED CSS STYLES ---
     const styles = `
-        /* FIX: Removed the opacity/transition rule that caused the fade-in effect. */
         .nav-link {
             font-size: 0.875rem; /* 14px */
             color: #D1D5DB; /* gray-300 */
             font-weight: 500;
             transition: color 0.2s ease-in-out;
             border-radius: 0.375rem; /* rounded-md */
-            padding: 0.5rem 0.75rem; /* Added padding for better spacing */
+            padding: 0.5rem 0.75rem;
         }
         .nav-link:hover {
             color: #FFFFFF; /* Brighter text on hover */
         }
-        /* FIX: The 'active' state is now indicated by white text. */
         .nav-link.active {
             color: #FFFFFF; /* White text for the active page */
             font-weight: 600;
@@ -73,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             headerPlaceholder.innerHTML = data;
-            // Once the HTML is loaded, initialize auth and UI logic.
             initializeAuthAndUI();
         })
         .catch(error => {
@@ -102,13 +94,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (user) {
                 // --- USER IS LOGGED IN ---
-                authLinkDesktop.classList.add('hidden');
-                profileLinkDesktop.classList.remove('hidden');
+                
+                // FIX: First, update the image source while its container is still hidden.
                 const initials = (user.displayName || user.email || "U").charAt(0).toUpperCase();
                 navProfilePic.src = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+                
+                // Second, hide the login button.
+                authLinkDesktop.classList.add('hidden');
+                
+                // Finally, show the fully prepared profile picture link. This prevents the flash.
+                profileLinkDesktop.classList.remove('hidden');
+
+                // Update mobile menu for logged-in state
                 authLinkMobile.classList.add('hidden');
                 profileLinkMobile.classList.remove('hidden');
                 logoutButtonMobile.classList.remove('hidden');
+
             } else {
                 // --- USER IS LOGGED OUT ---
                 authLinkDesktop.classList.remove('hidden');
@@ -133,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // --- FINAL UI UPDATES ---
             setActiveNavLink(); 
-            // FIX: Removed the line that controlled the fade-in.
         });
     }
 
