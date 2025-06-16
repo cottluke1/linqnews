@@ -43,7 +43,7 @@
 
         /* News Card & Grid */
         .section-title { font-size: 1.75rem; font-weight: 700; color: #E7E9EA; margin-bottom: 2rem; padding-bottom: 0.75rem; border-bottom: 1px solid #2F3336; }
-        .news-card { background-color: transparent; border-radius: 0.75rem; border: 1px solid #2F3336; box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.6); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; margin-bottom: 1.5rem; display: flex; align-items: center; padding: 1rem; position: relative; min-height: 150px; }
+        .news-card { background-color: transparent; border-radius: 0.75rem; border: 1px solid #2F3336; box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.6); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; margin-bottom: 1.5rem; display: flex; align-items: center; padding: 1rem; position: relative; }
         .news-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.2); border-color: #5a6268; }
         .news-card.premium-highlight:not(.locked) { border-color: rgba(0, 191, 255, 0.7); }
         
@@ -62,36 +62,7 @@
         }
         
         @media (max-width: 1023px) {
-            .news-card.locked .locked-overlay { 
-                opacity: 1;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                text-align: center;
-                height: 100%;
-                padding: 1.25rem;
-            }
-
-            .locked-content {
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                gap: 0.75rem;
-                height: auto;
-            }
-
-            .locked-text-wrapper,
-            .locked-cta-container {
-                width: 100%;
-                margin: 0;
-            }
-
-            .locked-text {
-                text-align: center;
-                width: 100%;
-                margin: 0 auto;
-            }
+            .news-card.locked .locked-overlay { opacity: 1; }
         }
 
         /* Responsive overlay content styling */
