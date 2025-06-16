@@ -6,273 +6,75 @@
     <title>Linq - Shared Post</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <!-- FIX: Added community_posts.js so this page has access to the data -->
+    <script src="community_posts.js" defer></script>
     <style>
         body {
             font-family: 'Lexend', sans-serif;
             background-color: #0A0A0A;
             color: #E0E0E0;
-            font-weight: 400;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            padding-top: 64px; /* Space for fixed header */
         }
-        body.overflow-hidden { overflow: hidden; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #1A1A1A; }
-        ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
-        ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
-
-        /* Header Styles (from community.html, assuming header.html provides structure) */
-        
-        #menu-overlay {
-            display: none; position: fixed; inset: 0;
-            background-color: rgba(0, 0, 0, 0.65); z-index: 1000;
-            opacity: 0; transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        #menu-overlay.active { display: block; opacity: 1; }
-
-        /* Page Specific Styles */
         .page-content-wrapper {
-            flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 800px; /* Centered and narrower for single post */
+            flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 800px;
             margin: 0 auto; padding-left: 1rem; padding-right: 1rem;
-            padding-top: 100px; /* Space for header */
+            padding-top: 2rem; /* Space below header */
         }
         .shared-post-title {
             font-size: 2rem; font-weight: 700; color: #FFFFFF; margin-bottom: 1.5rem; text-align: center;
             text-shadow: 0px 2px 8px rgba(0, 191, 255, 0.25);
         }
         .shared-post-title .accent-text { color: #00BFFF; }
-
-        /* Post Card Styles (copied from community.html for consistency) */
         .post-card {
             background-color: #121212; border: 1px solid #282828; border-radius: 0.75rem;
             padding: 1.75rem; margin-bottom: 2rem;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
             box-shadow: 0 4px 15px -5px rgba(0,0,0,0.4); display: flex; flex-direction: column;
         }
-        .post-card:hover { /* Optional: Keep hover effect or remove for static shared page */
-            transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(0, 191, 255, 0.2);
-            border-color: #00BFFF;
-        }
-        .post-title {
-            font-size: 1.375rem; font-weight: 600; color: #FFFFFF;
-            margin: 0 0 0.75rem; line-height: 1.4;
-        }
-        .post-meta {
-            font-size: 0.875rem; color: #A0A0A0; margin: 0 0 1rem; font-weight: 400;
-            display: flex; align-items: center; flex-wrap: wrap;
-        }
-        .post-category-tag {
-            background-color: rgba(0, 191, 255, 0.15); color: #00BFFF; padding: 0.3rem 0.875rem;
-            border-radius: 1rem; font-size: 0.75rem; font-weight: 500;
-            margin-left: 0.75rem; border: 1px solid rgba(0, 191, 255, 0.3);
-        }
-        .twitter-tweet-container {
-            margin-top: 1rem;
-            background-color: transparent;
-            border-radius: 0.5rem;
-            padding: 0;
-            border: none;
-            display: flex;
-            justify-content: center;
-        }
-        /* No post-actions needed for shared view, or a simplified version */
-        .message-area {
-            text-align: center; color: #A0A0A0; font-size: 1.1rem; padding: 3rem 1rem;
-            background-color: #121212; border-radius: 0.5rem; border: 1px solid #2a2a2a;
-            margin-top: 2rem;
-        }
-        .footer {
-            background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem;
-            border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem; margin-top: auto;
-        }
+        .post-title { font-size: 1.375rem; font-weight: 600; color: #FFFFFF; margin: 0 0 0.75rem; line-height: 1.4; }
+        .post-meta { font-size: 0.875rem; color: #A0A0A0; margin: 0 0 1rem; font-weight: 400; display: flex; align-items: center; flex-wrap: wrap; }
+        .post-category-tag { background-color: rgba(0, 191, 255, 0.15); color: #00BFFF; padding: 0.3rem 0.875rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 500; margin-left: 0.75rem; border: 1px solid rgba(0, 191, 255, 0.3); }
+        .twitter-tweet-container { margin-top: 1rem; background-color: transparent; border-radius: 0.5rem; padding: 0; border: none; display: flex; justify-content: center; }
+        .message-area { text-align: center; color: #A0A0A0; font-size: 1.1rem; padding: 3rem 1rem; background-color: #121212; border-radius: 0.5rem; border: 1px solid #2a2a2a; margin-top: 2rem; }
+        .footer { background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem; border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem; margin-top: auto; }
         .footer a { color: #B0B0B0; transition: color 0.2s ease; }
         .footer a:hover { color: #00BFFF; }
     </style>
 </head>
 <body class="antialiased">
-    <div id="navbar-placeholder">
-        </div>
+    <header id="header-placeholder"></header>
 
     <main class="page-content-wrapper">
         <h1 class="shared-post-title">Shared <span class="accent-text">Post</span></h1>
         <div id="sharedPostContainer">
-            </div>
+            <div class="message-area">Loading post...</div>
+        </div>
     </main>
 
     <footer class="footer">
         <p>&copy; <span id="current-year-share"></span> Linq Energy Intelligence. All Rights Reserved.</p>
         <nav class="text-xs space-x-3 mt-2">
-            <a href="#">Privacy Policy</a> |
-            <a href="#">Terms of Service</a> |
-            <a href="#">Contact Us</a>
+            <a href="privacy.html">Privacy Policy</a> |
+            <a href="terms.html">Terms of Service</a> |
+            <a href="contact.html">Contact Us</a>
         </nav>
     </footer>
 
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     <script>
-        // Data for community posts (needs to be available to this page)
-        // In a real application, this might come from a shared JS file or an API
-        const communityPostsDataPage = [
-             { id: 'tweet1', url: 'https://twitter.com/CRUDEOIL231/status/1919070053825495266', title: 'Saudi Production Levels & Brent Impact', meta: 'May 10, 2025 • JH (@CRUDEOIL231)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">If Saudis and OPEC+ maintain production levels without increasing output, and as a result, Brent crude prices barely hold steady around $70/bbl, would that be favorable for your positions?<br><br>Of course the best-case scenario is for prices to remain high, but that seems unlikely.…</p>&mdash; JH (@CRUDEOIL231) <a href="https://twitter.com/CRUDEOIL231/status/1919070053825495266?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
-             { id: 'tweet2', url: 'https://twitter.com/LinqNews/status/1919171857409855978', title: "India's Rising Oil Consumption: A Key Global Demand Anchor", meta: 'May 10, 2025 • Linq AI Insights (@LinqAI)', category: 'Energy Demand', tweetContent: '<p lang="en" dir="ltr">India\'s oil consumption rose 4.5% YoY in March. Infrastructure buildout and strong GDP expectations place it as key global demand anchor in 2025.<a href="https://twitter.com/hashtag/India?src=hash&ref_src=twsrc%5Etfw">#India</a> <a href="https://twitter.com/hashtag/EnergyDemand?src=hash&ref_src=twsrc%5Etfw">#EnergyDemand</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; Linq AI Insights (@LinqAI) <a href="https://twitter.com/LinqNews/status/1919171857409855978?ref_src=twsrc%5Etfw">May 4, 2025</a>' },
-             { id: 'tweet3', url: 'https://twitter.com/Rory_Johnston/status/1919158874172530712', title: 'Crude Gaps Down on OPEC+ News - Brent Back in $50s?', meta: 'May 09, 2025 • Rory Johnston (@Rory_Johnston)', category: 'Market Analysis', tweetContent: '<p lang="en" dir="ltr">Crude gaps down >$2/bbl—Brent back in the $50s—on Asia open following OPEC headline-filled weekend.<br><br>Hard to know what, exactly, was priced in going into weekend—even if the ~400 kbpd June production hike was priced in, the entire unwind by November threat/rumour certainly wasn’t <a href="https://t.co/oMqvcPx0U8">pic.twitter.com/oMqvcPx0U8</a></p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1919158874172530712?ref_src=twsrc%5Etfw">May 4, 2025</a>'},
-             { id: 'tweet4', url: 'https://twitter.com/aeberman12/status/1919396685362373026', title: 'Riyadh’s Strategic Oil Play', meta: 'May 05, 2025 • Art Berman (@aeberman12)', category: 'Energy', tweetContent: '<p lang="en" dir="ltr">My take:<br><br>Riyadh is betting that looming sanctions and tighter supply will push oil prices higher.<br><br>It’s a preemptive move to shape sentiment, not just follow it.<a href="https://t.co/g98C6IMwWl">https://t.co/g98C6IMwWl</a><a href="https://twitter.com/hashtag/energy?src=hash&ref_src=twsrc%5Etfw">#energy</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://twitter.com/hashtag/oilandgas?src=hash&ref_src=twsrc%5Etfw">#oilandgas</a> <a href="https://twitter.com/hashtag/WTI?src=hash&ref_src=twsrc%5Etfw">#WTI</a> <a href="https://twitter.com/hashtag/CrudeOil?src=hash&ref_src=twsrc%5Etfw">#CrudeOil</a> <a href="https://twitter.com/hashtag/fintwit?src=hash&ref_src=twsrc%5Etfw">#fintwit</a> <a href="https://twitter.com/hashtag/OPEC?src=hash&ref_src=twsrc%5Etfw">#OPEC</a> <a href="https://twitter.com/hashtag/Commodities?src=hash&ref_src=twsrc%5Etfw">#Commodities</a> <a href="https://twitter.com/hashtag/commoditiesmarket?src=hash&ref_src=twsrc%5Etfw">#commoditiesmarket</a> <a href="https://t.co/qhfZgyHTnM">pic.twitter.com/qhfZgyHTnM</a></p>&mdash; Art Berman (@aeberman12) <a href="https://twitter.com/aeberman12/status/1919396685362373026?ref_src=twsrc%5Etfw">May 5, 2025</a>'},
-             { id: 'tweet5', url: 'https://twitter.com/IPAAaccess/status/1919510569553432731', title: 'IPAA Supports Budget Reconciliation Provisions', meta: 'May 05, 2025 • IPAA American Energy (@IPAAaccess)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">IPAA and a coalition of energy trade groups wrote to <a href="https://twitter.com/SpeakerJohnson?ref_src=twsrc%5Etfw">@SpeakerJohnson</a> expressing strong support for the <a href="https://twitter.com/hashtag/budgetreconciliation?src=hash&ref_src=twsrc%5Etfw">#budgetreconciliation</a> provisions currently under consideration by the <a href="https://twitter.com/NatResources?ref_src=twsrc%5Etfw">@NatResources</a>. "These provisions, included in the House Natural Resources bill text will increase domestic… <a href="https://t.co/QQIcQvG64S">pic.twitter.com/QQIcQvG64S</a></p>&mdash; IPAA American Energy (@IPAAaccess) <a href="https://twitter.com/IPAAaccess/status/1919510569553432731?ref_src=twsrc%5Etfw">May 5, 2025</a>'}
-        ];
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('current-year-share').textContent = new Date().getFullYear();
 
-        // Function to Initialize and Run All Header Related Logic
-        function initializeHeaderAndAuthSharePage() {
-            // Standard header auth logic (copied from community.html for consistency)
-            // IMPORTANT: This function will be called AFTER header.html is loaded.
-            const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
-            const profileAndMenuDesktop = document.getElementById('profileAndMenuDesktop');
-            const authLinkMobile = document.getElementById('authLinkMobile');
-            const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-            const favoritesLinkMobile = document.getElementById('favoritesLinkMobile');
-            const linqAiLinkMobile = document.getElementById('linqAiLinkMobile');
-            const earningsLinkMobile = document.getElementById('earningsLinkMobile');
-            const desktopSlideOutMenu = document.getElementById('desktop-slideout-menu');
-            const menuOverlay = document.getElementById('menu-overlay');
-            const logoutButtonDesktopSlideout = document.getElementById('logoutButtonSlideout');
-            const desktopHamburgerButton = document.getElementById('desktop-hamburger-button');
-            const slideoutCloseButton = document.getElementById('slideout-close-button');
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-
-            // Firebase initialization (if not already done by header.html's own script)
-            if (!firebase.apps.length) {
-                const firebaseConfigShared = {
-                    apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
-                    authDomain: "linq-b27a8.firebaseapp.com",
-                    projectId: "linq-b27a8",
-                    storageBucket: "linq-b27a8.appspot.com",
-                    messagingSenderId: "1067901051826",
-                    appId: "1:1067901051826:web:44452d1339cdbe2af07aab"
-                };
-                firebase.initializeApp(firebaseConfigShared);
-            }
-            const authInstance = firebase.auth();
-
-            authInstance.onAuthStateChanged(user => {
-                if (user) {
-                    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.add('hidden');
-                    if (profileAndMenuDesktop) {
-                        profileAndMenuDesktop.classList.remove('hidden');
-                        profileAndMenuDesktop.classList.add('flex');
-                    }
-                    if (authLinkMobile) {
-                        authLinkMobile.textContent = "My Profile";
-                        authLinkMobile.href = "profile.html"; // Assuming profile.html exists
-                    }
-                    if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
-                    if (favoritesLinkMobile) favoritesLinkMobile.classList.remove('hidden');
-                    if (linqAiLinkMobile) linqAiLinkMobile.classList.remove('hidden');
-                    if (earningsLinkMobile) earningsLinkMobile.classList.remove('hidden');
-                } else {
-                    if (authLinkDesktopLogin) {
-                        authLinkDesktopLogin.classList.remove('hidden');
-                        authLinkDesktopLogin.classList.add('nav-link-button');
-                    }
-                    if (profileAndMenuDesktop) profileAndMenuDesktop.classList.add('hidden');
-                    if (authLinkMobile) {
-                        authLinkMobile.textContent = "Login";
-                        authLinkMobile.href = "login.html"; // Assuming login.html exists
-                    }
-                    if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
-                    if (favoritesLinkMobile) favoritesLinkMobile.classList.add('hidden');
-                    if (linqAiLinkMobile) linqAiLinkMobile.classList.add('hidden');
-                    if (earningsLinkMobile) earningsLinkMobile.classList.add('hidden');
-                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) {
-                        closeDesktopMenu();
-                    }
+            // FIX: Wait for the communityPostsData to be available from the deferred script
+            const dataCheckInterval = setInterval(() => {
+                if (window.communityPostsData) {
+                    clearInterval(dataCheckInterval);
+                    displaySharedPost();
                 }
-                // No setActiveNavLink() call here, as "Share" page isn't a primary nav item
-            });
-
-            function handleLogout(e) {
-                e.preventDefault();
-                if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
-                if (mobileMenu && !mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
-                authInstance.signOut().then(() => {
-                    console.log("User signed out from share page");
-                    // Optional: Redirect to home or login after logout from share page
-                    // window.location.href = 'index.html';
-                }).catch(error => console.error("Sign out error", error));
-            }
-
-            if (logoutButtonDesktopSlideout) logoutButtonDesktopSlideout.addEventListener('click', handleLogout);
-            if (logoutButtonMobile) logoutButtonMobile.addEventListener('click', handleLogout);
-
-            if (mobileMenuButton && mobileMenu) {
-                mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-            }
-
-            function openDesktopMenu() {
-                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.add('open');
-                if (menuOverlay) menuOverlay.classList.add('active');
-                document.body.classList.add('overflow-hidden');
-            }
-            function closeDesktopMenu() {
-                if (desktopSlideOutMenu) desktopSlideOutMenu.classList.remove('open');
-                if (menuOverlay) menuOverlay.classList.remove('active');
-                document.body.classList.remove('overflow-hidden');
-            }
-            if (desktopHamburgerButton) {
-                desktopHamburgerButton.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    if (desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
-                    else openDesktopMenu();
-                });
-            }
-            if (menuOverlay) menuOverlay.addEventListener('click', closeDesktopMenu);
-            if (slideoutCloseButton) slideoutCloseButton.addEventListener('click', closeDesktopMenu);
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && desktopSlideOutMenu && desktopSlideOutMenu.classList.contains('open')) closeDesktopMenu();
-            });
-        }
-
-
-        // Fetch and Inject Header
-        fetch('header.html')
-            .then(response => {
-                if (!response.ok) throw new Error('Network response was not ok for header.html');
-                return response.text();
-            })
-            .then(data => {
-                const navbarPlaceholder = document.getElementById('navbar-placeholder');
-                if (navbarPlaceholder) {
-                    navbarPlaceholder.innerHTML = data;
-                    initializeHeaderAndAuthSharePage(); // Initialize header logic AFTER loading it
-                    // Hide "Share" link if it exists in the loaded header
-                    const sharePageNavLink = navbarPlaceholder.querySelector('a.nav-link[href="share.html"]');
-                    if(sharePageNavLink) {
-                        sharePageNavLink.style.display = 'none';
-                    }
-                    const sharePageNavLinkMobile = navbarPlaceholder.querySelector('#mobile-menu a.nav-link[href="share.html"]');
-                     if(sharePageNavLinkMobile) {
-                        sharePageNavLinkMobile.style.display = 'none';
-                    }
-                } else {
-                    console.error('Navbar placeholder element not found on share.html.');
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching header for share.html:', error);
-                const navbarPlaceholder = document.getElementById('navbar-placeholder');
-                if(navbarPlaceholder) navbarPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
-            });
-
-        document.getElementById('current-year-share').textContent = new Date().getFullYear();
-
-        // Load Twitter widgets script
-        const twitterScriptShare = document.createElement('script');
-        twitterScriptShare.src = 'https://platform.twitter.com/widgets.js';
-        twitterScriptShare.async = true;
-        twitterScriptShare.charset = 'utf-8';
-        document.body.appendChild(twitterScriptShare);
+            }, 50); // Check every 50ms
+        });
 
         // Function to display the shared post
         function displaySharedPost() {
@@ -290,7 +92,8 @@
                 return;
             }
 
-            const post = communityPostsDataPage.find(p => p.id === postId);
+            // FIX: Find the post within the now-loaded window.communityPostsData
+            const post = window.communityPostsData.find(p => p.id === postId);
 
             if (!post) {
                 container.innerHTML = `<p class="message-area">Post with ID "${postId}" not found.</p>`;
@@ -298,7 +101,7 @@
             }
 
             const postElement = document.createElement('article');
-            postElement.className = 'post-card'; // Use existing post-card styling
+            postElement.className = 'post-card';
             const tweetHTML = typeof post.tweetContent === 'string' ? post.tweetContent : '<p>Error loading tweet content.</p>';
 
             postElement.innerHTML = `
@@ -314,17 +117,16 @@
                     <a href="community.html" class="text-cyan-400 hover:underline">View all posts</a>.
                 </div>
             `;
-            container.innerHTML = ''; // Clear previous content
+            container.innerHTML = ''; 
             container.appendChild(postElement);
 
-            // Reload Twitter widgets for the newly added post
             if (window.twttr && window.twttr.widgets) {
                 window.twttr.widgets.load(container);
             }
         }
-
-        // Display the post when the page loads
-        document.addEventListener('DOMContentLoaded', displaySharedPost);
     </script>
+    
+    <!-- Centralized header script -->
+    <script src="headerManager.js" defer></script>
 </body>
 </html>
