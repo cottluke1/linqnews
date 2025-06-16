@@ -22,7 +22,6 @@
     <script src="articles_past.js?v=20250612v4" defer></script>
 
     <style>
-        /* Styles specific to index.html content remain untouched */
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
@@ -30,120 +29,128 @@
             background-image: radial-gradient(ellipse 40% 20% at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
             color: #E7E9EA;
             font-weight: 400;
-            /* FIX: Add top padding to the body to prevent content from hiding behind the fixed header. This resolves the "page jump" issue. */
-            padding-top: 64px; /* Matches the h-16 height of the nav bar */
+            padding-top: 64px; 
         }
         body.overflow-hidden { overflow: hidden; }
-        .ticker-banner { background: #121212; color: #A0A0A0; padding: 0.625rem 0; overflow: hidden; white-space: nowrap; position: relative; width: 100%; z-index: 35; font-size: 0.8rem; line-height: 1.3; border-bottom: 1px solid #282828; }
-        .ticker-content { display: inline-block; white-space: nowrap; animation: ticker-scroll 300s linear infinite; }
-        @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-        .ticker-item { display: inline-block; margin-right: 1.75rem; }
-        .ticker-item .positive { color: #22C55E; }
-        .ticker-item .negative { color: #EF4444; }
-        .hero-section { background: transparent; padding: 5rem 1rem; text-align: center; }
-        .hero-title { font-size: 3.8rem; font-weight: 800; color: #E7E9EA; margin: 0; text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3); }
+        /* Hero Section */
+        .hero-section { background: transparent; padding: 3rem 1rem; text-align: center; }
+        /* Adjusted hero title for mobile */
+        .hero-title { font-size: 2.5rem; line-height: 1.2; font-weight: 800; color: #E7E9EA; margin: 0; text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3); }
         .hero-title .accent-text { color: #00BFFF; }
+        @media (min-width: 768px) {
+            .hero-title { font-size: 3.8rem; }
+        }
+
+        /* News Card & Grid */
         .section-title { font-size: 1.75rem; font-weight: 700; color: #E7E9EA; margin-bottom: 2rem; padding-bottom: 0.75rem; border-bottom: 1px solid #2F3336; }
         .news-card { background-color: transparent; border-radius: 0.75rem; border: 1px solid #2F3336; box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.6); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; margin-bottom: 1.5rem; display: flex; align-items: center; padding: 1rem; position: relative; }
         .news-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.2); border-color: #5a6268; }
         .news-card.premium-highlight:not(.locked) { border-color: rgba(0, 191, 255, 0.7); }
-        .news-card.premium-highlight:not(.locked):hover { box-shadow: 0 12px 30px -10px rgba(0, 191, 255, 0.25); }
         .news-card.locked .news-card-content { filter: blur(4px); pointer-events: none; }
         .locked-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 10; padding: 1rem; opacity: 0; transition: opacity 0.3s ease-in-out; cursor: pointer; background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.8) 100%); }
         .news-card.locked:hover .locked-overlay { opacity: 1; }
         .locked-content { display: flex; align-items: center; width: 100%; gap: 1.5rem; transform: translateY(10px); transition: transform 0.3s ease; padding-left: 66px; }
         .news-card.locked:hover .locked-content { transform: translateY(0); }
-        .locked-text-content { text-align: left; flex-grow: 1; }
         .locked-title { font-size: 1.1rem; font-weight: 600; color: #E7E9EA; line-height: 1.3; margin-bottom: 0.25rem; }
         .locked-text { color: #b0b0b0; font-size: 0.8rem; }
-        .go-premium-button { flex-shrink: 0; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgb(59 130 246); color: #FFFFFF; font-weight: 500; font-size: 0.875rem; padding: 0.6rem 1.25rem; border-radius: 0.375rem; transition: all 0.2s ease; box-shadow: 0 0 15px -5px rgb(59 130 246 / 0.5); }
-        .locked-overlay:hover .go-premium-button { transform: scale(1.03); background-color: rgba(59, 130, 246, 0.2); }
-        .side-lock-icon { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #6E767D; z-index: 5; transition: color 0.3s ease; }
-        .news-card.locked:hover .side-lock-icon { color: #a7aeb4; }
+        .go-premium-button { flex-shrink: 0; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgb(59 130 246); color: #FFFFFF; font-weight: 500; font-size: 0.875rem; padding: 0.6rem 1.25rem; border-radius: 0.375rem; transition: all 0.2s ease; box-shadow: 0 0 15px -5px rgb(59 130 246 / 0.5); }
+        .side-lock-icon { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #6E767D; z-index: 5; }
         .news-card-content { display: flex; flex-grow: 1; align-items: center; width: 100%; transition: filter 0.3s ease; }
         .news-source-logo-container { flex-shrink: 0; margin-right: 1rem; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 0.375rem; background-color: #1a1a1a;}
         .news-source-logo { max-width: 100%; max-height: 100%; object-fit: contain; }
         .news-content-wrapper { flex-grow: 1; display: flex; justify-content: space-between; align-items: center; }
-        .news-text-content {}
-        .news-title { font-size: 1.1rem; font-weight: 500; color: #E7E9EA; margin-bottom: 0.25rem; line-height: 1.3; }
+        .news-title { font-size: 1rem; md:font-size: 1.1rem; font-weight: 500; color: #E7E9EA; margin-bottom: 0.25rem; line-height: 1.3; }
         .news-title a { color: #E7E9EA; transition: color 0.2s ease; }
         .news-title a:hover { color: #00BFFF; }
         .news-meta-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
         .news-meta { font-size: 0.75rem; color: #6E767D; }
         .news-tag { background-color: rgba(0, 191, 255, 0.15); color: #00BFFF; padding: 0.25rem 0.6rem; border-radius: 9999px; font-size: 0.65rem; font-weight: 500; display: inline-block; border: 1px solid rgba(0, 191, 255, 0.3); }
-        .favorite-btn-area { flex-shrink: 0; margin-left: 1rem; }
-        .news-card.locked .favorite-btn-area { padding-right: 2rem; }
-        .filter-panel { background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%); padding: 2rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4); border: 1px solid #2a2a2a; position: sticky; top: 80px; } /* Adjusted top for new padding */
-        .filter-title { font-size: 1.25rem; font-weight: 600; color: #E0E0E0; margin-bottom: 1.25rem; }
-        .filter-button { display: block; width: 100%; text-align: left; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0.375rem; color: #B0B0B0; font-weight: 500; transition: all 0.2s ease; background-color: #1A1A1A; border: 1px solid #333333; }
-        .filter-button:hover { background-color: rgba(0, 191, 255, 0.1); color: #FFFFFF; border-color: rgba(0, 191, 255, 0.5); }
-        .filter-button.active { background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; font-weight: 600; border-color: #00BFFF; }
-        .search-container { position: relative; display: flex; align-items: center;}
-        .search-input { width: 100%; padding: 0.875rem 1.125rem 0.875rem 2.75rem; background-color: #1A1A1A; border: 1px solid #333333; border-radius: 0.5rem; font-size: 0.9rem; color: #E0E0E0; transition: border-color 0.2s ease, box-shadow 0.2s ease; line-height: normal; height: auto; }
-        .search-input::placeholder { color: #666666; }
-        .search-input:focus { outline: none; border-color: #00BFFF; box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3); background-color: #1F1F1F; }
-        .search-container svg { position: absolute; left: 0.875rem; width: 1.1rem; height: 1.1rem; color: #A0A0A0; pointer-events: none; }
         .favorite-btn { width: 2rem; height: 2rem; color: #888888; cursor: pointer; transition: color 0.2s ease, transform 0.2s ease; background: none; border: none; padding: 0.25rem; display: inline-flex; align-items: center; justify-content: center; }
         .favorite-btn:hover { color: #00BFFF; transform: scale(1.15); }
         .favorite-btn svg { width: 100%; height: 100%; stroke-width: 1.5; stroke: currentColor; fill: none; }
         .favorite-btn.favorited svg { fill: #00BFFF; stroke: #00BFFF; }
-		.pagination-container { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin-top: 3rem; padding: 1rem; gap: 0.5rem;}
-		.pagination-btn, .pagination-ellipsis { background-color: rgba(26, 26, 26, 0.7); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border: 1px solid #333333; color: #B0B0B0; font-weight: 500; border-radius: 0.5rem; padding: 0.5rem 1rem; min-width: 2.75rem; height: 2.75rem; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
-		.pagination-btn:hover:not(:disabled) { background-color: rgba(0, 191, 255, 0.15); border-color: rgba(0, 191, 255, 0.7); color: #FFFFFF; transform: translateY(-2px); }
-		.pagination-btn.active { background-color: rgb(0, 191, 255); color: #FFFFFF; border-color: #00BFFF; font-weight: 600; box-shadow: 0 0 15px -2px rgba(0, 191, 255, 0.5); }
+        
+        /* Filters */
+        .filter-panel { background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%); padding: 2rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4); border: 1px solid #2a2a2a; position: sticky; top: 80px; }
+        .filter-title { font-size: 1.25rem; font-weight: 600; color: #E0E0E0; margin-bottom: 1.25rem; }
+        .filter-button-desktop { display: block; width: 100%; text-align: left; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0.375rem; color: #B0B0B0; font-weight: 500; transition: all 0.2s ease; background-color: #1A1A1A; border: 1px solid #333333; }
+        .filter-button-desktop:hover, .filter-button-desktop.active { background-color: rgba(0, 191, 255, 0.1); color: #FFFFFF; border-color: rgba(0, 191, 255, 0.5); }
+        .filter-button-desktop.active { font-weight: 600; background-color: rgba(0, 191, 255, 0.2); border-color: #00BFFF; }
+
+        /* Mobile Filters */
+        .mobile-filter-scroll-container { overflow-x: auto; white-space: nowrap; padding: 0.5rem 0; margin-bottom: 1.5rem; -ms-overflow-style: none; scrollbar-width: none; }
+        .mobile-filter-scroll-container::-webkit-scrollbar { display: none; }
+        .filter-button-mobile { display: inline-block; padding: 0.6rem 1rem; margin-right: 0.75rem; border-radius: 0.5rem; color: #B0B0B0; font-weight: 500; transition: all 0.2s ease; background-color: #1A1A1A; border: 1px solid #333333; }
+        .filter-button-mobile:hover, .filter-button-mobile.active { background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; border-color: #00BFFF; }
+        .filter-button-mobile.active { font-weight: 600; }
+
+        /* Search */
+        .search-container { position: relative; display: flex; align-items: center; margin-bottom: 1.5rem; }
+        .search-input { width: 100%; padding: 0.875rem 1.125rem 0.875rem 2.75rem; background-color: #1A1A1A; border: 1px solid #333333; border-radius: 0.5rem; font-size: 0.9rem; color: #E0E0E0; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+        .search-input:focus { outline: none; border-color: #00BFFF; box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3); }
+        .search-container svg { position: absolute; left: 0.875rem; width: 1.1rem; height: 1.1rem; color: #A0A0A0; }
+
+        /* Mobile Premium Banner */
+        .mobile-premium-banner { background: linear-gradient(to right, #007ACC, #00BFFF); color: white; padding: 1rem; border-radius: 0.5rem; text-align: center; margin-bottom: 1.5rem; }
+        .mobile-premium-banner h4 { font-weight: 700; font-size: 1.1rem; }
+        .mobile-premium-banner p { font-size: 0.85rem; margin-top: 0.25rem; margin-bottom: 0.75rem; opacity: 0.9; }
+        .mobile-premium-banner a { background-color: white; color: #007ACC; padding: 0.5rem 1.25rem; border-radius: 99px; font-weight: 600; text-decoration: none; display: inline-block; transition: transform 0.2s; }
+        .mobile-premium-banner a:hover { transform: scale(1.05); }
+
+        /* Pagination & Footer */
+        .pagination-container { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin-top: 3rem; padding: 1rem; gap: 0.5rem;}
+		.pagination-btn { background-color: rgba(26, 26, 26, 0.7); border: 1px solid #333333; color: #B0B0B0; font-weight: 500; border-radius: 0.5rem; padding: 0.5rem 1rem; min-width: 2.75rem; height: 2.75rem; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+		.pagination-btn:hover:not(:disabled) { background-color: rgba(0, 191, 255, 0.15); border-color: rgba(0, 191, 255, 0.7); color: #FFFFFF; }
+		.pagination-btn.active { background-color: rgb(0, 191, 255); color: #FFFFFF; border-color: #00BFFF; font-weight: 600; }
         .pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .pagination-ellipsis { cursor: default; background-color: transparent; border-color: transparent; }
         .footer { background-color: #080808; color: #888888; padding: 3rem 1rem; margin-top: 4rem; border-top: 1px solid #222222; }
-        .terms-privacy-content { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(22, 22, 22, 0.9); backdrop-filter: blur(10px) saturate(150%); -webkit-backdrop-filter: blur(10px) saturate(150%); padding: 2.5rem; border-radius: 0.75rem; max-height: 85vh; overflow-y: auto; box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7); z-index: 100; color: #E0E0E0; border: 1px solid rgba(0, 191, 255, 0.3); max-width: 700px; width: 90%; }
-        .terms-privacy-content h2 { font-size: 1.75rem; font-weight: 600; color: #FFFFFF; margin-bottom: 1.5rem; border-bottom: 1px solid #00BFFF; padding-bottom: 0.75rem; }
-        .terms-privacy-content p { margin-bottom: 1rem; line-height: 1.7; color: #C0C0C0; }
-        .terms-privacy-content strong { color: #00BFFF; font-weight: 600; }
-        .terms-privacy-content a { color: #00BFFF; text-decoration: underline; transition: color 0.2s ease; }
-        .terms-privacy-content a:hover { color: #00A9E0; }
-        .close-btn { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 1.75rem; cursor: pointer; color: #A0A0A0; transition: color 0.2s ease, transform 0.2s ease; line-height: 1; }
-        .close-btn:hover { color: #FFFFFF; transform: rotate(90deg) scale(1.1); }
     </style>
 </head>
 <body class="antialiased">
-    <!-- FIX: Replaced the old static div with a semantic header placeholder for our script to target. -->
     <header id="header-placeholder"></header>
 
-    <div class="ticker-banner">
-      <div class="ticker-content" id="tickerContent"></div>
-    </div>
-
     <header class="hero-section">
-        <div class="container mx-auto px-9 sm:px-11 lg:px-13">
-            <h1 class="hero-title">Your <span class="accent-text">Linq</span> to Energy News</h1>
+        <div class="container mx-auto px-4">
+            <h1 class="hero-title">
+                <span class="block md:inline">Your Linq to</span>
+                <span class="block md:inline accent-text">Energy News</span>
+            </h1>
         </div>
     </header>
 
-    <main id="main-content" class="container mx-auto p-4 sm:p-6 lg:p-8 mt-10">
+    <main id="main-content" class="container mx-auto p-4 sm:p-6 lg:p-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-10">
             <div class="lg:col-span-9" id="news">
                 <section>
-                    <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-8">
-                        <h2 id="sectionDateTitle" class="section-title !mb-3 sm:!mb-0 !border-none">Latest News</h2>
-                        <div class="relative w-full sm:w-auto sm:max-w-xs search-container">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                            <input type="search" id="searchInput" placeholder="Search news..." class="search-input !mb-0 pl-10">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-6">
+                        <h2 id="sectionDateTitle" class="section-title !mb-3 sm:!mb-0 !border-none text-2xl">Latest News</h2>
+                        <div class="relative w-full sm:w-auto sm:max-w-xs search-container !mb-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 text-gray-500 absolute left-3.5 top-1/2 transform -translate-y-1/2"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            <input type="search" id="searchInput" placeholder="Search news..." class="search-input !mb-0">
                         </div>
                     </div>
+
+                    <!-- Mobile Filters -->
+                    <div id="mobileFilterContainer" class="lg:hidden">
+                        <div id="mobilePremiumBanner" class="mobile-premium-banner hidden">
+                            <h4>Unlock All Articles</h4>
+                            <p>Get unlimited access to premium news and our 7-day archive.</p>
+                            <a href="linqplus.html">Go Premium</a>
+                        </div>
+                        <div id="mobileCategoryFilters" class="mobile-filter-scroll-container">
+                            <!-- Mobile category buttons will be inserted here -->
+                        </div>
+                    </div>
+
                     <div class="space-y-6" id="newsGrid"></div>
                     <div id="paginationContainer" class="pagination-container"></div>
                 </section>
             </div>
-            <aside class="lg:col-span-3 space-y-8">
+            <aside class="hidden lg:block lg:col-span-3 space-y-8">
                 <div class="filter-panel p-6">
                     <h3 class="filter-title">Filter by Category</h3>
-                    <div id="categoryList" class="space-y-3">
-                        <button class="filter-button" data-category="Crude Oil">Crude Oil</button>
-                        <button class="filter-button" data-category="Natural Gas">Natural Gas</button>
-                        <button class="filter-button" data-category="Petrochemicals">Petrochemicals</button>
-                        <button class="filter-button" data-category="Power">Power</button>
-                        <button class="filter-button" data-category="Renewables">Renewables</button>
-                        <button class="filter-button" data-category="Company News">Company News</button>
-                        <button class="filter-button" data-category="Earnings">Earnings</button>
+                    <div id="desktopCategoryFilters" class="space-y-3">
+                        <!-- Desktop category buttons will be inserted here -->
                     </div>
                 </div>
             </aside>
@@ -153,29 +160,16 @@
     <footer class="footer text-center">
         <div class="container mx-auto">
             <p class="text-sm">&copy; 2025 Linq. All rights reserved.</p>
-            <p class="text-xs mt-1">
-                <a href="#terms" onclick="showTermsModal(event)" class="hover:text-sky-400 transition-colors">Terms of Service</a> |
-                <a href="#privacy" onclick="showPrivacyModal(event)" class="hover:text-sky-400 transition-colors">Privacy Policy</a>
-            </p>
         </div>
     </footer>
 
-    <div id="termsContent" class="terms-privacy-content"><span class="close-btn" onclick="closeTermsModal()">×</span><h2>Terms of Service</h2><p>Welcome to Linq... (Your full terms content here)</p></div>
-    <div id="privacyContent" class="terms-privacy-content"><span class="close-btn" onclick="closePrivacyModal()">×</span><h2>Privacy Policy</h2><p>At Linq, we are committed... (Your full privacy policy content here)</p></div>
-
     <script>
-        // --- CONFIGURATION & GLOBAL STATE (Page-specific logic remains) ---
         let isSubscribed = false; 
         let favorites = []; 
         let currentPage = 1;
         let allDaysData = [];
         let unsubscribeUserListener = null;
 
-        const FINNHUB_API_KEY = 'cprdj2pr01qjjs4st2e0cprdj2pr01qjjs4st2eg'; 
-        const DISPLAY_SYMBOLS = {'OANDA:USD_JPY':'JPY','OANDA:USD_CNY':'CNY','OANDA:EUR_USD':'EUR','OANDA:GBP_USD':'GBP','CL1:COM':'WTI CRUDE','CO1:COM':'BRENT CRUDE','RB1:COM':'RBOB GASOLINE','HO1:COM':'HEATING OIL','NG1:COM':'NATURAL GAS','TMUBMUSD02Y':'US 2YR YIELD','TMUBMUSD05Y':'US 5YR YIELD','TMUBMUSD10Y':'US 10YR YIELD','^GSPC':'S&P 500','^DJI':'DOW 30','^IXIC':'NASDAQ','DXY':'US DOLLAR IDX'};
-        const TICKER_ITEMS_TO_SHOW = ['OANDA:EUR_USD','OANDA:GBP_USD','OANDA:USD_JPY','OANDA:USD_CNY','CO1:COM','CL1:COM','NG1:COM','RB1:COM','HO1:COM','TMUBMUSD02Y','TMUBMUSD05Y','TMUBMUSD10Y','^GSPC','^DJI','^IXIC','DXY'];
-        
-        // --- Firebase Initialization (Page-specific) ---
         const firebaseConfig = {
             apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
             authDomain: "linq-b27a8.firebaseapp.com",
@@ -188,101 +182,83 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // --- DOM ELEMENTS (Page-specific) ---
         const newsGrid = document.getElementById('newsGrid');
         const searchInput = document.getElementById('searchInput');
-        const categoryList = document.getElementById('categoryList');
+        const desktopCategoryFilters = document.getElementById('desktopCategoryFilters');
+        const mobileCategoryFilters = document.getElementById('mobileCategoryFilters');
         const paginationContainer = document.getElementById('paginationContainer');
         const sectionDateTitle = document.getElementById('sectionDateTitle');
+        const mobilePremiumBanner = document.getElementById('mobilePremiumBanner');
         const mainContent = document.getElementById('main-content');
         
-        // --- FIX: All old header-related logic has been REMOVED from this script block ---
-        
-        // --- All other page-specific functions (updateTickerBanner, displayArticlesForPage, etc.) remain unchanged ---
-
         function initializeAppLogic() { 
             const presentArticles = window.presentDayArticles || [];
             const premiumArticles = window.premiumArticles || [];
-            
             const todayArticles = isSubscribed ? [...presentArticles, ...premiumArticles] : presentArticles;
             allDaysData = [todayArticles].concat(window.pastArticles || []);
             
+            populateCategoryFilters();
             displayArticlesForPage(currentPage);
         }
-        
-        async function updateTickerBanner() {
-            const tickerContent = document.getElementById('tickerContent');
-            if (!tickerContent || !FINNHUB_API_KEY) return;
-            let contentHTML = '';
-            for (const symbol of TICKER_ITEMS_TO_SHOW) {
-                try {
-                    const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`);
-                    const data = await response.json();
-                    if (data && data.c !== undefined) {
-                        const change = data.d;
-                        const changePercent = data.dp;
-                        const changeClass = change >= 0 ? 'positive' : 'negative';
-                        const sign = change >= 0 ? '+' : '';
-                        const displayName = DISPLAY_SYMBOLS[symbol] || symbol;
-                        contentHTML += `<div class="ticker-item">${displayName}: ${data.c.toFixed(2)} <span class="${changeClass}">(${sign}${change.toFixed(2)} / ${sign}${changePercent.toFixed(2)}%)</span></div>`;
-                    }
-                } catch (error) {
-                    console.error('Error fetching ticker data for', symbol, error);
-                }
-            }
-            tickerContent.innerHTML = contentHTML.repeat(10);
-        }
 
-        function getPageDateInfo(page) {
-            const today = new Date('2025-06-12T12:00:00Z');
-            if (page === 1) return { title: 'Latest News', date: today };
-            const dateForPage = new Date(today);
-            dateForPage.setDate(today.getDate() - (page - 1));
-            const dayName = dateForPage.toLocaleDateString('en-US', { weekday: 'long' });
-            const dateString = dateForPage.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-            return { title: `${dayName}, ${dateString}`, date: dateForPage };
+        function populateCategoryFilters() {
+            const categories = ["Crude Oil", "Natural Gas", "Petrochemicals", "Power", "Renewables", "Company News", "Earnings"];
+            desktopCategoryFilters.innerHTML = '';
+            mobileCategoryFilters.innerHTML = '';
+
+            categories.forEach(category => {
+                const desktopButton = document.createElement('button');
+                desktopButton.className = 'filter-button-desktop';
+                desktopButton.dataset.category = category;
+                desktopButton.textContent = category;
+                desktopCategoryFilters.appendChild(desktopButton);
+                
+                const mobileButton = document.createElement('button');
+                mobileButton.className = 'filter-button-mobile';
+                mobileButton.dataset.category = category;
+                mobileButton.textContent = category;
+                mobileCategoryFilters.appendChild(mobileButton);
+            });
         }
         
         function displayArticlesForPage(page) {
             currentPage = page;
             if(!newsGrid) return;
             newsGrid.innerHTML = ''; 
-            const pageInfo = getPageDateInfo(page);
-            sectionDateTitle.textContent = pageInfo.title;
+            sectionDateTitle.textContent = getPageDateInfo(page).title;
 
             let articlesForDay;
             if (page === 1) {
                  const presentArticles = window.presentDayArticles || [];
                  const premiumArticles = window.premiumArticles || [];
-                 let baseArticles = isSubscribed ? [...presentArticles, ...premiumArticles] : presentArticles;
-                 if(!isSubscribed) {
-                     articlesForDay = [...presentArticles, ...premiumArticles];
-                 } else {
-                     articlesForDay = baseArticles;
-                 }
+                 articlesForDay = isSubscribed ? [...presentArticles, ...premiumArticles] : [...presentArticles, ...premiumArticles];
             } else {
                 articlesForDay = (window.pastArticles && window.pastArticles[page - 2]) ? [...window.pastArticles[page - 2]] : [];
             }
             
             const searchQuery = searchInput.value.toLowerCase();
-            const activeCategoryBtns = document.querySelectorAll('#categoryList .filter-button.active');
-            const activeCategories = Array.from(activeCategoryBtns).map(btn => btn.dataset.category);
+            const activeCategories = Array.from(document.querySelectorAll('.filter-button-desktop.active, .filter-button-mobile.active')).map(btn => btn.dataset.category);
+            // Use a Set to handle categories from both desktop and mobile filters without duplicates
+            const uniqueActiveCategories = [...new Set(activeCategories)];
+
 
             let filteredArticles = articlesForDay;
-            if (activeCategories.length > 0) {
-                filteredArticles = filteredArticles.filter(a => activeCategories.includes(a.category));
+            if (uniqueActiveCategories.length > 0) {
+                filteredArticles = filteredArticles.filter(a => uniqueActiveCategories.includes(a.category));
             }
             if (searchQuery) {
                 filteredArticles = filteredArticles.filter(a => a.title.toLowerCase().includes(searchQuery) || (a.source && a.source.toLowerCase().includes(searchQuery)));
             }
             
+            let hasLockedArticles = false;
             if (filteredArticles.length === 0 ) { 
-                newsGrid.innerHTML = `<p class="text-center text-gray-500 col-span-full">No articles found for your criteria on this day.</p>`; 
+                newsGrid.innerHTML = `<p class="text-center text-gray-500 col-span-full py-10">No articles found for your criteria on this day.</p>`; 
             } else {
                 filteredArticles.forEach(article => { 
                     const isPremiumArticle = article.premium === true;
                     const isPastPage = page > 1;
                     const shouldBeLocked = !isSubscribed && (isPremiumArticle || isPastPage);
+                    if (shouldBeLocked) hasLockedArticles = true;
 
                     const articleElement = document.createElement('article'); 
                     articleElement.className = 'news-card'; 
@@ -297,17 +273,7 @@
                         ? { title: 'Access 7-Day Archive', text: 'Go premium to unlock past news.' }
                         : { title: 'Unlock Premium Content', text: 'Subscribe to get instant access.' };
 
-                    const lockedOverlayHTML = `
-                        <a href="linqplus.html" class="locked-overlay">
-                            <div class="locked-content">
-                                <div class="locked-text-content">
-                                    <h4 class="locked-title">${overlayText.title}</h4>
-                                    <p class="locked-text">${overlayText.text}</p>
-                                </div>
-                                <button class="go-premium-button">Go Premium</button>
-                            </div>
-                        </a>`;
-
+                    const lockedOverlayHTML = `<a href="linqplus.html" class="locked-overlay"><div class="locked-content"><div class="locked-text-content"><h4 class="locked-title">${overlayText.title}</h4><p class="locked-text">${overlayText.text}</p></div><button class="go-premium-button">Go Premium</button></div></a>`;
                     const sideLockIconHTML = `<div class="side-lock-icon"><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd" /></svg></div>`;
 
                     articleElement.innerHTML = ` 
@@ -330,9 +296,23 @@
                     newsGrid.appendChild(articleElement); 
                 }); 
             }
+
+            // Show mobile premium banner if applicable
+            mobilePremiumBanner.classList.toggle('hidden', !hasLockedArticles);
+
             updateFavoriteIcons();
             setupPagination();
         } 
+
+        function getPageDateInfo(page) {
+            const today = new Date('2025-06-12T12:00:00Z');
+            if (page === 1) return { title: 'Latest News', date: today };
+            const dateForPage = new Date(today);
+            dateForPage.setDate(today.getDate() - (page - 1));
+            const dayName = dateForPage.toLocaleDateString('en-US', { weekday: 'long' });
+            const dateString = dateForPage.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+            return { title: `${dayName}, ${dateString}`, date: dateForPage };
+        }
 
         function setupPagination() {
             if (!paginationContainer) return;
@@ -363,37 +343,35 @@
         }
 
         function handleCategoryFilter(e) {
-            const button = e.target.closest('.filter-button');
+            const button = e.target.closest('.filter-button-desktop, .filter-button-mobile');
             if (!button) return;
-            button.classList.toggle('active');
+            const category = button.dataset.category;
+            
+            // Toggle active state on all matching category buttons (desktop and mobile)
+            const allMatchingButtons = document.querySelectorAll(`button[data-category="${category}"]`);
+            const isNowActive = !button.classList.contains('active');
+
+            allMatchingButtons.forEach(btn => {
+                btn.classList.toggle('active', isNowActive);
+            });
+
             displayArticlesForPage(1);
         }
         
-        function handleFavoriteClick(e) {
-            const favButton = e.target.closest('.favorite-btn');
-            if (favButton) {
-                toggleFavorite(favButton.dataset.id);
-            }
-        }
-
         async function toggleFavorite(articleId) {
             const user = auth.currentUser;
             if (!user) {
                 window.location.href = 'login.html';
                 return;
             }
-            
             const idStr = String(articleId);
             const isCurrentlyFavorited = favorites.includes(idStr);
-            const isAdding = !isCurrentlyFavorited;
-
             const userRef = db.collection('users').doc(user.uid);
             const updateData = {
-                bookmarks: isAdding 
-                    ? firebase.firestore.FieldValue.arrayUnion(idStr) 
-                    : firebase.firestore.FieldValue.arrayRemove(idStr)
+                bookmarks: isCurrentlyFavorited 
+                    ? firebase.firestore.FieldValue.arrayRemove(idStr) 
+                    : firebase.firestore.FieldValue.arrayUnion(idStr)
             };
-
             try {
                 await userRef.set(updateData, { merge: true });
             } catch (error) {
@@ -408,25 +386,17 @@
             });
         }
         
-        function showTermsModal(event) { event.preventDefault(); document.getElementById('termsContent').style.display = 'block'; }
-        function closeTermsModal() { document.getElementById('termsContent').style.display = 'none'; }
-        function showPrivacyModal(event) { event.preventDefault(); document.getElementById('privacyContent').style.display = 'block'; }
-        function closePrivacyModal() { document.getElementById('privacyContent').style.display = 'none'; }
-
-        // --- Event Listeners (Page-specific) ---
         document.addEventListener('DOMContentLoaded', () => {
-            categoryList.addEventListener('click', handleCategoryFilter);
+            desktopCategoryFilters.addEventListener('click', handleCategoryFilter);
+            mobileCategoryFilters.addEventListener('click', handleCategoryFilter);
             searchInput.addEventListener('input', () => displayArticlesForPage(1));
-            newsGrid.addEventListener('click', handleFavoriteClick);
-
-            updateTickerBanner();
+            newsGrid.addEventListener('click', (e) => {
+                const favButton = e.target.closest('.favorite-btn');
+                if (favButton) toggleFavorite(favButton.dataset.id);
+            });
 
             auth.onAuthStateChanged(user => {
-                if (unsubscribeUserListener) {
-                    unsubscribeUserListener();
-                    unsubscribeUserListener = null;
-                }
-
+                if (unsubscribeUserListener) unsubscribeUserListener();
                 if (user) {
                     unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
                         isSubscribed = doc.exists && doc.data().isSubscribed === true;
@@ -447,7 +417,6 @@
         });
     </script>
     
-    <!-- FIX: Centralized header script is now included at the end of the body -->
     <script src="headerManager.js" defer></script>
 </body>
 </html>
