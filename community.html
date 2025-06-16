@@ -12,26 +12,22 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="community_posts.js" defer></script>
+    
     <style>
-        /* All page-specific styles remain untouched */
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
             background-color: #000000;
-            background-image: radial-gradient(at 50% 0%, rgba(67, 56, 202, 0.1) 0%, rgba(8, 0, 20, 0) 50%);
+            background-image: radial-gradient(ellipse 35% 15% at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
             color: #E7E9EA;
             font-weight: 400;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
             /* FIX: Set top padding on the body to prevent the page jump. */
-            padding-top: 88px; /* Matches header height */
+            padding-top: 64px;
         }
-        body.overflow-hidden { overflow: hidden; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #1A1A1A; }
-        ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
-        ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
-
+        .page-content-wrapper { flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px; margin: 0 auto; padding-left: 1rem; padding-right: 1rem; }
         .page-header { text-align: center; margin-bottom: 2.5rem; }
         .page-title { font-size: 2.5rem; font-weight: 800; color: #E7E9EA; margin: 0 0 1rem 0; text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3); }
         .page-title .accent-text { color: #00BFFF; }
@@ -41,7 +37,6 @@
         .search-input::placeholder { color: #777777; }
         .search-input:focus { border-color: #00BFFF; outline: none; box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.25); }
         .filter-section-wrapper { flex: 1; min-width: 280px; order: 2; }
-        /* Adjusted filter panel to be sticky relative to the new body padding */
         .filter-panel { background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%); padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4); border: 1px solid #2a2a2a; position: sticky; top: 80px; }
         .filter-title { font-size: 1.25rem; font-weight: 600; color: #E0E0E0; margin-bottom: 1.25rem; }
         .filter-button { display: block; width: 100%; text-align: left; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0.375rem; color: #B0B0B0; font-weight: 500; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; background-color: #1A1A1A; border: 1px solid #333333; cursor: pointer; }
@@ -66,11 +61,6 @@
         .footer { background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem; border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem; margin-top: auto; }
         .footer a { color: #B0B0B0; transition: color 0.2s ease; }
         .footer a:hover { color: #00BFFF; }
-        /* FIX: Removed the old `padding-top: 120px` which caused the page jump. Padding is now on the body. */
-        .page-content-wrapper { flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 1200px; margin: 0 auto; padding-left: 1rem; padding-right: 1rem; }
-        .community-main-grid { display: flex; flex-wrap: wrap; gap: 2rem; }
-        .posts-section { flex: 3; min-width: 0; order: 1; }
-
         @media (max-width: 1023px) {
             .community-main-grid { flex-direction: column; }
             .posts-section, .filter-section-wrapper { flex: none; width: 100%; }
@@ -79,7 +69,6 @@
     </style>
 </head>
 <body class="antialiased">
-    <!-- FIX: Replaced the old div with a semantic header placeholder. -->
     <header id="header-placeholder"></header>
 
     <main class="page-content-wrapper">
@@ -122,11 +111,10 @@
     </footer>
 
     <script>
-        // --- GLOBAL STATE (Page-specific) ---
+        // --- PAGE-SPECIFIC LOGIC ---
         let communityFavorites = [];
         let unsubscribeUserListener = null;
 
-        // --- FIREBASE SETUP (Page-specific) ---
         const firebaseConfigShared = {
             apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
             authDomain: "linq-b27a8.firebaseapp.com",
@@ -141,19 +129,6 @@
         const authInstance = firebase.auth();
         const db = firebase.firestore();
 
-        // --- DATA (Page-specific) ---
-        const communityPostsDataPage = [
-            { id: 'tweet19', url: 'https://twitter.com/DavidInglesTV/status/1933357784646758533', title: 'Oil Prices Up Most in Half Decade', meta: 'June 13, 2025 • David Ingles (@DavidInglesTV)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">Oil prices up the most in half decade. We were at $59 five weeks ago. $80 now in sight. Brent crude up over 10% <a href="https://t.co/g9sMWWWm3y">pic.twitter.com/g9sMWWWm3y</a></p>&mdash; David Ingles (@DavidInglesTV) <a href="https://twitter.com/DavidInglesTV/status/1933357784646758533?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
-            { id: 'tweet18', url: 'https://twitter.com/marketplunger1/status/1933341930512953427', title: 'Crude Oil Knew.', meta: 'June 13, 2025 • Brandon Beylo (@marketplunger1)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">Crude oil knew.</p>&mdash; Brandon Beylo (@marketplunger1) <a href="https://twitter.com/marketplunger1/status/1933341930512953427?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
-            { id: 'tweet17', url: 'https://twitter.com/Josh_Young_1/status/1933327432804618625', title: 'Got Oil?', meta: 'June 13, 2025 • Josh Young (@Josh_Young_1)', category: 'Crude oil', tweetContent: '<p lang="en" dir="ltr">Got oil? <a href="https://t.co/fcW53lCkB9">https://t.co/fcW53lCkB9</a></p>&mdash; Josh Young (@Josh_Young_1) <a href="https://twitter.com/Josh_Young_1/status/1933327432804618625?ref_src=twsrc%5Etfw">June 13, 2025</a>' },
-            // ... (rest of community post data remains unchanged)
-            { id: 'tweet1', url: 'https://twitter.com/IsraeliPM/status/1933244843624407170', title: 'PM Netanyahu\'s Remarks with Argentine President Milei', meta: 'June 12, 2025 • Prime Minister of Israel (@IsraeliPM)', category: 'Policy', tweetContent: '<p lang="en" dir="ltr">WATCH: Prime Minister Benjamin Netanyahu&#39;s remarks, today, at the signing of MOUs with Argentine President <a href="https://twitter.com/JMilei?ref_src=twsrc%5Etfw">@JMilei</a>.<br><br>&quot;We feel your heart, your connection to our people, to our land, to our state, and our eternal united city, Jerusalem.&quot;<a href="https://t.co/7wtikaq9GC">https://t.co/7wtikaq9GC</a> <a href="https://t.co/clKlE7t7DY">pic.twitter.com/clKlE7t7DY</a></p>&mdash; Prime Minister of Israel (@IsraeliPM) <a href="https://twitter.com/IsraeliPM/status/1933244843624407170?ref_src=twsrc%5Etfw">June 12, 2025</a>'}
-        ];
-
-        // --- FIX: REMOVED initializeHeaderAndAuth and setActiveNavLink functions. ---
-        // This is now handled by headerManager.js.
-
-        // --- All page-specific functions (display, filter, bookmark) remain unchanged. ---
         function displayCommunityPostsPage(postsToDisplay) {
             const postsContainerCommunity = document.getElementById('postsContainerCommunity');
             if (!postsContainerCommunity) return;
@@ -167,7 +142,6 @@
                 const postElement = document.createElement('article');
                 postElement.className = 'post-card';
                 const isFavorited = communityFavorites.includes(String(post.id));
-
                 postElement.innerHTML = `
                     <p class="post-title">${post.title || 'Untitled Post'}</p>
                     <p class="post-meta">${post.meta || 'N/A'} <span class="post-category-tag">${post.category || 'General'}</span></p>
@@ -180,19 +154,17 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2" /></svg>
                         </button>
                         <button class="action-btn share-btn" data-id="${post.id}" data-title="${post.title || 'Untitled Post'}"><i class="fas fa-share-alt"></i></button>
-                    </div>
-                `;
+                    </div>`;
                 postsContainerCommunity.appendChild(postElement);
             });
-
             if (window.twttr && window.twttr.widgets) window.twttr.widgets.load(postsContainerCommunity);
         }
 
         function filterAndDisplayPosts() {
+            const allPosts = window.communityPostsData || [];
             const searchQuery = document.getElementById('searchInputCommunity').value.toLowerCase().trim();
             const activeCategories = Array.from(document.querySelectorAll('#categoryFiltersCommunity .filter-button.active')).map(btn => btn.dataset.category);
-            
-            let filteredPosts = communityPostsDataPage;
+            let filteredPosts = allPosts;
             if (activeCategories.length > 0) {
                 filteredPosts = filteredPosts.filter(post => activeCategories.includes(post.category));
             }
@@ -204,7 +176,7 @@
                 );
             }
             displayCommunityPostsPage(filteredPosts);
-            updateFavoriteIcons(); // Update icons after every re-render
+            updateFavoriteIcons();
         }
 
         async function toggleCommunityFavorite(postId) {
@@ -214,21 +186,18 @@
                 return;
             }
             const idStr = String(postId);
-            const isCurrentlyFavorited = communityFavorites.includes(idStr);
-
             const userRef = db.collection('users').doc(user.uid);
+            const isCurrentlyFavorited = communityFavorites.includes(idStr);
             const updateData = {
                 communityBookmarks: isCurrentlyFavorited 
                     ? firebase.firestore.FieldValue.arrayRemove(idStr) 
                     : firebase.firestore.FieldValue.arrayUnion(idStr)
             };
-            // The onSnapshot listener will handle the UI update automatically.
             await userRef.set(updateData, { merge: true }).catch(error => {
                 console.error("Firestore community bookmark update failed:", error);
             });
         }
         
-        // FIX: Added this function to ensure favorite icons are updated correctly on re-render
         function updateFavoriteIcons() {
              document.querySelectorAll('.favorite-btn').forEach(button => {
                 const isFavorited = communityFavorites.includes(String(button.dataset.id));
@@ -248,39 +217,35 @@
             }).catch(err => console.error('Failed to copy share link:', err));
         }
 
-        // --- INITIALIZATION ---
+        // --- PAGE INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            // FIX: REMOVED the fetch('header.html') block. This is now handled by headerManager.js.
-
-            // FIX: Simplified the auth listener to ONLY handle page-specific logic (bookmarks).
+            // FIX: Removed all old header-related logic. It is now handled by headerManager.js.
+            
+            // Set up the listener for this page's specific needs (updating bookmarks).
             authInstance.onAuthStateChanged(user => {
-                if (unsubscribeUserListener) unsubscribeUserListener(); // Detach old listener
-                
+                if (unsubscribeUserListener) unsubscribeUserListener();
                 if (user) {
-                    // User is logged in, listen for changes to their bookmarks
                     unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
                         communityFavorites = doc.exists && doc.data().communityBookmarks ? doc.data().communityBookmarks : [];
-                        filterAndDisplayPosts(); // Re-render posts with updated favorite status
+                        filterAndDisplayPosts();
                     }, err => {
                         console.error("Error listening to community bookmarks:", err);
                         communityFavorites = [];
                         filterAndDisplayPosts();
                     });
                 } else {
-                    // User is logged out, clear local favorites and re-render
                     communityFavorites = [];
                     filterAndDisplayPosts();
                 }
             });
 
+            // Page-specific event listeners
             document.getElementById('current-year-community').textContent = new Date().getFullYear();
-
             const twitterScript = document.createElement('script');
             twitterScript.src = 'https://platform.twitter.com/widgets.js';
             twitterScript.async = true;
             twitterScript.charset = 'utf-8';
             document.body.appendChild(twitterScript);
-
             if (window.twttr) {
                 window.twttr.ready(twttr => {
                     twttr.events.bind('rendered', function (event) {
@@ -293,31 +258,22 @@
                     });
                 });
             }
-
             document.getElementById('postsContainerCommunity').addEventListener('click', function(event) {
                 const favoriteButton = event.target.closest('.favorite-btn');
-                if (favoriteButton) {
-                    toggleCommunityFavorite(favoriteButton.dataset.id);
-                    return;
-                }
+                if (favoriteButton) toggleCommunityFavorite(favoriteButton.dataset.id);
                 const shareButton = event.target.closest('.share-btn');
-                if (shareButton) {
-                    handleShareClick(shareButton);
-                }
+                if (shareButton) handleShareClick(shareButton);
             });
-
             document.querySelectorAll('#categoryFiltersCommunity .filter-button').forEach(button => {
                 button.addEventListener('click', () => {
                     button.classList.toggle('active');
                     filterAndDisplayPosts();
                 });
             });
-
             document.getElementById('searchInputCommunity').addEventListener('input', filterAndDisplayPosts);
         });
     </script>
     
-    <!-- FIX: Centralized header script is now included at the end of the body -->
     <script src="headerManager.js" defer></script>
 </body>
 </html>
