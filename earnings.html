@@ -22,12 +22,10 @@
             flex-direction: column;
             min-height: 100vh;
             overflow-x: hidden;
-            /* FIX: Added top padding to reserve space for the fixed header */
             padding-top: 64px;
             }
         main.page-content-wrapper {
             flex-grow: 1;
-            /* FIX: Removed old padding-top which is now on the body */
             padding-bottom: 4rem;
             width: 100%;
             max-width: 1200px; 
@@ -36,27 +34,62 @@
         .calendar-page-title { font-size: 2.75rem; font-weight: 700; color: #FFFFFF; }
         .calendar-page-title .accent-text { color: #00BFFF; }
         .calendar-page-subtitle { font-size: 1.125rem; color: #A0A0A0; margin-top: 0.5rem; font-weight: 400; }
-        .earnings-card { background-color: #121212; border: 1px solid #282828; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1.5rem; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; position: relative; }
-        .earnings-card:not(.locked):hover { transform: translateY(-4px); box-shadow: 0 8px 25px -8px rgba(0, 191, 255, 0.25); border-color: #00BFFF; }
-        .earnings-card.locked > .card-content { filter: blur(4px); pointer-events: none; }
-        .locked-overlay { position: absolute; inset: 0; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.7); backdrop-filter: blur(2px); border-radius: 0.75rem; cursor: pointer; }
-        .earnings-card.locked .locked-overlay { display: flex; }
-        .locked-overlay-content { text-align: center; color: white; padding: 1rem;}
-        .locked-overlay-content h4 { font-size: 1.25rem; font-weight: 600; }
-        .locked-overlay-content p { color: #b0b0b0; margin-top: 0.5rem; margin-bottom: 1rem; }
-        .locked-overlay-content .upgrade-btn { background: #00BFFF; color: white; padding: 0.5rem 1.5rem; border-radius: 99px; text-decoration: none; font-weight: 500; transition: background-color 0.2s; }
-        .locked-overlay-content .upgrade-btn:hover { background: #00A9E0; }
-        .company-logo-placeholder { width: 48px; height: 48px; background-color: #282828; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1.25rem; color: #00BFFF; border: 2px solid #333333; flex-shrink: 0; }
+        .earnings-card { 
+            background-color: #121212; 
+            border: 1px solid #282828; 
+            border-radius: 0.75rem; 
+            padding: 1.5rem; 
+            margin-bottom: 1.5rem; 
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; 
+            position: relative; 
+        }
+        .earnings-card:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 8px 25px -8px rgba(0, 191, 255, 0.25); 
+            border-color: #00BFFF; 
+        }
+        .company-logo-placeholder { 
+            width: 48px; 
+            height: 48px; 
+            background-color: #282828; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 600; 
+            font-size: 1.25rem; 
+            color: #00BFFF; 
+            border: 2px solid #333333; 
+            flex-shrink: 0; 
+        }
         .company-info-name { font-size: 1.25rem; font-weight: 600; color: #FFFFFF; }
         .company-info-ticker { font-size: 0.9rem; color: #A0A0A0; }
-        .detail-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; color: #B0B0B0; }
-        .detail-item i { color: #00BFFF; width: 16px; text-align: center; }
-        .action-btn { background-color: #1A1A1A; color: #00BFFF; border: 1px solid #00BFFF; padding: 0.5rem 1rem; border-radius: 0.375rem; font-size: 0.8rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.5rem; transition: background-color 0.2s ease, color 0.2s ease; cursor: pointer; }
-        .action-btn:hover { background-color: #00BFFF; color: #FFFFFF; }
-        .earnings-estimates-grid { border-top: 1px solid #282828; margin-top: 1rem; padding-top: 1rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center; }
-        .info-block h4 { font-size: 0.8rem; font-weight: 500; color: #888; margin-bottom: 0.25rem; text-transform: uppercase; }
+        .earnings-estimates-grid { 
+            border-top: 1px solid #282828; 
+            margin-top: 1.25rem; 
+            padding-top: 1.25rem; 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 1rem; 
+            text-align: left; 
+        }
+        .info-block h4 { 
+            font-size: 0.8rem; 
+            font-weight: 500; 
+            color: #888; 
+            margin-bottom: 0.25rem; 
+            text-transform: uppercase; 
+        }
         .info-block p { font-size: 1.1rem; font-weight: 600; color: #eee; }
-        .footer { background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem; border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem; margin-top: auto; }
+        .footer { 
+            background-color: #080808; 
+            color: #A0A0A0; 
+            padding: 2.5rem 1rem; 
+            border-top: 1px solid #1A1A1A; 
+            text-align: center; 
+            font-size: 0.875rem; 
+            margin-top: auto; 
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -65,14 +98,15 @@
     <main class="page-content-wrapper px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-10 mt-10">
             <h1 class="calendar-page-title">Energy Sector <span class="accent-text">Earnings</span></h1>
-            <p class="calendar-page-subtitle"></p>
+            <p class="calendar-page-subtitle">Upcoming earnings releases for major energy companies.</p>
             <a href="previous_earnings.html" class="inline-block text-white font-bold py-3 px-6 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-cyan-500/50 transform hover:-translate-y-0.5">
                 View Past Earnings
             </a>
         </div>
 
         <div id="earnings-container">
-             </div>
+             <!-- Earnings cards will be dynamically inserted here -->
+        </div>
     </main>
 
     <footer class="footer">
@@ -80,11 +114,9 @@
     </footer>
 
     <script>
-        // --- GLOBAL STATE & CONFIG ---
         let isSubscribed = false;
         let unsubscribeUserListener = null;
         
-        // --- DATA: Expanded with the new list of companies ---
         const earningsData = [
             { company: "ExxonMobil", ticker: "XOM", date: "2025-07-07", time: "4:30 PM", period: "Q2 2025", epsNormalizedEstimate: 1.49, epsGaapEstimate: 1.40, revenueEstimate: 79.07 },
             { company: "Chevron", ticker: "CVX", date: "2025-08-01", time: "9:00 AM", period: "Q2 2025", epsNormalizedEstimate: 1.77, epsGaapEstimate: 1.58, revenueEstimate: 44.59 },
@@ -131,7 +163,6 @@
             { company: "Baker Hughes", ticker: "BKR", date: "2025-07-22", time: "4:30 PM", period: "Q2 2025", epsNormalizedEstimate: 0.55, epsGaapEstimate: 0.56, revenueEstimate: 6.64 }
         ];
 
-        // --- FIREBASE SETUP ---
         const firebaseConfig = { 
             apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
             authDomain: "linq-b27a8.firebaseapp.com",
@@ -144,11 +175,9 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // --- PAGE-SPECIFIC INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             auth.onAuthStateChanged(user => {
                 if (unsubscribeUserListener) unsubscribeUserListener();
-
                 if (user) {
                     unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
                         isSubscribed = doc.exists && doc.data().isSubscribed === true;
@@ -163,7 +192,6 @@
                     renderEarnings();
                 }
             });
-            
             document.getElementById('current-year').textContent = new Date().getFullYear();
         });
 
@@ -189,10 +217,7 @@
                 titleEl.className = 'text-xl font-semibold text-white my-6 pb-2 border-b border-gray-700';
                 titleEl.textContent = new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 container.appendChild(titleEl);
-
-                groupedByDate[dateStr].forEach(call => {
-                    container.appendChild(createEarningsCard(call));
-                });
+                groupedByDate[dateStr].forEach(call => container.appendChild(createEarningsCard(call)));
             });
 
             if (tbdCalls.length > 0) {
@@ -200,9 +225,7 @@
                 tbdTitleEl.className = 'text-xl font-semibold text-white my-6 pb-2 border-b border-gray-700';
                 tbdTitleEl.textContent = 'Awaiting Announcement';
                 container.appendChild(tbdTitleEl);
-                tbdCalls.forEach(call => {
-                     container.appendChild(createEarningsCard(call));
-                });
+                tbdCalls.forEach(call => container.appendChild(createEarningsCard(call)));
             }
         }
 
@@ -211,9 +234,12 @@
             cardEl.className = 'earnings-card upcoming-card';
             
             const initials = call.ticker || call.company.substring(0, 3).toUpperCase();
-            const dateDisplay = call.date === 'TBD' ? 'TBD' : new Date(call.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            const dateDisplay = call.date === 'TBD' ? 'TBD' : new Date(call.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
             const timeDisplay = call.time === 'TBD' ? 'TBD' : call.time;
             
+            const formatRevenue = (value) => (typeof value === 'number') ? `$${value.toFixed(2)}B` : 'N/A';
+            const formatCurrency = (value) => (typeof value === 'number') ? `$${value.toFixed(2)}` : 'N/A';
+
             cardEl.innerHTML = `
                 <div class="card-content flex flex-col gap-y-4">
                     <div class="flex items-start justify-between">
@@ -225,30 +251,24 @@
                             </div>
                         </div>
                         <div class="text-right flex-shrink-0 ml-4">
-                             <div class="detail-item justify-end"><i class="fas fa-calendar-alt"></i><span>${dateDisplay}</span></div>
-                             <div class="detail-item justify-end"><i class="fas fa-clock"></i><span>${timeDisplay}</span></div>
+                             <p class="text-sm text-gray-400 font-medium">${call.period}</p>
+                             <p class="text-sm text-gray-500">${dateDisplay} at ${timeDisplay}</p>
                         </div>
                     </div>
                     
                     <div class="earnings-estimates-grid">
                         <div class="info-block">
-                            <h4>Period</h4>
-                            <p>${call.period}</p>
-                        </div>
-                        <div class="info-block">
                             <h4>Revenue Est.</h4>
-                            <p>---</p>
+                            <p>${formatRevenue(call.revenueEstimate)}</p>
                         </div>
                         <div class="info-block">
-                            <h4>EPS Est.</h4>
-                            <p>---</p>
+                            <h4>EPS (Normalized)</h4>
+                            <p>${formatCurrency(call.epsNormalizedEstimate)}</p>
                         </div>
-                    </div>
-
-                    <div class="card-actions flex justify-end gap-3 mt-2">
-                        <button class="action-btn add-to-calendar-btn" data-company="${call.company}" data-ticker="${call.ticker}" data-date="${call.date}" data-time="${call.time}" data-timezone="ET" data-period="${call.period}">
-                            <i class="fas fa-calendar-plus"></i> Add to Calendar
-                        </button>
+                        <div class="info-block">
+                            <h4>EPS (GAAP)</h4>
+                            <p>${formatCurrency(call.epsGaapEstimate)}</p>
+                        </div>
                     </div>
                 </div>`;
             return cardEl;
