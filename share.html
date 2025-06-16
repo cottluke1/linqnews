@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linq - Shared Post</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- FIX: Added community_posts.js so this page has access to the data -->
+    <!-- FIX: Updated font to Inter to match the rest of the site -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="community_posts.js" defer></script>
     <style>
         body {
-            font-family: 'Lexend', sans-serif;
+            /* FIX: Updated font-family */
+            font-family: 'Inter', sans-serif;
             background-color: #0A0A0A;
             color: #E0E0E0;
             display: flex;
@@ -21,7 +22,7 @@
         .page-content-wrapper {
             flex-grow: 1; padding-bottom: 4rem; width: 100%; max-width: 800px;
             margin: 0 auto; padding-left: 1rem; padding-right: 1rem;
-            padding-top: 2rem; /* Space below header */
+            padding-top: 2rem;
         }
         .shared-post-title {
             font-size: 2rem; font-weight: 700; color: #FFFFFF; margin-bottom: 1.5rem; text-align: center;
@@ -66,44 +67,31 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('current-year-share').textContent = new Date().getFullYear();
-
-            // FIX: Wait for the communityPostsData to be available from the deferred script
             const dataCheckInterval = setInterval(() => {
                 if (window.communityPostsData) {
                     clearInterval(dataCheckInterval);
                     displaySharedPost();
                 }
-            }, 50); // Check every 50ms
+            }, 50);
         });
 
-        // Function to display the shared post
         function displaySharedPost() {
             const container = document.getElementById('sharedPostContainer');
-            if (!container) {
-                console.error('Shared post container not found.');
-                return;
-            }
-
+            if (!container) return;
             const params = new URLSearchParams(window.location.search);
             const postId = params.get('postId');
-
             if (!postId) {
                 container.innerHTML = '<p class="message-area">No post ID provided in the URL.</p>';
                 return;
             }
-
-            // FIX: Find the post within the now-loaded window.communityPostsData
             const post = window.communityPostsData.find(p => p.id === postId);
-
             if (!post) {
                 container.innerHTML = `<p class="message-area">Post with ID "${postId}" not found.</p>`;
                 return;
             }
-
             const postElement = document.createElement('article');
             postElement.className = 'post-card';
             const tweetHTML = typeof post.tweetContent === 'string' ? post.tweetContent : '<p>Error loading tweet content.</p>';
-
             postElement.innerHTML = `
                 <p class="post-title">${post.title || 'Untitled Post'}</p>
                 <p class="post-meta">${post.meta || 'N/A'} <span class="post-category-tag">${post.category || 'General'}</span></p>
@@ -119,14 +107,12 @@
             `;
             container.innerHTML = ''; 
             container.appendChild(postElement);
-
             if (window.twttr && window.twttr.widgets) {
                 window.twttr.widgets.load(container);
             }
         }
     </script>
     
-    <!-- Centralized header script -->
     <script src="headerManager.js" defer></script>
 </body>
 </html>
