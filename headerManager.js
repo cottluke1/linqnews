@@ -104,7 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 profileLinkDesktop.appendChild(profileImg);
             }
 
-            // Set loading state
+            // Make sure the image is visible
+            profileImg.style.display = 'block';
             profileImg.style.opacity = '0.5';
             
             // Load image with error handling
