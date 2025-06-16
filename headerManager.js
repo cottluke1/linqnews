@@ -1,3 +1,8 @@
+// /js/headerManager.js
+// This script provides a centralized solution for managing the site's header,
+// including authentication state, mobile menu functionality, and active link highlighting.
+// It's designed to be included in every page to ensure a consistent user experience.
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. DEFINE CONSTANTS AND GET ELEMENTS ---
     const headerPlaceholder = document.getElementById('header-placeholder');
