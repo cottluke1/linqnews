@@ -58,14 +58,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 5. SETUP STATIC EVENT LISTENERS (using Event Delegation) ---
     function setupEventListeners(auth) {
-        const currentPath = window.location.pathname.split("/").pop() || "index.html";
+        // FIX: Normalize the current path to handle root URLs, query params, etc.
+        const currentPath = window.location.pathname.split("/").pop().split("?")[0] || "index.html";
 
         headerPlaceholder.addEventListener('click', (event) => {
             const target = event.target.closest('a, button');
             if (!target) return;
 
-            if (target.matches('.nav-link') && target.getAttribute('href') === currentPath) {
-                event.preventDefault();
+            // FIX: Normalize the target link's href before comparison.
+            const targetHrefRaw = target.getAttribute('href');
+            if (target.matches('.nav-link') && targetHrefRaw) {
+                const targetHref = targetHrefRaw.split("?")[0];
+                if (targetHref === currentPath) {
+                    event.preventDefault(); // Stop the browser from navigating
+                }
             }
 
             if (target.id === 'mobile-menu-button') {
@@ -92,51 +98,49 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!authLinkDesktop || !profileLinkDesktop || !navProfilePic) return;
 
         if (user) {
-            // --- USER IS LOGGED IN ---
             const initials = (user.displayName || user.email || "U").charAt(0).toUpperCase();
             const photoSrc = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-            
             const image = new Image();
             image.src = photoSrc;
-
-            // FIX: Implement the user's suggested preloading fix
             image.onload = () => {
                 navProfilePic.src = image.src;
-                navProfilePic.style.display = 'block'; // Only show after it's fully loaded
+                navProfilePic.style.display = 'block';
                 profileLinkDesktop.classList.remove('hidden');
                 authLinkDesktop.classList.add('hidden');
             };
             image.onerror = () => {
                 navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-                navProfilePic.style.display = 'block'; // Show the fallback image
+                navProfilePic.style.display = 'block';
                 profileLinkDesktop.classList.remove('hidden');
                 authLinkDesktop.classList.add('hidden');
             };
-
             authLinkMobile.classList.add('hidden');
             profileLinkMobile.classList.remove('hidden');
             logoutButtonMobile.classList.remove('hidden');
         } else {
-            // --- USER IS LOGGED OUT ---
             profileLinkDesktop.classList.add('hidden');
             authLinkDesktop.classList.remove('hidden');
-            navProfilePic.style.display = 'none'; // Ensure image is hidden on logout
+            navProfilePic.style.display = 'none';
             authLinkMobile.classList.remove('hidden');
             profileLinkMobile.classList.add('hidden');
             logoutButtonMobile.classList.add('hidden');
         }
-        
         setActiveNavLink();
     }
     
     // --- 7. UTILITY FUNCTION ---
     function setActiveNavLink() {
-        const currentPath = window.location.pathname.split("/").pop() || "index.html";
+        // FIX: Normalize the current path here as well for consistency.
+        const currentPath = window.location.pathname.split("/").pop().split("?")[0] || "index.html";
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
             link.classList.remove('active');
-            if (link.getAttribute('href') === currentPath) {
-                link.classList.add('active');
+            const linkHrefRaw = link.getAttribute('href');
+            if (linkHrefRaw) {
+                const linkHref = linkHrefRaw.split("?")[0];
+                if (linkHref === currentPath) {
+                    link.classList.add('active');
+                }
             }
         });
     }
