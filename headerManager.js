@@ -1,6 +1,6 @@
 // /js/headerManager.js
 // This script provides a centralized solution for managing the site's header.
-// UPDATED: Now includes logic for a responsive slide-out menu on mobile.
+// UPDATED: Styles have been refined to match the reference image, including icons.
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. DEFINE CONSTANTS AND GET ELEMENTS ---
@@ -11,10 +11,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 2. INJECT REQUIRED CSS STYLES ---
-    // Added styles for the new slide-out menu, overlay, and profile section.
+    // Added Font Awesome and updated styles for the new design.
+    const fontAwesomeLink = document.createElement('link');
+    fontAwesomeLink.rel = 'stylesheet';
+    fontAwesomeLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+    document.head.appendChild(fontAwesomeLink);
+    
     const styles = `
         /* Base Nav Link Styles */
-        .nav-link { font-size: 0.875rem; color: #D1D5DB; font-weight: 500; transition: color 0.2s ease-in-out; border-radius: 0.375rem; }
+        .nav-link { font-size: 0.875rem; color: #D1D5DB; font-weight: 500; transition: color 0.2s ease-in-out; border-radius: 0.375rem; text-decoration: none; }
         .nav-link:hover { color: #FFFFFF; }
         .nav-link.active { color: #FFFFFF; font-weight: 600; }
         .nav-link-button { font-size: 0.875rem; font-weight: 500; background-color: #00BFFF; color: white !important; padding: 0.5rem 1rem; border-radius: 0.375rem; transition: background-color 0.2s ease; }
@@ -22,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .go-premium-btn { font-size: 0.875rem; font-weight: 600; background-color: #1F2937; color: #FFFFFF; padding: 0.5rem 1rem; border-radius: 9999px; border: 1px solid #4B5563; transition: all 0.2s ease; display: inline-block; text-decoration: none; }
         .go-premium-btn:hover { background-color: #374151; border-color: #6B7280; transform: scale(1.05); }
 
-        /* Slide-Out Menu Styles */
+        /* Slide-Out Menu Styles - Refined to match image */
         #slide-out-menu {
             position: fixed;
             top: 0;
@@ -30,57 +35,51 @@ document.addEventListener('DOMContentLoaded', () => {
             width: 85%;
             max-width: 320px;
             height: 100vh;
-            background-color: #111827; /* Darker blue-gray */
+            background-color: #000000; /* Darker background */
             z-index: 2000;
             transform: translateX(100%);
             transition: transform 0.3s ease-in-out;
             display: flex;
             flex-direction: column;
-            border-left: 1px solid #374151;
         }
         #slide-out-menu.open {
             transform: translateX(0);
             box-shadow: -10px 0 25px rgba(0,0,0,0.5);
         }
-        .slide-out-header {
-            padding: 0.5rem 1rem;
-            text-align: right;
+        #slide-out-profile-section {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #1F2937;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        #slide-out-profile-pic {
+            width: 50px; /* Smaller picture */
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .profile-info {
+             flex-grow: 1;
+        }
+        .profile-info #slide-out-display-name {
+            font-weight: 700; /* Bolder */
+            font-size: 1rem;
+            color: #FFF;
+        }
+        .profile-info #slide-out-username {
+            font-size: 0.9rem;
+            color: #6B7280; /* Lighter gray */
         }
         #slide-out-close-btn {
-            font-size: 2.5rem;
-            font-weight: 300;
+            font-size: 1.5rem;
             color: #9CA3AF;
             background: none;
             border: none;
             cursor: pointer;
-            transition: transform 0.2s;
+            margin-left: auto;
         }
-        #slide-out-close-btn:hover {
-            transform: scale(1.1);
-            color: #FFF;
-        }
-        #slide-out-profile-section {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid #1F2937;
-            text-align: center;
-        }
-        #slide-out-profile-pic {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #374151;
-            margin: 0 auto 0.75rem;
-        }
-        .profile-info #slide-out-display-name {
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: #FFF;
-        }
-        .profile-info #slide-out-username {
-            font-size: 0.875rem;
-            color: #9CA3AF;
-        }
+
         .slide-out-nav {
             padding: 1rem;
             flex-grow: 1;
@@ -88,29 +87,48 @@ document.addEventListener('DOMContentLoaded', () => {
             flex-direction: column;
         }
         .slide-out-nav .nav-link {
-            font-size: 1rem;
-            padding: 0.75rem 1rem;
-            border-radius: 0.375rem;
+            font-size: 1.125rem; /* Larger font */
+            font-weight: 700; /* Bolder */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem; /* More space between icon and text */
+        }
+        .slide-out-nav .nav-link .icon {
+            width: 24px; /* Fixed width for alignment */
+            text-align: center;
+            font-size: 1.25rem;
         }
         .slide-out-nav .nav-link:hover {
             background-color: #1F2937;
         }
         .slide-out-nav hr {
             border-color: #1F2937;
-            margin: 0.75rem 0;
+            margin: 0.5rem 0;
         }
         .slide-out-nav .premium-link {
-            color: #22D3EE;
-            font-weight: 600;
+            color: #E2E8F0; /* Regular color, icon handles premium look */
+        }
+         .slide-out-nav .premium-link .icon {
+            color: #A855F7; /* Purple premium icon */
+        }
+        .slide-out-nav .beta-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            background-color: #0E7490;
+            color: #E2E8F0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 0.5rem;
         }
         .slide-out-nav .logout-button {
             margin-top: auto;
+        }
+        .slide-out-nav .logout-button .icon {
             color: #F87171;
         }
-        .slide-out-nav .logout-button:hover {
-            background-color: rgba(248, 113, 113, 0.1);
-        }
-
+        
         /* Menu Overlay */
         #menu-overlay {
             position: fixed;
@@ -118,15 +136,17 @@ document.addEventListener('DOMContentLoaded', () => {
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(9, 9, 11, 0.7); /* Darker overlay with a slight blur */
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
             z-index: 1999;
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
-            pointer-events: none; /* Allows clicks to pass through when hidden */
+            pointer-events: none;
         }
         #menu-overlay.open {
             opacity: 1;
-            pointer-events: auto; /* Catches clicks when visible */
+            pointer-events: auto;
         }
     `;
     const styleSheet = document.createElement("style");
@@ -142,7 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             headerPlaceholder.innerHTML = data;
-            // Once HTML is loaded, initialize all functionality
             initializeHeaderFunctionality();
         })
         .catch(error => {
@@ -161,7 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const db = firebase.firestore();
         let unsubscribeUserListener = null;
 
-        // Immediately restore cached avatar from localStorage if available
         const cachedPhoto = localStorage.getItem('navProfileURL');
         if (cachedPhoto) {
             updateDesktopProfilePic(cachedPhoto);
@@ -169,7 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         setupEventListeners(auth);
         
-        // Listen for Authentication state changes
         auth.onAuthStateChanged(user => {
             if (unsubscribeUserListener) {
                 unsubscribeUserListener();
@@ -177,17 +194,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (user) {
-                // User is signed in, listen for real-time profile updates
                 unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
                     const userData = doc.exists ? doc.data() : {};
                     updateAuthUI(user, userData);
                 }, error => {
                     console.error("Error listening to user document:", error);
-                    // Fallback with basic user info if Firestore fails
                     updateAuthUI(user, {});
                 });
             } else {
-                // User is signed out
                 updateAuthUI(null, null);
             }
         });
@@ -201,7 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const logoutButton = document.getElementById('slide-out-logout-button');
         const slideOutMenu = document.getElementById('slide-out-menu');
 
-        // --- Menu open/close functions ---
         const openMenu = () => {
             slideOutMenu?.classList.add('open');
             menuOverlay?.classList.add('open');
@@ -211,21 +224,19 @@ document.addEventListener('DOMContentLoaded', () => {
             menuOverlay?.classList.remove('open');
         };
 
-        // --- Assign event listeners ---
         slideOutMenuButton?.addEventListener('click', openMenu);
         slideOutCloseButton?.addEventListener('click', closeMenu);
         menuOverlay?.addEventListener('click', closeMenu);
 
         logoutButton?.addEventListener('click', (event) => {
             event.preventDefault();
-            localStorage.removeItem('navProfileURL'); // Clear cached image on logout
+            localStorage.removeItem('navProfileURL');
             auth.signOut();
-            closeMenu(); // Close menu after logging out
+            closeMenu();
         });
         
-        // Close menu if a nav link is clicked
         slideOutMenu?.addEventListener('click', (event) => {
-            if (event.target.matches('.nav-link') && event.target.id !== 'slide-out-logout-button') {
+            if (event.target.closest('.nav-link') && !event.target.closest('.logout-button')) {
                 closeMenu();
             }
         });
@@ -257,12 +268,10 @@ document.addEventListener('DOMContentLoaded', () => {
             
             localStorage.setItem('navProfileURL', photoSrc);
 
-            // Update Desktop UI
             updateDesktopProfilePic(photoSrc, name);
             authLinkDesktop.classList.add('hidden');
             profileLinkDesktop.classList.remove('hidden');
 
-            // Update Slide-Out Menu UI
             profileSection.classList.remove('hidden');
             profilePic.src = photoSrc;
             displayName.textContent = name;
@@ -273,18 +282,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } else {
             // --- LOGGED-OUT STATE ---
-            // Update Desktop UI
             profileLinkDesktop.classList.add('hidden');
             authLinkDesktop.classList.remove('hidden');
             profileLinkDesktop.innerHTML = '<img id="navProfilePic" style="display:none;" src="" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition">';
 
-            // Update Slide-Out Menu UI
             profileSection.classList.add('hidden');
             profileLink.classList.add('hidden');
             logoutButton.classList.add('hidden');
             loginLink.classList.remove('hidden');
         }
-        // Highlight the active navigation link in all menus
         setActiveNavLink();
     }
     
@@ -297,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
         image.src = imgSrc;
         
         const createAndAppendImage = (finalSrc) => {
-            profileLinkDesktop.innerHTML = ''; // Clear previous image
+            profileLinkDesktop.innerHTML = '';
             const newImg = document.createElement('img');
             newImg.id = 'navProfilePic';
             newImg.src = finalSrc;
@@ -314,9 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setActiveNavLink() {
-        // Gets the last part of the URL path (e.g., 'index.html', 'community.html')
         const currentPath = window.location.pathname.split("/").pop().split("?")[0] || "index.html";
-        // Selects nav links from BOTH desktop and mobile menus
         const navLinks = document.querySelectorAll('div.hidden.md\\:flex a.nav-link, .slide-out-nav a.nav-link');
         
         navLinks.forEach(link => {
@@ -324,7 +328,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const linkHrefRaw = link.getAttribute('href');
             if (linkHrefRaw) {
                 const linkHref = linkHrefRaw.split("?")[0];
-                // Check if the link's href matches the current page's path
                 if (linkHref === currentPath) {
                     link.classList.add('active');
                 }
