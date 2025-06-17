@@ -1,7 +1,7 @@
 <!--
   MODERNIZED HEADER FRAGMENT (FIXED)
-  - Contains all necessary styles for both desktop and the new slide-out mobile menu.
-  - The structure remains the same, supporting the slide-out functionality.
+  - Desktop alignment glitch is resolved.
+  - Mobile slide-out menu structure is updated for a simpler profile link.
 -->
 <style>
     /* --- Base Desktop Nav Styles (Restored) --- */
@@ -80,18 +80,16 @@
 <nav class="fixed top-0 left-0 w-full z-[1000] bg-black/80 backdrop-blur-sm border-b border-gray-800">
   <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
     
-    <!-- Left Side: Logo -->
-    <div class="flex-shrink-0">
-      <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
-    </div>
-
-    <!-- Center: Nav Links (Desktop) -->
-    <div class="hidden md:flex items-center space-x-2">
-      <a href="index.html" class="nav-link px-3 py-2">News</a>
-      <a href="community.html" class="nav-link px-3 py-2">Community</a>
-      <a href="linqai.html" class="nav-link px-3 py-2">Linq AI</a>
-      <a href="earnings.html" class="nav-link px-3 py-2">Earnings</a>
-      <a href="favorites.html" class="nav-link px-3 py-2">Bookmarks</a>
+    <!-- Left Side: Logo and Desktop Nav -->
+    <div class="flex items-center gap-x-8">
+      <a href="index.html" class="text-3xl font-bold text-white flex-shrink-0">Linq</a>
+       <div class="hidden md:flex items-center space-x-2">
+        <a href="index.html" class="nav-link px-3 py-2">News</a>
+        <a href="community.html" class="nav-link px-3 py-2">Community</a>
+        <a href="linqai.html" class="nav-link px-3 py-2">Linq AI</a>
+        <a href="earnings.html" class="nav-link px-3 py-2">Earnings</a>
+        <a href="favorites.html" class="nav-link px-3 py-2">Bookmarks</a>
+      </div>
     </div>
 
     <!-- Right Side: Auth and Premium Button (Desktop) -->
@@ -116,16 +114,7 @@
 <div id="menu-overlay" class="fixed inset-0 bg-black bg-opacity-60 z-[1001] hidden opacity-0 pointer-events-none"></div>
 <div id="slide-out-menu" class="fixed top-0 right-0 h-full w-72 bg-[#101010] shadow-2xl z-[1002] transform translate-x-full flex flex-col">
     <!-- Panel Header -->
-    <div class="p-4 flex justify-between items-start border-b border-gray-800">
-        <div id="slide-out-user-info" class="hidden">
-            <a href="profile.html" class="flex items-center gap-3 group">
-                <img id="slide-out-avatar" src="https://placehold.co/40x40/374151/FFFFFF?text=U" alt="User Avatar" class="w-10 h-10 rounded-full object-cover bg-gray-700 group-hover:ring-2 ring-cyan-400 transition">
-                <div>
-                    <p id="slide-out-name" class="font-bold text-white group-hover:text-cyan-400 transition">User</p>
-                    <p id="slide-out-email" class="text-xs text-gray-400">user@email.com</p>
-                </div>
-            </a>
-        </div>
+    <div class="p-4 flex justify-end items-center border-b border-gray-800">
         <button id="slide-out-close-btn" class="text-gray-500 hover:text-white hover:rotate-90 transition-transform duration-300">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
@@ -133,6 +122,7 @@
 
     <!-- Panel Navigation -->
     <nav class="flex-grow p-4 space-y-2">
+        <a href="profile.html" id="profile-button-slideout" class="slide-out-nav-link hidden"><i class="fas fa-user-circle"></i>Profile</a>
         <a href="index.html" class="slide-out-nav-link"><i class="fas fa-newspaper"></i>News</a>
         <a href="community.html" class="slide-out-nav-link"><i class="fas fa-users"></i>Community</a>
         <a href="linqai.html" class="slide-out-nav-link"><i class="fas fa-brain"></i>Linq AI</a>
