@@ -1,129 +1,223 @@
 // /js/headerManager.js
-// Improved: Handles auth, nav centering, profile persistence, and SPA-style routing
+// This script fetches the header, handles authentication state, centers navigation,
+// and implements SPA-style page loading for a smoother user experience.
 
 document.addEventListener('DOMContentLoaded', () => {
     const headerPlaceholder = document.getElementById('header-placeholder');
-    if (!headerPlaceholder) return;
+    if (!headerPlaceholder) {
+        console.error("Header placeholder element not found.");
+        return;
+    }
 
+    // Fetch the header content and inject it into the placeholder
     fetch('header.html')
-        .then(res => res.text())
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to fetch header.html');
+            return response.text();
+        })
         .then(html => {
             headerPlaceholder.innerHTML = html;
-
-            // Wait one animation frame to ensure elements are fully parsed before initializing
-            requestAnimationFrame(() => {
-                initHeader();
-            });
+            // Once the header is loaded, initialize its dynamic functionality
+            initializeHeaderFunctionality();
+        })
+        .catch(error => {
+            console.error('Error loading header:', error);
+            headerPlaceholder.innerHTML = "<p class='text-center text-red-500'>Error loading navigation.</p>";
         });
 });
 
-
-    function initHeader() {
-        if (typeof firebase === 'undefined') return;
-    
-        const auth = firebase.auth();
-    
-        auth.onAuthStateChanged(user => {
-            // Call updateAuthUI twice: immediately and again in the next animation frame
-            updateAuthUI(user);
-            requestAnimationFrame(() => updateAuthUI(user));
-        });
-    
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.classList.add('text-center', 'w-full');
-        });
-    
-        const navContainer = document.querySelector('.flex.items-center.space-x-2');
-        if (navContainer) navContainer.classList.add('justify-center', 'w-full');
-    
-        interceptNavClicks();
-        setupMobileMenu(auth);
+/**
+ * Initializes all header-related logic after the HTML has been injected.
+ */
+function initializeHeaderFunctionality() {
+    if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined') {
+        console.error("Firebase is not available. Header functionality will be limited.");
+        return;
     }
 
+    const auth = firebase.auth();
 
-    function updateAuthUI(user) {
-        const isLoggedIn = !!user;
+    // Set up a listener that updates the UI whenever the user's login state changes.
+    // This is the single source of truth and prevents UI glitches.
+    auth.onAuthStateChanged(updateAuthUI);
 
-        document.getElementById('authLinkDesktopLogin')?.classList.toggle('hidden', isLoggedIn);
-        document.getElementById('profileLinkDesktop')?.classList.toggle('hidden', !isLoggedIn);
+    // Fix for centering the desktop navigation links
+    const desktopNavContainer = document.querySelector('.hidden.md\\:block .flex.items-center.space-x-2');
+    if (desktopNavContainer) {
+        desktopNavContainer.classList.add('justify-center', 'w-full');
+    }
 
-        const pic = document.getElementById('navProfilePic');
-        if (pic) {
-            if (isLoggedIn) {
-                const photo = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email[0].toUpperCase()}`;
-                pic.src = photo;
-                pic.style.display = 'block';
-            } else {
-                pic.style.display = 'none';
-            }
-        }
+    // Set up mobile menu toggling
+    setupMobileMenu(auth);
 
-        document.getElementById('authLinkMobile')?.classList.toggle('hidden', isLoggedIn);
-        document.getElementById('bottomProfileLinkMobile')?.classList.toggle('hidden', !isLoggedIn);
-        document.getElementById('logoutButtonMobile')?.classList.toggle('hidden', !isLoggedIn);
-        document.getElementById('slideout-user-info')?.classList.toggle('hidden', !isLoggedIn);
+    // Set up the SPA-style navigation
+    interceptNavigationClicks();
+    window.addEventListener('popstate', handleBrowserNavigation);
+    updateActiveLink(window.location.pathname);
+}
 
+/**
+ * Updates all UI elements in the header based on whether a user is logged in.
+ * @param {firebase.User | null} user The authenticated user object, or null if logged out.
+ */
+function updateAuthUI(user) {
+    const isLoggedIn = !!user;
+
+    // Toggle visibility of desktop login/profile links
+    document.getElementById('authLinkDesktopLogin')?.classList.toggle('hidden', isLoggedIn);
+    document.getElementById('profileLinkDesktop')?.classList.toggle('hidden', !isLoggedIn);
+
+    // Update the profile picture in the main header
+    const navProfilePic = document.getElementById('navProfilePic');
+    if (navProfilePic) {
         if (isLoggedIn) {
-            document.getElementById('slideoutProfilePic').src = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email[0].toUpperCase()}`;
-            document.getElementById('slideoutDisplayName').textContent = user.displayName || 'User';
-            document.getElementById('slideoutEmail').textContent = `@${user.email.split('@')[0]}`;
+            navProfilePic.src = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email[0].toUpperCase()}`;
+            navProfilePic.style.display = 'block';
+        } else {
+            navProfilePic.style.display = 'none';
         }
     }
 
-    function setupMobileMenu(auth) {
-        document.getElementById('mobile-menu-button')?.addEventListener('click', () => {
-            document.getElementById('mobile-slideout-menu')?.classList.remove('translate-x-full');
-            document.getElementById('menu-overlay')?.classList.remove('hidden');
-            document.body.classList.add('overflow-hidden');
-        });
+    // Update the slide-out mobile menu based on login state
+    document.getElementById('slideout-user-info')?.classList.toggle('hidden', !isLoggedIn);
+    document.getElementById('authLinkMobile')?.classList.toggle('hidden', isLoggedIn);
+    document.getElementById('bottomProfileLinkMobile')?.classList.toggle('hidden', !isLoggedIn);
+    document.getElementById('logoutButtonMobile')?.classList.toggle('hidden', !isLoggedIn);
 
-        const close = () => {
-            document.getElementById('mobile-slideout-menu')?.classList.add('translate-x-full');
-            document.getElementById('menu-overlay')?.classList.add('hidden');
-            document.body.classList.remove('overflow-hidden');
-        };
+    if (isLoggedIn) {
+        document.getElementById('slideoutProfilePic').src = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email[0].toUpperCase()}`;
+        document.getElementById('slideoutDisplayName').textContent = user.displayName || 'User';
+        document.getElementById('slideoutEmail').textContent = user.email ? `@${user.email.split('@')[0]}` : '';
+    }
+}
 
-        document.getElementById('mobile-menu-close-button')?.addEventListener('click', close);
-        document.getElementById('menu-overlay')?.addEventListener('click', close);
+/**
+ * Sets up the event listeners for opening and closing the mobile slideout menu.
+ * @param {firebase.auth.Auth} auth The Firebase auth instance.
+ */
+function setupMobileMenu(auth) {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const closeButton = document.getElementById('mobile-menu-close-button');
+    const overlay = document.getElementById('menu-overlay');
+    const slideoutMenu = document.getElementById('mobile-slideout-menu');
+    const logoutButton = document.getElementById('logoutButtonMobile');
 
-        document.getElementById('logoutButtonMobile')?.addEventListener('click', (e) => {
-            e.preventDefault();
-            auth.signOut();
-            close();
-        });
+    const openMenu = () => {
+        slideoutMenu?.classList.remove('translate-x-full');
+        overlay?.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    };
+
+    const closeMenu = () => {
+        slideoutMenu?.classList.add('translate-x-full');
+        overlay?.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    };
+
+    mobileMenuButton?.addEventListener('click', openMenu);
+    closeButton?.addEventListener('click', closeMenu);
+    overlay?.addEventListener('click', closeMenu);
+    logoutButton?.addEventListener('click', (e) => {
+        e.preventDefault();
+        auth.signOut();
+        closeMenu();
+    });
+}
+
+/**
+ * Intercepts clicks on local navigation links to prevent full-page reloads.
+ */
+function interceptNavigationClicks() {
+    document.body.addEventListener('click', (e) => {
+        const link = e.target.closest('a');
+
+        // Ignore clicks that aren't on local links or are meant to open in a new tab
+        if (!link || link.target === '_blank' || link.href.startsWith('http') || link.hash) {
+            return;
+        }
+
+        e.preventDefault();
+        const destinationPath = new URL(link.href).pathname;
+
+        if (window.location.pathname !== destinationPath) {
+            window.history.pushState({ path: destinationPath }, '', destinationPath);
+            loadPageContent(destinationPath);
+        }
+
+        // Close the mobile menu after navigation
+        document.getElementById('mobile-slideout-menu')?.classList.add('translate-x-full');
+        document.getElementById('menu-overlay')?.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    });
+}
+
+/**
+ * Fetches and displays page content without a full refresh.
+ * @param {string} path The path of the page to load.
+ */
+async function loadPageContent(path) {
+    const mainContentArea = document.querySelector('main');
+    if (!mainContentArea) {
+        window.location.href = path; // Fallback to full reload
+        return;
     }
 
-    function interceptNavClicks() {
-        document.querySelectorAll('.nav-link, .slideout-link').forEach(link => {
-            const href = link.getAttribute('href');
-            if (href && !href.startsWith('http')) {
-                link.addEventListener('click', e => {
-                    e.preventDefault();
-                    history.pushState({}, '', href);
-                    loadPage(href);
-                });
-            }
-        });
+    try {
+        const response = await fetch(path);
+        if (!response.ok) throw new Error(`Fetch failed for ${path}`);
+        
+        const newPageHtml = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(newPageHtml, 'text/html');
 
-        window.addEventListener('popstate', () => {
-            loadPage(location.pathname.split('/').pop());
-        });
-    }
+        const newMainContent = doc.querySelector('main');
+        const newTitle = doc.querySelector('title');
 
-    function loadPage(path) {
-        const content = document.getElementById('main-content');
-        if (!content) return;
-        fetch(path)
-            .then(res => res.text())
-            .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const newMain = doc.getElementById('main-content');
-                if (newMain) {
-                    content.innerHTML = newMain.innerHTML;
-                    window.scrollTo(0, 0);
-                }
+        if (newMainContent) {
+            mainContentArea.innerHTML = newMainContent.innerHTML;
+            document.title = newTitle ? newTitle.textContent : 'Linq';
+            
+            // Re-execute scripts from the new content to ensure functionality
+            newMainContent.querySelectorAll('script').forEach(oldScript => {
+                const newScript = document.createElement("script");
+                Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                newScript.textContent = oldScript.textContent;
+                document.body.appendChild(newScript).parentNode.removeChild(newScript);
             });
+            
+            updateActiveLink(path);
+            window.scrollTo(0, 0);
+        } else {
+            throw new Error(`<main> content not found in ${path}`);
+        }
+    } catch (error) {
+        console.error('SPA Navigation Error:', error);
+        window.location.href = path; // Fallback to full reload on error
     }
-});
+}
+
+/**
+ * Handles browser back/forward button clicks.
+ */
+function handleBrowserNavigation(event) {
+    const path = event.state ? event.state.path : window.location.pathname;
+    loadPageContent(path);
+}
+
+/**
+ * Updates the active state of navigation links to reflect the current page.
+ * @param {string} currentPath The current page's path.
+ */
+function updateActiveLink(currentPath) {
+    let pageName = currentPath.split('/').pop();
+    if (pageName === '') pageName = 'index.html';
+
+    document.querySelectorAll('nav a').forEach(link => {
+        const linkName = new URL(link.href).pathname.split('/').pop();
+        if (linkName === pageName || (pageName === 'index.html' && linkName === '')) {
+            link.classList.add('active'); // Add a general 'active' class
+        } else {
+            link.classList.remove('active');
+        }
+    });
+}
