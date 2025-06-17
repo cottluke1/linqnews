@@ -20,8 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .go-premium-btn { font-size: 0.875rem; font-weight: 600; background-color: #1F2937; color: #FFFFFF; padding: 0.5rem 1rem; border-radius: 9999px; border: 1px solid #4B5563; transition: all 0.2s ease; display: inline-block; text-decoration: none; }
         .go-premium-btn:hover { background-color: #374151; border-color: #6B7280; transform: scale(1.05); }
 
-        /* Styles for the new mobile slide-out panel */
-        /* FIX: Made the background-color rule more specific and important to prevent transparency issues. */
+
         nav #slide-out-panel {
             background-color: #121212 !important;
         }
