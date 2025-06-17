@@ -104,55 +104,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 6. UPDATE UI BASED ON AUTH STATE ---
     function updateAuthUI(user) {
-        // Desktop Elements
+        // --- Update Desktop UI ---
         const authLinkDesktop = document.getElementById('authLinkDesktopLogin');
         const profileLinkDesktop = document.getElementById('profileLinkDesktop');
         const navProfilePic = document.getElementById('navProfilePic');
-        
-        // Mobile Slideout Elements
+
+        if (authLinkDesktop && profileLinkDesktop && navProfilePic) {
+            if (user) {
+                const initials = (user.displayName || user.email || "U").charAt(0).toUpperCase();
+                const photoSrc = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+                navProfilePic.src = photoSrc;
+                navProfilePic.style.display = 'block';
+                profileLinkDesktop.classList.remove('hidden');
+                authLinkDesktop.classList.add('hidden');
+            } else {
+                profileLinkDesktop.classList.add('hidden');
+                authLinkDesktop.classList.remove('hidden');
+                navProfilePic.style.display = 'none';
+            }
+        }
+
+        // --- Update Mobile UI (as requested by user) ---
         const authLinkMobile = document.getElementById('authLinkMobile');
         const logoutButtonMobile = document.getElementById('logoutButtonMobile');
         const bottomProfileLinkMobile = document.getElementById('bottomProfileLinkMobile');
         const slideoutUserInfo = document.getElementById('slideout-user-info');
-        const slideoutProfilePic = document.getElementById('slideoutProfilePic');
-        const slideoutDisplayName = document.getElementById('slideoutDisplayName');
-        const slideoutEmail = document.getElementById('slideoutEmail');
 
-        if (!authLinkDesktop || !profileLinkDesktop || !navProfilePic) return;
+        if (authLinkMobile && logoutButtonMobile && bottomProfileLinkMobile && slideoutUserInfo) {
+            if (user) {
+                // User is logged in: Show profile, logout, and user info. Hide login.
+                const slideoutProfilePic = document.getElementById('slideoutProfilePic');
+                const slideoutDisplayName = document.getElementById('slideoutDisplayName');
+                const slideoutEmail = document.getElementById('slideoutEmail');
+                
+                const initials = (user.displayName || user.email || "U").charAt(0).toUpperCase();
+                const photoSrc = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
 
-        if (user) {
-            // -- LOGGED IN STATE --
-            const initials = (user.displayName || user.email || "U").charAt(0).toUpperCase();
-            const photoSrc = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-            
-            // Desktop UI
-            navProfilePic.src = photoSrc;
-            navProfilePic.style.display = 'block';
-            profileLinkDesktop.classList.remove('hidden');
-            authLinkDesktop.classList.add('hidden');
-
-            // Mobile UI
-            slideoutProfilePic.src = photoSrc;
-            slideoutDisplayName.textContent = user.displayName || 'User';
-            slideoutEmail.textContent = user.email ? `@${user.email.split('@')[0]}` : '';
-            
-            slideoutUserInfo.classList.remove('hidden');
-            authLinkMobile.classList.add('hidden');
-            logoutButtonMobile.classList.remove('hidden');
-            bottomProfileLinkMobile.classList.remove('hidden');
-
-        } else {
-            // -- LOGGED OUT STATE --
-            // Desktop UI
-            profileLinkDesktop.classList.add('hidden');
-            authLinkDesktop.classList.remove('hidden');
-            navProfilePic.style.display = 'none';
-
-            // Mobile UI
-            slideoutUserInfo.classList.add('hidden');
-            authLinkMobile.classList.remove('hidden');
-            logoutButtonMobile.classList.add('hidden');
-            bottomProfileLinkMobile.classList.add('hidden');
+                if (slideoutProfilePic) slideoutProfilePic.src = photoSrc;
+                if (slideoutDisplayName) slideoutDisplayName.textContent = user.displayName || 'User';
+                if (slideoutEmail) slideoutEmail.textContent = user.email ? `@${user.email.split('@')[0]}` : '';
+                
+                slideoutUserInfo.classList.remove('hidden');
+                authLinkMobile.classList.add('hidden');
+                logoutButtonMobile.classList.remove('hidden');
+                bottomProfileLinkMobile.classList.remove('hidden');
+            } else {
+                // User is logged out: Show login. Hide profile, logout, and user info.
+                slideoutUserInfo.classList.add('hidden');
+                authLinkMobile.classList.remove('hidden');
+                logoutButtonMobile.classList.add('hidden');
+                bottomProfileLinkMobile.classList.add('hidden');
+            }
         }
         setActiveNavLink();
     }
