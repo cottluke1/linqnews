@@ -9,27 +9,38 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(res => res.text())
         .then(html => {
             headerPlaceholder.innerHTML = html;
-            initHeader();
+
+            // Wait one animation frame to ensure elements are fully parsed before initializing
+            requestAnimationFrame(() => {
+                initHeader();
+            });
         });
+});
+
 
     function initHeader() {
         if (typeof firebase === 'undefined') return;
+    
         const auth = firebase.auth();
-
-        auth.onAuthStateChanged(user => updateAuthUI(user));
-        setTimeout(() => updateAuthUI(auth.currentUser), 1000);
-
+    
+        auth.onAuthStateChanged(user => {
+            // Call updateAuthUI twice: immediately and again in the next animation frame
+            updateAuthUI(user);
+            requestAnimationFrame(() => updateAuthUI(user));
+        });
+    
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
             link.classList.add('text-center', 'w-full');
         });
-
+    
         const navContainer = document.querySelector('.flex.items-center.space-x-2');
         if (navContainer) navContainer.classList.add('justify-center', 'w-full');
-
+    
         interceptNavClicks();
         setupMobileMenu(auth);
     }
+
 
     function updateAuthUI(user) {
         const isLoggedIn = !!user;
