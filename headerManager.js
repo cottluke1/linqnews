@@ -3,6 +3,15 @@
 // including authentication state, mobile menu functionality, and active link highlighting.
 
 document.addEventListener('DOMContentLoaded', () => {
+    // --- ADD THIS CODE BLOCK ---
+    const faviconLink = document.createElement('link');
+    faviconLink.rel = 'icon';
+    faviconLink.type = 'image/png';
+    faviconLink.href = 'favicon.png'; // Make sure favicon.png is in the root folder
+    document.head.appendChild(faviconLink);
+    // --- END OF CODE BLOCK TO ADD ---
+
+
     // --- 1. DEFINE CONSTANTS AND GET ELEMENTS ---
     const headerPlaceholder = document.getElementById('header-placeholder');
     if (!headerPlaceholder) {
