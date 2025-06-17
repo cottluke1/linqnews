@@ -9,47 +9,42 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // --- Step 1: Immediately check localStorage for a cached user ---
-    const cachedUser = JSON.parse(localStorage.getItem('linqUser'));
-    if (cachedUser) {
-        // Temporarily update the UI with cached data to prevent flicker
-        // Note: This part needs the header HTML to be available synchronously,
-        // so we'll call it again after fetch to be safe.
-        preloadAuthUI(cachedUser);
-    }
-
-    // --- Step 2: Fetch the header and initialize full functionality ---
+    // Fetch the header content. The logic to update the UI will be handled inside the .then() block.
     fetch('header.html')
         .then(response => {
             if (!response.ok) throw new Error("Failed to load header.html");
             return response.text();
         })
         .then(html => {
+            // Step 1: Inject the header HTML into the placeholder.
+            // The DOM for the header is now available.
             headerPlaceholder.innerHTML = html;
-            // Now that the header DOM is loaded, initialize all functionality
-            initializeHeaderFunctionality();
+
+            // Step 2: Get the user data that was cached in localStorage.
+            const cachedUser = JSON.parse(localStorage.getItem('linqUser'));
+            
+            // Step 3: Update the UI immediately with the cached data.
+            // This provides an instant visual update and prevents the "logged-out" flicker.
+            updateAuthUI(cachedUser);
+
+            // Step 4: Now, initialize the full Firebase functionality.
+            // This will set up the live listener to get the absolute latest user data
+            // and handle real-time login/logout events.
+            initializeFirebaseAndListeners();
         })
         .catch(error => {
             console.error("Error loading header:", error);
-            headerPlaceholder.innerHTML = "<p class='text-center text-red-500 py-4'>Could not load navigation.</p>";
+            if (headerPlaceholder) {
+                headerPlaceholder.innerHTML = "<p class='text-center text-red-500 py-4'>Could not load navigation.</p>";
+            }
         });
 });
 
-/**
- * Pre-populates the UI with cached data. This is a lightweight, synchronous function
- * to avoid waiting for the full header to load before showing the user's state.
- * @param {object} userData - The cached user data from localStorage.
- */
-function preloadAuthUI(userData) {
-    // This function can be expanded if needed, but for now, its main job
-    // is to ensure the logic runs. The real update happens in updateAuthUI.
-}
-
 
 /**
- * Initializes all header-related logic AFTER the HTML has been injected.
+ * Initializes Firebase, sets up auth listeners, and wires up interactive elements.
  */
-function initializeHeaderFunctionality() {
+function initializeFirebaseAndListeners() {
     if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined') {
         console.error("Firebase is not available. Header functionality will be limited.");
         return;
@@ -57,17 +52,18 @@ function initializeHeaderFunctionality() {
 
     const auth = firebase.auth();
 
-    // Set up the primary listener that updates the UI and localStorage.
+    // Set up the primary listener that updates the UI and localStorage on any auth change.
     auth.onAuthStateChanged(user => {
         if (user) {
-            // User is logged in. Get the latest profile info.
+            // User is officially logged in. Create the data object to cache.
             const userData = {
                 displayName: user.displayName,
                 email: user.email,
                 photoURL: user.photoURL
             };
-            // Cache the latest user data and update the UI.
+            // Cache the latest user data.
             localStorage.setItem('linqUser', JSON.stringify(userData));
+            // Update the UI with this definitive data.
             updateAuthUI(userData);
         } else {
             // User is logged out. Clear the cache and update the UI.
@@ -75,11 +71,6 @@ function initializeHeaderFunctionality() {
             updateAuthUI(null);
         }
     });
-    
-    // An initial check to render the UI instantly from the cache while Firebase initializes.
-    const cachedUser = JSON.parse(localStorage.getItem('linqUser'));
-    updateAuthUI(cachedUser);
-
 
     setupInteractiveElements(auth);
     interceptNavigationClicks();
@@ -89,7 +80,8 @@ function initializeHeaderFunctionality() {
 
 /**
  * Updates all UI elements in the header based on the provided user data.
- * @param {object | null} user The user data object, or null if logged out.
+ * This function includes checks to ensure elements exist before modification.
+ * @param {object | null} user The user data object from cache or Firebase, or null if logged out.
  */
 function updateAuthUI(user) {
     const isLoggedIn = !!user;
@@ -116,12 +108,12 @@ function updateAuthUI(user) {
     if (slideoutUserInfo) slideoutUserInfo.classList.toggle('hidden', !isLoggedIn);
     if (bottomProfileLinkMobile) bottomProfileLinkMobile.classList.toggle('hidden', !isLoggedIn);
 
-    if (isLoggedIn && navProfilePic) {
+    if (isLoggedIn) {
         const photoURL = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${(user.email || 'U').charAt(0).toUpperCase()}`;
-        navProfilePic.src = photoURL;
-        if(slideoutProfilePic) slideoutProfilePic.src = photoURL;
-        if(slideoutDisplayName) slideoutDisplayName.textContent = user.displayName || 'User';
-        if(slideoutEmail) slideoutEmail.textContent = user.email;
+        if (navProfilePic) navProfilePic.src = photoURL;
+        if (slideoutProfilePic) slideoutProfilePic.src = photoURL;
+        if (slideoutDisplayName) slideoutDisplayName.textContent = user.displayName || 'User';
+        if (slideoutEmail) slideoutEmail.textContent = user.email;
     }
 }
 
@@ -148,7 +140,7 @@ function setupInteractiveElements(auth) {
     const logoutButton = document.getElementById('logoutButtonMobile');
     logoutButton?.addEventListener('click', (e) => {
         e.preventDefault();
-        auth.signOut(); // This will trigger onAuthStateChanged, which handles UI and cache cleanup
+        auth.signOut(); // This will trigger onAuthStateChanged, which handles all UI and cache cleanup.
         toggleMenu(); 
     });
 }
@@ -170,7 +162,6 @@ function interceptNavigationClicks() {
         }
         const slideoutMenu = document.getElementById('mobile-slideout-menu');
         if(slideoutMenu && !slideoutMenu.classList.contains('translate-x-full')){
-            // Manually trigger the close action
             slideoutMenu.classList.add('translate-x-full');
             document.getElementById('menu-overlay')?.classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
