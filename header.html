@@ -75,24 +75,16 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white p-10">
+<body>
 
-<!-- 
-    START: REDESIGNED HEADER V5
-    - Crisp LED border on CTA button.
-    - Improved mobile menu icons and layout.
-    - Removed glow from desktop profile picture.
--->
 <nav class="header-nav fixed top-0 left-0 w-full z-50">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="relative flex items-center justify-center h-16">
       
-      <!-- Left: Logo -->
       <div class="absolute left-4 flex items-center">
         <a href="index.html" class="text-2xl font-bold text-white tracking-wider">Linq</a>
       </div>
 
-      <!-- Center: Desktop Navigation -->
       <div class="hidden md:block">
         <div class="flex items-baseline space-x-4">
           <a href="index.html" class="nav-link-desktop px-3 py-2 rounded-md text-sm">News</a>
@@ -103,16 +95,14 @@
         </div>
       </div>
 
-      <!-- Right: Actions -->
       <div class="absolute right-4 flex items-center">
         <div class="hidden md:flex items-center space-x-4">
           <a href="linqplus.html" class="go-premium-btn-neon py-2 px-4 rounded-md text-sm">Go Premium</a>
-          <a href="login.html" id="authLinkDesktopLogin" class="hidden text-gray-300 hover:text-white font-medium text-sm">Login</a>
+          <a href="login.html" id="authLinkDesktopLogin" class="text-white font-medium text-sm px-4 py-2 rounded-md bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 shadow-md hover:shadow-lg">Login</a>
           <a href="profile.html" id="profileLinkDesktop" class="hidden rounded-full" title="My Profile">
             <img id="navProfilePic" src="https://placehold.co/36x36/1a1a1a/ffffff?text=U" alt="User Profile" class="w-9 h-9 rounded-full border-2 border-gray-700">
           </a>
         </div>
-        <!-- Mobile menu button -->
         <div class="md:hidden">
             <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none">
                 <span class="sr-only">Open main menu</span>
@@ -125,11 +115,9 @@
   </div>
 </nav>
 
-<!-- Slide-out Mobile Menu (New Design V5) -->
 <div id="menu-overlay" class="hidden fixed inset-0 bg-black bg-opacity-60 z-30"></div>
 <div id="mobile-slideout-menu" class="fixed top-0 right-0 h-full w-80 bg-black z-40 transform translate-x-full shadow-2xl">
     <div class="p-5 flex flex-col h-full">
-        <!-- Menu Header: User Info -->
         <div class="mb-6 pb-4 border-b border-gray-800">
              <div id="slideout-user-info" class="hidden">
                 <a href="profile.html" class="flex items-center space-x-3">
@@ -142,9 +130,7 @@
             </div>
         </div>
         
-        <!-- Navigation Links -->
         <nav class="flex flex-col space-y-1 flex-grow">
-            <!-- Section 1 -->
             <a href="index.html" class="slideout-link flex items-center text-white px-3 py-3 rounded-md text-lg font-bold">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V3.375c0-1.036-.84-1.875-1.875-1.875H5.625zM12 18a.75.75 0 000-1.5H7.5a.75.75 0 000 1.5H12zM15 13.5a.75.75 0 01-.75.75H7.5a.75.75 0 010-1.5h6.75a.75.75 0 01.75.75zM15 9a.75.75 0 000-1.5H7.5a.75.75 0 000 1.5H15z" /></svg>
                 News
@@ -160,8 +146,7 @@
             
             <hr class="border-gray-800 my-3">
             
-            <!-- Section 2 -->
-             <a href="linqai.html" class="slideout-link flex items-center text-white px-3 py-3 rounded-md text-lg font-bold">
+            <a href="linqai.html" class="slideout-link flex items-center text-white px-3 py-3 rounded-md text-lg font-bold">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.522c0 .323.21.6.5.707.556.174 1.14.323 1.75.433V4.533zM12.75 20.636V4.533a9.707 9.707 0 015.25-1.533c1.16 0 2.27.194 3.25.555a.75.75 0 01.5.707v14.522c0 .323-.21.6-.5.707a9.735 9.735 0 01-3.25.433c-.61.11-1.194.259-1.75.433z" /></svg>
                 Linq AI
             </a>
@@ -175,11 +160,9 @@
             </a>
         </nav>
 
-        <!-- Footer Auth Links -->
         <div class="mt-auto">
              <hr class="border-gray-800 my-3">
-             <!-- Section 3 -->
-            <a href="profile.html" id="bottomProfileLinkMobile" class="slideout-link hidden flex items-center text-white px-3 py-3 rounded-md text-lg font-bold">
+             <a href="profile.html" id="bottomProfileLinkMobile" class="slideout-link hidden flex items-center text-white px-3 py-3 rounded-md text-lg font-bold">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" /></svg>
                 Profile
             </a>
@@ -188,8 +171,6 @@
         </div>
     </div>
 </div>
-<!-- END: REDESIGNED HEADER -->
-
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     // --- Mobile Menu Toggle Logic ---
