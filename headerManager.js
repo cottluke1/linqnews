@@ -1,124 +1,206 @@
-// /js/headerManager.js
-// This script fetches the header, handles authentication state robustly using localStorage to prevent UI flickering,
-// and manages SPA-style page loading for a smoother user experience.
-
-document.addEventListener('DOMContentLoaded', () => {
-    const headerPlaceholder = document.getElementById('header-placeholder');
-    if (!headerPlaceholder) {
-        console.error("Header placeholder element not found.");
-        return;
-    }
-
-    // Fetch the header content. The logic to update the UI will be handled inside the .then() block.
-    fetch('header.html')
-        .then(response => {
-            if (!response.ok) throw new Error("Failed to load header.html");
-            return response.text();
-        })
-        .then(html => {
-            // Step 1: Inject the header HTML into the placeholder.
-            // The DOM for the header is now available.
-            headerPlaceholder.innerHTML = html;
-
-            // Step 2: Get the user data that was cached in localStorage.
-            const cachedUser = JSON.parse(localStorage.getItem('linqUser'));
-            
-            // Step 3: Update the UI immediately with the cached data.
-            // This provides an instant visual update and prevents the "logged-out" flicker.
-            updateAuthUI(cachedUser);
-
-            // Step 4: Now, initialize the full Firebase functionality.
-            // This will set up the live listener to get the absolute latest user data
-            // and handle real-time login/logout events.
-            initializeFirebaseAndListeners();
-        })
-        .catch(error => {
-            console.error("Error loading header:", error);
-            if (headerPlaceholder) {
-                headerPlaceholder.innerHTML = "<p class='text-center text-red-500 py-4'>Could not load navigation.</p>";
-            }
-        });
-});
-
-
-/**
- * Initializes Firebase, sets up auth listeners, and wires up interactive elements.
- */
-function initializeFirebaseAndListeners() {
-    if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined') {
-        console.error("Firebase is not available. Header functionality will be limited.");
-        return;
-    }
-
-    const auth = firebase.auth();
-
-    // Set up the primary listener that updates the UI and localStorage on any auth change.
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            // User is officially logged in. Create the data object to cache.
-            const userData = {
-                displayName: user.displayName,
-                email: user.email,
-                photoURL: user.photoURL
-            };
-            // Cache the latest user data.
-            localStorage.setItem('linqUser', JSON.stringify(userData));
-            // Update the UI with this definitive data.
-            updateAuthUI(userData);
-        } else {
-            // User is logged out. Clear the cache and update the UI.
-            localStorage.removeItem('linqUser');
-            updateAuthUI(null);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linq Header</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #05080f; 
         }
-    });
 
-    setupInteractiveElements(auth);
-    interceptNavigationClicks();
-    window.addEventListener('popstate', handleBrowserNavigation);
-    updateActiveLink(window.location.pathname);
-}
+        .header-nav {
+            background-color: #000000;
+            border-bottom: 1px solid #2a2a2a;
+        }
 
-/**
- * Updates all UI elements in the header based on the provided user data.
- * This function includes checks to ensure elements exist before modification.
- * @param {object | null} user The user data object from cache or Firebase, or null if logged out.
- */
-function updateAuthUI(user) {
-    const isLoggedIn = !!user;
+        .nav-link-desktop {
+            color: #9ca3af;
+            font-weight: 500;
+            transition: color 0.2s ease, font-weight 0.2s ease;
+        }
+        .nav-link-desktop:hover, .nav-link-desktop.active {
+            color: #ffffff;
+            font-weight: 700;
+        }
 
-    // Desktop Elements
-    const authLinkDesktopLogin = document.getElementById('authLinkDesktopLogin');
-    const profileLinkDesktop = document.getElementById('profileLinkDesktop');
-    const navProfilePic = document.getElementById('navProfilePic');
-    
-    // Mobile Slideout Elements
-    const authLinkMobile = document.getElementById('authLinkMobile');
-    const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-    const slideoutUserInfo = document.getElementById('slideout-user-info');
-    const slideoutProfilePic = document.getElementById('slideoutProfilePic');
-    const slideoutDisplayName = document.getElementById('slideoutDisplayName');
-    const slideoutEmail = document.getElementById('slideoutEmail');
-    const bottomProfileLinkMobile = document.getElementById('bottomProfileLinkMobile');
+        .go-premium-btn-neon {
+            background: transparent;
+            border: 1px solid #005fcc;
+            color: #aaccff;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 5px rgba(0, 119, 255, 0.8), inset 0 0 5px rgba(0, 119, 255, 0.5);
+        }
+        .go-premium-btn-neon:hover {
+            background: rgba(0, 119, 255, 0.1);
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 119, 255, 1), inset 0 0 8px rgba(0, 119, 255, 0.8);
+        }
+        
+        #mobile-slideout-menu {
+            background-color: #000000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #menu-overlay {
+            transition: opacity 0.3s ease-in-out;
+        }
 
-    // Toggle visibility based on login state
-    if (authLinkDesktopLogin) authLinkDesktopLogin.classList.toggle('hidden', isLoggedIn);
-    if (profileLinkDesktop) profileLinkDesktop.classList.toggle('hidden', !isLoggedIn);
-    if (authLinkMobile) authLinkMobile.classList.toggle('hidden', isLoggedIn);
-    if (logoutButtonMobile) logoutButtonMobile.classList.toggle('hidden', !isLoggedIn);
-    if (slideoutUserInfo) slideoutUserInfo.classList.toggle('hidden', !isLoggedIn);
-    if (bottomProfileLinkMobile) bottomProfileLinkMobile.classList.toggle('hidden', !isLoggedIn);
+        .slideout-link svg {
+            width: 24px;
+            height: 24px;
+            margin-right: 1.25rem;
+            color: #9ca3af;
+            transition: color 0.2s ease;
+        }
+        .slideout-link:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .slideout-link:hover svg, .slideout-link:hover i {
+            color: #ffffff;
+        }
+        .slideout-link i {
+            width: 24px;
+            text-align: center;
+            margin-right: 1.25rem;
+            color: #9ca3af;
+            font-size: 20px;
+            transition: color 0.2s ease;
+        }
+        /* Style for the new gradient login button */
+        .login-btn-gradient {
+            background-image: linear-gradient(to right, #007cf0, #00dfd8);
+            box-shadow: 0 4px 15px -5px rgba(0, 169, 224, 0.5);
+        }
+        .login-btn-gradient:hover {
+            box-shadow: 0 6px 20px -6px rgba(0, 169, 224, 0.8);
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white p-10">
 
-    if (isLoggedIn) {
-        const photoURL = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${(user.email || 'U').charAt(0).toUpperCase()}`;
-        if (navProfilePic) navProfilePic.src = photoURL;
-        if (slideoutProfilePic) slideoutProfilePic.src = photoURL;
-        if (slideoutDisplayName) slideoutDisplayName.textContent = user.displayName || 'User';
-        if (slideoutEmail) slideoutEmail.textContent = user.email;
-    }
-}
+<!-- 
+    START: REDESIGNED HEADER V6
+    - Added a blue gradient login button for logged-out users on desktop.
+-->
+<nav class="header-nav fixed top-0 left-0 w-full z-50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="relative flex items-center justify-center h-16">
+      
+      <!-- Left: Logo -->
+      <div class="absolute left-4 flex items-center">
+        <a href="index.html" class="text-2xl font-bold text-white tracking-wider">Linq</a>
+      </div>
 
+      <!-- Center: Desktop Navigation -->
+      <div class="hidden md:block">
+        <div class="flex items-baseline space-x-4">
+          <a href="index.html" class="nav-link-desktop px-3 py-2 rounded-md text-sm">News</a>
+          <a href="community.html" class="nav-link-desktop px-3 py-2 rounded-md text-sm">Community</a>
+          <a href="linqai.html" class="nav-link-desktop px-3 py-2 rounded-md text-sm">Linq AI</a>
+          <a href="earnings.html" class="nav-link-desktop px-3 py-2 rounded-md text-sm">Earnings</a>
+          <a href="favorites.html" class="nav-link-desktop px-3 py-2 rounded-md text-sm">Bookmarks</a>
+        </div>
+      </div>
 
-function setupInteractiveElements(auth) {
+      <!-- Right: Actions -->
+      <div class="absolute right-4 flex items-center">
+        <div class="hidden md:flex items-center space-x-4">
+          <a href="linqplus.html" class="go-premium-btn-neon py-2 px-4 rounded-md text-sm">Go Premium</a>
+          <!-- UPDATED: Login button with blue gradient -->
+          <a href="login.html" id="authLinkDesktopLogin" class="hidden login-btn-gradient text-white font-semibold py-2 px-4 rounded-md text-sm transition-all duration-200">Login</a>
+          <a href="profile.html" id="profileLinkDesktop" class="hidden rounded-full" title="My Profile">
+            <img id="navProfilePic" src="https://placehold.co/36x36/1a1a1a/ffffff?text=U" alt="User Profile" class="w-9 h-9 rounded-full border-2 border-gray-700">
+          </a>
+        </div>
+        <!-- Mobile menu button -->
+        <div class="md:hidden">
+            <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none">
+                <span class="sr-only">Open main menu</span>
+                <svg id="menu-open-icon" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                <svg id="menu-close-icon" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Slide-out Mobile Menu (New Design V5) -->
+<div id="menu-overlay" class="hidden fixed inset-0 bg-black bg-opacity-60 z-30"></div>
+<div id="mobile-slideout-menu" class="fixed top-0 right-0 h-full w-80 bg-black z-40 transform translate-x-full shadow-2xl">
+    <div class="p-5 flex flex-col h-full">
+        <!-- Menu Header: User Info -->
+        <div class="mb-6 pb-4 border-b border-gray-800">
+             <div id="slideout-user-info" class="hidden">
+                <a href="profile.html" class="flex items-center space-x-3">
+                    <img id="slideoutProfilePic" src="https://placehold.co/40x40/1a1a1a/ffffff?text=U" class="w-10 h-10 rounded-full object-cover">
+                    <div>
+                        <p id="slideoutDisplayName" class="font-bold text-white leading-tight">User Name</p>
+                        <p id="slideoutEmail" class="text-sm text-gray-500 leading-tight">@email_handle</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Navigation Links -->
+        <nav class="flex flex-col space-y-1 flex-grow">
+            <!-- Section 1 -->
+            <a href="index.html" class="slideout-link flex items-center text-white px-3 py-3 rounded-md text-lg font-bold">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V3.375c0-1.036-.84-1.875-1.875-1.875H5.625zM12 18a.75.75 0 000-1.5H7.5a.75.75 0 000 1.5H12zM15 13.5a.75.75 0 01-.75.75H7.5a.75.75 0 010-1.5h6.75a.75.75 0 01.75.75zM15 9a.75.75 0 000-1.5H7.5a.75.75 0 000 1.5H15z" /></svg>
+                News
+            </a>
+            <a href="community.html" class="slideout-link flex items-center text-white px-3 py-3 rounded-md text-lg font-bold">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M4.848 2.771A49.144 49.144 0 0112 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 01-3.476.383.39.39 0 00-.297.15l-2.755 4.133a.75.75 0 01-1.248 0l-2.755-4.133a.39.39 0 00-.297-.15 48.902 48.902 0 01-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.74c0-1.946 1.37-3.68 3.348-3.97z" clip-rule="evenodd" /></svg>
+                Community
+            </a>
+             <a href="favorites.html" class="slideout-link flex items-center text-white px-3 py-3 rounded-md text-lg font-bold">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z" clip-rule="evenodd" /></svg>
+                Bookmarks
+            </a>
+            
+            <hr class="border-gray-800 my-3">
+            
+            <!-- Section 2 -->
+             <a href="linqai.html" class="slideout-link flex items-center text-white px-3 py-3 rounded-md text-lg font-bold">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.522c0 .323.21.6.5.707.556.174 1.14.323 1.75.433V4.533zM12.75 20.636V4.533a9.707 9.707 0 015.25-1.533c1.16 0 2.27.194 3.25.555a.75.75 0 01.5.707v14.522c0 .323-.21.6-.5.707a9.735 9.735 0 01-3.25.433c-.61.11-1.194.259-1.75.433z" /></svg>
+                Linq AI
+            </a>
+            <a href="earnings.html" class="slideout-link flex items-center text-white px-3 py-3 rounded-md text-lg font-bold">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.78 2.375a.75.75 0 01.44 1.343l-1.32 1.054a.75.75 0 01-1.07-1.07l1.054-1.32a.75.75 0 01.896-.007zM14.632 3.42a.75.75 0 01.007.896l-1.32 1.054a.75.75 0 11-1.07-1.07l1.054-1.32a.75.75 0 011.329.44zM16.92 6.007a.75.75 0 01.393.812l-1.018 4.23a.75.75 0 01-1.46-.35l1.018-4.23a.75.75 0 011.067-.462zM9.75 7.5a.75.75 0 01.75.75v11.25a.75.75 0 01-1.5 0V8.25a.75.75 0 01.75-.75zm3 4.5a.75.75 0 01.75.75v6.75a.75.75 0 01-1.5 0v-6.75a.75.75 0 01.75-.75zm3-1.5a.75.75 0 01.75.75v8.25a.75.75 0 01-1.5 0v-8.25a.75.75 0 01.75-.75z" /></svg>
+                Earnings
+            </a>
+            <a href="linqplus.html" class="slideout-link flex items-center text-white px-3 py-3 rounded-md text-lg font-bold">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.007z" clip-rule="evenodd" /></svg>
+                Premium
+            </a>
+        </nav>
+
+        <!-- Footer Auth Links -->
+        <div class="mt-auto">
+             <hr class="border-gray-800 my-3">
+             <!-- Section 3 -->
+            <a href="profile.html" id="bottomProfileLinkMobile" class="slideout-link hidden flex items-center text-white px-3 py-3 rounded-md text-lg font-bold">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" /></svg>
+                Profile
+            </a>
+            <a href="login.html" id="authLinkMobile" class="slideout-link flex items-center text-gray-400 hover:text-white px-3 py-3 rounded-md text-base font-medium"><i class="fas fa-sign-in-alt"></i>Login</a>
+            <a href="#" id="logoutButtonMobile" class="slideout-link hidden flex items-center text-red-500 hover:text-red-400 px-3 py-3 rounded-md text-base font-medium"><i class="fas fa-sign-out-alt"></i>Logout</a>
+        </div>
+    </div>
+</div>
+<!-- END: REDESIGNED HEADER -->
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Mobile Menu Toggle Logic ---
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const overlay = document.getElementById('menu-overlay');
     const slideoutMenu = document.getElementById('mobile-slideout-menu');
@@ -127,112 +209,44 @@ function setupInteractiveElements(auth) {
 
     const toggleMenu = () => {
         const isMenuOpen = !slideoutMenu.classList.contains('translate-x-full');
-        slideoutMenu.classList.toggle('translate-x-full', isMenuOpen);
-        overlay.classList.toggle('hidden', isMenuOpen);
-        document.body.classList.toggle('overflow-hidden', !isMenuOpen);
-        if(openIcon) openIcon.classList.toggle('hidden', !isMenuOpen);
-        if(closeIcon) closeIcon.classList.toggle('hidden', isMenuOpen);
+        if (isMenuOpen) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    };
+    
+    const openMenu = () => {
+        slideoutMenu.classList.remove('translate-x-full');
+        overlay.classList.remove('hidden');
+        openIcon.classList.add('hidden');
+        closeIcon.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    };
+
+    const closeMenu = () => {
+        slideoutMenu.classList.add('translate-x-full');
+        overlay.classList.add('hidden');
+        openIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
     };
 
     mobileMenuButton?.addEventListener('click', toggleMenu);
-    overlay?.addEventListener('click', toggleMenu);
-    
-    const logoutButton = document.getElementById('logoutButtonMobile');
-    logoutButton?.addEventListener('click', (e) => {
-        e.preventDefault();
-        auth.signOut(); // This will trigger onAuthStateChanged, which handles all UI and cache cleanup.
-        toggleMenu(); 
-    });
-}
+    overlay?.addEventListener('click', closeMenu);
 
-
-// --- SPA Navigation Logic ---
-
-function interceptNavigationClicks() {
-    document.body.addEventListener('click', e => {
-        const link = e.target.closest('a');
-        if (!link || link.target === '_blank' || link.href.startsWith('http') || link.hash) {
-            return;
-        }
-        e.preventDefault();
-        const destinationPath = new URL(link.href).pathname;
-        if (window.location.pathname !== destinationPath) {
-            window.history.pushState({ path: destinationPath }, '', destinationPath);
-            loadPageContent(destinationPath);
-        }
-        const slideoutMenu = document.getElementById('mobile-slideout-menu');
-        if(slideoutMenu && !slideoutMenu.classList.contains('translate-x-full')){
-            slideoutMenu.classList.add('translate-x-full');
-            document.getElementById('menu-overlay')?.classList.add('hidden');
-            document.body.classList.remove('overflow-hidden');
-            document.getElementById('menu-open-icon')?.classList.remove('hidden');
-            document.getElementById('menu-close-icon')?.classList.add('hidden');
-        }
-    });
-}
-
-async function loadPageContent(path) {
-    const mainContentArea = document.querySelector('main');
-    if (!mainContentArea) {
-        window.location.href = path;
-        return;
-    }
-    
-    mainContentArea.style.opacity = '0';
-    mainContentArea.style.transition = 'opacity 0.2s ease-out';
-
-    try {
-        const response = await fetch(path);
-        if (!response.ok) throw new Error(`Fetch failed for ${path}`);
-        const newPageHtml = await response.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(newPageHtml, 'text/html');
-        const newMainContent = doc.querySelector('main');
-        const newTitle = doc.querySelector('title');
-
-        if (newMainContent) {
-            setTimeout(() => {
-                mainContentArea.innerHTML = newMainContent.innerHTML;
-                document.title = newTitle ? newTitle.textContent : 'Linq';
-                
-                const pageScripts = newMainContent.querySelectorAll('script');
-                pageScripts.forEach(oldScript => {
-                    const newScript = document.createElement("script");
-                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
-                    newScript.textContent = oldScript.textContent;
-                    document.body.appendChild(newScript).parentNode.removeChild(newScript);
-                });
-                
-                updateActiveLink(path);
-                window.scrollTo(0, 0);
-                
-                mainContentArea.style.opacity = '1';
-                mainContentArea.style.transition = 'opacity 0.3s ease-in';
-            }, 200);
-
-        } else {
-            throw new Error(`<main> content not found in ${path}`);
-        }
-    } catch (error) {
-        console.error('SPA Navigation Error:', error);
-        window.location.href = path;
-    }
-}
-
-function handleBrowserNavigation(event) {
-    const path = event.state ? event.state.path : window.location.pathname;
-    loadPageContent(path);
-}
-
-function updateActiveLink(currentPath) {
-    let pageName = currentPath.split('/').pop();
-    if (pageName === '' || pageName === 'linqnews') pageName = 'index.html';
-
-    document.querySelectorAll('nav a').forEach(link => {
-        const linkHref = link.getAttribute('href');
-        link.classList.remove('active');
-        if (linkHref === pageName) {
+    // --- Desktop Active Nav Link ---
+    const currentPath = window.location.pathname.split("/").pop() || "index.html";
+    document.querySelectorAll('.nav-link-desktop').forEach(link => {
+        const linkPath = link.getAttribute('href');
+        if (linkPath === currentPath) {
             link.classList.add('active');
         }
     });
-}
+
+    
+});
+</script>
+
+</body>
+</html>
