@@ -1,20 +1,17 @@
 <!-- 
-  Updated Header Fragment V2
-  - The HTML for the slide-out menu is restructured to EXACTLY match the photo's layout.
-  - Includes a new profile header with a decorative 'more options' icon.
-  - Links are reordered and grouped with icons as seen in the image.
-  - FIX: Changed nav background to solid black for mobile view.
-  - FIX: Moved logout button to be directly under the profile link.
+  Updated Header Fragment
+  - Profile picture <img> tag is hidden by default.
+  - FIX: The src attribute is now empty to be extra safe and prevent any placeholder flash.
 -->
-<nav class="fixed top-0 left-0 w-full z-[1000] bg-black border-b border-gray-800">
+<nav class="fixed top-0 left-0 w-full z-[1000] bg-black/80 backdrop-blur-sm border-b border-gray-800">
   <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center h-16">
     
-    <!-- Left Side: Logo (No Changes) -->
+    <!-- Left Side: Logo -->
     <div class="absolute inset-y-0 left-0 flex items-center">
       <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
     </div>
 
-    <!-- Center: Nav Links (Desktop - No Changes) -->
+    <!-- Center: Nav Links (Desktop) -->
     <div class="hidden md:flex items-center space-x-2">
       <a href="index.html" class="nav-link px-3 py-2">News</a>
       <a href="community.html" class="nav-link px-3 py-2">Community</a>
@@ -23,56 +20,37 @@
       <a href="favorites.html" class="nav-link px-3 py-2">Bookmarks</a>
     </div>
 
-    <!-- Right Side: Auth and Premium Button (Desktop - No Changes) -->
+    <!-- Right Side: Auth and Premium Button -->
     <div class="absolute inset-y-0 right-0 hidden md:flex items-center space-x-4">
       <a href="linqplus.html" class="go-premium-btn">Go Premium</a>
       <a href="login.html" id="authLinkDesktopLogin" class="hidden nav-link-button">Login</a>
       <a href="profile.html" id="profileLinkDesktop" class="hidden" title="My Profile">
+        <!-- FIX: Image hidden by default and src is empty. It will be replaced entirely by the script. -->
         <img id="navProfilePic" style="display:none;" src="" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition">
       </a>
     </div>
 
-    <!-- Mobile Menu Button (Hamburger Icon - No Changes) -->
+    <!-- Mobile Menu Button -->
     <div class="md:hidden absolute inset-y-0 right-0 flex items-center">
-        <button id="slide-out-menu-button" class="text-gray-300 hover:text-white focus:outline-none p-2 rounded-md">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none p-2 rounded-md">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
         </button>
     </div>
   </div>
-</nav>
 
-<!-- Exact Replica Slide-Out Menu Structure -->
-<div id="menu-overlay" class=""></div>
-<div id="slide-out-menu" class="">
-    <!-- Profile Header Section -->
-    <div id="slide-out-profile-section" class="hidden">
-        <img id="slide-out-profile-pic" src="" alt="User" />
-        <div class="profile-info">
-            <p id="slide-out-display-name"></p>
-            <p id="slide-out-username"></p>
-        </div>
-        <!-- Decorative "more options" icon -->
-        <i class="fas fa-ellipsis-h" id="more-options-icon"></i>
+  <!-- Mobile Menu (Collapsible) -->
+  <div id="mobile-menu" class="md:hidden hidden bg-black border-t border-gray-800">
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <a href="index.html" class="nav-link block">News</a>
+      <a href="community.html" class="nav-link block">Community</a>
+      <a href="linqai.html" class="nav-link block">Linq AI</a>
+      <a href="previous_earnings.html" class="nav-link block">Earnings</a>
+      <a href="favorites.html" class="nav-link block">Bookmarks</a>
+      <a href="linqplus.html" class="nav-link block font-semibold text-cyan-400">Go Premium</a>
+      <hr class="border-gray-700 my-2">
+      <a href="login.html" id="authLinkMobile" class="nav-link block">Login</a>
+      <a href="profile.html" id="profileLinkMobile" class="nav-link hidden">My Profile</a>
+      <a href="#" id="logoutButtonMobile" class="nav-link block text-red-400 hidden">Logout</a>
     </div>
-    
-    <!-- Navigation Links with Icons -->
-    <nav class="slide-out-nav">
-        <!-- Logged-in Main Links -->
-        <a href="profile.html" id="slide-out-profile-link" class="nav-link hidden"><i class="fas fa-user icon"></i>Profile</a>
-        <a href="#" id="slide-out-logout-button" class="nav-link logout-button hidden"><i class="fas fa-sign-out-alt icon"></i>Logout</a>
-
-        <a href="linqplus.html" id="slide-out-premium-link" class="nav-link premium-link"><i class="fas fa-xmark icon"></i>Premium</a>
-        <a href="linqai.html" class="nav-link"><i class="fas fa-comment-dots icon"></i>Chat <span class="beta-tag">BETA</span></a>
-        <a href="favorites.html" class="nav-link"><i class="fas fa-bookmark icon"></i>Bookmarks</a>
-
-        <!-- General Site Links (using our pages) -->
-        <a href="earnings.html" class="nav-link"><i class="fas fa-chart-line icon"></i>Earnings</a>
-        <a href="community.html" class="nav-link"><i class="fas fa-users icon"></i>Community</a>
-        <a href="index.html" class="nav-link"><i class="fas fa-newspaper icon"></i>News</a>
-        
-        <hr/>
-
-        <!-- Auth Links -->
-        <a href="login.html" id="slide-out-login-link" class="nav-link"><i class="fas fa-sign-in-alt icon"></i>Login</a>
-    </nav>
-</div>
+  </div>
+</nav>
