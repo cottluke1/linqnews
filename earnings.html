@@ -43,7 +43,7 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; 
             position: relative; 
         }
-        .earnings-card:hover { 
+        .earnings-card:not(.locked):hover { 
             transform: translateY(-4px); 
             box-shadow: 0 8px 25px -8px rgba(0, 191, 255, 0.25); 
             border-color: #00BFFF; 
@@ -90,6 +90,17 @@
             font-size: 0.875rem; 
             margin-top: auto; 
         }
+
+        /* Styles for locked content */
+        .earnings-card.locked > .card-content { filter: blur(4px); pointer-events: none; }
+        .locked-overlay { position: absolute; inset: 0; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.7); backdrop-filter: blur(2px); border-radius: 0.75rem; cursor: pointer; }
+        .earnings-card.locked .locked-overlay { display: flex; }
+        .locked-overlay-content { text-align: center; color: white; padding: 1rem;}
+        .locked-overlay-content h4 { font-size: 1.25rem; font-weight: 600; }
+        .locked-overlay-content p { color: #b0b0b0; margin-top: 0.5rem; margin-bottom: 1rem; }
+        .locked-overlay-content .upgrade-btn { background: #00BFFF; color: white; padding: 0.5rem 1.5rem; border-radius: 99px; text-decoration: none; font-weight: 500; transition: background-color 0.2s; }
+        .locked-overlay-content .upgrade-btn:hover { background: #00A9E0; }
+
     </style>
 </head>
 <body class="antialiased">
@@ -212,12 +223,16 @@
                 return acc;
             }, {});
 
+            let cardIndex = 0;
             Object.keys(groupedByDate).forEach(dateStr => {
                 const titleEl = document.createElement('h2');
                 titleEl.className = 'text-xl font-semibold text-white my-6 pb-2 border-b border-gray-700';
                 titleEl.textContent = new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 container.appendChild(titleEl);
-                groupedByDate[dateStr].forEach(call => container.appendChild(createEarningsCard(call)));
+                groupedByDate[dateStr].forEach(call => {
+                    container.appendChild(createEarningsCard(call, cardIndex));
+                    cardIndex++;
+                });
             });
 
             if (tbdCalls.length > 0) {
@@ -225,13 +240,20 @@
                 tbdTitleEl.className = 'text-xl font-semibold text-white my-6 pb-2 border-b border-gray-700';
                 tbdTitleEl.textContent = 'Awaiting Announcement';
                 container.appendChild(tbdTitleEl);
-                tbdCalls.forEach(call => container.appendChild(createEarningsCard(call)));
+                tbdCalls.forEach(call => {
+                    container.appendChild(createEarningsCard(call, cardIndex));
+                    cardIndex++;
+                });
             }
         }
 
-        function createEarningsCard(call) {
+        function createEarningsCard(call, cardIndex) {
             const cardEl = document.createElement('div');
             cardEl.className = 'earnings-card upcoming-card';
+            
+            if (!isSubscribed && cardIndex > 0) {
+                cardEl.classList.add('locked');
+            }
             
             const initials = call.ticker || call.company.substring(0, 3).toUpperCase();
             const dateDisplay = call.date === 'TBD' ? 'TBD' : new Date(call.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
@@ -269,6 +291,13 @@
                             <h4>EPS (GAAP)</h4>
                             <p>${formatCurrency(call.epsGaapEstimate)}</p>
                         </div>
+                    </div>
+                </div>
+                <div class="locked-overlay" onclick="location.href='linqplus.html'">
+                    <div class="locked-overlay-content">
+                        <h4>Premium Feature</h4>
+                        <p>Upgrade to view full earnings details and calendar.</p>
+                        <a href="linqplus.html" class="upgrade-btn">Go Premium</a>
                     </div>
                 </div>`;
             return cardEl;
