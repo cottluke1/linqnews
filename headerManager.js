@@ -3,15 +3,6 @@
 // including authentication state, mobile menu functionality, and active link highlighting.
 
 document.addEventListener('DOMContentLoaded', () => {
-    // --- ADD THIS CODE BLOCK ---
-    const faviconLink = document.createElement('link');
-    faviconLink.rel = 'icon';
-    faviconLink.type = 'image/png';
-    faviconLink.href = 'favicon.png'; // Make sure favicon.png is in the root folder
-    document.head.appendChild(faviconLink);
-    // --- END OF CODE BLOCK TO ADD ---
-
-
     // --- 1. DEFINE CONSTANTS AND GET ELEMENTS ---
     const headerPlaceholder = document.getElementById('header-placeholder');
     if (!headerPlaceholder) {
@@ -111,23 +102,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- 6. UPDATE UI BASED ON AUTH STATE ---
+    // --- 6. UPDATE UI BASED ON AUTH STATE (Corrected Logic) ---
     function updateAuthUI(user) {
         // Desktop Elements
         const authLinkDesktop = document.getElementById('authLinkDesktopLogin');
         const profileLinkDesktop = document.getElementById('profileLinkDesktop');
         const navProfilePic = document.getElementById('navProfilePic');
         
-        // Mobile Slideout Elements
-        const authLinkMobile = document.getElementById('authLinkMobile');
-        const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-        const bottomProfileLinkMobile = document.getElementById('bottomProfileLinkMobile');
+        // **NEW** Mobile Group Elements
+        const loggedInLinksMobile = document.getElementById('mobile-logged-in-links');
+        const loggedOutLinksMobile = document.getElementById('mobile-logged-out-links');
+        
+        // Mobile User Info Elements
         const slideoutUserInfo = document.getElementById('slideout-user-info');
         const slideoutProfilePic = document.getElementById('slideoutProfilePic');
         const slideoutDisplayName = document.getElementById('slideoutDisplayName');
         const slideoutEmail = document.getElementById('slideoutEmail');
 
-        if (!authLinkDesktop || !profileLinkDesktop || !navProfilePic) return;
+        if (!authLinkDesktop || !profileLinkDesktop || !navProfilePic || !loggedInLinksMobile || !loggedOutLinksMobile || !slideoutUserInfo) {
+            console.error("One or more header UI elements could not be found.");
+            return;
+        }
 
         if (user) {
             // -- LOGGED IN STATE --
@@ -146,9 +141,8 @@ document.addEventListener('DOMContentLoaded', () => {
             slideoutEmail.textContent = user.email ? `@${user.email.split('@')[0]}` : '';
             
             slideoutUserInfo.classList.remove('hidden');
-            authLinkMobile.classList.add('hidden');
-            logoutButtonMobile.classList.remove('hidden');
-            bottomProfileLinkMobile.classList.remove('hidden');
+            loggedInLinksMobile.classList.remove('hidden');
+            loggedOutLinksMobile.classList.add('hidden');
 
         } else {
             // -- LOGGED OUT STATE --
@@ -159,9 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Mobile UI
             slideoutUserInfo.classList.add('hidden');
-            authLinkMobile.classList.remove('hidden');
-            logoutButtonMobile.classList.add('hidden');
-            bottomProfileLinkMobile.classList.add('hidden');
+            loggedInLinksMobile.classList.add('hidden');
+            loggedOutLinksMobile.classList.remove('hidden');
         }
         setActiveNavLink();
     }
