@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linq - Energy Earnings</title>
+    <title>Linq - Past Energy Earnings</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,7 +47,22 @@
         .company-logo-placeholder { width: 48px; height: 48px; background-color: #282828; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1.25rem; color: #00BFFF; border: 2px solid #333333; flex-shrink: 0; }
         .company-info-name { font-size: 1.25rem; font-weight: 600; color: #FFFFFF; }
         .company-info-ticker { font-size: 0.9rem; color: #A0A0A0; }
-        .action-btn { background-color: #1A1A1A; color: #00BFFF; border: 1px solid #00BFFF; padding: 0.5rem 1rem; border-radius: 0.375rem; font-size: 0.8rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.5rem; transition: background-color 0.2s ease, color 0.2s ease; cursor: pointer; }
+        /* FIX: Adjusted action button for mobile */
+        .action-btn { 
+            background-color: #1A1A1A; color: #00BFFF; border: 1px solid #00BFFF; 
+            border-radius: 0.375rem; 
+            display: inline-flex; align-items: center; gap: 0.5rem; 
+            transition: background-color 0.2s ease, color 0.2s ease; cursor: pointer;
+            padding: 0.25rem 0.6rem; /* Smaller padding for mobile */
+            font-size: 0.75rem; /* Smaller font for mobile */
+            font-weight: 500;
+        }
+        @media (min-width: 640px) {
+            .action-btn {
+                padding: 0.5rem 1rem; /* Original padding for larger screens */
+                font-size: 0.8rem; /* Original font size for larger screens */
+            }
+        }
         .action-btn:hover { background-color: #00BFFF; color: #FFFFFF; }
         .footer { background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem; border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem; margin-top: auto; }
         .earnings-results-grid { 
@@ -77,8 +92,8 @@
 
     <main class="page-content-wrapper px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-10 mt-10">
-            <h1 class="calendar-page-title">Energy <span class="accent-text">Earnings</span></h1>
-            <p class="calendar-page-subtitle">            </p>
+            <h1 class="calendar-page-title">Past Energy <span class="accent-text">Earnings</span></h1>
+            <p class="calendar-page-subtitle"></p>
             <a href="earnings.html" class="mt-6 inline-block text-white font-bold py-3 px-6 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-cyan-500/50 transform hover:-translate-y-0.5">
                 View Upcoming Earnings
             </a>
@@ -97,51 +112,18 @@
         let isSubscribed = false;
         let unsubscribeUserListener = null;
         
-                const previousEarningsData = [
-                    { "company": "ExxonMobil", "ticker": "XOM", "date": "2025-05-02", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investor.exxonmobil.com/news-events/ir-calendar/detail/20250502-1q-2025-earnings-call?utm_source=chatgpt.com", "epsEstimate": 1.74, "epsActual": 1.76, "revenueEstimate": 86.09, "revenueActual": 83.13 },
-                    { "company": "Chevron", "ticker": "CVX", "date": "2025-05-02", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://chevroncorp.gcs-web.com/static-files/26ecd08e-3af0-43e0-a96e-63416947ae56?utm_source=chatgpt.com", "epsEstimate": 2.15, "epsActual": 2.18, "revenueEstimate": 48.39, "revenueActual": 47.61 },
-                    { "company": "Shell", "ticker": "SHEL", "date": "2025-05-02", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.shell.com/investors/results-and-reporting/quarterly-results.html?utm_source=chatgpt.com", "epsEstimate": 1.61, "epsActual": 1.84, "revenueEstimate": 79.12, "revenueActual": 69.23 },
-                    { "company": "BP", "ticker": "BP", "date": "2025-04-29", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.bp.com/content/dam/bp/business-sites/en/global/corporate/pdfs/investors/bp-first-quarter-2025-results-qa-transcript.pdf?utm_source=chatgpt.com", "epsEstimate": 0.56, "epsActual": 0.53, "revenueEstimate": 39.89, "revenueActual": 46.91 },
-                    { "company": "TotalEnergies", "ticker": "TTE", "date": "2025-04-30", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://totalenergies.com/system/files/documents/totalenergies_1q25-results-press-release_2025.pdf?utm_source=chatgpt.com", "epsEstimate": 1.83, "epsActual": 1.83, "revenueEstimate": 44.91, "revenueActual": 47.90 },
-                    { "company": "ConocoPhillips", "ticker": "COP", "date": "2025-05-08", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.conocophillips.com/news-media/story/conocophillips-announces-first-quarter-2025-results-and-quarterly-dividend/?utm_source=chatgpt.com", "epsEstimate": 2.05, "epsActual": 2.09, "revenueEstimate": 15.91, "revenueActual": 17.10 },
-                    { "company": "EOG Resources", "ticker": "EOG", "date": "2025-05-01", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investors.eogresources.com/image/1Q_2025_Earnings_Press_Release.pdf?utm_source=chatgpt.com", "epsEstimate": 2.77, "epsActual": 2.87, "revenueEstimate": 5.85, "revenueActual": 5.67 },
-                    { "company": "Occidental Petroleum", "ticker": "OXY", "date": "2025-05-07", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.oxy.com/news/news-releases/occidental-announces-1st-quarter-2025-results/?utm_source=chatgpt.com", "epsEstimate": 0.76, "epsActual": 0.87, "revenueEstimate": 6.90, "revenueActual": 6.84 },
-                    { "company": "Valero Energy", "ticker": "VLO", "date": "2025-04-24", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investor.williams.com/?utm_source=chatgpt.com", "epsEstimate": 0.41, "epsActual": 0.89, "revenueEstimate": 28.46, "revenueActual": 30.26 },
-                    { "company": "Phillips 66", "ticker": "PSX", "date": "2025-04-25", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investor.phillips66.com/financial-information/news-releases/news-release-details/2025/Phillips-66-Reports-First-Quarter-Results/default.aspx?utm_source=chatgpt.com", "epsEstimate": -0.72, "epsActual": -0.90, "revenueEstimate": 32.06, "revenueActual": 31.73 },
-                    { "company": "Marathon Petroleum", "ticker": "MPC", "date": "2025-05-06", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://ir.marathonpetroleum.com/investor/news-releases/news-details/2025/Marathon-Petroleum-Corp--Reports-First-Quarter-2025-Results/default.aspx?utm_source=chatgpt.com", "epsEstimate": -0.54, "epsActual": -0.24, "revenueEstimate": 30.15, "revenueActual": 31.85 },
-                    { "company": "Kinder Morgan", "ticker": "KMI", "date": "2025-04-16", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://ir.kindermorgan.com/news/news-details/2025/Kinder-Morgan-Reports-First-Quarter-2025-Financial-Results/default.aspx?utm_source=chatgpt.com", "epsEstimate": 0.36, "epsActual": 0.34, "revenueEstimate": 4.02, "revenueActual": 4.24 },
-                    { "company": "Devon Energy", "ticker": "DVN", "date": "2025-05-06", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investor.williams.com/news-releases/news-release-details/williams-announces-strong-first-quarter-2025-results-and-raises", "epsEstimate": 1.22, "epsActual": 1.21, "revenueEstimate": 4.37, "revenueActual": 4.45 },
-                    { "company": "Williams Companies", "ticker": "WMB", "date": "2025-05-05", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investor.williams.com/news-releases/news-release-details/williams-announces-strong-first-quarter-2025-results-and-raises", "epsEstimate": 0.55, "epsActual": 0.60, "revenueEstimate": 2.94, "revenueActual": 3.05 },
-                    { "company": "Enterprise Products", "ticker": "EPD", "date": "2025-04-29", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://ir.enterpriseproducts.com/news-releases/news-release-details/enterprise-reports-first-quarter-2025-earnings?utm_source=chatgpt.com", "epsEstimate": 0.71, "epsActual": 0.66, "revenueEstimate": 14.00, "revenueActual": 15.42 },
-                    { "company": "Energy Transfer", "ticker": "ET", "date": "2025-05-06", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.energytransfer.com/wp-content/uploads/2025/05/ET-Q1-2025-Earnings-Presentation_Final.pdf?utm_source=chatgpt.com", "epsEstimate": 0.28, "epsActual": 0.37, "revenueEstimate": 21.54, "revenueActual": 21.02 },
-                    { "company": "Cheniere Energy", "ticker": "LNG", "date": "2025-05-08", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://lngir.cheniere.com/news-events/press-releases/detail/318/cheniere-reports-first-quarter-2025-results-and-reconfirms?utm_source=chatgpt.com", "epsEstimate": 3.19, "epsActual": 3.70, "revenueEstimate": 4.95, "revenueActual": 5.44 },
-                    { "company": "NextEra Energy", "ticker": "NEE", "date": "2025-04-23", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.investor.nexteraenergy.com/news-and-events/news-releases/2025/04-23-2025-123045027?utm_source=chatgpt.com", "epsEstimate": 0.98, "epsActual": 0.99, "revenueEstimate": 6.63, "revenueActual": 6.25 },
-                    { "company": "APA Corporation", "ticker": "APA", "date": "2025-05-07", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.globenewswire.com/news-release/2025/05/07/3076644/0/en/APA-Corporation-Announces-First-Quarter-2025-Financial-and-Operational-Results.html?utm_source=chatgpt.com", "epsEstimate": 0.82, "epsActual": 1.06, "revenueEstimate": 2.19, "revenueActual": 2.61 },
-                    { "company": "Antero Resources", "ticker": "AR", "date": "2025-04-30", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.anteroresources.com/investors/press-releases/detail/245/antero-resources-announces-first-quarter-2025-financial-and?utm_source=chatgpt.com", "epsEstimate": 0.88, "epsActual": 0.78, "revenueEstimate": 1.39, "revenueActual": 1.35 },
-                    { "company": "Coterra Energy", "ticker": "CTRA", "date": "2025-05-05", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://s28.q4cdn.com/696626308/files/doc_events/2025/May/06/1Q25-Press-Release-VF.pdf?utm_source=chatgpt.com", "epsEstimate": 0.80, "epsActual": 0.80, "revenueEstimate": 2.02, "revenueActual": 1.90 },
-                    { "company": "Range Resources", "ticker": "RRC", "date": "2025-04-22", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://ir.rangeresources.com/static-files/646848bd-6b2b-466b-8276-e2f1fbad2ea0?utm_source=chatgpt.com", "epsEstimate": 0.93, "epsActual": 0.96, "revenueEstimate": 0.78, "revenueActual": 0.69 },
-                    { "company": "EQT Corporation", "ticker": "EQT", "date": "2025-04-22", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://media.eqt.com/investor-relations/news/news-release-details/2025/EQT-Reports-First-Quarter-2025-Results/default.aspx?utm_source=chatgpt.com", "epsEstimate": 1.01, "epsActual": 1.18, "revenueEstimate": 2.09, "revenueActual": 1.74 },
-                    { "company": "PBF Energy", "ticker": "PBF", "date": "2025-05-01", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investors.pbfenergy.com/financials/quarterly-results/default.aspx?utm_source=chatgpt.com", "epsEstimate": -3.29, "epsActual": -3.09, "revenueEstimate": 6.61, "revenueActual": 7.07 },
-                    { "company": "Targa Resources", "ticker": "TRGP", "date": "2025-05-01", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.targaresources.com/static-files/8040abfc-86e5-4fd6-a752-17e2b833c8da?utm_source=chatgpt.com", "epsEstimate": 2.05, "epsActual": 1.89, "revenueEstimate": 4.90, "revenueActual": 4.56 },
-                    { "company": "SM Energy", "ticker": "SM", "date": "2025-05-01", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.sm-energy.com/investors/news-events/press-releases/detail/348/sm-energy-reports-first-quarter-2025-financial-and-operating-results-successful-uinta-basin-integration-drives-production-to-high-end-of-guidance-at-53-oil?utm_source=chatgpt.com", "epsEstimate": 1.62, "epsActual": 1.76, "revenueEstimate": 0.82, "revenueActual": 0.84 },
-                    { "company": "Ovintiv", "ticker": "OVV", "date": "2025-05-06", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investor.ovintiv.com/2025-05-06-Ovintiv-Reports-First-Quarter-2025-Financial-and-Operating-Results?utm_source=chatgpt.com", "epsEstimate": 1.18, "epsActual": 1.42, "revenueEstimate": 2.29, "revenueActual": 2.38 },
-                    { "company": "Kosmos Energy", "ticker": "KOS", "date": "2025-05-06", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investors.kosmosenergy.com/news-releases/news-release-details/kosmos-energy-announces-first-quarter-2025-results?utm_source=chatgpt.com", "epsEstimate": -0.08, "epsActual": -0.22, "revenueEstimate": 0.32, "revenueActual": 0.29 },
-                    { "company": "Matador Resources", "ticker": "MTDR", "date": "2025-04-23", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.matadorresources.com/news-releases/news-release-details/matador-resources-company-reports-first-quarter-2025-results-and?utm_source=chatgpt.com", "epsEstimate": 1.78, "epsActual": 1.99, "revenueEstimate": 0.95, "revenueActual": 1.01 },
-                    { "company": "Gulfport Energy", "ticker": "GPOR", "date": "2025-05-06", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.gulfportenergy.com/news/press-releases/detail/1417/gulfport-energy-reports-first-quarter-2025-financial-and?utm_source=chatgpt.com", "epsEstimate": 5.23, "epsActual": 5.63, "revenueEstimate": 0.32, "revenueActual": 0.20 },
-                    { "company": "Magnolia Oil & Gas", "ticker": "MGY", "date": "2025-04-30", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.magnoliaoilgas.com/investors/press-releases/year/2025/04-30-2025-210121064?utm_source=chatgpt.com", "epsEstimate": 0.53, "epsActual": 0.52, "revenueEstimate": 0.34, "revenueActual": 0.35 },
-                    { "company": "CNX Resources", "ticker": "CNX", "date": "2025-04-24", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investors.cnx.com/news-releases/2025/04-24-2025-114533170?utm_source=chatgpt.com", "epsEstimate": 0.63, "epsActual": 0.78, "revenueEstimate": 0.52, "revenueActual": 0.08 },
-                    { "company": "Northern Oil & Gas", "ticker": "NOG", "date": "2025-04-29", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.northernoil.com/investor-relations/investor-news/news-details/2025/NOG-Announces-First-Quarter-2025-Results/default.aspx?utm_source=chatgpt.com", "epsEstimate": 1.13, "epsActual": 1.33, "revenueEstimate": 0.56, "revenueActual": 0.58 },
-                    { "company": "Talos Energy", "ticker": "TALO", "date": "2025-05-05", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.talosenergy.com/investor-relations/news/news-details/2025/Talos-Energy-Announces-First-Quarter-2025-Operational-and-Financial-Results/default.aspx?utm_source=chatgpt.com", "epsEstimate": -0.10, "epsActual": 0.06, "revenueEstimate": 0.50, "revenueActual": 0.51 },
-                    { "company": "Civitas Resources", "ticker": "CIVI", "date": "2025-05-07", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://s28.q4cdn.com/138385969/files/doc_news/2025/04/CIVI-1Q25-Earnings-Date-Press-Release.pdf?utm_source=chatgpt.com", "epsEstimate": 1.65, "epsActual": 1.77, "revenueEstimate": 1.19, "revenueActual": 1.19 },
-                    { "company": "Helmerich & Payne", "ticker": "HP", "date": "2025-05-07", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.businesswire.com/news/home/20250205447985/en/Helmerich-Payne-Inc.-Announces-Fiscal-First-Quarter-Results?utm_source=chatgpt.com", "epsEstimate": 0.62, "epsActual": 0.02, "revenueEstimate": 0.96, "revenueActual": 1.02 },
-                    { "company": "Patterson-UTI", "ticker": "PTEN", "date": "2025-04-23", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investor.patenergy.com/Investors/News-and-Events/news/news-details/2025/Patterson-UTI-Energy-Reports-Financial-Results-for-the-Quarter-Ended-March-31-2025-/?utm_source=chatgpt.com", "epsEstimate": -0.05, "epsActual": 0.00, "revenueEstimate": 1.19, "revenueActual": 1.28 },
-                    { "company": "Nabors Industries", "ticker": "NBR", "date": "2025-04-29", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.prnewswire.com/news-releases/nabors-announces-first-quarter-2025-results-302441797.html?utm_source=chatgpt.com", "epsEstimate": -3.48, "epsActual": -3.24, "revenueEstimate": 0.72, "revenueActual": 0.74 },
-                    { "company": "TechnipFMC", "ticker": "FTI", "date": "2025-04-24", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.technipfmc.com/en/investors/financial-news-releases/press-release/technipfmc-announces-first-quarter-2025-earnings-release-and-conference-call/?utm_source=chatgpt.com", "epsEstimate": 0.37, "epsActual": 0.33, "revenueEstimate": 2.25, "revenueActual": 2.23 },
-                    { "company": "NOV Inc.", "ticker": "NOV", "date": "2025-04-28", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investors.nov.com/quarterly-results?utm_source=chatgpt.com", "epsEstimate": 0.25, "epsActual": 0.19, "revenueEstimate": 2.09, "revenueActual": 2.10 },
-                    { "company": "Halliburton", "ticker": "HAL", "date": "2025-04-22", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.halliburton.com/en/about-us/press-release/halliburton-announces-first-quarter-2025-results?utm_source=chatgpt.com", "epsEstimate": 0.60, "epsActual": 0.60, "revenueEstimate": 5.28, "revenueActual": 5.42 },
-                    { "company": "Schlumberger", "ticker": "SLB", "date": "2025-04-25", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investorcenter.slb.com/news-releases/news-release-details/slb-announces-first-quarter-2025-results/?utm_source=chatgpt.com", "epsEstimate": 0.73, "epsActual": 0.72, "revenueEstimate": 8.59, "revenueActual": 8.49 },
-                    { "company": "Baker Hughes", "ticker": "BKR", "date": "2025-04-22", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investors.bakerhughes.com/news-releases/news-release-details/baker-hughes-company-announces-first-quarter-2025-results?utm_source=chatgpt.com", "epsEstimate": 0.47, "epsActual": 0.51, "revenueEstimate": 6.50, "revenueActual": 6.43 }
-                ];
+        const previousEarningsData = [
+            { "company": "ExxonMobil", "ticker": "XOM", "date": "2025-05-02", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investor.exxonmobil.com/news-events/ir-calendar/detail/20250502-1q-2025-earnings-call?utm_source=chatgpt.com", "epsEstimate": 1.74, "epsActual": 1.76, "revenueEstimate": 86.09, "revenueActual": 83.13 },
+            { "company": "Chevron", "ticker": "CVX", "date": "2025-05-02", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://chevroncorp.gcs-web.com/static-files/26ecd08e-3af0-43e0-a96e-63416947ae56?utm_source=chatgpt.com", "epsEstimate": 2.15, "epsActual": 2.18, "revenueEstimate": 48.39, "revenueActual": 47.61 },
+            { "company": "Shell", "ticker": "SHEL", "date": "2025-05-02", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.shell.com/investors/results-and-reporting/quarterly-results.html?utm_source=chatgpt.com", "epsEstimate": 1.61, "epsActual": 1.84, "revenueEstimate": 79.12, "revenueActual": 69.23 },
+            { "company": "BP", "ticker": "BP", "date": "2025-04-29", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.bp.com/content/dam/bp/business-sites/en/global/corporate/pdfs/investors/bp-first-quarter-2025-results-qa-transcript.pdf?utm_source=chatgpt.com", "epsEstimate": 0.56, "epsActual": 0.53, "revenueEstimate": 39.89, "revenueActual": 46.91 },
+            { "company": "TotalEnergies", "ticker": "TTE", "date": "2025-04-30", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://totalenergies.com/system/files/documents/totalenergies_1q25-results-press-release_2025.pdf?utm_source=chatgpt.com", "epsEstimate": 1.83, "epsActual": 1.83, "revenueEstimate": 44.91, "revenueActual": 47.90 },
+            { "company": "ConocoPhillips", "ticker": "COP", "date": "2025-05-08", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.conocophillips.com/news-media/story/conocophillips-announces-first-quarter-2025-results-and-quarterly-dividend/?utm_source=chatgpt.com", "epsEstimate": 2.05, "epsActual": 2.09, "revenueEstimate": 15.91, "revenueActual": 17.10 },
+            { "company": "EOG Resources", "ticker": "EOG", "date": "2025-05-01", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investors.eogresources.com/image/1Q_2025_Earnings_Press_Release.pdf?utm_source=chatgpt.com", "epsEstimate": 2.77, "epsActual": 2.87, "revenueEstimate": 5.85, "revenueActual": 5.67 },
+            { "company": "Occidental Petroleum", "ticker": "OXY", "date": "2025-05-07", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://www.oxy.com/news/news-releases/occidental-announces-1st-quarter-2025-results/?utm_source=chatgpt.com", "epsEstimate": 0.76, "epsActual": 0.87, "revenueEstimate": 6.90, "revenueActual": 6.84 },
+            { "company": "Valero Energy", "ticker": "VLO", "date": "2025-04-24", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investor.williams.com/?utm_source=chatgpt.com", "epsEstimate": 0.41, "epsActual": 0.89, "revenueEstimate": 28.46, "revenueActual": 30.26 },
+            { "company": "Phillips 66", "ticker": "PSX", "date": "2025-04-25", "time": "4:30 PM", "period": "Q1 2025", "transcriptUrl": "https://investor.phillips66.com/financial-information/news-releases/news-release-details/2025/Phillips-66-Reports-First-Quarter-Results/default.aspx?utm_source=chatgpt.com", "epsEstimate": -0.72, "epsActual": -0.90, "revenueEstimate": 32.06, "revenueActual": 31.73 },
+        ];
 
         const firebaseConfig = { 
             apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
@@ -232,20 +214,26 @@
                 else if (diff < 0) revClass = 'negative';
             }
 
+            // FIX: New HTML structure for the top part of the card
             cardEl.innerHTML = `
                 <div class="card-content flex flex-col gap-y-4">
                     <div class="flex items-start justify-between">
                         <div class="flex items-center gap-4">
                             <div class="company-logo-placeholder"><span>${initials}</span></div>
-                            <div>
+                            <div class="flex-grow">
                                 <h3 class="company-info-name">${call.company}</h3>
-                                <p class="company-info-ticker">${call.ticker}</p>
+                                <div class="flex items-center gap-x-4 mt-1">
+                                    <p class="company-info-ticker">${call.ticker}</p>
+                                    <a href="${call.transcriptUrl}" target="_blank" rel="noopener noreferrer" class="action-btn transcript-btn hidden sm:inline-flex">
+                                        <i class="fas fa-file-alt fa-xs"></i>
+                                        <span>Transcript</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                        <div class="flex-shrink-0 ml-4">
-                             <a href="${call.transcriptUrl}" target="_blank" rel="noopener noreferrer" class="action-btn transcript-btn">
-                                <i class="fas fa-file-alt"></i> View Transcript
-                            </a>
+                        <div class="text-right flex-shrink-0 ml-4">
+                             <p class="text-sm text-gray-400 font-medium">${call.period}</p>
+                             <p class="text-sm text-gray-500">${new Date(call.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
                         </div>
                     </div>
 
@@ -267,6 +255,10 @@
                             <p class="${epsClass}">${epsDiffText}</p>
                         </div>
                     </div>
+                     <a href="${call.transcriptUrl}" target="_blank" rel="noopener noreferrer" class="action-btn transcript-btn sm:hidden mt-4 w-full justify-center">
+                        <i class="fas fa-file-alt"></i>
+                        <span>View Transcript</span>
+                    </a>
                 </div>
                 <div class="locked-overlay" onclick="location.href='linqplus.html'">
                     <div class="locked-overlay-content">
