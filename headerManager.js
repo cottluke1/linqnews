@@ -111,10 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Mobile Slideout Elements
         const authLinkMobile = document.getElementById('authLinkMobile');
-        const profileLinkMobile = document.getElementById('profileLinkMobile');
         const logoutButtonMobile = document.getElementById('logoutButtonMobile');
         const slideoutUserInfo = document.getElementById('slideout-user-info');
-        const slideoutUserDetails = document.getElementById('slideout-user-details');
         const slideoutProfilePic = document.getElementById('slideoutProfilePic');
         const slideoutDisplayName = document.getElementById('slideoutDisplayName');
         const slideoutEmail = document.getElementById('slideoutEmail');
@@ -138,9 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             slideoutEmail.textContent = user.email ? `@${user.email.split('@')[0]}` : '';
             
             slideoutUserInfo.classList.remove('hidden');
-            slideoutUserDetails.classList.remove('hidden');
             authLinkMobile.classList.add('hidden');
-            profileLinkMobile.classList.remove('hidden');
             logoutButtonMobile.classList.remove('hidden');
 
         } else {
@@ -152,9 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Mobile UI
             slideoutUserInfo.classList.add('hidden');
-            slideoutUserDetails.classList.add('hidden');
             authLinkMobile.classList.remove('hidden');
-            profileLinkMobile.classList.add('hidden');
             logoutButtonMobile.classList.add('hidden');
         }
         setActiveNavLink();
