@@ -66,14 +66,6 @@ window.presentDayArticles = [
         link: 'https://finance.yahoo.com/news/latest-news-energy-transition-renewable-113724114.html'
     },
     {
-        id: "p9",
-        category: 'Policy & Markets',
-        title: 'Trump\'s Big Beautiful Bill: Medicaid, Tax Cuts',
-        date: 'June 17, 2025',
-        source: 'AP News',
-        link: 'https://apnews.com/article/trump-big-beautiful-bill-medicaid-tax-cuts-bec87c569760ed979ac8c34cccba186b'
-    },
-    {
         id: "p10",
         category: 'Policy & Markets',
         title: 'Climate Clean Energy Investments: Trump Solar Wind',
