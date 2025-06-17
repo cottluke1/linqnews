@@ -34,12 +34,11 @@
         ::-webkit-scrollbar-thumb { background-color: #333333; border-radius: 10px; border: 2px solid #1A1A1A; }
         ::-webkit-scrollbar-thumb:hover { background-color: #4A4A4A; }
 
-        /* FIX: Replaced the old wrapper padding with body padding to prevent layout shift */
         .chat-container-wrapper {
             flex-grow: 1; display: flex; flex-direction: column; width: 100%;
             max-width: 900px; margin: 0 auto;
-            height: 100%; /* Occupy full height of the padded body */
-            padding-top: 64px; /* Space for the header */
+            height: 100%; 
+            padding-top: 64px; 
         }
         .chat-header-area { flex-shrink: 0; }
         .page-heading-container { text-align: center; padding: 1.5rem 1rem 1rem 1rem; }
@@ -80,22 +79,23 @@
     </style>
 </head>
 <body class="antialiased">
-    <!-- FIX: Replaced spacer div with the semantic header placeholder -->
     <header id="header-placeholder"></header>
 
     <div class="chat-container-wrapper px-2 sm:px-4">
         <div class="chat-header-area">
             <div class="page-heading-container">
                 <h1 class="chat-page-title">Linq <span class="accent-text">AI</span></h1>
-                <p class="chat-page-subtitle">Your Energy Questions Answered</p>
+                <!-- FIX: Added responsive classes to hide on mobile -->
+                <p class="chat-page-subtitle hidden lg:block">Your Energy Questions Answered</p>
             </div>
         </div>
 
         <div id="chat-window" class="chat-window">
             <!-- Chat messages will be appended here by JavaScript -->
         </div>
-
-        <div id="suggested-questions" class="suggested-questions">
+        
+        <!-- FIX: Added responsive classes to hide on mobile -->
+        <div id="suggested-questions" class="suggested-questions hidden lg:flex">
             <button class="suggested-question-btn">Future of Green Hydrogen?</button>
             <button class="suggested-question-btn">Latest on Carbon Capture?</button>
             <button class="suggested-question-btn">Oil Price Volatility Factors?</button>
@@ -113,11 +113,9 @@
     </div>
     
     <script>
-        // --- GLOBAL STATE ---
         let isSubscribed = false; 
         let unsubscribeUserListener = null;
 
-        // --- Firebase Initialization ---
         const firebaseConfig = {
             apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
             authDomain: "linq-b27a8.firebaseapp.com",
@@ -130,7 +128,6 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // --- UI ELEMENTS ---
         const chatWindow = document.getElementById('chat-window');
         const chatForm = document.getElementById('chat-form');
         const chatInput = document.getElementById('chat-input');
@@ -142,22 +139,17 @@
              content: 'You are Linq AI, a helpful and knowledgeable energy analyst. Provide concise, informative answers related to the energy sector, including oil, gas, renewables, and market trends. Keep responses to a few sentences unless asked for more detail.'
         }];
 
-        // --- PAGE-SPECIFIC INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            // FIX: Removed all header-related fetching and auth logic from here.
-            
-            // Set up page-specific event listeners
             chatForm.addEventListener('submit', handleFormSubmit);
             suggestedQuestionsContainer.addEventListener('click', handleSuggestedQuestionClick);
             
-            // Listen for auth changes to manage page-specific UI (chat input)
             auth.onAuthStateChanged(user => {
                 if (unsubscribeUserListener) unsubscribeUserListener();
 
                 if (user) {
                     unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
                         isSubscribed = doc.exists && doc.data().isSubscribed === true;
-                        updateChatUI(true, isSubscribed); // User is logged in
+                        updateChatUI(true, isSubscribed); 
                     }, error => {
                         console.error("Error with real-time listener:", error);
                         isSubscribed = false;
@@ -165,18 +157,15 @@
                     });
                 } else {
                     isSubscribed = false;
-                    updateChatUI(false, false); // User is logged out
+                    updateChatUI(false, false); 
                 }
             });
             
-            // Add initial welcome message
             addMessageToChat("I'm Linq's AI Energy Analyst—here to answer your energy questions with the latest data and real insights. What's on your mind?", 'ai');
         });
 
-        // --- All page-specific Chat UI logic remains unchanged ---
-        
         function updateChatUI(isUserLoggedIn, isUserSubscribed) {
-            chatInput.disabled = false; // Always enable the input field visually
+            chatInput.disabled = false; 
             sendButton.disabled = false;
         
             if (!isUserLoggedIn) {
@@ -287,7 +276,6 @@
         }
     </script>
 
-    <!-- FIX: Centralized header script is now included at the end of the body -->
     <script src="headerManager.js" defer></script>
 </body>
 </html>
