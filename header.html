@@ -1,4 +1,91 @@
-<nav class="fixed top-0 left-0 w-full z-[1000] bg-black/80 backdrop-blur-sm border-b border-gray-800">
+<style>
+/* Base Navigation Bar Styles */
+.main-nav {
+    background-color: rgba(10, 10, 10, 0.7); /* Dark semi-transparent background */
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Desktop Navigation Link Styles */
+.nav-link {
+    transition: all 0.2s ease-in-out;
+    font-weight: 500;
+    color: #A0A0A0; /* Lighter gray for better readability */
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.9rem;
+}
+.nav-link:hover, .nav-link.active {
+    color: #FFFFFF;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Premium Button Style */
+.go-premium-btn {
+    background: #00BFFF;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 15px -5px rgba(0, 191, 255, 0.4);
+}
+.go-premium-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px -5px rgba(0, 191, 255, 0.5);
+    background: #00A9E0;
+}
+
+/* Profile Picture Style */
+#navProfilePic {
+    transition: border-color 0.2s ease;
+}
+
+/* Mobile Slide-out Menu Styles */
+#mobile-slideout-menu {
+    background-color: rgba(17, 17, 17, 0.8); /* #111111 with opacity */
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.slideout-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    color: #a0a0a0;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+.slideout-link:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white;
+}
+.slideout-link i {
+    width: 1.5rem;
+    text-align: center;
+    color: #6b7280;
+    transition: color 0.2s ease-in-out;
+}
+.slideout-link:hover i {
+    color: #00BFFF;
+}
+.slideout-link .beta-tag {
+    background-color: #00BFFF;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    margin-left: auto;
+}
+</style>
+
+<nav class="main-nav fixed top-0 left-0 w-full z-[1000]">
   <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
     
     <div class="flex-shrink-0">
@@ -18,9 +105,9 @@
     <div class="flex items-center">
       <div class="hidden md:flex items-center space-x-4">
         <a href="linqplus.html" class="go-premium-btn">Go Premium</a>
-        <a href="login.html" id="authLinkDesktopLogin" class="hidden nav-link-button">Login</a>
+        <a href="login.html" id="authLinkDesktopLogin" class="hidden nav-link font-semibold">Login</a>
         <a href="profile.html" id="profileLinkDesktop" class="hidden" title="My Profile">
-          <img id="navProfilePic" style="display:none;" src="" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition">
+          <img id="navProfilePic" style="display:none;" src="" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400">
         </a>
       </div>
       <div class="md:hidden">
@@ -33,35 +120,42 @@
 </nav>
 
 <div id="menu-overlay" class="hidden fixed inset-0 bg-black bg-opacity-70 z-40 transition-opacity duration-300 ease-in-out"></div>
-<div id="mobile-slideout-menu" class="fixed top-0 right-0 h-full w-72 bg-[#111111] z-50 transform translate-x-full transition-transform ease-in-out duration-300 overflow-y-auto">
-    <div class="p-4">
-        <div class="flex justify-between items-center mb-6">
-            <span class="font-bold text-lg text-white">Linq</span>
-            <button id="mobile-menu-close-button" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+
+<div id="mobile-slideout-menu" class="fixed top-0 right-0 h-full w-72 z-50 transform translate-x-full transition-transform ease-in-out duration-300 overflow-y-auto">
+    <div class="p-4 flex flex-col h-full">
+        <div class="flex justify-between items-center mb-6 flex-shrink-0">
+            <a href="index.html" class="font-bold text-lg text-white">Linq</a>
+            <button id="mobile-menu-close-button" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
         </div>
 
-        <div id="slideout-user-info" class="hidden mb-6">
-            <a href="profile.html" class="flex items-center justify-between w-full">
+        <div id="slideout-user-info" class="hidden mb-6 flex-shrink-0">
+            <a href="profile.html" class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors duration-200">
+                <img id="slideoutProfilePic" src="" class="w-11 h-11 rounded-full object-cover border-2 border-gray-600">
                 <div>
                     <p id="slideoutDisplayName" class="font-bold text-white leading-tight">User</p>
                     <p id="slideoutEmail" class="text-sm text-gray-400 leading-tight">@email</p>
                 </div>
-                <img id="slideoutProfilePic" src="" class="w-10 h-10 rounded-full object-cover border-2 border-gray-600">
             </a>
         </div>
         
-        <nav class="flex flex-col space-y-1">
-            <a href="index.html" class="slideout-link"><i class="fas fa-newspaper w-6"></i>News</a>
-            <a href="community.html" class="slideout-link"><i class="fas fa-users w-6"></i>Community</a>
-            <a href="earnings.html" class="slideout-link"><i class="fas fa-chart-line w-6"></i>Earnings</a>
-            <hr class="border-gray-700 my-2">
-            <a href="linqplus.html" class="slideout-link"><i class="fas fa-star w-6"></i>Premium</a>
-            <a href="linqai.html" class="slideout-link"><i class="fas fa-comment-dots w-6"></i>Linq AI<span class="text-xs bg-cyan-500 text-white px-1.5 py-0.5 rounded-full ml-2">BETA</span></a>
-            <a href="favorites.html" class="slideout-link"><i class="fas fa-bookmark w-6"></i>Bookmarks</a>
-            <hr class="border-gray-700 my-2">
-            <a href="login.html" id="authLinkMobile" class="slideout-link"><i class="fas fa-sign-in-alt w-6"></i>Login</a>
-            <a href="profile.html" id="bottomProfileLinkMobile" class="slideout-link hidden"><i class="fas fa-user-circle w-6"></i>Profile</a>
-            <a href="#" id="logoutButtonMobile" class="slideout-link text-red-400 hidden"><i class="fas fa-sign-out-alt w-6"></i>Logout</a>
+        <nav class="flex-grow flex flex-col space-y-1">
+            <a href="index.html" class="slideout-link"><i class="fas fa-newspaper"></i><span>News</span></a>
+            <a href="community.html" class="slideout-link"><i class="fas fa-users"></i><span>Community</span></a>
+            <a href="earnings.html" class="slideout-link"><i class="fas fa-chart-line"></i><span>Earnings</span></a>
+            
+            <hr class="border-gray-700/60 my-3">
+            
+            <a href="linqplus.html" class="slideout-link"><i class="fas fa-star"></i><span>Premium</span></a>
+            <a href="linqai.html" class="slideout-link"><i class="fas fa-comment-dots"></i><span>Linq AI</span><span class="beta-tag">BETA</span></a>
+            <a href="favorites.html" class="slideout-link"><i class="fas fa-bookmark"></i><span>Bookmarks</span></a>
+            
+            <div class="flex-grow"></div>
+
+            <hr class="border-gray-700/60 my-3">
+            
+            <a href="login.html" id="authLinkMobile" class="slideout-link"><i class="fas fa-sign-in-alt"></i><span>Login</span></a>
+            <a href="profile.html" id="bottomProfileLinkMobile" class="slideout-link hidden"><i class="fas fa-user-circle"></i><span>Profile</span></a>
+            <a href="#" id="logoutButtonMobile" class="slideout-link hidden"><i class="fas fa-sign-out-alt text-red-400/80"></i><span class="text-red-400/80">Logout</span></a>
         </nav>
     </div>
 </div>
