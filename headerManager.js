@@ -21,8 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
         .go-premium-btn:hover { background-color: #374151; border-color: #6B7280; transform: scale(1.05); }
 
         /* Styles for the new mobile slide-out panel */
-        #slide-out-panel { /* FIX: Explicitly set a solid background color */
-            background-color: #000000;
+        /* FIX: Made the background-color rule more specific and important to prevent transparency issues. */
+        nav #slide-out-panel {
+            background-color: #000000 !important;
         }
         .nav-link-mobile {
             font-size: 1rem;
@@ -112,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 5. SETUP EVENT LISTENERS ---
-    // UPDATED: Replaced dropdown logic with slide-out panel logic
     function setupEventListeners(auth) {
         const slideOutPanel = document.getElementById('slide-out-panel');
         const menuOverlay = document.getElementById('menu-overlay');
@@ -133,53 +133,51 @@ document.addEventListener('DOMContentLoaded', () => {
             const target = event.target.closest('a, button');
             if (!target) return;
             
-            // Mobile menu open button
-            if (target.id === 'mobile-menu-button') {
-                openMobileMenu();
-            }
-
-            // Mobile menu close button
-            if (target.id === 'slideout-close-button') {
-                closeMobileMenu();
-            }
-
-            // Logout button
+            if (target.id === 'mobile-menu-button') openMobileMenu();
+            if (target.id === 'slideout-close-button') closeMobileMenu();
+            
             if (target.id === 'logoutButtonMobile') {
                 event.preventDefault();
                 localStorage.removeItem('navProfileURL');
-                closeMobileMenu(); // Close menu on logout
+                closeMobileMenu(); 
                 auth.signOut();
             }
         });
         
-        // Close menu when clicking the overlay
         if (menuOverlay) {
             menuOverlay.addEventListener('click', closeMobileMenu);
         }
     }
 
     // --- 6. UPDATE UI BASED ON AUTH STATE ---
+    // FIX: Reinforced logic to ensure correct links are shown based on authentication state.
     function updateAuthUI(user, userData) {
+        // Desktop elements
         const authLinkDesktop = document.getElementById('authLinkDesktopLogin');
         const profileLinkDesktop = document.getElementById('profileLinkDesktop');
-        // UPDATED: Selectors now target the links in the slide-out panel
+        
+        // Mobile elements
         const authLinkMobile = document.getElementById('authLinkMobile');
         const profileLinkMobile = document.getElementById('profileLinkMobile');
         const logoutButtonMobile = document.getElementById('logoutButtonMobile');
 
-        if (!authLinkDesktop || !profileLinkDesktop || !authLinkMobile || !profileLinkMobile || !logoutButtonMobile) return;
+        // Exit if elements aren't found
+        if (!authLinkDesktop || !profileLinkDesktop || !authLinkMobile || !profileLinkMobile || !logoutButtonMobile) {
+            console.error("One or more auth UI elements are missing from the DOM.");
+            return;
+        }
 
         if (user) {
-            // User is logged in
+            // --- USER IS LOGGED IN ---
             const name = (userData?.displayName || user.displayName || user.email || "U");
             const initials = name.charAt(0).toUpperCase();
             const photoSrc = userData?.photoURL || user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
             
             localStorage.setItem('navProfileURL', photoSrc);
 
+            // Set desktop profile picture
             const image = new Image();
             image.src = photoSrc;
-
             const createImage = (imgSrc) => {
                 profileLinkDesktop.innerHTML = ''; 
                 const newImg = document.createElement('img');
@@ -192,21 +190,23 @@ document.addEventListener('DOMContentLoaded', () => {
             image.onload = () => createImage(image.src);
             image.onerror = () => createImage(`https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`);
             
-            // Desktop
+            // Update Desktop UI
             profileLinkDesktop.classList.remove('hidden');
             authLinkDesktop.classList.add('hidden');
-            // Mobile
+            
+            // Update Mobile UI
             authLinkMobile.classList.add('hidden');
             profileLinkMobile.classList.remove('hidden');
             logoutButtonMobile.classList.remove('hidden');
 
         } else {
-            // User is logged out
-            // Desktop
+            // --- USER IS LOGGED OUT ---
+            // Update Desktop UI
             profileLinkDesktop.classList.add('hidden');
             authLinkDesktop.classList.remove('hidden');
             profileLinkDesktop.innerHTML = '<img id="navProfilePic" style="display:none;" src="" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition">';
-            // Mobile
+            
+            // Update Mobile UI
             authLinkMobile.classList.remove('hidden');
             profileLinkMobile.classList.add('hidden');
             logoutButtonMobile.classList.add('hidden');
@@ -217,7 +217,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 7. UTILITY FUNCTION ---
     function setActiveNavLink() {
         const currentPath = window.location.pathname.split("/").pop().split("?")[0] || "index.html";
-        // UPDATED: Selector includes new mobile nav links
         const navLinks = document.querySelectorAll('.nav-link, .nav-link-mobile');
         navLinks.forEach(link => {
             link.classList.remove('active');
