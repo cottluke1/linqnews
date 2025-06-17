@@ -146,7 +146,7 @@ function updateUIForGuest() {
 
 function setActiveNavLink() {
     // Use a more specific selector to avoid matching non-nav links
-    const navLinks = document.querySelectorAll('div.hidden.md\:flex a.nav-link, #slide-out-menu a.slide-out-nav-link');
+    const navLinks = document.querySelectorAll('div.hidden.md\\:flex a.nav-link, #slide-out-menu a.slide-out-nav-link');
     const currentPath = window.location.pathname.split("/").pop() || "index.html";
 
     navLinks.forEach(link => {
