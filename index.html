@@ -455,35 +455,6 @@
             });
         }
         
-        document.addEventListener('DOMContentLoaded', () => {
-            desktopCategoryFilters.addEventListener('click', handleCategoryFilter);
-            mobileCategoryFilters.addEventListener('click', handleCategoryFilter);
-            searchInput.addEventListener('input', () => displayArticlesForPage(1));
-            newsGrid.addEventListener('click', (e) => {
-                const favButton = e.target.closest('.favorite-btn');
-                if (favButton) toggleFavorite(favButton.dataset.id);
-            });
-
-            auth.onAuthStateChanged(user => {
-                if (unsubscribeUserListener) unsubscribeUserListener();
-                if (user) {
-                    unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
-                        isSubscribed = doc.exists && doc.data().isSubscribed === true;
-                        favorites = doc.exists ? doc.data().bookmarks || [] : [];
-                        initializeAppLogic();
-                    }, error => {
-                        console.error("Error with real-time listener:", error);
-                        isSubscribed = false;
-                        favorites = [];
-                        initializeAppLogic();
-                    });
-                } else { 
-                    isSubscribed = false;
-                    favorites = [];
-                    initializeAppLogic();
-                }
-            });
-        });
     </script>
     
     <script src="headerManager.js" defer></script>
