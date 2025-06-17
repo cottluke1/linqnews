@@ -3,162 +3,202 @@
 window.presentDayArticles = [
     {
         id: "p1",
-        category: 'Power',
-        title: 'Nokia Expands IP Routing Portfolio to Utilities with New Platforms to Boost Smart Grid',
-        date: 'June 12, 2025',
-        source: 'Seeking Alpha',
-        link: 'https://seekingalpha.com/pr/20135065-nokia-expands-ip-routing-portfolio-to-utilities-with-new-platforms-to-boost-smart-grid'
+        category: 'Crude Oil',
+        title: 'Israel-Iran Tensions Impact: Crude Oil Climbs Over 1% Amid Geopolitical Concerns',
+        date: 'June 17, 2025',
+        source: 'Times of India',
+        link: 'https://timesofindia.indiatimes.com/business/india-business/israel-iran-tensions-impact-crude-oil-climbs-over-1-amid-geopoliitcal-concerns-evacuation-fears-hit-global-markets/articleshow/121909149.cms'
     },
     {
         id: "p2",
-        category: 'Earnings',
-        title: 'Energy Transfer Has A Strong Yield And Growth Potential',
-        date: 'June 12, 2025',
-        source: 'Seeking Alpha',
-        link: 'https://seekingalpha.com/article/4791526-energy-transfer-has-a-strong-yield-and-growth-potential'
+        category: 'Crude Oil',
+        title: 'Oil Prices Add to Gains After Israel Hits Iran Energy Facilities',
+        date: 'June 17, 2025',
+        source: 'MarketWatch',
+        link: 'https://www.marketwatch.com/story/oil-prices-add-to-gains-after-israel-hits-iran-energy-facilities-stocks-taking-turmoil-in-stride-abfb2cb3'
     },
     {
         id: "p3",
-        category: 'Earnings',
-        title: 'Energy Transfer Is My Largest Holding For Good Reason',
-        date: 'June 12, 2025',
-        source: 'Seeking Alpha',
-        link: 'https://seekingalpha.com/article/4794381-energy-transfer-is-my-largest-holding-for-good-reason'
+        category: 'Natural Gas',
+        title: 'Natural Gas Price Outlook: Natural Gas Continues to See Buying',
+        date: 'June 17, 2025',
+        source: 'FX Empire',
+        link: 'https://www.fxempire.com/forecasts/article/natural-gas-price-outlook-natural-gas-continues-to-see-buying-1526732'
     },
     {
         id: "p4",
-        category: 'Earnings',
-        title: 'Devon Energy: Creating Value With Low Oil Prices',
-        date: 'June 12, 2025',
-        source: 'Seeking Alpha',
-        link: 'https://seekingalpha.com/article/4794278-devon-energy-creating-value-with-low-oil-prices'
+        category: 'Petrochemicals',
+        title: 'Russian Sibur Doubles LPG Loadings at Ust-Luga, Resumes Supply to India',
+        date: 'June 17, 2025',
+        source: 'Reuters',
+        link: 'https://www.reuters.com/business/energy/russian-sibur-doubles-lpg-loadings-ust-luga-resumes-supply-india-2025-06-17/'
     },
     {
         id: "p5",
-        category: 'Earnings',
-        title: 'Duke Energy Keeps Sparking',
-        date: 'June 12, 2025',
-        source: 'Seeking Alpha',
-        link: 'https://seekingalpha.com/article/4794276-duke-energy-keeps-sparking'
+        category: 'Power',
+        title: 'CG Power Bags Its Biggest Ever Order Worth 641 Crore from Power Grid Corporation',
+        date: 'June 17, 2025',
+        source: 'Economic Times',
+        link: 'https://economictimes.indiatimes.com/industry/energy/power/cg-power-bags-its-biggest-ever-order-worth-641-crore-from-power-grid-corporation/articleshow/121909378.cms'
     },
     {
         id: "p6",
-        category: 'Company News',
-        title: 'Capital Clean Energy Carriers: A New Name, A New Growth Engine, A Compelling Buy',
-        date: 'June 12, 2025',
-        source: 'Seeking Alpha',
-        link: 'https://seekingalpha.com/article/4794442-capital-clean-energy-carriers-a-new-name-a-new-growth-engine-a-compelling-buy'
+        category: 'Power',
+        title: 'NTPC Group Working on 20 GW Pumped Storage Projects, Aims to Commission 5 GW by FY32',
+        date: 'June 17, 2025',
+        source: 'Economic Times',
+        link: 'https://economictimes.indiatimes.com/industry/energy/power/ntpc-group-working-on-20-gw-pumped-storage-projects-aims-to-commission-5-gw-by-fy32-official/articleshow/121879881.cms'
     },
     {
         id: "p7",
-        category: 'Earnings',
-        title: 'Clearway Energy: 6% Yield On Utilities, Undervalued, 20 Straight Hikes',
-        date: 'June 12, 2025',
-        source: 'Seeking Alpha',
-        link: 'https://seekingalpha.com/article/4793020-clearway-energy-6-percent-yield-on-utilities-undervalued-20-straight-hikes'
+        category: 'Power',
+        title: 'NRG, LS Power FERC Gas-Fired Power Plant PJM NYISO',
+        date: 'June 17, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/nrg-ls-power-ferc-gas-fired-power-plant-pjm-nyiso/750900/'
     },
     {
         id: "p8",
-        category: 'Power',
-        title: 'EPA Greenhouse Gas, Mercury Power Plant Rules Finalized',
-        date: 'June 12, 2025',
-        source: 'CT Mirror',
-        link: 'https://ctmirror.org/2025/06/12/epa-greenhouse-gas-mercury-power-plant-rules/'
+        category: 'Renewables',
+        title: 'Latest News: Energy Transition & Renewable Energy',
+        date: 'June 17, 2025',
+        source: 'Yahoo Finance',
+        link: 'https://finance.yahoo.com/news/latest-news-energy-transition-renewable-113724114.html'
     },
     {
         id: "p9",
-        category: 'Power',
-        title: 'Victorian Grid Under Pressure As Coal And Gas Outages Hit Supply',
-        date: 'June 12, 2025',
-        source: 'The Australian',
-        link: 'https://www.theaustralian.com.au/business/victorian-grid-under-pressure-as-coal-and-gas-outages-hit-supply/news-story/e38ab0d8c0e7f74853e892eb8f23459e'
+        category: 'Policy & Markets',
+        title: 'Trump\'s Big Beautiful Bill: Medicaid, Tax Cuts',
+        date: 'June 17, 2025',
+        source: 'AP News',
+        link: 'https://apnews.com/article/trump-big-beautiful-bill-medicaid-tax-cuts-bec87c569760ed979ac8c34cccba186b'
     },
     {
         id: "p10",
-        category: 'Power',
-        title: 'Trump EPA Pollution Rules Overturned',
-        date: 'June 12, 2025',
-        source: 'The Guardian',
-        link: 'https://www.theguardian.com/us-news/2025/jun/12/trump-epa-pollution-rules'
+        category: 'Policy & Markets',
+        title: 'Climate Clean Energy Investments: Trump Solar Wind',
+        date: 'June 17, 2025',
+        source: 'AP News',
+        link: 'https://apnews.com/article/climate-clean-energy-investments-trump-solar-wind-349e80c0d9c2cc768e63de9d48813d31'
     },
     {
         id: "p11",
-        category: 'Crude Oil',
-        title: 'JP Morgan Maintains 2025 Forecast for Oil Prices in Low to Mid-$60s',
-        date: 'June 12, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/jp-morgan-maintains-2025-forecast-oil-prices-low-to-mid-60s-2025-06-12/'
+        category: 'Policy & Markets',
+        title: 'Congress Clean Energy Reconciliation Tax Credits Trump',
+        date: 'June 17, 2025',
+        source: 'AP News',
+        link: 'https://apnews.com/article/congress-clean-energy-reconciliation-tax-credits-trump-c66009b4ac41a37517429bc08df26251'
     },
     {
         id: "p12",
-        category: 'Crude Oil',
-        title: 'Saudi Arabia Is Grabbing Oil Market Share, But It Can Open The Tap Only So Far',
-        date: 'June 12, 2025',
-        source: 'Wall Street Journal',
-        link: 'https://www.wsj.com/business/energy-oil/saudi-arabia-is-grabbing-oil-market-share-but-it-can-open-the-tap-only-so-far-6f79fe49'
+        category: 'Petrochemicals',
+        title: 'India, Saudi Arabia to Boost Cooperation in Fertilizer, Petrochemical and Mining Sectors',
+        date: 'June 17, 2025',
+        source: 'Money Control',
+        link: 'https://www.moneycontrol.com/news/business/india-saudi-arabia-to-boost-cooperation-in-fertilizer-petrochemical-and-mining-sectors-12855581.html'
     },
     {
         id: "p13",
         category: 'Crude Oil',
-        title: 'This Crucial Corner of the Energy Market Is At High Risk from All-Out War Between Israel and Iran—And It’s Not Oil',
-        date: 'June 12, 2025',
-        source: 'MarketWatch',
-        link: 'https://www.marketwatch.com/story/this-crucial-corner-of-the-energy-market-is-at-high-risk-from-an-all-out-war-between-israel-and-iran-and-its-not-oil-0d26bfbf'
+        title: 'Oil Prices Rise as Iran-Israel Conflict Fans Supply Worries',
+        date: 'June 17, 2025',
+        source: 'Reuters',
+        link: 'https://www.reuters.com/business/energy/oil-prices-rise-iran-israel-conflict-fans-supply-worries-2025-06-17/'
     },
     {
         id: "p14",
-        category: 'Company News',
-        title: 'NextDecade Signs $9 Billion Contracts With Bechtel for LNG Sites',
-        date: 'June 12, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/nextdecade-signs-9-billion-contracts-with-bechtel-construction-lng-sites-2025-06-12/'
+        category: 'Crude Oil',
+        title: 'Will Crude Touch $100 Per Barrel?',
+        date: 'June 17, 2025',
+        source: 'Mettis Global',
+        link: 'https://mettisglobal.news/Will-Crude-touch-100-per-barrel-53108'
     },
     {
         id: "p15",
-        category: 'Company News',
-        title: 'TotalEnergies to Collaborate With Mistral AI to Increase Efficiency',
-        date: 'June 12, 2025',
-        source: 'Yahoo Finance',
-        link: 'https://finance.yahoo.com/news/totalenergies-collaborate-mistral-ai-increase-061500813.html'
+        category: 'Natural Gas',
+        title: 'Qatar Says Its Output Gas Field Shared with Iran is Steady Following Israeli',
+        date: 'June 17, 2025',
+        source: 'Reuters',
+        link: 'https://www.reuters.com/business/energy/qatar-says-its-output-gas-field-shared-with-iran-is-steady-following-israeli-2025-06-17/'
     },
     {
         id: "p16",
-        category: 'Company News',
-        title: 'US Energy Loan Office to Fund More Projects in 2025',
-        date: 'June 12, 2025',
-        source: 'Yahoo Finance',
-        link: 'https://finance.yahoo.com/news/us-energy-loan-office-fund-181503597.html'
+        category: 'Petrochemicals',
+        title: 'Malaysia\'s Expanded Sales Tax to Hit Key Petrochemicals from 1 July',
+        date: 'June 17, 2025',
+        source: 'ICIS',
+        link: 'https://www.icis.com/explore/resources/news/2025/06/17/11111197/malaysia-s-expanded-sales-tax-to-hit-key-petrochemicals-from-1-july/'
     },
     {
         id: "p17",
-        category: 'Natural Gas',
-        title: 'JERA Expects US LNG Share To Reach 30% After Latest Gulf Coast Deals',
-        date: 'June 12, 2025',
-        source: 'S&P Global',
-        link: 'https://www.spglobal.com/commodity-insights/en/news-research/latest-news/lng/061225-jera-expects-us-lng-share-to-reach-30-after-latest-55-mil-mtyear-gulf-coast-deals'
+        category: 'Power',
+        title: 'How Big Batteries Will Help Avoid Power Outages This Summer',
+        date: 'June 17, 2025',
+        source: 'Bloomberg',
+        link: 'https://www.bloomberg.com/news/articles/2025-06-17/how-big-batteries-will-help-avoid-power-outages-this-summer'
     },
     {
         id: "p18",
-        category: 'Natural Gas',
-        title: 'Oil Futures Crude Down On Renewed Tariff Fears',
-        date: 'June 12, 2025',
-        source: 'S&P Global',
-        link: 'https://www.spglobal.com/commodity-insights/en/news-research/latest-news/crude-oil/061225-oil-futures-crude-down-on-renewed-tariff-fears'
+        category: 'Power',
+        title: 'Huawei, Schneider Electric Commission Cambodia\'s First Grid-Forming BESS Demonstration Project',
+        date: 'June 17, 2025',
+        source: 'Energy Storage News',
+        link: 'https://www.energy-storage.news/huawei-schneitec-commission-cambodias-first-grid-forming-bess-demonstration-project/'
     },
     {
         id: "p19",
-        category: 'Policy & Markets',
-        title: 'Trump’s Energy Dominance Agenda Could Be Ravaged By Section 899',
-        date: 'June 12, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/markets/commodities/trumps-energy-dominance-agenda-could-be-ravaged-by-section-899-2025-06-12/'
+        category: 'Renewables',
+        title: 'Europe\'s Largest Flow Battery Project Launched to Boost Energy Security',
+        date: 'June 17, 2025',
+        source: 'Alt Energy Mag',
+        link: 'https://www.altenergymag.com/news/2025/06/17/europes-largest-flow-battery-project-launched-to-boost-energy-security/45530/'
     },
     {
         id: "p20",
-        category: 'Company News',
-        title: 'Trump to Attend AI + Energy Summit in Pittsburgh',
-        date: 'June 12, 2025',
+        category: 'Renewables',
+        title: 'India Proposes Virtual Power Agreements to Boost Renewable Energy Trading',
+        date: 'June 17, 2025',
         source: 'Reuters',
-        link: 'https://www.reuters.com/world/us/trump-attend-ai-energy-summit-pittsburgh-2025-06-12/'
+        link: 'https://www.reuters.com/sustainability/climate-energy/india-proposes-virtual-power-agreements-boost-renewable-energy-trading-power-2025-06-17/'
+    },
+    {
+        id: "p21",
+        category: 'Renewables',
+        title: 'Boom and Balance: Vietnam\'s Clean Energy Transition',
+        date: 'June 17, 2025',
+        source: 'IEEFA',
+        link: 'https://ieefa.org/resources/boom-balance-vietnams-clean-energy-transition'
+    },
+    {
+        id: "p22",
+        category: 'Renewables',
+        title: 'Philippines Reveals Timeline for 10 GW Renewables Auction',
+        date: 'June 17, 2025',
+        source: 'PV Magazine',
+        link: 'https://www.pv-magazine.com/2025/06/17/philippines-reveals-timeline-for-10-gw-renewables-auction/'
+    },
+    {
+        id: "p23",
+        category: 'Company News',
+        title: 'Algeria: TotalEnergies Granted New Exploration License',
+        date: 'June 17, 2025',
+        source: 'TotalEnergies',
+        link: 'https://totalenergies.com/news/press-releases/algeria-totalenergies-granted-new-exploration-license'
+    },
+    {
+        id: "p24",
+        category: 'Company News',
+        title: 'Meta, XGS Energy Announce Geothermal Deal for New Mexico Data Centers, AI',
+        date: 'June 17, 2025',
+        source: 'Utility Dive',
+        link: 'https://www.utilitydive.com/news/meta-xgs-energy-announce-geothermal-deal-new-mexico-data-centers-ai/750913/'
+    },
+    {
+        id: "p25",
+        category: 'Earnings',
+        title: 'TEN Ltd Reports Profits for First Quarter 2025 and Declares First Semi-Annual Common Share Dividend',
+        date: 'June 17, 2025',
+        source: 'Globe Newswire',
+        link: 'https://www.globenewswire.com/news-release/2025/06/17/3100773/0/en/TEN-Ltd-Reports-Profits-for-First-Quarter-2025-and-Declares-First-Semi-Annual-Common-Share-Dividend-of-0-60.html'
     }
 ];
