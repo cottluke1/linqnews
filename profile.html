@@ -14,213 +14,115 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
     
     <style>
-        :root {
-            --accent-cyan: #00BFFF;
-            --error-red: #FF3B30;
-            --success-green: #34C759;
-            --border-radius-md: 8px;
-            --border-radius-lg: 16px;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0B0C10;
-            background-image: radial-gradient(at 50% 0%, rgba(0, 191, 255, 0.1) 0%, rgba(8, 0, 20, 0) 50%);
-            color: #F5F5F5;
-            line-height: 1.65;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            /* FIX: Added top padding to the body to reserve space for the fixed header */
-            padding-top: 64px;
-        }
-        main {
-            /* FIX: Removed old padding-top which is now handled by the body style */
-            flex-grow: 1;
-        }
-        main .container {
-            padding-top: 40px;
-            padding-bottom: 60px;
-        }
-        .glass-ui {
-            background: rgba(22, 22, 22, 0.6);
-            backdrop-filter: blur(20px) saturate(150%);
-            -webkit-backdrop-filter: blur(20px) saturate(150%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-        .profile-nav-container {
-             display: flex;
-             justify-content: center;
-             margin-bottom: 40px;
-        }
-        .profile-nav {
-            display: inline-flex;
-            gap: 8px;
-            padding: 8px;
-            border-radius: var(--border-radius-lg);
-        }
-        .nav-tab {
-            padding: 12px 24px;
-            font-weight: 600;
-            color: #A0A0A0;
-            cursor: pointer;
-            border-radius: var(--border-radius-md);
-            transition: all 0.2s ease-in-out;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: 2px solid transparent;
-        }
-        .nav-tab:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: #FFFFFF;
-        }
-        .nav-tab.active-link {
-            color: #FFFFFF;
-            background-color: rgba(0, 191, 255, 0.15);
-            border-color: var(--accent-cyan);
-        }
+        :root { --accent-cyan: #00BFFF; --error-red: #FF3B30; --success-green: #34C759; --border-radius-md: 8px; --border-radius-lg: 16px; }
+        body { font-family: 'Inter', sans-serif; background-color: #0B0C10; background-image: radial-gradient(at 50% 0%, rgba(0, 191, 255, 0.1) 0%, rgba(8, 0, 20, 0) 50%); color: #F5F5F5; line-height: 1.65; display: flex; flex-direction: column; min-height: 100vh; padding-top: 64px; }
+        main { flex-grow: 1; }
+        main .container { padding-top: 2.5rem; padding-bottom: 4rem; }
+        .glass-ui { background: rgba(22, 22, 22, 0.6); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
+        .profile-nav-container { display: flex; justify-content: center; margin-bottom: 2.5rem; }
+        .profile-nav { display: inline-flex; gap: 8px; padding: 8px; border-radius: var(--border-radius-lg); }
+        .nav-tab { padding: 12px 24px; font-weight: 600; color: #A0A0A0; cursor: pointer; border-radius: var(--border-radius-md); transition: all 0.2s ease-in-out; display: flex; align-items: center; gap: 8px; border: 2px solid transparent; }
+        .nav-tab:hover { background-color: rgba(255, 255, 255, 0.05); color: #FFFFFF; }
+        .nav-tab.active-link { color: #FFFFFF; background-color: rgba(0, 191, 255, 0.15); border-color: var(--accent-cyan); }
         .content-section { display: none; animation: fadeIn 0.5s ease-in-out; }
         .content-section.active-section { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        
         .card { border-radius: var(--border-radius-lg); overflow: hidden; }
         .card-header { padding: 25px 30px; background: rgba(255, 255, 255, 0.04); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
         .card-header h3 { margin: 0; font-size: 1.5em; font-weight: 700; }
-        .card-body { padding: 30px; }
-        .profile-info-container { display: flex; align-items: center; gap: 30px; flex-wrap: wrap; }
-        .avatar-section { position: relative; }
-        .avatar { width: 140px; height: 140px; border-radius: 50%; border: 4px solid rgba(255, 255, 255, 0.1); object-fit: cover; }
-        .profile-info { flex-grow: 1; display: grid; grid-template-columns: 1fr; gap: 24px; }
+        .card-body { padding: 2rem 1.5rem; }
+        @media (min-width: 768px) { .card-body { padding: 30px; } }
+        .avatar-section { position: relative; text-align: center; }
+        .avatar { width: 140px; height: 140px; border-radius: 50%; border: 4px solid rgba(255, 255, 255, 0.1); object-fit: cover; margin: 0 auto; }
         .info-item label { display: block; color: #A0A0A0; font-size: 0.9em; margin-bottom: 6px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
         .info-item p { color: #F5F5F5; font-size: 1.1em; margin: 0; font-weight: 500;}
         .form-group { margin-bottom: 25px; }
         .form-group label { display: block; color: #A0A0A0; margin-bottom: 10px; font-weight: 500; }
         .form-input { width: 100%; padding: 14px 18px; background-color: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: var(--border-radius-md); color: #F5F5F5; font-size: 1em; transition: all 0.2s ease; }
-        .form-input::placeholder { color: #888; }
         .form-input:focus { outline: none; border-color: var(--accent-cyan); box-shadow: 0 0 0 4px rgba(0, 191, 255, 0.25); }
         .btn { padding: 12px 24px; border-radius: var(--border-radius-md); cursor: pointer; font-size: 1em; font-weight: 600; transition: all 0.2s ease; text-align: center; letter-spacing: 0.3px; text-decoration: none; display: inline-flex; justify-content: center; align-items: center; gap: 8px; }
         .btn-glass { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: #F5F5F5; }
         .btn-glass:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.3); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .btn:active { transform: translateY(0); }
-        .btn-danger { background-color: var(--error-red); color: white; border: none; }
-        .btn-danger:hover { background-color: #d92d23; box-shadow: 0 6px 20px rgba(255, 59, 48, 0.4);}
-        .btn-danger:disabled { background-color: #7f1d1d; cursor: not-allowed; opacity: 0.6; }
-        .btn-clear { background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); color: #A0A0A0; }
-        .btn-clear:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.3); color: #FFFFFF; }
-        #form-message { text-align: center; padding: 10px; margin-bottom: 20px; border-radius: var(--border-radius-md); font-weight: 500; display: none; }
-        #form-message.success { background-color: rgba(52, 199, 89, 0.2); border: 1px solid var(--success-green); color: var(--success-green); }
-        #form-message.error { background-color: rgba(255, 59, 48, 0.2); border: 1px solid var(--error-red); color: var(--error-red); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-primary { background-color: var(--accent-cyan); color: white; border: none; }
+        .btn-primary:hover { background-color: #00a9e0; box-shadow: 0 6px 20px rgba(0, 191, 255, 0.4); }
+        #form-message, #avatar-form-message { text-align: center; padding: 10px; margin-bottom: 20px; border-radius: var(--border-radius-md); font-weight: 500; display: none; }
+        #form-message.success, #avatar-form-message.success { background-color: rgba(52, 199, 89, 0.2); border: 1px solid var(--success-green); color: var(--success-green); }
+        #form-message.error, #avatar-form-message.error { background-color: rgba(255, 59, 48, 0.2); border: 1px solid var(--error-red); color: var(--error-red); }
         footer { background-color: transparent; color: #A0A0A0; padding: 30px 0; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.1); margin-top: auto; }
-        
-        @media (max-width: 768px) {
-            .profile-info-container { flex-direction: column; align-items: stretch; }
-            .profile-info { grid-template-columns: 1fr; }
-            .profile-nav-container { justify-content: flex-start; }
-            .profile-nav { flex-direction: column; }
-        }
     </style>
 </head>
 <body>
-    <!-- FIX: Updated to a semantic header placeholder -->
     <header id="header-placeholder"></header>
 
     <main>
-        <div class="container mx-auto max-w-4xl">
-            <div>
-                <div class="profile-nav-container">
-                    <nav class="profile-nav glass-ui">
-                        <a href="#profile" class="nav-tab active-link">Profile</a>
-                        <a href="#subscription" class="nav-tab">Subscription</a>
-                        <a href="#security" class="nav-tab">Security</a>
-                        <a href="#contact" class="nav-tab">Contact</a>
-                    </nav>
-                </div>
+        <div class="container mx-auto max-w-4xl px-4">
+            <div class="profile-nav-container">
+                <nav class="profile-nav glass-ui">
+                    <a href="#profile" class="nav-tab active-link">Profile</a>
+                    <a href="#subscription" class="nav-tab">Subscription</a>
+                    <a href="#security" class="nav-tab">Security</a>
+                </nav>
+            </div>
 
-                <div id="profile" class="content-section active-section">
-                    <div class="card glass-ui">
-                        <div class="card-body profile-info-container">
-                            <div class="avatar-section">
-                                <img src="https://placehold.co/140x140/1A1A1A/FFFFFF?text=U&font=inter" alt="User Avatar" class="avatar" id="profileAvatar">
+            <div id="profile" class="content-section active-section">
+                <div class="card glass-ui">
+                    <div class="card-body flex flex-col md:flex-row items-center gap-8">
+                        <div class="avatar-section">
+                            <img src="https://placehold.co/140x140/1A1A1A/FFFFFF?text=U&font=inter" alt="User Avatar" class="avatar" id="profileAvatar">
+                            <input type="file" id="avatarUpload" class="hidden" accept="image/png, image/jpeg">
+                            <button id="changeAvatarButton" class="btn btn-glass mt-4 w-full">Change Picture</button>
+                            <div id="avatar-form-message" class="mt-2"></div>
+                            <button id="saveAvatarButton" class="btn btn-primary mt-2 w-full hidden">Save Picture</button>
+                        </div>
+                        <div class="w-full flex-grow grid grid-cols-1 sm:grid-cols-2 gap-6 text-center md:text-left">
+                            <div class="info-item">
+                                <label>Full Name</label>
+                                <p id="profileDisplayName">N/A</p>
                             </div>
-                            <div class="profile-info">
-                                <!-- FIX: Removed the Display Name field as it's part of the header now -->
-                                <div class="info-item">
-                                    <label>Email Address</label>
-                                    <p id="profileEmail">N/A</p>
-                                </div>
-                                <div class="info-item">
-                                    <label>Joined</label>
-                                    <p id="profileJoinedDate">N/A</p>
-                                </div>
+                            <div class="info-item">
+                                <label>Email Address</label>
+                                <p id="profileEmail">N/A</p>
+                            </div>
+                            <div class="info-item sm:col-span-2">
+                                <label>Joined</label>
+                                <p id="profileJoinedDate">N/A</p>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div id="subscription" class="content-section">
-                     <div class="card glass-ui">
-                         <div class="card-header">
-                             <h3>My Subscription</h3>
-                         </div>
-                         <div class="card-body">
-                             <p class="text-lg">Your current plan: <span id="current-plan-name" class="font-bold text-cyan-400">Loading...</span></p>
-                             <p class="text-gray-400" id="subscription-status-text">Checking your subscription status.</p>
-                             <p class="text-sm text-gray-500 mt-1" id="subscription-billing-cycle"></p>
-                             
-                             <div class="mt-6 flex flex-wrap gap-4" id="subscriptionActions">
-                                 <a id="upgrade-plan-button" href="linqplus.html" class="btn btn-glass">Upgrade to Premium</a>
-                             </div>
-
-                             <div id="premium-manage-info" class="mt-8 hidden">
-                                 <p class="text-gray-300">To cancel or change your plan, please contact our support team. support@linqnews.com </p>
-                                 <a href="mailto:support@linqnews.com?subject=Subscription%20Change%20Request" class="btn btn-glass mt-4">Contact Us</a>
-                             </div>
+            </div>
+            
+            <div id="subscription" class="content-section">
+                 <div class="card glass-ui">
+                     <div class="card-header"> <h3>My Subscription</h3> </div>
+                     <div class="card-body">
+                         <p class="text-lg">Your current plan: <span id="current-plan-name" class="font-bold text-cyan-400">Loading...</span></p>
+                         <p class="text-gray-400" id="subscription-status-text">Checking your subscription status.</p>
+                         <div class="mt-6 flex flex-wrap gap-4" id="subscriptionActions">
+                             <a id="upgrade-plan-button" href="linqplus.html" class="btn btn-glass">Upgrade to Premium</a>
                          </div>
                      </div>
-                </div>
-
-                <div id="security" class="content-section">
-                    <div class="card glass-ui">
-                        <div class="card-header">
-                            <h3>Account Security</h3>
-                        </div>
-                        <div class="card-body">
-                            <div id="form-message"></div>
-                            <form id="changePasswordForm">
-                                <div class="form-group">
-                                    <label for="current-password">Current Password:</label>
-                                    <input type="password" id="current-password" placeholder="Enter your current password" class="form-input" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="new-password">New Password:</label>
-                                    <input type="password" id="new-password" placeholder="Enter new password (min. 8 characters)" class="form-input" required minlength="8">
-                                </div>
-                                <div class="form-group">
-                                    <label for="confirm-password">Confirm New Password:</label>
-                                    <input type="password" id="confirm-password" placeholder="Confirm new password" class="form-input" required minlength="8">
-                                </div>
-                                <button type="submit" class="btn btn-glass">Update Password</button>
-                            </form>
-                            <hr class="border-gray-700 my-8">
-                            <div class="space-y-4">
-                                <button id="logoutButton" class="btn btn-glass w-full">Logout</button>
+                 </div>
+            </div>
+            <div id="security" class="content-section">
+                <div class="card glass-ui">
+                    <div class="card-header"> <h3>Account Security</h3> </div>
+                    <div class="card-body">
+                        <div id="form-message"></div>
+                        <form id="changePasswordForm">
+                            <div class="form-group">
+                                <label for="current-password">Current Password:</label>
+                                <input type="password" id="current-password" placeholder="Enter your current password" class="form-input" required>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div id="contact" class="content-section">
-                    <div class="card glass-ui">
-                        <div class="card-header">
-                            <h3>Get In Touch</h3>
-                        </div>
-                        <div class="card-body">
-                            <p class="text-gray-300 mb-6">Have a question or feedback? We'd love to hear from you. Reach out to our support team, and we'll get back to you as soon as possible. support@linqnews.com</p>
-                            <a href="mailto:support@linqnews.com" class="btn btn-glass">Email Support</a>
-                        </div>
+                            <div class="form-group">
+                                <label for="new-password">New Password:</label>
+                                <input type="password" id="new-password" placeholder="Enter new password (min. 8 characters)" class="form-input" required minlength="8">
+                            </div>
+                            <button type="submit" class="btn btn-glass">Update Password</button>
+                        </form>
+                        <hr class="border-gray-700 my-8">
+                        <div class="space-y-4"> <button id="logoutButton" class="btn btn-glass w-full">Logout</button> </div>
                     </div>
                 </div>
             </div>
@@ -228,17 +130,11 @@
     </main>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2025 Linq AI. All rights reserved.</p>
-        </div>
+        <div class="container mx-auto px-4"><p>&copy; 2025 Linq AI. All rights reserved.</p></div>
     </footer>
 
     <script>
-        // --- PAGE-SPECIFIC SCRIPT ---
-        let unsubscribeUserListener = null;
-
         document.addEventListener('DOMContentLoaded', function () {
-            // Firebase setup (remains for page-specific db/auth access)
             const firebaseConfig = {
                 apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
                 authDomain: "linq-b27a8.firebaseapp.com",
@@ -250,81 +146,127 @@
             if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
             const auth = firebase.auth();
             const db = firebase.firestore();
+            const storage = firebase.storage();
 
-            // Page-specific element references
             const navTabs = document.querySelectorAll('.nav-tab');
             const contentSections = document.querySelectorAll('.content-section');
-            const changePasswordForm = document.getElementById('changePasswordForm');
-            const formMessage = document.getElementById('form-message');
+            const changeAvatarButton = document.getElementById('changeAvatarButton');
+            const avatarUploadInput = document.getElementById('avatarUpload');
+            const saveAvatarButton = document.getElementById('saveAvatarButton');
+            const profileAvatar = document.getElementById('profileAvatar');
+            const avatarFormMessage = document.getElementById('avatar-form-message');
             const logoutButton = document.getElementById('logoutButton');
 
-            // Set up logout functionality
-            if (logoutButton) {
-                logoutButton.addEventListener('click', () => auth.signOut());
+            let selectedFile = null;
+            let unsubscribeUserListener = null;
+
+            if(logoutButton) logoutButton.addEventListener('click', () => auth.signOut());
+            if(changeAvatarButton) changeAvatarButton.addEventListener('click', () => avatarUploadInput.click());
+            
+            if (avatarUploadInput) {
+                avatarUploadInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        selectedFile = file;
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            profileAvatar.src = event.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                        saveAvatarButton.classList.remove('hidden');
+                    }
+                });
             }
 
-            // FIX: Simplified Auth Listener for Page-Specific Logic
-            // The headerManager.js handles showing/hiding the header elements.
-            // This listener now only handles populating the profile page content.
+            if(saveAvatarButton) {
+                saveAvatarButton.addEventListener('click', handleAvatarUpload);
+            }
+
             auth.onAuthStateChanged(user => {
                 if (user) {
-                    // User is logged in, populate the page
-                    populateUserProfile(user);
-                    setupSubscriptionListener(user);
+                    if (unsubscribeUserListener) unsubscribeUserListener();
+                    
+                    unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
+                        const userData = doc.exists ? doc.data() : {};
+                        populateUserProfile(user, userData);
+                        updateSubscriptionInfo(userData);
+                    }, error => {
+                        console.error("Error listening to user document:", error);
+                        populateUserProfile(user, {});
+                    });
                 } else {
-                    // User is not logged in, redirect to the login page.
                     window.location.href = 'login.html';
                 }
             });
-            
-            // --- ALL PAGE-SPECIFIC FUNCTIONS REMAIN UNCHANGED ---
 
-            function populateUserProfile(user) {
-                document.getElementById('profileEmail').textContent = user.email || 'N/A';
+            function populateUserProfile(user, userData) {
+                document.getElementById('profileDisplayName').textContent = userData.displayName || user.displayName || 'N/A';
+                document.getElementById('profileEmail').textContent = userData.email || user.email || 'N/A';
                 if (user.metadata.creationTime) {
                     document.getElementById('profileJoinedDate').textContent = new Date(user.metadata.creationTime).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
                 }
-                const profileAvatarEl = document.getElementById('profileAvatar');
-                if (user.photoURL) {
-                    profileAvatarEl.src = user.photoURL;
+                
+                const photoUrl = userData.photoURL || user.photoURL;
+                if (photoUrl) {
+                    profileAvatar.src = photoUrl;
                 } else {
-                    let initials = user.displayName ? user.displayName.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() : (user.email ? user.email.charAt(0).toUpperCase() : 'U');
-                    profileAvatarEl.src = `https://placehold.co/140x140/1A1A1A/FFFFFF?text=${initials}&font=inter`;
+                    const initials = (userData.displayName || user.displayName || user.email || "U").charAt(0).toUpperCase();
+                    profileAvatar.src = `https://placehold.co/140x140/1A1A1A/FFFFFF?text=${initials}&font=inter`;
+                }
+            }
+            
+            async function handleAvatarUpload() {
+                const user = auth.currentUser;
+                if (!user || !selectedFile) return;
+
+                saveAvatarButton.disabled = true;
+                saveAvatarButton.textContent = 'Uploading...';
+                showAvatarMessage('Uploading, please wait...', 'success');
+
+                const filePath = `profile_pictures/${user.uid}/${selectedFile.name}`;
+                const fileRef = storage.ref(filePath);
+                
+                try {
+                    const uploadTask = await fileRef.put(selectedFile);
+                    const downloadURL = await uploadTask.ref.getDownloadURL();
+
+                    await user.updateProfile({ photoURL: downloadURL });
+                    await db.collection('users').doc(user.uid).update({ photoURL: downloadURL });
+
+                    showAvatarMessage('Profile picture updated!', 'success');
+                    selectedFile = null;
+                    saveAvatarButton.classList.add('hidden');
+                } catch (error) {
+                    console.error("Avatar upload error:", error);
+                    showAvatarMessage('Upload failed. Please try again.', 'error');
+                } finally {
+                    saveAvatarButton.disabled = false;
+                    saveAvatarButton.textContent = 'Save Picture';
                 }
             }
 
-            function setupSubscriptionListener(user) {
-                if (unsubscribeUserListener) unsubscribeUserListener(); 
-
-                const userDocRef = db.collection('users').doc(user.uid);
-                unsubscribeUserListener = userDocRef.onSnapshot(doc => {
-                    const planNameEl = document.getElementById('current-plan-name');
-                    const statusTextEl = document.getElementById('subscription-status-text');
-                    const billingCycleEl = document.getElementById('subscription-billing-cycle');
-                    const premiumManageInfoEl = document.getElementById('premium-manage-info');
-                    const subscriptionActionsEl = document.getElementById('subscriptionActions');
-                    
-                    if (doc.exists && doc.data().isSubscribed) {
-                        const userData = doc.data();
-                        const billingType = userData.billingCycle || 'Annually';
-                        planNameEl.textContent = `Premium`;
-                        statusTextEl.textContent = 'Your premium subscription is active.';
-                        billingCycleEl.textContent = `Billed ${billingType}.`;
-                        billingCycleEl.classList.remove('hidden');
-                        premiumManageInfoEl.classList.remove('hidden');
-                        subscriptionActionsEl.classList.add('hidden');
-                    } else {
-                        planNameEl.textContent = 'Free Plan';
-                        statusTextEl.textContent = 'You have access to basic news and community features.';
-                        billingCycleEl.classList.add('hidden');
-                        premiumManageInfoEl.classList.add('hidden');
-                        subscriptionActionsEl.classList.remove('hidden');
-                    }
-                }, error => {
-                    console.error("Error with subscription listener:", error);
-                });
+            function updateSubscriptionInfo(userData) {
+                const planNameEl = document.getElementById('current-plan-name');
+                const statusTextEl = document.getElementById('subscription-status-text');
+                const subscriptionActionsEl = document.getElementById('subscriptionActions');
+                
+                if (userData && userData.isSubscribed) {
+                    planNameEl.textContent = 'Premium';
+                    statusTextEl.textContent = 'Your premium subscription is active.';
+                    subscriptionActionsEl.innerHTML = '<a href="#" class="btn btn-glass">Manage Subscription</a>';
+                } else {
+                    planNameEl.textContent = 'Free Plan';
+                    statusTextEl.textContent = 'You have access to basic news and community features.';
+                    subscriptionActionsEl.innerHTML = '<a href="linqplus.html" class="btn btn-glass">Upgrade to Premium</a>';
+                }
             }
-            
+
+            function showAvatarMessage(message, type) {
+                avatarFormMessage.textContent = message;
+                avatarFormMessage.className = `mt-2 ${type}`;
+                avatarFormMessage.style.display = 'block';
+            }
+
             function showSection(sectionId) {
                 contentSections.forEach(section => section.classList.remove('active-section'));
                 const targetSection = document.getElementById(sectionId);
@@ -335,7 +277,6 @@
                     if (link.getAttribute('href') === `#${sectionId}`) link.classList.add('active-link');
                 });
             }
-            
             navTabs.forEach(link => {
                 link.addEventListener('click', e => {
                     e.preventDefault();
@@ -346,66 +287,17 @@
                     }
                 });
             });
-
             function activateSectionFromHash() {
                 let hash = window.location.hash.substring(1);
                 const validHashes = Array.from(navTabs).map(t => t.getAttribute('href').substring(1));
                 if (!hash || !validHashes.includes(hash)) hash = 'profile';
                 showSection(hash);
             }
-            
             activateSectionFromHash();
             window.addEventListener('hashchange', activateSectionFromHash);
-            
-            if (changePasswordForm) {
-                changePasswordForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    formMessage.style.display = 'none';
-                    
-                    const user = auth.currentUser;
-                    const currentPassword = document.getElementById('current-password').value;
-                    const newPassword = document.getElementById('new-password').value;
-                    const confirmPassword = document.getElementById('confirm-password').value;
-
-                    if (!user) {
-                        showFormMessage('You must be logged in to change your password.', 'error');
-                        return;
-                    }
-                    if (newPassword !== confirmPassword) {
-                        showFormMessage('New passwords do not match.', 'error');
-                        return;
-                    }
-                    if (newPassword.length < 8) {
-                        showFormMessage('New password must be at least 8 characters.', 'error');
-                        return;
-                    }
-
-                    try {
-                        const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
-                        await user.reauthenticateWithCredential(credential);
-                        await user.updatePassword(newPassword);
-                        showFormMessage('Password updated successfully!', 'success');
-                        changePasswordForm.reset();
-                    } catch (error) {
-                        console.error('Password change error:', error);
-                        if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-                            showFormMessage('The current password you entered is incorrect.', 'error');
-                        } else {
-                            showFormMessage('An error occurred. Please try again.', 'error');
-                        }
-                    }
-                });
-            }
-
-            function showFormMessage(message, type) {
-                formMessage.textContent = message;
-                formMessage.className = type === 'success' ? 'success' : 'error';
-                formMessage.style.display = 'block';
-            }
         });
     </script>
     
-    <!-- FIX: Centralized header script is now included at the end of the body -->
     <script src="headerManager.js" defer></script>
 </body>
 </html>
