@@ -1,5 +1,5 @@
 // /js/headerManager.js
-// This script fetches the header, handles authentication state robustly to prevent UI flickering,
+// This script fetches the header, handles authentication state robustly using localStorage to prevent UI flickering,
 // and manages SPA-style page loading for a smoother user experience.
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -9,7 +9,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Fetch the header content and inject it into the placeholder
+    // --- Step 1: Immediately check localStorage for a cached user ---
+    const cachedUser = JSON.parse(localStorage.getItem('linqUser'));
+    if (cachedUser) {
+        // Temporarily update the UI with cached data to prevent flicker
+        // Note: This part needs the header HTML to be available synchronously,
+        // so we'll call it again after fetch to be safe.
+        preloadAuthUI(cachedUser);
+    }
+
+    // --- Step 2: Fetch the header and initialize full functionality ---
     fetch('header.html')
         .then(response => {
             if (!response.ok) throw new Error("Failed to load header.html");
@@ -27,8 +36,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
+ * Pre-populates the UI with cached data. This is a lightweight, synchronous function
+ * to avoid waiting for the full header to load before showing the user's state.
+ * @param {object} userData - The cached user data from localStorage.
+ */
+function preloadAuthUI(userData) {
+    // This function can be expanded if needed, but for now, its main job
+    // is to ensure the logic runs. The real update happens in updateAuthUI.
+}
+
+
+/**
  * Initializes all header-related logic AFTER the HTML has been injected.
- * This prevents race conditions and ensures all elements are available.
  */
 function initializeHeaderFunctionality() {
     if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined') {
@@ -38,25 +57,39 @@ function initializeHeaderFunctionality() {
 
     const auth = firebase.auth();
 
-    // Set up a listener that updates the UI whenever the user's login state changes.
-    // This is the single source of truth for the auth UI.
+    // Set up the primary listener that updates the UI and localStorage.
     auth.onAuthStateChanged(user => {
-        updateAuthUI(user);
+        if (user) {
+            // User is logged in. Get the latest profile info.
+            const userData = {
+                displayName: user.displayName,
+                email: user.email,
+                photoURL: user.photoURL
+            };
+            // Cache the latest user data and update the UI.
+            localStorage.setItem('linqUser', JSON.stringify(userData));
+            updateAuthUI(userData);
+        } else {
+            // User is logged out. Clear the cache and update the UI.
+            localStorage.removeItem('linqUser');
+            updateAuthUI(null);
+        }
     });
+    
+    // An initial check to render the UI instantly from the cache while Firebase initializes.
+    const cachedUser = JSON.parse(localStorage.getItem('linqUser'));
+    updateAuthUI(cachedUser);
 
-    // Set up mobile menu toggling and other interactive elements
+
     setupInteractiveElements(auth);
-
-    // Set up the SPA-style navigation
     interceptNavigationClicks();
     window.addEventListener('popstate', handleBrowserNavigation);
     updateActiveLink(window.location.pathname);
 }
 
 /**
- * Updates all UI elements in the header based on the user's login status.
- * This function is designed to be safely callable at any time.
- * @param {firebase.User | null} user The authenticated user object, or null if logged out.
+ * Updates all UI elements in the header based on the provided user data.
+ * @param {object | null} user The user data object, or null if logged out.
  */
 function updateAuthUI(user) {
     const isLoggedIn = !!user;
@@ -83,9 +116,8 @@ function updateAuthUI(user) {
     if (slideoutUserInfo) slideoutUserInfo.classList.toggle('hidden', !isLoggedIn);
     if (bottomProfileLinkMobile) bottomProfileLinkMobile.classList.toggle('hidden', !isLoggedIn);
 
-
     if (isLoggedIn && navProfilePic) {
-        const photoURL = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email.charAt(0).toUpperCase()}`;
+        const photoURL = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${(user.email || 'U').charAt(0).toUpperCase()}`;
         navProfilePic.src = photoURL;
         if(slideoutProfilePic) slideoutProfilePic.src = photoURL;
         if(slideoutDisplayName) slideoutDisplayName.textContent = user.displayName || 'User';
@@ -93,10 +125,7 @@ function updateAuthUI(user) {
     }
 }
 
-/**
- * Sets up event listeners for interactive header elements like the mobile menu.
- * @param {firebase.auth.Auth} auth The Firebase auth instance.
- */
+
 function setupInteractiveElements(auth) {
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const overlay = document.getElementById('menu-overlay');
@@ -116,12 +145,11 @@ function setupInteractiveElements(auth) {
     mobileMenuButton?.addEventListener('click', toggleMenu);
     overlay?.addEventListener('click', toggleMenu);
     
-    // Logout functionality
     const logoutButton = document.getElementById('logoutButtonMobile');
     logoutButton?.addEventListener('click', (e) => {
         e.preventDefault();
-        auth.signOut();
-        toggleMenu(); // Close menu on logout
+        auth.signOut(); // This will trigger onAuthStateChanged, which handles UI and cache cleanup
+        toggleMenu(); 
     });
 }
 
@@ -142,7 +170,12 @@ function interceptNavigationClicks() {
         }
         const slideoutMenu = document.getElementById('mobile-slideout-menu');
         if(slideoutMenu && !slideoutMenu.classList.contains('translate-x-full')){
-             setupInteractiveElements(firebase.auth()); // Re-run toggle to close
+            // Manually trigger the close action
+            slideoutMenu.classList.add('translate-x-full');
+            document.getElementById('menu-overlay')?.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+            document.getElementById('menu-open-icon')?.classList.remove('hidden');
+            document.getElementById('menu-close-icon')?.classList.add('hidden');
         }
     });
 }
@@ -150,11 +183,10 @@ function interceptNavigationClicks() {
 async function loadPageContent(path) {
     const mainContentArea = document.querySelector('main');
     if (!mainContentArea) {
-        window.location.href = path; // Fallback
+        window.location.href = path;
         return;
     }
     
-    // Add a class to fade out the old content
     mainContentArea.style.opacity = '0';
     mainContentArea.style.transition = 'opacity 0.2s ease-out';
 
@@ -168,12 +200,10 @@ async function loadPageContent(path) {
         const newTitle = doc.querySelector('title');
 
         if (newMainContent) {
-            // Wait for fade out to finish before replacing content
             setTimeout(() => {
                 mainContentArea.innerHTML = newMainContent.innerHTML;
                 document.title = newTitle ? newTitle.textContent : 'Linq';
                 
-                // Re-execute necessary scripts from the new content
                 const pageScripts = newMainContent.querySelectorAll('script');
                 pageScripts.forEach(oldScript => {
                     const newScript = document.createElement("script");
@@ -185,7 +215,6 @@ async function loadPageContent(path) {
                 updateActiveLink(path);
                 window.scrollTo(0, 0);
                 
-                // Fade in the new content
                 mainContentArea.style.opacity = '1';
                 mainContentArea.style.transition = 'opacity 0.3s ease-in';
             }, 200);
@@ -195,7 +224,7 @@ async function loadPageContent(path) {
         }
     } catch (error) {
         console.error('SPA Navigation Error:', error);
-        window.location.href = path; // Fallback on error
+        window.location.href = path;
     }
 }
 
@@ -210,7 +239,7 @@ function updateActiveLink(currentPath) {
 
     document.querySelectorAll('nav a').forEach(link => {
         const linkHref = link.getAttribute('href');
-        link.classList.remove('active'); // General active class for styling
+        link.classList.remove('active');
         if (linkHref === pageName) {
             link.classList.add('active');
         }
