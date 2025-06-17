@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 2. INJECT REQUIRED CSS STYLES ---
     // Added styles for the new slide-out menu, overlay, and profile section.
+    // FIX: Removed margin-top from logout button to adjust its position.
     const styles = `
         /* Base Nav Link Styles */
         .nav-link { font-size: 0.875rem; color: #D1D5DB; font-weight: 500; transition: color 0.2s ease-in-out; border-radius: 0.375rem; }
@@ -104,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
             font-weight: 600;
         }
         .slide-out-nav .logout-button {
-            margin-top: auto;
+            /* FIX: Removed margin-top: auto to allow natural flow */
             color: #F87171;
         }
         .slide-out-nav .logout-button:hover {
@@ -246,6 +247,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const loginLink = document.getElementById('slide-out-login-link');
         const logoutButton = document.getElementById('slide-out-logout-button');
 
+        const navProfilePic = document.getElementById('navProfilePic'); // Get the img element
+
         if (!authLinkDesktop || !profileLinkDesktop || !profileSection) return;
 
         if (user) {
@@ -276,7 +279,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update Desktop UI
             profileLinkDesktop.classList.add('hidden');
             authLinkDesktop.classList.remove('hidden');
-            profileLinkDesktop.innerHTML = '<img id="navProfilePic" style="display:none;" src="" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition">';
+            // FIX: Don't destroy the image element, just hide it.
+            if (navProfilePic) navProfilePic.style.display = 'none';
 
             // Update Slide-Out Menu UI
             profileSection.classList.add('hidden');
@@ -289,27 +293,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // --- 7. UTILITY FUNCTIONS ---
+    // FIX: This function no longer destroys and recreates the image element, preventing the flash/glitch.
     function updateDesktopProfilePic(imgSrc, altText = 'User Avatar') {
-        const profileLinkDesktop = document.getElementById('profileLinkDesktop');
-        if (!profileLinkDesktop) return;
+        const navProfilePic = document.getElementById('navProfilePic');
+        if (!navProfilePic) return;
 
         const image = new Image();
         image.src = imgSrc;
         
-        const createAndAppendImage = (finalSrc) => {
-            profileLinkDesktop.innerHTML = ''; // Clear previous image
-            const newImg = document.createElement('img');
-            newImg.id = 'navProfilePic';
-            newImg.src = finalSrc;
-            newImg.alt = altText;
-            newImg.className = 'rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition';
-            profileLinkDesktop.appendChild(newImg);
+        image.onload = () => {
+            navProfilePic.src = image.src;
+            navProfilePic.alt = altText;
+            navProfilePic.style.display = ''; // Make sure it's visible
         };
-        
-        image.onload = () => createAndAppendImage(image.src);
         image.onerror = () => {
              const initials = (altText || "U").charAt(0).toUpperCase();
-             createAndAppendImage(`https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`);
+             navProfilePic.src = `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+             navProfilePic.alt = altText;
+             navProfilePic.style.display = ''; // Make sure it's visible
         };
     }
 
