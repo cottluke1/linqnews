@@ -187,8 +187,10 @@
             color: #B0B0B0; 
             font-weight: 500; 
             transition: all 0.2s ease; 
-            background-color: #1A1A1A; 
-            border: 1px solid #333333; 
+            background-color: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(12px) saturate(150%);
+            -webkit-backdrop-filter: blur(12px) saturate(150%);
+            border: 1px solid #2F3336;
         }
         .filter-button-mobile:hover {
              border-color: #4A5568;
@@ -205,7 +207,16 @@
         }
 
         .search-container { position: relative; display: flex; align-items: center; margin-bottom: 1.5rem; }
-        .search-input { width: 100%; padding: 0.875rem 1.125rem 0.875rem 2.75rem; border: 1px solid #333333; border-radius: 0.5rem; font-size: 0.9rem; color: #E0E0E0; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+        .search-input { 
+            width: 100%; 
+            padding: 0.875rem 1.125rem 0.875rem 2.75rem; 
+            background-color: transparent;
+            border: 1px solid #2F3336;
+            border-radius: 0.5rem; 
+            font-size: 0.9rem; 
+            color: #E0E0E0; 
+            transition: border-color 0.2s ease, box-shadow 0.2s ease; 
+        }
         .search-input:focus { outline: none; border-color: #00BFFF; box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.3); }
         .search-container svg { position: absolute; left: 0.875rem; width: 1.1rem; height: 1.1rem; color: #A0A0A0; }
 
@@ -236,7 +247,7 @@
                         <h2 id="sectionDateTitle" class="section-title !mb-3 sm:!mb-0 !border-none text-2xl">Latest News</h2>
                         <div class="relative w-full sm:w-auto sm:max-w-xs search-container !mb-0 blurred-panel">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 text-gray-500 absolute left-3.5 top-1/2 transform -translate-y-1/2"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                            <input type="search" id="searchInput" placeholder="Search news..." class="search-input !mb-0 blurred-panel">
+                            <input type="search" id="searchInput" placeholder="Search news..." class="search-input !mb-0">
                         </div>
                     </div>
 
