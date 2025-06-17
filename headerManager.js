@@ -112,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Mobile Slideout Elements
         const authLinkMobile = document.getElementById('authLinkMobile');
         const logoutButtonMobile = document.getElementById('logoutButtonMobile');
+        const bottomProfileLinkMobile = document.getElementById('bottomProfileLinkMobile');
         const slideoutUserInfo = document.getElementById('slideout-user-info');
         const slideoutProfilePic = document.getElementById('slideoutProfilePic');
         const slideoutDisplayName = document.getElementById('slideoutDisplayName');
@@ -138,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
             slideoutUserInfo.classList.remove('hidden');
             authLinkMobile.classList.add('hidden');
             logoutButtonMobile.classList.remove('hidden');
+            bottomProfileLinkMobile.classList.remove('hidden');
 
         } else {
             // -- LOGGED OUT STATE --
@@ -150,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
             slideoutUserInfo.classList.add('hidden');
             authLinkMobile.classList.remove('hidden');
             logoutButtonMobile.classList.add('hidden');
+            bottomProfileLinkMobile.classList.add('hidden');
         }
         setActiveNavLink();
     }
