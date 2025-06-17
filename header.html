@@ -1,7 +1,7 @@
 <!-- 
   Updated Header Fragment
   - Profile picture <img> tag is hidden by default.
-  - FIX: Removed background styling from the main panel and applied it to an inner div to prevent style conflicts and ensure a solid black background.
+  - FIX: The src attribute is now empty to be extra safe and prevent any placeholder flash.
 -->
 <nav class="fixed top-0 left-0 w-full z-[1000] bg-black/80 backdrop-blur-sm border-b border-gray-800">
   <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center h-16">
@@ -25,6 +25,7 @@
       <a href="linqplus.html" class="go-premium-btn">Go Premium</a>
       <a href="login.html" id="authLinkDesktopLogin" class="hidden nav-link-button">Login</a>
       <a href="profile.html" id="profileLinkDesktop" class="hidden" title="My Profile">
+        <!-- FIX: Image hidden by default and src is empty. It will be replaced entirely by the script. -->
         <img id="navProfilePic" style="display:none;" src="" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition">
       </a>
     </div>
@@ -37,29 +38,19 @@
     </div>
   </div>
 
-  <!-- Slide-Out Mobile Menu -->
-  <div id="slide-out-panel" class="fixed top-0 right-0 h-full w-72 shadow-lg z-50 transform translate-x-full transition-transform duration-300 ease-in-out border-l border-gray-800">
-    <div class="p-5 h-full bg-black">
-      <div class="flex justify-between items-center mb-8">
-          <span class="text-2xl font-bold text-white">Linq</span>
-          <button id="slideout-close-button" class="text-gray-400 hover:text-white text-4xl leading-none">&times;</button>
-      </div>
-      <nav class="flex flex-col">
-        <a href="index.html" class="nav-link-mobile">News</a>
-        <a href="community.html" class="nav-link-mobile">Community</a>
-        <a href="linqai.html" class="nav-link-mobile">Linq AI</a>
-        <a href="previous_earnings.html" class="nav-link-mobile">Earnings</a>
-        <a href="favorites.html" class="nav-link-mobile">Bookmarks</a>
-        <a href="linqplus.html" class="nav-link-mobile font-semibold text-cyan-400">Go Premium</a>
-        <hr class="border-gray-700 my-4">
-        <a href="profile.html" id="profileLinkMobile" class="nav-link-mobile hidden">My Profile</a>
-        <a href="login.html" id="authLinkMobile" class="nav-link-mobile">Login</a>
-        <a href="#" id="logoutButtonMobile" class="nav-link-mobile text-red-400 hidden">Logout</a>
-      </nav>
+  <!-- Mobile Menu (Collapsible) -->
+  <div id="mobile-menu" class="md:hidden hidden bg-black border-t border-gray-800">
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <a href="index.html" class="nav-link block">News</a>
+      <a href="community.html" class="nav-link block">Community</a>
+      <a href="linqai.html" class="nav-link block">Linq AI</a>
+      <a href="previous_earnings.html" class="nav-link block">Earnings</a>
+      <a href="favorites.html" class="nav-link block">Bookmarks</a>
+      <a href="linqplus.html" class="nav-link block font-semibold text-cyan-400">Go Premium</a>
+      <hr class="border-gray-700 my-2">
+      <a href="login.html" id="authLinkMobile" class="nav-link block">Login</a>
+      <a href="profile.html" id="profileLinkMobile" class="nav-link hidden">My Profile</a>
+      <a href="#" id="logoutButtonMobile" class="nav-link block text-red-400 hidden">Logout</a>
     </div>
   </div>
-
-  <!-- Overlay for Slide-Out Menu -->
-  <div id="menu-overlay" class="hidden fixed inset-0 bg-black bg-opacity-60 z-40"></div>
-
 </nav>
