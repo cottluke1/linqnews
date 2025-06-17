@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
         .go-premium-btn:hover { background-color: #374151; border-color: #6B7280; transform: scale(1.05); }
 
         /* Styles for the new mobile slide-out panel */
+        #slide-out-panel { /* FIX: Explicitly set a solid background color */
+            background-color: #000000;
+        }
         .nav-link-mobile {
             font-size: 1rem;
             color: #D1D5DB;
