@@ -18,7 +18,6 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            /* FIX: Add top padding to the body to prevent content from hiding behind the fixed header */
             padding-top: 64px;
         }
         .auth-container {
@@ -114,15 +113,6 @@
                 <p class="text-center mt-6 text-sm">
                     Already have an account? <span class="toggle-link" id="show-login-link">Login</span>
                 </p>
-                <div class="flex items-center my-6">
-                    <hr class="flex-grow border-gray-700">
-                    <span class="px-3 text-gray-500 text-sm uppercase">or</span>
-                    <hr class="flex-grow border-gray-700">
-                </div>
-                <button id="google-signup-button" class="auth-button bg-white text-black flex items-center justify-center gap-3 hover:bg-gray-100 transition">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" class="h-5 w-5">
-                    Continue with Google
-                </button>
             </div>
         </div>
     </main>
@@ -131,10 +121,8 @@
         <p class="text-xs">&copy; 2025 Linq Energy Intelligence. All Rights Reserved.</p>
     </footer>
 
-    <!-- FIX: Reverted to a standard script tag and compat syntax to match the rest of the site -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Firebase Initialization ---
             const firebaseConfig = {
                 apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
                 authDomain: "linq-b27a8.firebaseapp.com",
@@ -149,13 +137,11 @@
             const auth = firebase.auth();
             const db = firebase.firestore();
 
-            // --- DOM Elements ---
             const loginForm = document.getElementById('login-form');
             const signupForm = document.getElementById('signup-form');
             const formTitle = document.getElementById('form-title');
             const errorMessage = document.getElementById('error-message');
 
-            // --- Form Toggling ---
             document.getElementById('show-signup-link').addEventListener('click', () => {
                 loginForm.classList.add('hidden');
                 signupForm.classList.remove('hidden');
@@ -169,18 +155,27 @@
                 errorMessage.style.display = 'none';
             });
 
-            // --- Authentication Logic ---
-            async function ensureUserDocument(user) {
+            // Creates or updates a user document in Firestore
+            async function updateUserDocument(user, additionalData = {}) {
+                if (!user) return;
                 const userRef = db.collection("users").doc(user.uid);
                 const userSnap = await userRef.get();
+                const data = {
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName,
+                    createdAt: user.metadata.creationTime,
+                    photoURL: user.photoURL,
+                    ...additionalData
+                };
+
                 if (!userSnap.exists) {
-                    await userRef.set({
-                        uid: user.uid,
-                        email: user.email,
-                        displayName: user.displayName || null,
-                        createdAt: new Date().toISOString(),
-                        isSubscribed: false
-                    });
+                    // New user, set isSubscribed to false by default
+                    data.isSubscribed = false;
+                    await userRef.set(data);
+                } else {
+                    // Existing user, merge data to avoid overwriting subscription status
+                    await userRef.set(data, { merge: true });
                 }
             }
 
@@ -189,24 +184,20 @@
                 return params.get('redirect') || 'index.html';
             }
 
-            auth.onAuthStateChanged(async (user) => {
+            auth.onAuthStateChanged(user => {
                 if (user) {
-                    await ensureUserDocument(user);
                     window.location.href = getRedirectUrl();
                 }
             });
 
-            // --- Event Listeners ---
             document.getElementById('login-button').addEventListener('click', () => {
                 const email = document.getElementById("login-email").value;
                 const password = document.getElementById("login-password").value;
                 errorMessage.style.display = "none";
-
                 auth.signInWithEmailAndPassword(email, password)
                     .catch(error => {
                         errorMessage.style.display = "block";
                         errorMessage.textContent = "Incorrect email or password.";
-                        console.error("Login Error:", error);
                     });
             });
 
@@ -216,51 +207,45 @@
                 const password = document.getElementById("signup-password").value;
                 errorMessage.style.display = "none";
             
-                if (password.length < 6) {
-                    errorMessage.textContent = "Password must be at least 6 characters.";
-                    errorMessage.style.display = "block";
-                    return;
-                }
                 if (!name) {
                     errorMessage.textContent = "Please enter your full name.";
                     errorMessage.style.display = "block";
                     return;
                 }
+                 if (password.length < 6) {
+                    errorMessage.textContent = "Password must be at least 6 characters.";
+                    errorMessage.style.display = "block";
+                    return;
+                }
 
                 auth.createUserWithEmailAndPassword(email, password)
-                    .then(userCredential => {
-                        return userCredential.user.updateProfile({
-                            displayName: name
-                        });
+                    .then(async (userCredential) => {
+                        const user = userCredential.user;
+                        await user.updateProfile({ displayName: name });
+                        await updateUserDocument(user, { displayName: name });
                     })
                     .catch(error => {
                         errorMessage.style.display = "block";
-                        if (error.code === 'auth/email-already-in-use') {
-                            errorMessage.textContent = "This email address is already in use.";
-                        } else {
-                            errorMessage.textContent = "Sign up failed. Please try again.";
-                        }
-                        console.error("Sign Up Error:", error);
+                        errorMessage.textContent = error.message;
                     });
             });
             
             const handleGoogleLogin = () => {
                 const provider = new firebase.auth.GoogleAuthProvider();
-                errorMessage.style.display = "none";
                 auth.signInWithPopup(provider)
+                    .then(async (result) => {
+                        await updateUserDocument(result.user);
+                    })
                     .catch(error => {
                         errorMessage.style.display = "block";
                         errorMessage.textContent = "Google sign-in failed. Please try again.";
-                        console.error("Google Sign-In Error:", error);
                     });
             };
 
             document.getElementById('google-login-button').addEventListener('click', handleGoogleLogin);
-            document.getElementById('google-signup-button').addEventListener('click', handleGoogleLogin);
         });
     </script>
     
-    <!-- Centralized header manager script -->
     <script src="headerManager.js" defer></script>
 </body>
 </html>
