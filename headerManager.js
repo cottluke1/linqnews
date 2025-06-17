@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         /* Styles for the new mobile slide-out panel */
         /* FIX: Made the background-color rule more specific and important to prevent transparency issues. */
         nav #slide-out-panel {
-            background-color: #000000 !important;
+            background-color: #121212 !important;
         }
         .nav-link-mobile {
             font-size: 1rem;
