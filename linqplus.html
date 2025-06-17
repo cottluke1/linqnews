@@ -78,21 +78,20 @@
     </a>
 
     <div class="container mx-auto p-4 w-full">
-        <div class="text-center mb-12">
+        <div class="text-center mt-12 mb-12">
             <h1 class="text-3xl lg:text-4xl font-extrabold text-white mb-2">Upgrade to Premium</h1>
-            <p class="text-md lg:text-lg text-gray-400">Unlock premium features and gain a competitive edge</p>
         </div>
 
         <div class="mb-8 block lg:hidden">
             <div class="flex justify-center p-1 bg-slate-800/70 rounded-xl max-w-sm mx-auto">
-                <button data-target="free" class="tab-btn-mobile active">Free</button>
-                <button data-target="premium" class="tab-btn-mobile">Premium</button>
+                <button data-target="free" class="tab-btn-mobile">Free</button>
+                <button data-target="premium" class="tab-btn-mobile active">Premium</button>
             </div>
         </div>
 
         <div class="flex flex-col lg:flex-row justify-center items-stretch gap-8">
 
-            <div data-tab="free" class="w-full lg:max-w-sm p-8 bg-slate-900/50 rounded-2xl shadow-lg flex-col plan-card mobile-tab-panel">
+            <div data-tab="free" class="w-full lg:max-w-sm p-8 bg-slate-900/50 rounded-2xl shadow-lg flex-col plan-card mobile-tab-panel hidden lg:flex">
                 <h2 class="text-xl font-bold text-white text-center">Free</h2>
                 <p class="text-center text-gray-400 mt-1 text-sm">Basic access</p>
                 <div class="text-center my-6">
@@ -114,7 +113,7 @@
                 </div>
             </div>
 
-            <div data-tab="premium" class="w-full lg:max-w-sm p-8 bg-slate-800/70 rounded-2xl shadow-2xl flex-col plan-card premium mobile-tab-panel hidden lg:flex">
+            <div data-tab="premium" class="w-full lg:max-w-sm p-8 bg-slate-800/70 rounded-2xl shadow-2xl flex-col plan-card premium mobile-tab-panel lg:flex">
                 <div class="flex justify-center items-center gap-4">
                     <h2 class="text-xl font-bold text-white text-center">Premium</h2>
                 </div>
