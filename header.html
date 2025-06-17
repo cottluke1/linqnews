@@ -1,56 +1,68 @@
-<!-- 
-  Updated Header Fragment
-  - Profile picture <img> tag is hidden by default.
-  - FIX: The src attribute is now empty to be extra safe and prevent any placeholder flash.
--->
 <nav class="fixed top-0 left-0 w-full z-[1000] bg-black/80 backdrop-blur-sm border-b border-gray-800">
-  <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center h-16">
+  <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
     
-    <!-- Left Side: Logo -->
-    <div class="absolute inset-y-0 left-0 flex items-center">
+    <div class="flex-shrink-0">
       <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
     </div>
 
-    <!-- Center: Nav Links (Desktop) -->
-    <div class="hidden md:flex items-center space-x-2">
-      <a href="index.html" class="nav-link px-3 py-2">News</a>
-      <a href="community.html" class="nav-link px-3 py-2">Community</a>
-      <a href="linqai.html" class="nav-link px-3 py-2">Linq AI</a>
-      <a href="previous_earnings.html" class="nav-link px-3 py-2">Earnings</a>
-      <a href="favorites.html" class="nav-link px-3 py-2">Bookmarks</a>
+    <div class="hidden md:block">
+      <div class="flex items-center space-x-2">
+        <a href="index.html" class="nav-link px-3 py-2">News</a>
+        <a href="community.html" class="nav-link px-3 py-2">Community</a>
+        <a href="linqai.html" class="nav-link px-3 py-2">Linq AI</a>
+        <a href="earnings.html" class="nav-link px-3 py-2">Earnings</a>
+        <a href="favorites.html" class="nav-link px-3 py-2">Bookmarks</a>
+      </div>
     </div>
 
-    <!-- Right Side: Auth and Premium Button -->
-    <div class="absolute inset-y-0 right-0 hidden md:flex items-center space-x-4">
-      <a href="linqplus.html" class="go-premium-btn">Go Premium</a>
-      <a href="login.html" id="authLinkDesktopLogin" class="hidden nav-link-button">Login</a>
-      <a href="profile.html" id="profileLinkDesktop" class="hidden" title="My Profile">
-        <!-- FIX: Image hidden by default and src is empty. It will be replaced entirely by the script. -->
-        <img id="navProfilePic" style="display:none;" src="" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition">
-      </a>
-    </div>
-
-    <!-- Mobile Menu Button -->
-    <div class="md:hidden absolute inset-y-0 right-0 flex items-center">
-        <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none p-2 rounded-md">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-        </button>
-    </div>
-  </div>
-
-  <!-- Mobile Menu (Collapsible) -->
-  <div id="mobile-menu" class="md:hidden hidden bg-black border-t border-gray-800">
-    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-      <a href="index.html" class="nav-link block">News</a>
-      <a href="community.html" class="nav-link block">Community</a>
-      <a href="linqai.html" class="nav-link block">Linq AI</a>
-      <a href="previous_earnings.html" class="nav-link block">Earnings</a>
-      <a href="favorites.html" class="nav-link block">Bookmarks</a>
-      <a href="linqplus.html" class="nav-link block font-semibold text-cyan-400">Go Premium</a>
-      <hr class="border-gray-700 my-2">
-      <a href="login.html" id="authLinkMobile" class="nav-link block">Login</a>
-      <a href="profile.html" id="profileLinkMobile" class="nav-link hidden">My Profile</a>
-      <a href="#" id="logoutButtonMobile" class="nav-link block text-red-400 hidden">Logout</a>
+    <div class="flex items-center">
+      <div class="hidden md:flex items-center space-x-4">
+        <a href="linqplus.html" class="go-premium-btn">Go Premium</a>
+        <a href="login.html" id="authLinkDesktopLogin" class="hidden nav-link-button">Login</a>
+        <a href="profile.html" id="profileLinkDesktop" class="hidden" title="My Profile">
+          <img id="navProfilePic" style="display:none;" src="" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition">
+        </a>
+      </div>
+      <div class="md:hidden">
+          <button id="mobile-menu-button" type="button" class="text-gray-300 hover:text-white focus:outline-none p-2 rounded-md">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          </button>
+      </div>
     </div>
   </div>
 </nav>
+
+<div id="menu-overlay" class="hidden fixed inset-0 bg-black bg-opacity-70 z-40 transition-opacity duration-300 ease-in-out"></div>
+<div id="mobile-slideout-menu" class="fixed top-0 right-0 h-full w-72 bg-[#111111] z-50 transform translate-x-full transition-transform ease-in-out duration-300 overflow-y-auto">
+    <div class="p-4">
+        <div class="flex justify-between items-center mb-6">
+             <div id="slideout-user-info" class="hidden flex items-center gap-3">
+                <a href="profile.html">
+                    <img id="slideoutProfilePic" src="" class="w-10 h-10 rounded-full object-cover border-2 border-gray-600">
+                </a>
+             </div>
+             <button id="mobile-menu-close-button" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        </div>
+
+        <div id="slideout-user-details" class="hidden mb-4">
+           <a href="profile.html">
+              <p id="slideoutDisplayName" class="font-bold text-white leading-tight">User</p>
+              <p id="slideoutEmail" class="text-sm text-gray-400 leading-tight">@email</p>
+            </a>
+        </div>
+
+        <nav class="flex flex-col space-y-1">
+            <a href="profile.html" id="profileLinkMobile" class="slideout-link hidden"><i class="fas fa-user w-6"></i>Profile</a>
+            <a href="linqplus.html" class="slideout-link"><i class="fas fa-star w-6"></i>Premium</a>
+            <a href="linqai.html" class="slideout-link"><i class="fas fa-comment-dots w-6"></i>Chat <span class="text-xs bg-cyan-500 text-white px-1.5 py-0.5 rounded-full ml-2">BETA</span></a>
+            <a href="favorites.html" class="slideout-link"><i class="fas fa-bookmark w-6"></i>Bookmarks</a>
+            <hr class="border-gray-700 my-2">
+            <a href="index.html" class="slideout-link"><i class="fas fa-newspaper w-6"></i>News</a>
+            <a href="community.html" class="slideout-link"><i class="fas fa-users w-6"></i>Community</a>
+            <a href="earnings.html" class="slideout-link"><i class="fas fa-chart-line w-6"></i>Earnings</a>
+            <hr class="border-gray-700 my-2">
+            <a href="login.html" id="authLinkMobile" class="slideout-link"><i class="fas fa-sign-in-alt w-6"></i>Login</a>
+            <a href="#" id="logoutButtonMobile" class="slideout-link text-red-400 hidden"><i class="fas fa-sign-out-alt w-6"></i>Logout</a>
+        </nav>
+    </div>
+</div>
