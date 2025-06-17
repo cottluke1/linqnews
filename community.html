@@ -36,12 +36,11 @@
         .page-title { font-size: 2.5rem; font-weight: 800; color: #E7E9EA; margin: 0 0 1rem 0; text-shadow: 0px 2px 10px rgba(0, 191, 255, 0.3); }
         .page-title .accent-text { color: #00BFFF; }
         .page-subtitle { font-size: 1.125rem; color: #6E767D; max-width: none; margin: 0; line-height: 1.6; }
-        .search-container { margin-bottom: 1rem; } /* Adjusted margin */
+        .search-container { margin-bottom: 1rem; }
         .search-input { width: 100%; padding: 0.875rem 1rem; background-color: #1A1A1A; border: 1px solid #333333; border-radius: 0.5rem; font-size: 1rem; color: #E0E0E0; transition: border-color 0.2s ease, box-shadow 0.2s ease; line-height: normal; height: 3rem; }
         .search-input::placeholder { color: #777777; }
         .search-input:focus { border-color: #00BFFF; outline: none; box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.25); }
         .community-main-grid { display: flex; flex-wrap: wrap; gap: 2rem; }
-        /* FIX: Swapped order to put filters on the right */
         .posts-section { flex: 3; min-width: 0; order: 1; }
         .filter-section-wrapper { flex: 1; min-width: 280px; order: 2; }
         .filter-panel { background-color: rgba(22, 22, 22, 0.7); backdrop-filter: blur(8px) saturate(130%); padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.4); border: 1px solid #2a2a2a; position: sticky; top: 80px; }
@@ -50,19 +49,19 @@
         .filter-button:hover { background-color: rgba(0, 191, 255, 0.1); color: #FFFFFF; border-color: #00BFFF; }
         .filter-button.active { background-color: rgba(0, 191, 255, 0.2); color: #FFFFFF; font-weight: 600; border-color: #00BFFF; }
         
-        /* NEW: Mobile Filter Styles */
-        .mobile-filter-container {
+        /* NEW: Mobile Filter Styles - Replicating index.html */
+        .mobile-filter-scroll-container {
             overflow-x: auto;
             white-space: nowrap;
-            -ms-overflow-style: none; /* IE and Edge */
-            scrollbar-width: none; /* Firefox */
             padding: 0.5rem 0;
             margin-bottom: 1.5rem;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
-        .mobile-filter-container::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, and Opera */
+        .mobile-filter-scroll-container::-webkit-scrollbar {
+            display: none;
         }
-        .mobile-filter-button {
+        .filter-button-mobile {
             display: inline-block;
             padding: 0.6rem 1.25rem;
             margin-right: 0.75rem;
@@ -74,15 +73,18 @@
             border: 1px solid #333333;
             cursor: pointer;
         }
-        .mobile-filter-button:hover {
-            background-color: rgba(0, 191, 255, 0.1);
-            color: #FFFFFF;
+        .filter-button-mobile:hover {
+            border-color: #4A5568;
+            background-color: #1A1A1A;
         }
-        .mobile-filter-button.active {
+        .filter-button-mobile.active {
             background-color: rgba(0, 191, 255, 0.2);
             color: #FFFFFF;
             border-color: #00BFFF;
             font-weight: 600;
+        }
+        .filter-button-mobile.active:hover {
+             background-color: rgba(0, 191, 255, 0.2);
         }
 
         .post-card { background-color: #121212; border: 1px solid #2F3336; border-radius: 0.75rem; padding: 1.75rem; margin-bottom: 2rem; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; box-shadow: 0 4px 15px -5px rgba(0,0,0,0.4); display: flex; flex-direction: column; }
@@ -108,7 +110,6 @@
             .community-main-grid { flex-direction: column; }
             .posts-section { order: 1; }
             .filter-section-wrapper { order: 2; flex: none; width: 100%; }
-            /* This rule is now effectively overridden for positioning by Tailwind's hidden/lg:block classes, but it does no harm. */
             .filter-panel { position: static; margin-bottom: 2rem; top: auto; }
         }
     </style>
@@ -128,15 +129,9 @@
                     <input type="text" id="searchInputCommunity" placeholder="Search community posts..." class="search-input">
                 </div>
 
-                <div class="lg:hidden">
-                    <div id="categoryFiltersCommunityMobile" class="mobile-filter-container">
-                        <button class="mobile-filter-button category-filter-btn" data-category="Crude oil">Crude Oil</button>
-                        <button class="mobile-filter-button category-filter-btn" data-category="Natural Gas">Natural Gas</button>
-                        <button class="mobile-filter-button category-filter-btn" data-category="Energy">General Energy</button>
-                        <button class="mobile-filter-button category-filter-btn" data-category="Policy">Policy & Markets</button>
-                        <button class="mobile-filter-button category-filter-btn" data-category="Market Analysis">Market Analysis</button>
-                        <button class="mobile-filter-button category-filter-btn" data-category="Energy Demand">Energy Demand</button>
-                    </div>
+                <div id="mobileFilterContainer" class="lg:hidden">
+                    <div id="categoryFiltersCommunityMobile" class="mobile-filter-scroll-container">
+                        </div>
                 </div>
 
                 <div id="postsContainerCommunity" class="space-y-8"></div>
@@ -146,13 +141,7 @@
                 <div class="filter-panel">
                     <h3 class="filter-title">Filter by Category</h3>
                     <div id="categoryFiltersCommunity" class="space-y-3">
-                        <button class="filter-button category-filter-btn" data-category="Crude oil">Crude Oil</button>
-                        <button class="filter-button category-filter-btn" data-category="Natural Gas">Natural Gas</button>
-                        <button class="filter-button category-filter-btn" data-category="Energy">General Energy</button>
-                        <button class="filter-button category-filter-btn" data-category="Policy">Policy & Markets</button>
-                        <button class="filter-button category-filter-btn" data-category="Market Analysis">Market Analysis</button>
-                        <button class="filter-button category-filter-btn" data-category="Energy Demand">Energy Demand</button>
-                    </div>
+                        </div>
                 </div>
             </aside>
         </div>
@@ -185,6 +174,32 @@
         }
         const authInstance = firebase.auth();
         const db = firebase.firestore();
+
+        // NEW: Function to dynamically create and populate filters
+        function populateCategoryFilters() {
+            const categories = ["Crude oil", "Natural Gas", "Energy", "Policy", "Market Analysis", "Energy Demand"];
+            const desktopContainer = document.getElementById('categoryFiltersCommunity');
+            const mobileContainer = document.getElementById('categoryFiltersCommunityMobile');
+            
+            desktopContainer.innerHTML = '';
+            mobileContainer.innerHTML = '';
+
+            categories.forEach(category => {
+                // Create desktop button
+                const desktopButton = document.createElement('button');
+                desktopButton.className = 'filter-button category-filter-btn';
+                desktopButton.dataset.category = category;
+                desktopButton.textContent = category;
+                desktopContainer.appendChild(desktopButton);
+
+                // Create mobile button
+                const mobileButton = document.createElement('button');
+                mobileButton.className = 'filter-button-mobile category-filter-btn';
+                mobileButton.dataset.category = category;
+                mobileButton.textContent = category;
+                mobileContainer.appendChild(mobileButton);
+            });
+        }
 
         function displayCommunityPostsPage(postsToDisplay) {
             const postsContainerCommunity = document.getElementById('postsContainerCommunity');
@@ -220,7 +235,6 @@
         function filterAndDisplayPosts() {
             const allPosts = window.communityPostsData || [];
             const searchQuery = document.getElementById('searchInputCommunity').value.toLowerCase().trim();
-            // UPDATED: Selects active buttons from mobile or desktop
             const activeCategories = [...new Set(Array.from(document.querySelectorAll('.category-filter-btn.active')).map(btn => btn.dataset.category))];
             
             let filteredPosts = allPosts;
@@ -277,6 +291,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            populateCategoryFilters(); // NEW: Call the function to create the buttons
+
             authInstance.onAuthStateChanged(user => {
                 if (unsubscribeUserListener) unsubscribeUserListener();
                 if (user) {
@@ -318,20 +334,20 @@
                 const shareButton = event.target.closest('.share-btn');
                 if (shareButton) handleShareClick(shareButton);
             });
-
-            // UPDATED: Event listener for both mobile and desktop filter buttons
-            document.querySelectorAll('.category-filter-btn').forEach(button => {
-                button.addEventListener('click', () => {
+            
+            // UPDATED: A single event listener on the main content area for delegation
+            document.querySelector('.page-content-wrapper').addEventListener('click', (event) => {
+                if (event.target.matches('.category-filter-btn')) {
+                    const button = event.target;
                     const category = button.dataset.category;
                     const isCurrentlyActive = button.classList.contains('active');
                     
-                    // Sync the state for all buttons of the same category
                     document.querySelectorAll(`.category-filter-btn[data-category="${category}"]`).forEach(btn => {
                         btn.classList.toggle('active', !isCurrentlyActive);
                     });
-
+                    
                     filterAndDisplayPosts();
-                });
+                }
             });
 
             document.getElementById('searchInputCommunity').addEventListener('input', filterAndDisplayPosts);
