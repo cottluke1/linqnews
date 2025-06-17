@@ -72,11 +72,12 @@ function updateAuthUI(user) {
     if (navProfilePic) {
         if (isLoggedIn) {
             navProfilePic.src = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email[0].toUpperCase()}`;
-            navProfilePic.style.display = 'block';
+            navProfilePic.classList.remove('hidden');
         } else {
-            navProfilePic.style.display = 'none';
+            navProfilePic.classList.add('hidden');
         }
     }
+
 
     // Update the slide-out mobile menu based on login state
     document.getElementById('slideout-user-info')?.classList.toggle('hidden', !isLoggedIn);
