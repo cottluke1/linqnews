@@ -1,13 +1,61 @@
-<!-- 
-  Updated Header Fragment
-  - Profile picture <img> tag is hidden by default.
-  - FIX: The src attribute is now empty to be extra safe and prevent any placeholder flash.
+<!--
+  MODERNIZED HEADER FRAGMENT
+  - Desktop view is unchanged.
+  - Mobile view now uses a hamburger icon to trigger a slide-out navigation panel.
+  - All styling and structure for the new slide-out menu is contained here.
 -->
+<style>
+    /* Styling for the new slide-out menu */
+    #slide-out-menu {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #slide-out-menu.open {
+        transform: translateX(0);
+    }
+    #menu-overlay {
+        transition: opacity 0.3s ease-in-out;
+    }
+    #menu-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .slide-out-nav-link {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        color: #D1D5DB; /* gray-300 */
+        font-weight: 500;
+        transition: background-color 0.2s, color 0.2s;
+    }
+    .slide-out-nav-link i {
+        width: 1.25rem; /* w-5 */
+        margin-right: 0.75rem; /* mr-3 */
+        color: #9CA3AF; /* gray-400 */
+        transition: color 0.2s;
+    }
+    .slide-out-nav-link:hover {
+        background-color: #374151; /* gray-700 */
+        color: #FFFFFF;
+    }
+    .slide-out-nav-link:hover i {
+        color: #E5E7EB; /* gray-200 */
+    }
+    .slide-out-nav-link.active {
+        background-color: rgba(0, 191, 255, 0.1);
+        color: #FFFFFF;
+        font-weight: 600;
+    }
+     .slide-out-nav-link.active i {
+        color: #00BFFF;
+    }
+</style>
+
 <nav class="fixed top-0 left-0 w-full z-[1000] bg-black/80 backdrop-blur-sm border-b border-gray-800">
-  <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center h-16">
+  <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
     
     <!-- Left Side: Logo -->
-    <div class="absolute inset-y-0 left-0 flex items-center">
+    <div class="flex-shrink-0">
       <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
     </div>
 
@@ -16,41 +64,60 @@
       <a href="index.html" class="nav-link px-3 py-2">News</a>
       <a href="community.html" class="nav-link px-3 py-2">Community</a>
       <a href="linqai.html" class="nav-link px-3 py-2">Linq AI</a>
-      <a href="previous_earnings.html" class="nav-link px-3 py-2">Earnings</a>
+      <a href="earnings.html" class="nav-link px-3 py-2">Earnings</a>
       <a href="favorites.html" class="nav-link px-3 py-2">Bookmarks</a>
     </div>
 
-    <!-- Right Side: Auth and Premium Button -->
-    <div class="absolute inset-y-0 right-0 hidden md:flex items-center space-x-4">
+    <!-- Right Side: Auth and Premium Button (Desktop) -->
+    <div class="hidden md:flex items-center space-x-4">
       <a href="linqplus.html" class="go-premium-btn">Go Premium</a>
       <a href="login.html" id="authLinkDesktopLogin" class="hidden nav-link-button">Login</a>
       <a href="profile.html" id="profileLinkDesktop" class="hidden" title="My Profile">
-        <!-- FIX: Image hidden by default and src is empty. It will be replaced entirely by the script. -->
         <img id="navProfilePic" style="display:none;" src="" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition">
       </a>
     </div>
 
-    <!-- Mobile Menu Button -->
-    <div class="md:hidden absolute inset-y-0 right-0 flex items-center">
+    <!-- Mobile Menu Button (Hamburger) -->
+    <div class="md:hidden flex items-center">
         <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none p-2 rounded-md">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
     </div>
   </div>
-
-  <!-- Mobile Menu (Collapsible) -->
-  <div id="mobile-menu" class="md:hidden hidden bg-black border-t border-gray-800">
-    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-      <a href="index.html" class="nav-link block">News</a>
-      <a href="community.html" class="nav-link block">Community</a>
-      <a href="linqai.html" class="nav-link block">Linq AI</a>
-      <a href="previous_earnings.html" class="nav-link block">Earnings</a>
-      <a href="favorites.html" class="nav-link block">Bookmarks</a>
-      <a href="linqplus.html" class="nav-link block font-semibold text-cyan-400">Go Premium</a>
-      <hr class="border-gray-700 my-2">
-      <a href="login.html" id="authLinkMobile" class="nav-link block">Login</a>
-      <a href="profile.html" id="profileLinkMobile" class="nav-link hidden">My Profile</a>
-      <a href="#" id="logoutButtonMobile" class="nav-link block text-red-400 hidden">Logout</a>
-    </div>
-  </div>
 </nav>
+
+<!-- Slide-out Panel (Mobile) -->
+<div id="menu-overlay" class="fixed inset-0 bg-black bg-opacity-60 z-[1001] hidden opacity-0 pointer-events-none"></div>
+<div id="slide-out-menu" class="fixed top-0 right-0 h-full w-72 bg-[#101010] shadow-2xl z-[1002] transform translate-x-full flex flex-col">
+    <!-- Panel Header -->
+    <div class="p-4 flex justify-between items-start border-b border-gray-800">
+        <div id="slide-out-user-info" class="hidden">
+            <a href="profile.html" class="flex items-center gap-3 group">
+                <img id="slide-out-avatar" src="https://placehold.co/40x40/374151/FFFFFF?text=U" alt="User Avatar" class="w-10 h-10 rounded-full object-cover bg-gray-700 group-hover:ring-2 ring-cyan-400 transition">
+                <div>
+                    <p id="slide-out-name" class="font-bold text-white group-hover:text-cyan-400 transition">User</p>
+                    <p id="slide-out-email" class="text-xs text-gray-400">user@email.com</p>
+                </div>
+            </a>
+        </div>
+        <button id="slide-out-close-btn" class="text-gray-500 hover:text-white hover:rotate-90 transition-transform duration-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+    </div>
+
+    <!-- Panel Navigation -->
+    <nav class="flex-grow p-4 space-y-2">
+        <a href="index.html" class="slide-out-nav-link"><i class="fas fa-newspaper"></i>News</a>
+        <a href="community.html" class="slide-out-nav-link"><i class="fas fa-users"></i>Community</a>
+        <a href="linqai.html" class="slide-out-nav-link"><i class="fas fa-brain"></i>Linq AI</a>
+        <a href="earnings.html" class="slide-out-nav-link"><i class="fas fa-chart-line"></i>Earnings</a>
+        <a href="favorites.html" id="slide-out-favorites" class="slide-out-nav-link hidden"><i class="fas fa-bookmark"></i>Bookmarks</a>
+    </nav>
+    
+    <!-- Panel Footer -->
+    <div class="p-4 border-t border-gray-800 space-y-2">
+        <a href="linqplus.html" class="slide-out-nav-link bg-blue-500/10 text-blue-300 hover:bg-blue-500/20 hover:text-blue-200"><i class="fas fa-star"></i>Go Premium</a>
+        <a href="login.html" id="login-button-slideout" class="slide-out-nav-link"><i class="fas fa-sign-in-alt"></i>Login</a>
+        <a href="#" id="logout-button-slideout" class="slide-out-nav-link hidden text-red-400 hover:bg-red-500/10 hover:text-red-300"><i class="fas fa-sign-out-alt"></i>Logout</a>
+    </div>
+</div>
