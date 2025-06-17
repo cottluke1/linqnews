@@ -102,27 +102,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- 6. UPDATE UI BASED ON AUTH STATE (Corrected Logic) ---
+    // --- 6. UPDATE UI BASED ON AUTH STATE ---
     function updateAuthUI(user) {
         // Desktop Elements
         const authLinkDesktop = document.getElementById('authLinkDesktopLogin');
         const profileLinkDesktop = document.getElementById('profileLinkDesktop');
         const navProfilePic = document.getElementById('navProfilePic');
         
-        // **NEW** Mobile Group Elements
-        const loggedInLinksMobile = document.getElementById('mobile-logged-in-links');
-        const loggedOutLinksMobile = document.getElementById('mobile-logged-out-links');
-        
-        // Mobile User Info Elements
+        // Mobile Slideout Elements
+        const authLinkMobile = document.getElementById('authLinkMobile');
+        const logoutButtonMobile = document.getElementById('logoutButtonMobile');
+        const bottomProfileLinkMobile = document.getElementById('bottomProfileLinkMobile');
         const slideoutUserInfo = document.getElementById('slideout-user-info');
         const slideoutProfilePic = document.getElementById('slideoutProfilePic');
         const slideoutDisplayName = document.getElementById('slideoutDisplayName');
         const slideoutEmail = document.getElementById('slideoutEmail');
 
-        if (!authLinkDesktop || !profileLinkDesktop || !navProfilePic || !loggedInLinksMobile || !loggedOutLinksMobile || !slideoutUserInfo) {
-            console.error("One or more header UI elements could not be found.");
-            return;
-        }
+        if (!authLinkDesktop || !profileLinkDesktop || !navProfilePic) return;
 
         if (user) {
             // -- LOGGED IN STATE --
@@ -141,8 +137,9 @@ document.addEventListener('DOMContentLoaded', () => {
             slideoutEmail.textContent = user.email ? `@${user.email.split('@')[0]}` : '';
             
             slideoutUserInfo.classList.remove('hidden');
-            loggedInLinksMobile.classList.remove('hidden');
-            loggedOutLinksMobile.classList.add('hidden');
+            authLinkMobile.classList.add('hidden');
+            logoutButtonMobile.classList.remove('hidden');
+            bottomProfileLinkMobile.classList.remove('hidden');
 
         } else {
             // -- LOGGED OUT STATE --
@@ -153,8 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Mobile UI
             slideoutUserInfo.classList.add('hidden');
-            loggedInLinksMobile.classList.add('hidden');
-            loggedOutLinksMobile.classList.remove('hidden');
+            authLinkMobile.classList.remove('hidden');
+            logoutButtonMobile.classList.add('hidden');
+            bottomProfileLinkMobile.classList.add('hidden');
         }
         setActiveNavLink();
     }
