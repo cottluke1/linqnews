@@ -1,4 +1,4 @@
-// /js/headerManager.js
+ // /js/headerManager.js
 // This script fetches the header, handles authentication state, centers navigation,
 // and implements SPA-style page loading for a smoother user experience.
 
@@ -11,19 +11,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch the header content and inject it into the placeholder
     fetch('header.html')
-        .then(response => {
-            if (!response.ok) throw new Error('Failed to fetch header.html');
-            return response.text();
-        })
-        .then(html => {
-            headerPlaceholder.innerHTML = html;
-            // Once the header is loaded, initialize its dynamic functionality
+      .then(response => response.text())
+      .then(html => {
+        headerPlaceholder.innerHTML = html;
+    
+        // Wait TWO animation frames to ensure header is fully rendered
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
             initializeHeaderFunctionality();
-        })
-        .catch(error => {
-            console.error('Error loading header:', error);
-            headerPlaceholder.innerHTML = "<p class='text-center text-red-500'>Error loading navigation.</p>";
+          });
         });
+      });
+
 });
 
 /**
