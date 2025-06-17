@@ -1,18 +1,18 @@
 <!-- 
-  Updated Header Fragment
-  - No changes to the desktop layout.
-  - Replaced the old mobile menu button and dropdown with a new hamburger icon that will trigger a slide-out panel.
-  - Added the structure for the slide-out panel and an overlay. The content and visibility will be managed by headerManager.js.
+  Updated Header Fragment V2
+  - The HTML for the slide-out menu is restructured to EXACTLY match the photo's layout.
+  - Includes a new profile header with a decorative 'more options' icon.
+  - Links are reordered and grouped with icons as seen in the image.
 -->
 <nav class="fixed top-0 left-0 w-full z-[1000] bg-black/80 backdrop-blur-sm border-b border-gray-800">
   <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center h-16">
     
-    <!-- Left Side: Logo -->
+    <!-- Left Side: Logo (No Changes) -->
     <div class="absolute inset-y-0 left-0 flex items-center">
       <a href="index.html" class="text-3xl font-bold text-white">Linq</a>
     </div>
 
-    <!-- Center: Nav Links (Desktop) -->
+    <!-- Center: Nav Links (Desktop - No Changes) -->
     <div class="hidden md:flex items-center space-x-2">
       <a href="index.html" class="nav-link px-3 py-2">News</a>
       <a href="community.html" class="nav-link px-3 py-2">Community</a>
@@ -21,7 +21,7 @@
       <a href="favorites.html" class="nav-link px-3 py-2">Bookmarks</a>
     </div>
 
-    <!-- Right Side: Auth and Premium Button (Desktop) -->
+    <!-- Right Side: Auth and Premium Button (Desktop - No Changes) -->
     <div class="absolute inset-y-0 right-0 hidden md:flex items-center space-x-4">
       <a href="linqplus.html" class="go-premium-btn">Go Premium</a>
       <a href="login.html" id="authLinkDesktopLogin" class="hidden nav-link-button">Login</a>
@@ -30,48 +30,46 @@
       </a>
     </div>
 
-    <!-- Mobile Menu Button (Hamburger Icon) -->
+    <!-- Mobile Menu Button (Hamburger Icon - No Changes) -->
     <div class="md:hidden absolute inset-y-0 right-0 flex items-center">
         <button id="slide-out-menu-button" class="text-gray-300 hover:text-white focus:outline-none p-2 rounded-md">
-            <!-- This is the 3-line hamburger icon -->
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
     </div>
   </div>
-
-  <!-- Note: The old collapsible #mobile-menu div is removed. -->
 </nav>
 
-<!-- New Slide-Out Menu Structure -->
+<!-- Exact Replica Slide-Out Menu Structure -->
 <div id="menu-overlay" class=""></div>
 <div id="slide-out-menu" class="">
-    <!-- Close button -->
-    <div class="slide-out-header">
-        <button id="slide-out-close-btn" aria-label="Close menu">&times;</button>
-    </div>
-    
-    <!-- Profile Section (Visible when logged in) -->
+    <!-- Profile Header Section -->
     <div id="slide-out-profile-section" class="hidden">
         <img id="slide-out-profile-pic" src="" alt="User" />
         <div class="profile-info">
             <p id="slide-out-display-name"></p>
             <p id="slide-out-username"></p>
         </div>
+        <!-- Decorative "more options" icon -->
+        <i class="fas fa-ellipsis-h" id="more-options-icon"></i>
     </div>
     
-    <!-- Navigation Links -->
+    <!-- Navigation Links with Icons -->
     <nav class="slide-out-nav">
-        <!-- General Links -->
-        <a href="index.html" class="nav-link">News</a>
-        <a href="community.html" class="nav-link">Community</a>
-        <a href="linqai.html" class="nav-link">Linq AI</a>
-        <a href="previous_earnings.html" class="nav-link">Earnings</a>
-        <a href="favorites.html" class="nav-link">Bookmarks</a>
+        <!-- Logged-in Main Links -->
+        <a href="profile.html" id="slide-out-profile-link" class="nav-link hidden"><i class="fas fa-user icon"></i>Profile</a>
+        <a href="linqplus.html" id="slide-out-premium-link" class="nav-link premium-link"><i class="fas fa-xmark icon"></i>Premium</a>
+        <a href="linqai.html" class="nav-link"><i class="fas fa-comment-dots icon"></i>Chat <span class="beta-tag">BETA</span></a>
+        <a href="favorites.html" class="nav-link"><i class="fas fa-bookmark icon"></i>Bookmarks</a>
+
+        <!-- General Site Links (using our pages) -->
+        <a href="earnings.html" class="nav-link"><i class="fas fa-chart-line icon"></i>Earnings</a>
+        <a href="community.html" class="nav-link"><i class="fas fa-users icon"></i>Community</a>
+        <a href="index.html" class="nav-link"><i class="fas fa-newspaper icon"></i>News</a>
+        
         <hr/>
-        <!-- Auth-dependent Links -->
-        <a href="linqplus.html" id="slide-out-premium-link" class="nav-link premium-link">Go Premium</a>
-        <a href="profile.html" id="slide-out-profile-link" class="nav-link hidden">Profile</a>
-        <a href="login.html" id="slide-out-login-link" class="nav-link">Login</a>
-        <a href="#" id="slide-out-logout-button" class="nav-link logout-button hidden">Logout</a>
+
+        <!-- Auth Links -->
+        <a href="login.html" id="slide-out-login-link" class="nav-link"><i class="fas fa-sign-in-alt icon"></i>Login</a>
+        <a href="#" id="slide-out-logout-button" class="nav-link logout-button hidden"><i class="fas fa-sign-out-alt icon"></i>Logout</a>
     </nav>
 </div>
