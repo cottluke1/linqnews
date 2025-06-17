@@ -446,6 +446,9 @@
                     if (pageNumber) {
                         displayArticlesForPage(pageNumber);
                         mainContent.scrollIntoView({ behavior: 'smooth' });
+                        setTimeout(() => {
+                            window.scrollBy(0, -100); 
+                        }, 500); 
                     }
                 });
                 return btn;
