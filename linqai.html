@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linq AI - Your Energy Questions Answered</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
+    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700&display=swap)" rel="stylesheet">
+    <link href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)" rel="stylesheet">
     
     <!-- Firebase Libraries -->
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="[https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js](https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js)"></script>
+    <script src="[https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js](https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js)"></script>
+    <script src="[https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js](https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js)"></script>
     <style>
         html {
             height: 100%;
@@ -87,7 +87,8 @@
         <div class="chat-header-area">
             <div class="page-heading-container">
                 <h1 class="chat-page-title">Linq <span class="accent-text">AI</span></h1>
-                <p class="chat-page-subtitle">Your Energy Questions Answered</p>
+                <!-- MODIFICATION: Added Tailwind classes to hide on mobile (screens smaller than 'md') -->
+                <p class="chat-page-subtitle hidden md:block">Your Energy Questions Answered</p>
             </div>
         </div>
 
@@ -95,7 +96,8 @@
             <!-- Chat messages will be appended here by JavaScript -->
         </div>
 
-        <div id="suggested-questions" class="suggested-questions">
+        <!-- MODIFICATION: Added Tailwind classes to hide on mobile (screens smaller than 'md') and show as flex on desktop -->
+        <div id="suggested-questions" class="suggested-questions hidden md:flex">
             <button class="suggested-question-btn">Future of Green Hydrogen?</button>
             <button class="suggested-question-btn">Latest on Carbon Capture?</button>
             <button class="suggested-question-btn">Oil Price Volatility Factors?</button>
@@ -261,7 +263,7 @@
             if (!currentUser) throw new Error("User not logged in.");
             
             const firebaseIdToken = await currentUser.getIdToken(true);
-            const functionUrl = 'https://us-central1-linq-b27a8.cloudfunctions.net/api/chat';
+            const functionUrl = '[https://us-central1-linq-b27a8.cloudfunctions.net/api/chat](https://us-central1-linq-b27a8.cloudfunctions.net/api/chat)';
             
             try {
                 const response = await fetch(functionUrl, {
