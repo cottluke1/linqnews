@@ -113,21 +113,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 6. UPDATE UI BASED ON AUTH STATE ---
     function updateAuthUI(user) {
-        // DEFINE ONCE – DO NOT REPEAT
-        const slideoutProfilePic = document.getElementById('slideoutProfilePic');
-        const slideoutDisplayName = document.getElementById('slideoutDisplayName');
-        const slideoutEmail = document.getElementById('slideoutEmail');
+    // Define mobile user elements only once
+    const slideoutProfilePic = document.getElementById('slideoutProfilePic');
+    const slideoutDisplayName = document.getElementById('slideoutDisplayName');
+    const slideoutEmail = document.getElementById('slideoutEmail');
     
-        // Desktop Elements
-        const authLinkDesktop = document.getElementById('authLinkDesktopLogin');
-        const profileLinkDesktop = document.getElementById('profileLinkDesktop');
-        const navProfilePic = document.getElementById('navProfilePic');
-    
-        // Mobile Slideout Elements
-        const authLinkMobile = document.getElementById('authLinkMobile');
-        const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-        const bottomProfileLinkMobile = document.getElementById('bottomProfileLinkMobile');
-        const slideoutUserInfo = document.getElementById('slideout-user-info');
+    // Desktop Elements
+    const authLinkDesktop = document.getElementById('authLinkDesktopLogin');
+    const profileLinkDesktop = document.getElementById('profileLinkDesktop');
+    const navProfilePic = document.getElementById('navProfilePic');
+
+    // Mobile Slideout Elements
+    const authLinkMobile = document.getElementById('authLinkMobile');
+    const logoutButtonMobile = document.getElementById('logoutButtonMobile');
+    const bottomProfileLinkMobile = document.getElementById('bottomProfileLinkMobile');
+    const slideoutUserInfo = document.getElementById('slideout-user-info');
+
 
 
         if (!authLinkDesktop || !profileLinkDesktop || !navProfilePic) return;
