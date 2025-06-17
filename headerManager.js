@@ -1,163 +1,68 @@
-// /js/headerManager.js
-// Manages authentication state and dynamic header behavior
-
 document.addEventListener('DOMContentLoaded', () => {
     const headerPlaceholder = document.getElementById('header-placeholder');
-    if (!headerPlaceholder) {
-        console.error("Header placeholder element (#header-placeholder) not found. Header cannot be loaded.");
-        return;
-    }
-
-    const styles = `
-        body.overflow-hidden { overflow: hidden; }
-        .nav-link { font-size: 0.875rem; color: #D1D5DB; font-weight: 500; transition: color 0.2s ease-in-out; border-radius: 0.375rem; }
-        .nav-link:hover { color: #FFFFFF; }
-        .nav-link.active { color: #FFFFFF; font-weight: 600; }
-        .nav-link-button { font-size: 0.875rem; font-weight: 500; background-color: #00BFFF; color: white !important; padding: 0.5rem 1rem; border-radius: 0.375rem; transition: background-color 0.2s ease; }
-        .nav-link-button:hover { background-color: #00A9E0; }
-        .go-premium-btn { font-size: 0.875rem; font-weight: 600; background-color: #1F2937; color: #FFFFFF; padding: 0.5rem 1rem; border-radius: 9999px; border: 1px solid #4B5563; transition: all 0.2s ease; display: inline-block; text-decoration: none; }
-        .go-premium-btn:hover { background-color: #374151; border-color: #6B7280; transform: scale(1.05); }
-        .slideout-link { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; border-radius: 9999px; font-weight: 500; font-size: 1rem; color: #D1D5DB; text-decoration: none; }
-        .slideout-link:hover { background-color: #27272a; color: white; }
-        .slideout-link.active { color: #FFFFFF; font-weight: 700; }
-    `;
-    const styleSheet = document.createElement("style");
-    styleSheet.innerText = styles;
-    document.head.appendChild(styleSheet);
+    if (!headerPlaceholder) return;
 
     fetch('header.html')
-        .then(response => {
-            if (!response.ok) throw new Error('Network response was not ok for header.html');
-            return response.text();
-        })
-        .then(data => {
-            headerPlaceholder.innerHTML = data;
-            initializeHeaderFunctionality();
-        })
-        .catch(error => {
-            console.error('Error fetching header:', error);
-            headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
+        .then(res => res.text())
+        .then(html => {
+            headerPlaceholder.innerHTML = html;
+            initHeader();
         });
 
-    function initializeHeaderFunctionality() {
-        if (typeof firebase === 'undefined') {
-            console.error('Firebase is not loaded. Header cannot function correctly.');
-            return;
-        }
+    function initHeader() {
+        if (typeof firebase === 'undefined') return;
         const auth = firebase.auth();
 
-        setupEventListeners(auth);
-        auth.onAuthStateChanged(user => updateAuthUI(user));
+        auth.onAuthStateChanged(user => {
+            const isLoggedIn = !!user;
 
-        // Backup retry for slower Firebase loads
-        setTimeout(() => {
-            updateAuthUI(auth.currentUser);
-        }, 1000);
-    }
+            // DESKTOP
+            document.getElementById('authLinkDesktopLogin')?.classList.toggle('hidden', isLoggedIn);
+            document.getElementById('profileLinkDesktop')?.classList.toggle('hidden', !isLoggedIn);
 
-    function setupEventListeners(auth) {
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
-        const slideoutMenu = document.getElementById('mobile-slideout-menu');
-        const menuOverlay = document.getElementById('menu-overlay');
-
-        const openMenu = () => {
-            if (slideoutMenu && menuOverlay) {
-                menuOverlay.classList.remove('hidden');
-                menuOverlay.classList.add('opacity-100');
-                slideoutMenu.classList.remove('translate-x-full');
-                slideoutMenu.classList.add('translate-x-0');
-                document.body.classList.add('overflow-hidden');
-            }
-        };
-
-        const closeMenu = () => {
-            if (slideoutMenu && menuOverlay) {
-                menuOverlay.classList.remove('opacity-100');
-                menuOverlay.classList.add('hidden');
-                slideoutMenu.classList.remove('translate-x-0');
-                slideoutMenu.classList.add('translate-x-full');
-                document.body.classList.remove('overflow-hidden');
-            }
-        };
-
-        if (mobileMenuButton) mobileMenuButton.addEventListener('click', openMenu);
-        if (mobileMenuCloseButton) mobileMenuCloseButton.addEventListener('click', closeMenu);
-        if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
-
-        const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-        if (logoutButtonMobile) {
-            logoutButtonMobile.addEventListener('click', (event) => {
-                event.preventDefault();
-                auth.signOut();
-                closeMenu();
-            });
-        }
-    }
-
-    function updateAuthUI(user) {
-        const authLinkDesktop = document.getElementById('authLinkDesktopLogin');
-        const profileLinkDesktop = document.getElementById('profileLinkDesktop');
-        const navProfilePic = document.getElementById('navProfilePic');
-
-        if (authLinkDesktop && profileLinkDesktop && navProfilePic) {
-            if (user) {
-                const initials = (user.displayName || user.email || "U").charAt(0).toUpperCase();
-                const photoSrc = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-                navProfilePic.src = photoSrc;
-                navProfilePic.style.display = 'block';
-                profileLinkDesktop.classList.remove('hidden');
-                authLinkDesktop.classList.add('hidden');
-            } else {
-                profileLinkDesktop.classList.add('hidden');
-                authLinkDesktop.classList.remove('hidden');
-                navProfilePic.style.display = 'none';
-            }
-        }
-
-        const authLinkMobile = document.getElementById('authLinkMobile');
-        const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-        const bottomProfileLinkMobile = document.getElementById('bottomProfileLinkMobile');
-        const slideoutUserInfo = document.getElementById('slideout-user-info');
-
-        if (user) {
-            if (authLinkMobile) authLinkMobile.classList.add('hidden');
-            if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
-            if (bottomProfileLinkMobile) bottomProfileLinkMobile.classList.remove('hidden');
-            if (slideoutUserInfo) slideoutUserInfo.classList.remove('hidden');
-
-            const slideoutProfilePic = document.getElementById('slideoutProfilePic');
-            const slideoutDisplayName = document.getElementById('slideoutDisplayName');
-            const slideoutEmail = document.getElementById('slideoutEmail');
-            const initials = (user.displayName || user.email || "U").charAt(0).toUpperCase();
-            const photoSrc = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-
-            if (slideoutProfilePic) slideoutProfilePic.src = photoSrc;
-            if (slideoutDisplayName) slideoutDisplayName.textContent = user.displayName || 'User';
-            if (slideoutEmail) slideoutEmail.textContent = user.email ? `@${user.email.split('@')[0]}` : '';
-        } else {
-            if (authLinkMobile) authLinkMobile.classList.remove('hidden');
-            if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
-            if (bottomProfileLinkMobile) bottomProfileLinkMobile.classList.add('hidden');
-            if (slideoutUserInfo) slideoutUserInfo.classList.add('hidden');
-        }
-
-        setActiveNavLink();
-    }
-
-    function setActiveNavLink() {
-        const currentPath = window.location.pathname.split("/").pop() || "index.html";
-        const navLinks = document.querySelectorAll('.nav-link, .slideout-link');
-
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            const linkHrefRaw = link.getAttribute('href');
-            if (linkHrefRaw) {
-                const linkHref = linkHrefRaw.split("?")[0];
-                if (linkHref === currentPath || (currentPath === 'previous_earnings.html' && linkHref === 'earnings.html')) {
-                    link.classList.add('active');
+            const navProfilePic = document.getElementById('navProfilePic');
+            if (navProfilePic) {
+                navProfilePic.style.display = isLoggedIn ? 'block' : 'none';
+                if (isLoggedIn) {
+                    const photo = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email[0].toUpperCase()}`;
+                    navProfilePic.src = photo;
                 }
             }
+
+            // MOBILE
+            document.getElementById('authLinkMobile')?.classList.toggle('hidden', isLoggedIn);
+            document.getElementById('bottomProfileLinkMobile')?.classList.toggle('hidden', !isLoggedIn);
+            document.getElementById('logoutButtonMobile')?.classList.toggle('hidden', !isLoggedIn);
+            document.getElementById('slideout-user-info')?.classList.toggle('hidden', !isLoggedIn);
+
+            if (isLoggedIn) {
+                const photo = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email[0].toUpperCase()}`;
+                document.getElementById('slideoutProfilePic').src = photo;
+                document.getElementById('slideoutDisplayName').textContent = user.displayName || 'User';
+                document.getElementById('slideoutEmail').textContent = `@${user.email.split('@')[0]}`;
+            }
         });
+
+        // Mobile menu
+        document.getElementById('mobile-menu-button')?.addEventListener('click', () => {
+            document.getElementById('mobile-slideout-menu')?.classList.remove('translate-x-full');
+            document.getElementById('menu-overlay')?.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        });
+
+        document.getElementById('mobile-menu-close-button')?.addEventListener('click', closeMobileMenu);
+        document.getElementById('menu-overlay')?.addEventListener('click', closeMobileMenu);
+
+        document.getElementById('logoutButtonMobile')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            auth.signOut();
+            closeMobileMenu();
+        });
+
+        function closeMobileMenu() {
+            document.getElementById('mobile-slideout-menu')?.classList.add('translate-x-full');
+            document.getElementById('menu-overlay')?.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
     }
 });
