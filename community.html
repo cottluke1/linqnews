@@ -73,6 +73,53 @@
             .posts-section { order: 1; } /* Posts appear first on mobile */
             .filter-section-wrapper { order: 2; flex: none; width: 100%; }
             .filter-panel { position: static; margin-bottom: 2rem; top: auto; }
+            
+            /* Hide desktop filters on mobile */
+            .filter-button { display: none; }
+            
+            /* Show mobile filter container */
+            #mobileFilterContainer {
+                display: block;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        /* Mobile Filter Styles */
+        .mobile-filter-scroll-container { 
+            overflow-x: auto; 
+            white-space: nowrap; 
+            padding: 0.5rem 0; 
+            margin-bottom: 1.5rem; 
+            -ms-overflow-style: none; 
+            scrollbar-width: none; 
+        }
+        .mobile-filter-scroll-container::-webkit-scrollbar { 
+            display: none; 
+        }
+        
+        .filter-button-mobile { 
+            display: inline-block; 
+            padding: 0.6rem 1rem; 
+            margin-right: 0.75rem; 
+            border-radius: 0.5rem; 
+            color: #B0B0B0; 
+            font-weight: 500; 
+            transition: all 0.2s ease; 
+            background-color: #1A1A1A; 
+            border: 1px solid #333333; 
+        }
+        .filter-button-mobile:hover {
+            border-color: #4A5568;
+            background-color: #1A1A1A;
+        }
+        .filter-button-mobile.active { 
+            background-color: rgba(0, 191, 255, 0.2); 
+            color: #FFFFFF; 
+            border-color: #00BFFF; 
+            font-weight: 600; 
+        }
+        .filter-button-mobile.active:hover {
+            background-color: rgba(0, 191, 255, 0.2);
         }
     </style>
 </head>
@@ -89,6 +136,12 @@
             <section class="posts-section">
                 <div class="search-container">
                     <input type="text" id="searchInputCommunity" placeholder="Search community posts..." class="search-input">
+                </div>
+                <!-- Add mobile filter container -->
+                <div id="mobileFilterContainer" class="lg:hidden">
+                    <div id="mobileCategoryFilters" class="mobile-filter-scroll-container">
+                        <!-- Mobile category buttons will be inserted here -->
+                    </div>
                 </div>
                 <div id="postsContainerCommunity" class="space-y-8"></div>
             </section>
@@ -274,6 +327,27 @@
                 });
             });
             document.getElementById('searchInputCommunity').addEventListener('input', filterAndDisplayPosts);
+
+            // Populate mobile filters
+            const categories = ["Crude Oil", "Natural Gas", "General Energy", "Policy & Markets", "Market Analysis", "Energy Demand"];
+            const mobileFiltersContainer = document.getElementById('mobileCategoryFilters');
+            if (mobileFiltersContainer) {
+                categories.forEach(category => {
+                    const button = document.createElement('button');
+                    button.className = 'filter-button-mobile';
+                    button.dataset.category = category;
+                    button.textContent = category;
+                    mobileFiltersContainer.appendChild(button);
+                });
+            }
+
+            // Add click handlers for mobile filters
+            document.querySelectorAll('.filter-button-mobile').forEach(button => {
+                button.addEventListener('click', () => {
+                    button.classList.toggle('active');
+                    filterAndDisplayPosts();
+                });
+            });
         });
     </script>
     
