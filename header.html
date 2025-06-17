@@ -1,7 +1,8 @@
 <!-- 
   Updated Header Fragment
-  - The core desktop navigation and mobile hamburger button remain the same.
-  - The HTML for the slide-out menu has been updated to include icons for each link and a BETA tag for the Chat link, matching the new design.
+  - No changes to the desktop layout.
+  - Replaced the old mobile menu button and dropdown with a new hamburger icon that will trigger a slide-out panel.
+  - Added the structure for the slide-out panel and an overlay. The content and visibility will be managed by headerManager.js.
 -->
 <nav class="fixed top-0 left-0 w-full z-[1000] bg-black/80 backdrop-blur-sm border-b border-gray-800">
   <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center h-16">
@@ -37,37 +38,40 @@
         </button>
     </div>
   </div>
+
+  <!-- Note: The old collapsible #mobile-menu div is removed. -->
 </nav>
 
-<!-- Updated Slide-Out Menu Structure with Icons -->
+<!-- New Slide-Out Menu Structure -->
 <div id="menu-overlay" class=""></div>
 <div id="slide-out-menu" class="">
-    <!-- Profile Section (now uses flexbox for alignment) -->
+    <!-- Close button -->
+    <div class="slide-out-header">
+        <button id="slide-out-close-btn" aria-label="Close menu">&times;</button>
+    </div>
+    
+    <!-- Profile Section (Visible when logged in) -->
     <div id="slide-out-profile-section" class="hidden">
         <img id="slide-out-profile-pic" src="" alt="User" />
         <div class="profile-info">
             <p id="slide-out-display-name"></p>
             <p id="slide-out-username"></p>
         </div>
-        <!-- Close button is now inside the profile header section -->
-        <button id="slide-out-close-btn" aria-label="Close menu">&times;</button>
     </div>
     
-    <!-- Navigation Links with Icons -->
+    <!-- Navigation Links -->
     <nav class="slide-out-nav">
-        <!-- Logged-in Links -->
-        <a href="profile.html" id="slide-out-profile-link" class="nav-link hidden"><i class="fas fa-user icon"></i>Profile</a>
-        <a href="linqplus.html" id="slide-out-premium-link" class="nav-link premium-link"><i class="fas fa-crown icon"></i>Premium</a>
-        <a href="linqai.html" class="nav-link"><i class="fas fa-comment-dots icon"></i>Chat <span class="beta-tag">BETA</span></a>
-        <a href="favorites.html" class="nav-link"><i class="fas fa-bookmark icon"></i>Bookmarks</a>
-        <hr/>
         <!-- General Links -->
-        <a href="index.html" class="nav-link"><i class="fas fa-newspaper icon"></i>News</a>
-        <a href="community.html" class="nav-link"><i class="fas fa-users icon"></i>Community</a>
-        <a href="earnings.html" class="nav-link"><i class="fas fa-chart-line icon"></i>Earnings</a>
+        <a href="index.html" class="nav-link">News</a>
+        <a href="community.html" class="nav-link">Community</a>
+        <a href="linqai.html" class="nav-link">Linq AI</a>
+        <a href="previous_earnings.html" class="nav-link">Earnings</a>
+        <a href="favorites.html" class="nav-link">Bookmarks</a>
         <hr/>
-        <!-- Auth Links -->
-        <a href="login.html" id="slide-out-login-link" class="nav-link"><i class="fas fa-sign-in-alt icon"></i>Login</a>
-        <a href="#" id="slide-out-logout-button" class="nav-link logout-button hidden"><i class="fas fa-sign-out-alt icon"></i>Logout</a>
+        <!-- Auth-dependent Links -->
+        <a href="linqplus.html" id="slide-out-premium-link" class="nav-link premium-link">Go Premium</a>
+        <a href="profile.html" id="slide-out-profile-link" class="nav-link hidden">Profile</a>
+        <a href="login.html" id="slide-out-login-link" class="nav-link">Login</a>
+        <a href="#" id="slide-out-logout-button" class="nav-link logout-button hidden">Logout</a>
     </nav>
 </div>
