@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linq - Energy Earnings</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
+    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@400;500;600;700&display=swap)" rel="stylesheet">
+    <link href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)" rel="stylesheet">
+    <script src="[https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js](https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js)"></script>
+    <script src="[https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js](https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js)"></script>
+    <script src="[https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js](https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js)"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -232,6 +232,7 @@
                 else if (diff < 0) revClass = 'negative';
             }
 
+            // MODIFICATION: Restructured the top part of the card for mobile responsiveness
             cardEl.innerHTML = `
                 <div class="card-content flex flex-col gap-y-4">
                     <div class="flex items-start justify-between">
@@ -239,10 +240,17 @@
                             <div class="company-logo-placeholder"><span>${initials}</span></div>
                             <div>
                                 <h3 class="company-info-name">${call.company}</h3>
-                                <p class="company-info-ticker">${call.ticker}</p>
+                                <div class="flex items-center gap-x-3 mt-1">
+                                    <p class="company-info-ticker">${call.ticker}</p>
+                                    <!-- MOBILE-ONLY BUTTON -->
+                                    <a href="${call.transcriptUrl}" target="_blank" rel="noopener noreferrer" class="action-btn transcript-btn sm:hidden py-1 px-2 text-xs">
+                                        <i class="fas fa-file-alt mr-1"></i>Transcript
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                        <div class="flex-shrink-0 ml-4">
+                        <!-- DESKTOP-ONLY BUTTON -->
+                        <div class="hidden sm:flex flex-shrink-0 ml-4">
                              <a href="${call.transcriptUrl}" target="_blank" rel="noopener noreferrer" class="action-btn transcript-btn">
                                 <i class="fas fa-file-alt"></i> View Transcript
                             </a>
