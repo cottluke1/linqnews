@@ -1,31 +1,14 @@
 // /js/headerManager.js
-// This script provides a centralized solution for managing the site's header,
-// including authentication state, mobile menu functionality, and active link highlighting.
+// This script provides a centralized solution for managing the site's modern header,
+// including auth state, a slide-out mobile menu, and active link highlighting.
 
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. DEFINE CONSTANTS AND GET ELEMENTS ---
     const headerPlaceholder = document.getElementById('header-placeholder');
     if (!headerPlaceholder) {
         console.error("Header placeholder element (#header-placeholder) not found. Header cannot be loaded.");
         return;
     }
 
-    // --- 2. INJECT REQUIRED CSS STYLES ---
-    const styles = `
-        .nav-link { font-size: 0.875rem; color: #D1D5DB; font-weight: 500; transition: color 0.2s ease-in-out; border-radius: 0.375rem; }
-        .nav-link:hover { color: #FFFFFF; }
-        .nav-link.active { color: #FFFFFF; font-weight: 600; }
-        .nav-link-button { font-size: 0.875rem; font-weight: 500; background-color: #00BFFF; color: white !important; padding: 0.5rem 1rem; border-radius: 0.375rem; transition: background-color 0.2s ease; }
-        .nav-link-button:hover { background-color: #00A9E0; }
-        .go-premium-btn { font-size: 0.875rem; font-weight: 600; background-color: #1F2937; color: #FFFFFF; padding: 0.5rem 1rem; border-radius: 9999px; border: 1px solid #4B5563; transition: all 0.2s ease; display: inline-block; text-decoration: none; }
-        .go-premium-btn:hover { background-color: #374151; border-color: #6B7280; transform: scale(1.05); }
-    `;
-    const styleSheet = document.createElement("style");
-    styleSheet.innerText = styles;
-    document.head.appendChild(styleSheet);
-
-
-    // --- 3. FETCH AND INJECT HEADER HTML ---
     fetch('header.html')
         .then(response => {
             if (!response.ok) throw new Error('Network response was not ok for header.html');
@@ -39,137 +22,139 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error fetching header:', error);
             headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
         });
+});
 
+function initializeHeaderFunctionality() {
+    if (typeof firebase === 'undefined') {
+        console.error('Firebase is not loaded. Header cannot function correctly.');
+        return;
+    }
 
-    // --- 4. INITIALIZE ALL HEADER FUNCTIONALITY ---
-    function initializeHeaderFunctionality() {
-        if (typeof firebase === 'undefined') {
-            console.error('Firebase is not loaded. Header cannot function correctly.');
-            return;
+    // --- DOM Elements ---
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const slideOutMenu = document.getElementById('slide-out-menu');
+    const closeButton = document.getElementById('slide-out-close-btn');
+    const menuOverlay = document.getElementById('menu-overlay');
+
+    // --- Firebase Services ---
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    let unsubscribeUserListener = null;
+
+    // --- Menu Logic ---
+    const openMenu = () => {
+        if (!slideOutMenu || !menuOverlay) return;
+        menuOverlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Prevent background scroll
+        requestAnimationFrame(() => {
+            slideOutMenu.classList.add('open');
+            menuOverlay.classList.add('active');
+        });
+    };
+
+    const closeMenu = () => {
+        if (!slideOutMenu || !menuOverlay) return;
+        slideOutMenu.classList.remove('open');
+        menuOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+        setTimeout(() => {
+            menuOverlay.classList.add('hidden');
+        }, 300); // Match transition duration
+    };
+
+    // --- Event Listeners ---
+    if (mobileMenuButton) mobileMenuButton.addEventListener('click', openMenu);
+    if (closeButton) closeButton.addEventListener('click', closeMenu);
+    if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && slideOutMenu?.classList.contains('open')) {
+            closeMenu();
         }
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        let unsubscribeUserListener = null;
+    });
 
-        // FIX: Immediately restore cached avatar from localStorage if available
-        const cachedPhoto = localStorage.getItem('navProfileURL');
-        if (cachedPhoto) {
-            const profileLinkDesktop = document.getElementById('profileLinkDesktop');
-            const authLinkDesktop = document.getElementById('authLinkDesktopLogin');
-            if (profileLinkDesktop && authLinkDesktop) {
-                profileLinkDesktop.innerHTML = `<img id="navProfilePic" src="${cachedPhoto}" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition">`;
-                profileLinkDesktop.classList.remove('hidden');
-                authLinkDesktop.classList.add('hidden');
-            }
-        }
-        
-        setupEventListeners(auth);
-        
-        auth.onAuthStateChanged(user => {
-            if (unsubscribeUserListener) {
-                unsubscribeUserListener();
-                unsubscribeUserListener = null;
-            }
-
-            if (user) {
-                unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
-                    const userData = doc.exists ? doc.data() : {};
-                    updateAuthUI(user, userData);
-                }, error => {
-                    console.error("Error listening to user document:", error);
-                    updateAuthUI(user, {});
-                });
-            } else {
-                updateAuthUI(null, null);
-            }
+    const logoutButton = document.getElementById('logout-button-slideout');
+    if(logoutButton) {
+        logoutButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            auth.signOut().catch(error => console.error("Sign out error", error));
         });
     }
 
-    // --- 5. SETUP STATIC EVENT LISTENERS ---
-    function setupEventListeners(auth) {
-        const currentPath = window.location.pathname.split("/").pop().split("?")[0] || "index.html";
-        headerPlaceholder.addEventListener('click', (event) => {
-            const target = event.target.closest('a, button');
-            if (!target) return;
-            const targetHrefRaw = target.getAttribute('href');
-            if (target.matches('.nav-link') && targetHrefRaw) {
-                const targetHref = targetHrefRaw.split("?")[0];
-                if (targetHref === currentPath) event.preventDefault();
-            }
-            if (target.id === 'mobile-menu-button') {
-                document.getElementById('mobile-menu')?.classList.toggle('hidden');
-            }
-            if (target.id === 'logoutButtonMobile') {
-                event.preventDefault();
-                // FIX: Clear localStorage on logout
-                localStorage.removeItem('navProfileURL');
-                auth.signOut();
-            }
-        });
-    }
-
-    // --- 6. UPDATE UI BASED ON AUTH STATE ---
-    function updateAuthUI(user, userData) {
-        const authLinkDesktop = document.getElementById('authLinkDesktopLogin');
-        const profileLinkDesktop = document.getElementById('profileLinkDesktop');
-        const authLinkMobile = document.getElementById('authLinkMobile');
-        const profileLinkMobile = document.getElementById('profileLinkMobile');
-        const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-
-        if (!authLinkDesktop || !profileLinkDesktop) return;
-
+    // --- Auth State Management ---
+    auth.onAuthStateChanged(user => {
+        if (unsubscribeUserListener) unsubscribeUserListener();
+        
         if (user) {
-            const name = (userData?.displayName || user.displayName || user.email || "U");
-            const initials = name.charAt(0).toUpperCase();
-            const photoSrc = userData?.photoURL || user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
-            
-            // FIX: Save the definitive image source to localStorage
-            localStorage.setItem('navProfileURL', photoSrc);
-
-            // This logic will still run to ensure the image is the most up-to-date version
-            const image = new Image();
-            image.src = photoSrc;
-
-            const createImage = (imgSrc) => {
-                profileLinkDesktop.innerHTML = ''; 
-                const newImg = document.createElement('img');
-                newImg.id = 'navProfilePic';
-                newImg.src = imgSrc;
-                newImg.alt = user.displayName || 'User Avatar';
-                newImg.className = 'rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition';
-                profileLinkDesktop.appendChild(newImg);
-                profileLinkDesktop.classList.remove('hidden');
-                authLinkDesktop.classList.add('hidden');
-            };
-            image.onload = () => createImage(image.src);
-            image.onerror = () => createImage(`https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`);
-            
-            authLinkMobile.classList.add('hidden');
-            profileLinkMobile.classList.remove('hidden');
-            logoutButtonMobile.classList.remove('hidden');
+            unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
+                const userData = doc.exists ? doc.data() : {};
+                updateUIForUser(user, userData);
+            }, error => {
+                console.error("Error listening to user document:", error);
+                updateUIForUser(user, {}); // Fallback with auth data
+            });
         } else {
-            // User is logged out
-            profileLinkDesktop.classList.add('hidden');
-            authLinkDesktop.classList.remove('hidden');
-            profileLinkDesktop.innerHTML = '<img id="navProfilePic" style="display:none;" src="" alt="User" class="rounded-full w-9 h-9 object-cover border-2 border-gray-600 hover:border-cyan-400 transition">';
-            authLinkMobile.classList.remove('hidden');
-            profileLinkMobile.classList.add('hidden');
-            logoutButtonMobile.classList.add('hidden');
+            updateUIForGuest();
         }
-        setActiveNavLink();
+    });
+}
+
+function updateUIForUser(user, userData) {
+    // --- Desktop Header ---
+    const authLinkDesktop = document.getElementById('authLinkDesktopLogin');
+    const profileLinkDesktop = document.getElementById('profileLinkDesktop');
+    const navProfilePic = document.getElementById('navProfilePic');
+
+    if (authLinkDesktop) authLinkDesktop.classList.add('hidden');
+    if (profileLinkDesktop) profileLinkDesktop.classList.remove('hidden');
+    
+    const photoUrl = userData.photoURL || user.photoURL;
+    const initials = (userData.displayName || user.displayName || user.email || 'U').charAt(0).toUpperCase();
+
+    if(navProfilePic) {
+        navProfilePic.src = photoUrl || `https://placehold.co/40x40/374151/FFFFFF?text=${initials}`;
+        navProfilePic.style.display = 'block';
     }
     
-    // --- 7. UTILITY FUNCTION ---
-    function setActiveNavLink() {
-        const currentPath = window.location.pathname.split("/").pop().split("?")[0] || "index.html";
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
+    // --- Slide-out Menu ---
+    document.getElementById('slide-out-user-info')?.classList.remove('hidden');
+    document.getElementById('login-button-slideout')?.classList.add('hidden');
+    document.getElementById('logout-button-slideout')?.classList.remove('hidden');
+    document.getElementById('slide-out-favorites')?.classList.remove('hidden');
+
+    document.getElementById('slide-out-avatar').src = photoUrl || `https://placehold.co/40x40/374151/FFFFFF?text=${initials}`;
+    document.getElementById('slide-out-name').textContent = userData.displayName || user.displayName || 'User';
+    document.getElementById('slide-out-email').textContent = userData.email || user.email;
+
+    setActiveNavLink();
+}
+
+function updateUIForGuest() {
+    // --- Desktop Header ---
+    document.getElementById('authLinkDesktopLogin')?.classList.remove('hidden');
+    document.getElementById('profileLinkDesktop')?.classList.add('hidden');
+    const navProfilePic = document.getElementById('navProfilePic');
+    if(navProfilePic) navProfilePic.style.display = 'none';
+
+    // --- Slide-out Menu ---
+    document.getElementById('slide-out-user-info')?.classList.add('hidden');
+    document.getElementById('login-button-slideout')?.classList.remove('hidden');
+    document.getElementById('logout-button-slideout')?.classList.add('hidden');
+    document.getElementById('slide-out-favorites')?.classList.add('hidden');
+
+    setActiveNavLink();
+}
+
+function setActiveNavLink() {
+    // Use a more specific selector to avoid matching non-nav links
+    const navLinks = document.querySelectorAll('div.hidden.md\:flex a.nav-link, #slide-out-menu a.slide-out-nav-link');
+    const currentPath = window.location.pathname.split("/").pop() || "index.html";
+
+    navLinks.forEach(link => {
+        const linkHref = (link.getAttribute('href') || "").split("?")[0];
+        if (linkHref === currentPath) {
+            link.classList.add('active');
+        } else {
             link.classList.remove('active');
-            const linkHrefRaw = link.getAttribute('href');
-            if (linkHrefRaw) {
-                const linkHref = linkHrefRaw.split("?")[0];
-                if (linkHref === currentPath) link.classList.add('active');
-            }
-        });
-    }
-});
+        }
+    });
+}
