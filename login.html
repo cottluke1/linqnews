@@ -219,17 +219,6 @@
                     });
             });
             
-            const handleGoogleLogin = () => {
-                const provider = new firebase.auth.GoogleAuthProvider();
-                auth.signInWithPopup(provider)
-                    .then(async (result) => {
-                        await updateUserDocument(result.user);
-                    })
-                    .catch(error => {
-                        errorMessage.style.display = "block";
-                        errorMessage.textContent = "Google sign-in failed. Please try again.";
-                    });
-            };
 
             document.getElementById('google-login-button').addEventListener('click', handleGoogleLogin);
         });
