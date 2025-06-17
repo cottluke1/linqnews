@@ -3,15 +3,6 @@
 // including authentication state, mobile menu functionality, and active link highlighting.
 
 document.addEventListener('DOMContentLoaded', () => {
-    // --- ADD THIS CODE BLOCK ---
-    const faviconLink = document.createElement('link');
-    faviconLink.rel = 'icon';
-    faviconLink.type = 'image/png';
-    faviconLink.href = 'favicon.png'; // Make sure favicon.png is in the root folder
-    document.head.appendChild(faviconLink);
-    // --- END OF CODE BLOCK TO ADD ---
-
-
     // --- 1. DEFINE CONSTANTS AND GET ELEMENTS ---
     const headerPlaceholder = document.getElementById('header-placeholder');
     if (!headerPlaceholder) {
@@ -123,11 +114,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const logoutButtonMobile = document.getElementById('logoutButtonMobile');
         const bottomProfileLinkMobile = document.getElementById('bottomProfileLinkMobile');
         const slideoutUserInfo = document.getElementById('slideout-user-info');
-        const slideoutProfilePic = document.getElementById('slideoutProfilePic');
-        const slideoutDisplayName = document.getElementById('slideoutDisplayName');
-        const slideoutEmail = document.getElementById('slideoutEmail');
 
-        if (!authLinkDesktop || !profileLinkDesktop || !navProfilePic) return;
+        if (!authLinkDesktop || !profileLinkDesktop || !navProfilePic || !authLinkMobile || !logoutButtonMobile || !bottomProfileLinkMobile || !slideoutUserInfo) {
+            console.error("One or more header UI elements could not be found.");
+            return;
+        }
 
         if (user) {
             // -- LOGGED IN STATE --
@@ -145,10 +136,11 @@ document.addEventListener('DOMContentLoaded', () => {
             slideoutDisplayName.textContent = user.displayName || 'User';
             slideoutEmail.textContent = user.email ? `@${user.email.split('@')[0]}` : '';
             
+            // **FIXED:** Show user-specific links and hide the login link
             slideoutUserInfo.classList.remove('hidden');
-            authLinkMobile.classList.add('hidden');
-            logoutButtonMobile.classList.remove('hidden');
             bottomProfileLinkMobile.classList.remove('hidden');
+            logoutButtonMobile.classList.remove('hidden');
+            authLinkMobile.classList.add('hidden');
 
         } else {
             // -- LOGGED OUT STATE --
@@ -157,11 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
             authLinkDesktop.classList.remove('hidden');
             navProfilePic.style.display = 'none';
 
-            // Mobile UI
+            // **FIXED:** Show the login link and hide user-specific links
             slideoutUserInfo.classList.add('hidden');
-            authLinkMobile.classList.remove('hidden');
-            logoutButtonMobile.classList.add('hidden');
             bottomProfileLinkMobile.classList.add('hidden');
+            logoutButtonMobile.classList.add('hidden');
+            authLinkMobile.classList.remove('hidden');
         }
         setActiveNavLink();
     }
