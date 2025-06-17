@@ -15,8 +15,8 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #000000;
-            background-image: radial-gradient(ellipse 40% 20% at 50% -10%, rgba(255, 255, 255, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
+            background-color: #0B0C10;
+            background-image: radial-gradient(at 50% 0%, rgba(0, 191, 255, 0.1) 0%, rgba(8, 0, 20, 0) 50%);
             color: #E0E0E0;
             display: flex;
             flex-direction: column;
@@ -34,55 +34,8 @@
         .calendar-page-title { font-size: 2.75rem; font-weight: 700; color: #FFFFFF; }
         .calendar-page-title .accent-text { color: #00BFFF; }
         .calendar-page-subtitle { font-size: 1.125rem; color: #A0A0A0; margin-top: 0.5rem; font-weight: 400; }
-        .earnings-card { 
-            background-color: #121212; 
-            border: 1px solid #282828; 
-            border-radius: 0.75rem; 
-            padding: 1.5rem; 
-            margin-bottom: 1.5rem; 
-            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; 
-            position: relative; 
-        }
-        .earnings-card:not(.locked):hover { 
-            transform: translateY(-4px); 
-            box-shadow: 0 8px 25px -8px rgba(0, 191, 255, 0.25); 
-            border-color: #00BFFF; 
-        }
-        .company-logo-placeholder { 
-            width: 48px; 
-            height: 48px; 
-            background-color: #282828; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-weight: 600; 
-            font-size: 1.25rem; 
-            color: #00BFFF; 
-            border: 2px solid #333333; 
-            flex-shrink: 0; 
-        }
-        .company-info-name { font-size: 1.25rem; font-weight: 600; color: #FFFFFF; }
-        .company-info-ticker { font-size: 0.9rem; color: #A0A0A0; }
-        .earnings-estimates-grid { 
-            border-top: 1px solid #282828; 
-            margin-top: 1.25rem; 
-            padding-top: 1.25rem; 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 1rem; 
-            text-align: left; 
-        }
-        .info-block h4 { 
-            font-size: 0.8rem; 
-            font-weight: 500; 
-            color: #888; 
-            margin-bottom: 0.25rem; 
-            text-transform: uppercase; 
-        }
-        .info-block p { font-size: 1.1rem; font-weight: 600; color: #eee; }
-
-        /* Styles for locked content */
+        .earnings-card { background-color: #121212; border: 1px solid #282828; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1.5rem; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; position: relative; }
+        .earnings-card:not(.locked):hover { transform: translateY(-4px); box-shadow: 0 8px 25px -8px rgba(0, 191, 255, 0.25); border-color: #00BFFF; }
         .earnings-card.locked > .card-content { filter: blur(4px); pointer-events: none; }
         .locked-overlay { position: absolute; inset: 0; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.7); backdrop-filter: blur(2px); border-radius: 0.75rem; cursor: pointer; }
         .earnings-card.locked .locked-overlay { display: flex; }
@@ -91,7 +44,15 @@
         .locked-overlay-content p { color: #b0b0b0; margin-top: 0.5rem; margin-bottom: 1rem; }
         .locked-overlay-content .upgrade-btn { background: #00BFFF; color: white; padding: 0.5rem 1.5rem; border-radius: 99px; text-decoration: none; font-weight: 500; transition: background-color 0.2s; }
         .locked-overlay-content .upgrade-btn:hover { background: #00A9E0; }
-
+        .company-logo-placeholder { width: 48px; height: 48px; background-color: #282828; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1.25rem; color: #00BFFF; border: 2px solid #333333; }
+        .company-info h3 { font-size: 1.25rem; font-weight: 600; color: #FFFFFF; }
+        .company-info .ticker { font-size: 0.9rem; color: #A0A0A0; }
+        .detail-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; color: #B0B0B0; }
+        .detail-item i { color: #00BFFF; width: 16px; text-align: center; }
+        .detail-label { font-weight: 500; color: #E0E0E0; margin-right: 0.25rem; }
+        .action-btn { background-color: #1A1A1A; color: #00BFFF; border: 1px solid #00BFFF; padding: 0.5rem 1rem; border-radius: 0.375rem; font-size: 0.8rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.5rem; transition: background-color 0.2s ease, color 0.2s ease; cursor: pointer; }
+        .action-btn:hover { background-color: #00BFFF; color: #FFFFFF; }
+        .footer { background-color: #080808; color: #A0A0A0; padding: 2.5rem 1rem; border-top: 1px solid #1A1A1A; text-align: center; font-size: 0.875rem; margin-top: auto; }
     </style>
 </head>
 <body class="antialiased">
@@ -101,7 +62,7 @@
         <div class="text-center mb-10 mt-10">
             <h1 class="calendar-page-title">Energy Sector <span class="accent-text">Earnings</span></h1>
             <p class="calendar-page-subtitle"></p>
-            <a href="previous_earnings.html" class="mt-6 inline-block text-white font-bold py-3 px-6 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-cyan-500/50 transform hover:-translate-y-0.5">
+            <a href="previous_earnings.html" class="inline-block text-white font-bold py-3 px-6 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-cyan-500/50 transform hover:-translate-y-0.5">
                 View Past Earnings
             </a>
         </div>
@@ -110,6 +71,10 @@
              <!-- Earnings cards will be dynamically inserted here -->
         </div>
     </main>
+
+    <footer class="footer">
+        <p>&copy; <span id="current-year"></span> Linq Energy Intelligence.</p>
+    </footer>
 
     <script>
         let isSubscribed = false;
@@ -176,6 +141,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             auth.onAuthStateChanged(user => {
                 if (unsubscribeUserListener) unsubscribeUserListener();
+
                 if (user) {
                     unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
                         isSubscribed = doc.exists && doc.data().isSubscribed === true;
@@ -190,6 +156,7 @@
                     renderEarnings();
                 }
             });
+            
             document.getElementById('current-year').textContent = new Date().getFullYear();
         });
 
@@ -210,15 +177,14 @@
                 return acc;
             }, {});
 
-            let cardIndex = 0;
             Object.keys(groupedByDate).forEach(dateStr => {
                 const titleEl = document.createElement('h2');
                 titleEl.className = 'text-xl font-semibold text-white my-6 pb-2 border-b border-gray-700';
                 titleEl.textContent = new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 container.appendChild(titleEl);
+
                 groupedByDate[dateStr].forEach(call => {
-                    container.appendChild(createEarningsCard(call, cardIndex));
-                    cardIndex++;
+                    container.appendChild(createEarningsCard(call));
                 });
             });
 
@@ -228,63 +194,54 @@
                 tbdTitleEl.textContent = 'Awaiting Announcement';
                 container.appendChild(tbdTitleEl);
                 tbdCalls.forEach(call => {
-                    container.appendChild(createEarningsCard(call, cardIndex));
-                    cardIndex++;
+                     container.appendChild(createEarningsCard(call));
                 });
             }
         }
 
-        function createEarningsCard(call, cardIndex) {
+        function createEarningsCard(call) {
             const cardEl = document.createElement('div');
-            cardEl.className = 'earnings-card upcoming-card';
-            
-            if (!isSubscribed && cardIndex > 0) {
-                cardEl.classList.add('locked');
-            }
+            cardEl.className = 'earnings-card';
             
             const initials = call.ticker || call.company.substring(0, 3).toUpperCase();
-            const dateDisplay = call.date === 'TBD' ? 'TBD' : new Date(call.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+            const dateDisplay = call.date === 'TBD' ? 'TBD' : new Date(call.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
             const timeDisplay = call.time === 'TBD' ? 'TBD' : call.time;
             
-            const formatRevenue = (value) => (typeof value === 'number') ? `$${value.toFixed(2)}B` : 'N/A';
             const formatCurrency = (value) => (typeof value === 'number') ? `$${value.toFixed(2)}` : 'N/A';
+            const formatRevenue = (value) => (typeof value === 'number') ? `$${value.toLocaleString()}B` : 'N/A';
 
             cardEl.innerHTML = `
-                <div class="card-content flex flex-col gap-y-4">
-                    <div class="flex items-start justify-between">
-                        <div class="flex items-center gap-4">
-                            <div class="company-logo-placeholder"><span>${initials}</span></div>
-                            <div>
-                                <h3 class="company-info-name">${call.company}</h3>
-                                <p class="company-info-ticker">${call.ticker}</p>
-                            </div>
-                        </div>
-                        <div class="text-right flex-shrink-0 ml-4">
-                             <p class="text-sm text-gray-400 font-medium">${call.period}</p>
-                             <p class="text-sm text-gray-500">${dateDisplay} at ${timeDisplay}</p>
+                <div class="card-content flex flex-col gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="company-logo-placeholder"><span>${initials}</span></div>
+                        <div class="company-info">
+                            <h3>${call.company}</h3>
+                            <p class="ticker">${call.ticker}</p>
                         </div>
                     </div>
-                    
-                    <div class="earnings-estimates-grid">
-                        <div class="info-block">
-                            <h4>Revenue Est.</h4>
-                            <p>${formatRevenue(call.revenueEstimate)}</p>
-                        </div>
-                        <div class="info-block">
-                            <h4>EPS (Normalized)</h4>
+                    <div class="earnings-details flex flex-col gap-2">
+                        <div class="detail-item"><i class="fas fa-calendar-alt"></i><span class="detail-label">Date:</span>${dateDisplay}</div>
+                        <div class="detail-item"><i class="fas fa-clock"></i><span class="detail-label">Time:</span>${timeDisplay}</div>
+                        <div class="detail-item"><i class="fas fa-chart-line"></i><span class="detail-label">Period:</span>${call.period}</div>
+                    </div>
+                    <div class="earnings-details-inline">
+                        <div class="info-block-inline">
+                            <h4>EPS Normalized Estimate</h4>
                             <p>${formatCurrency(call.epsNormalizedEstimate)}</p>
                         </div>
-                        <div class="info-block">
-                            <h4>EPS (GAAP)</h4>
+                        <div class="info-block-inline">
+                            <h4>EPS GAAP Estimate</h4>
                             <p>${formatCurrency(call.epsGaapEstimate)}</p>
                         </div>
+                        <div class="info-block-inline">
+                            <h4>Revenue Estimate</h4>
+                            <p>${formatRevenue(call.revenueEstimate)}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="locked-overlay" onclick="location.href='linqplus.html'">
-                    <div class="locked-overlay-content">
-                        <h4>Premium Feature</h4>
-                        <p>Upgrade to view full earnings details and calendar.</p>
-                        <a href="linqplus.html" class="upgrade-btn">Go Premium</a>
+                    <div class="card-actions flex flex-wrap gap-3 mt-2">
+                        <button class="action-btn add-to-calendar-btn" data-company="${call.company}" data-ticker="${call.ticker}" data-date="${call.date}" data-time="${call.time}" data-timezone="ET" data-period="${call.period}">
+                            <i class="fas fa-calendar-plus"></i> Add to Calendar
+                        </button>
                     </div>
                 </div>`;
             return cardEl;
