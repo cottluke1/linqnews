@@ -1,16 +1,13 @@
 // /js/headerManager.js
-// This script provides a centralized solution for managing the site's header,
-// including authentication state, mobile menu functionality, and active link highlighting.
+// Manages authentication state and dynamic header behavior
 
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 1. DEFINE CONSTANTS AND GET ELEMENTS ---
     const headerPlaceholder = document.getElementById('header-placeholder');
     if (!headerPlaceholder) {
         console.error("Header placeholder element (#header-placeholder) not found. Header cannot be loaded.");
         return;
     }
 
-    // --- 2. INJECT REQUIRED CSS STYLES ---
     const styles = `
         body.overflow-hidden { overflow: hidden; }
         .nav-link { font-size: 0.875rem; color: #D1D5DB; font-weight: 500; transition: color 0.2s ease-in-out; border-radius: 0.375rem; }
@@ -28,8 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     styleSheet.innerText = styles;
     document.head.appendChild(styleSheet);
 
-
-    // --- 3. FETCH AND INJECT HEADER HTML ---
     fetch('header.html')
         .then(response => {
             if (!response.ok) throw new Error('Network response was not ok for header.html');
@@ -44,23 +39,22 @@ document.addEventListener('DOMContentLoaded', () => {
             headerPlaceholder.innerHTML = "<p class='text-red-500 text-center py-3'>Error loading navigation.</p>";
         });
 
-
-    // --- 4. INITIALIZE ALL HEADER FUNCTIONALITY ---
     function initializeHeaderFunctionality() {
         if (typeof firebase === 'undefined') {
             console.error('Firebase is not loaded. Header cannot function correctly.');
             return;
         }
         const auth = firebase.auth();
-        
+
         setupEventListeners(auth);
-        
-        auth.onAuthStateChanged(user => {
-            updateAuthUI(user);
-        });
+        auth.onAuthStateChanged(user => updateAuthUI(user));
+
+        // Backup retry for slower Firebase loads
+        setTimeout(() => {
+            updateAuthUI(auth.currentUser);
+        }, 1000);
     }
 
-    // --- 5. SETUP EVENT LISTENERS (Mobile Menu & Links) ---
     function setupEventListeners(auth) {
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenuCloseButton = document.getElementById('mobile-menu-close-button');
@@ -87,13 +81,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        if(mobileMenuButton) mobileMenuButton.addEventListener('click', openMenu);
-        if(mobileMenuCloseButton) mobileMenuCloseButton.addEventListener('click', closeMenu);
-        if(menuOverlay) menuOverlay.addEventListener('click', closeMenu);
+        if (mobileMenuButton) mobileMenuButton.addEventListener('click', openMenu);
+        if (mobileMenuCloseButton) mobileMenuCloseButton.addEventListener('click', closeMenu);
+        if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
 
-        // Logout listener
         const logoutButtonMobile = document.getElementById('logoutButtonMobile');
-        if(logoutButtonMobile) {
+        if (logoutButtonMobile) {
             logoutButtonMobile.addEventListener('click', (event) => {
                 event.preventDefault();
                 auth.signOut();
@@ -102,9 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- 6. UPDATE UI BASED ON AUTH STATE ---
     function updateAuthUI(user) {
-        // --- Update Desktop UI ---
         const authLinkDesktop = document.getElementById('authLinkDesktopLogin');
         const profileLinkDesktop = document.getElementById('profileLinkDesktop');
         const navProfilePic = document.getElementById('navProfilePic');
@@ -124,51 +115,46 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // --- Update Mobile UI ---
         const authLinkMobile = document.getElementById('authLinkMobile');
         const logoutButtonMobile = document.getElementById('logoutButtonMobile');
         const bottomProfileLinkMobile = document.getElementById('bottomProfileLinkMobile');
         const slideoutUserInfo = document.getElementById('slideout-user-info');
 
         if (user) {
-            // Logged in state for mobile
             if (authLinkMobile) authLinkMobile.classList.add('hidden');
             if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
             if (bottomProfileLinkMobile) bottomProfileLinkMobile.classList.remove('hidden');
             if (slideoutUserInfo) slideoutUserInfo.classList.remove('hidden');
+
             const slideoutProfilePic = document.getElementById('slideoutProfilePic');
             const slideoutDisplayName = document.getElementById('slideoutDisplayName');
             const slideoutEmail = document.getElementById('slideoutEmail');
             const initials = (user.displayName || user.email || "U").charAt(0).toUpperCase();
             const photoSrc = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+
             if (slideoutProfilePic) slideoutProfilePic.src = photoSrc;
             if (slideoutDisplayName) slideoutDisplayName.textContent = user.displayName || 'User';
             if (slideoutEmail) slideoutEmail.textContent = user.email ? `@${user.email.split('@')[0]}` : '';
         } else {
-            // Logged out state for mobile
             if (authLinkMobile) authLinkMobile.classList.remove('hidden');
             if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
             if (bottomProfileLinkMobile) bottomProfileLinkMobile.classList.add('hidden');
             if (slideoutUserInfo) slideoutUserInfo.classList.add('hidden');
         }
+
         setActiveNavLink();
     }
-    
-    // --- 7. UTILITY FUNCTION to highlight active nav link ---
+
     function setActiveNavLink() {
         const currentPath = window.location.pathname.split("/").pop() || "index.html";
-        // Combine selectors for desktop and mobile links
         const navLinks = document.querySelectorAll('.nav-link, .slideout-link');
-        
+
         navLinks.forEach(link => {
             link.classList.remove('active');
             const linkHrefRaw = link.getAttribute('href');
             if (linkHrefRaw) {
-                // Handle cases like "earnings.html" vs "previous_earnings.html"
                 const linkHref = linkHrefRaw.split("?")[0];
-                if (linkHref === currentPath) {
-                    link.classList.add('active');
-                } else if (currentPath === 'previous_earnings.html' && linkHref === 'earnings.html') {
+                if (linkHref === currentPath || (currentPath === 'previous_earnings.html' && linkHref === 'earnings.html')) {
                     link.classList.add('active');
                 }
             }
