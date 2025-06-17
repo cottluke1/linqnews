@@ -113,6 +113,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 6. UPDATE UI BASED ON AUTH STATE ---
     function updateAuthUI(user) {
+        const slideoutProfilePic = document.getElementById('slideoutProfilePic');
+        const slideoutDisplayName = document.getElementById('slideoutDisplayName');
+        const slideoutEmail = document.getElementById('slideoutEmail');
+        
         // Desktop Elements
         const authLinkDesktop = document.getElementById('authLinkDesktopLogin');
         const profileLinkDesktop = document.getElementById('profileLinkDesktop');
