@@ -30,22 +30,19 @@ function initializeHeaderFunctionality() {
         return;
     }
 
-    // --- DOM Elements ---
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const slideOutMenu = document.getElementById('slide-out-menu');
     const closeButton = document.getElementById('slide-out-close-btn');
     const menuOverlay = document.getElementById('menu-overlay');
 
-    // --- Firebase Services ---
     const auth = firebase.auth();
     const db = firebase.firestore();
     let unsubscribeUserListener = null;
 
-    // --- Menu Logic ---
     const openMenu = () => {
         if (!slideOutMenu || !menuOverlay) return;
         menuOverlay.classList.remove('hidden');
-        document.body.style.overflow = 'hidden'; // Prevent background scroll
+        document.body.style.overflow = 'hidden';
         requestAnimationFrame(() => {
             slideOutMenu.classList.add('open');
             menuOverlay.classList.add('active');
@@ -59,10 +56,9 @@ function initializeHeaderFunctionality() {
         document.body.style.overflow = '';
         setTimeout(() => {
             menuOverlay.classList.add('hidden');
-        }, 300); // Match transition duration
+        }, 300);
     };
 
-    // --- Event Listeners ---
     if (mobileMenuButton) mobileMenuButton.addEventListener('click', openMenu);
     if (closeButton) closeButton.addEventListener('click', closeMenu);
     if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
@@ -80,7 +76,6 @@ function initializeHeaderFunctionality() {
         });
     }
 
-    // --- Auth State Management ---
     auth.onAuthStateChanged(user => {
         if (unsubscribeUserListener) unsubscribeUserListener();
         
@@ -90,7 +85,7 @@ function initializeHeaderFunctionality() {
                 updateUIForUser(user, userData);
             }, error => {
                 console.error("Error listening to user document:", error);
-                updateUIForUser(user, {}); // Fallback with auth data
+                updateUIForUser(user, {});
             });
         } else {
             updateUIForGuest();
@@ -116,15 +111,11 @@ function updateUIForUser(user, userData) {
     }
     
     // --- Slide-out Menu ---
-    document.getElementById('slide-out-user-info')?.classList.remove('hidden');
+    document.getElementById('profile-button-slideout')?.classList.remove('hidden');
     document.getElementById('login-button-slideout')?.classList.add('hidden');
     document.getElementById('logout-button-slideout')?.classList.remove('hidden');
     document.getElementById('slide-out-favorites')?.classList.remove('hidden');
-
-    document.getElementById('slide-out-avatar').src = photoUrl || `https://placehold.co/40x40/374151/FFFFFF?text=${initials}`;
-    document.getElementById('slide-out-name').textContent = userData.displayName || user.displayName || 'User';
-    document.getElementById('slide-out-email').textContent = userData.email || user.email;
-
+    
     setActiveNavLink();
 }
 
@@ -136,7 +127,7 @@ function updateUIForGuest() {
     if(navProfilePic) navProfilePic.style.display = 'none';
 
     // --- Slide-out Menu ---
-    document.getElementById('slide-out-user-info')?.classList.add('hidden');
+    document.getElementById('profile-button-slideout')?.classList.add('hidden');
     document.getElementById('login-button-slideout')?.classList.remove('hidden');
     document.getElementById('logout-button-slideout')?.classList.add('hidden');
     document.getElementById('slide-out-favorites')?.classList.add('hidden');
@@ -145,7 +136,6 @@ function updateUIForGuest() {
 }
 
 function setActiveNavLink() {
-    // Use a more specific selector to avoid matching non-nav links
     const navLinks = document.querySelectorAll('div.hidden.md\\:flex a.nav-link, #slide-out-menu a.slide-out-nav-link');
     const currentPath = window.location.pathname.split("/").pop() || "index.html";
 
