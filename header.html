@@ -1,11 +1,37 @@
 <!--
-  MODERNIZED HEADER FRAGMENT
-  - Desktop view is unchanged.
-  - Mobile view now uses a hamburger icon to trigger a slide-out navigation panel.
-  - All styling and structure for the new slide-out menu is contained here.
+  MODERNIZED HEADER FRAGMENT (FIXED)
+  - Contains all necessary styles for both desktop and the new slide-out mobile menu.
+  - The structure remains the same, supporting the slide-out functionality.
 -->
 <style>
-    /* Styling for the new slide-out menu */
+    /* --- Base Desktop Nav Styles (Restored) --- */
+    .nav-link { 
+        font-size: 0.875rem; 
+        color: #D1D5DB; 
+        font-weight: 500; 
+        transition: color 0.2s ease-in-out; 
+        border-radius: 0.375rem; 
+    }
+    .nav-link:hover { color: #FFFFFF; }
+    .nav-link.active { color: #FFFFFF; font-weight: 600; }
+    .go-premium-btn { 
+        font-size: 0.875rem; 
+        font-weight: 600; 
+        background-color: #1F2937; 
+        color: #FFFFFF; padding: 0.5rem 1rem; 
+        border-radius: 9999px; 
+        border: 1px solid #4B5563; 
+        transition: all 0.2s ease; 
+        display: inline-block; 
+        text-decoration: none; 
+    }
+    .go-premium-btn:hover { 
+        background-color: #374151; 
+        border-color: #6B7280; 
+        transform: scale(1.05); 
+    }
+
+    /* --- New Slide-Out Menu Styles --- */
     #slide-out-menu {
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
