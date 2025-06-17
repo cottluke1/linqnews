@@ -130,32 +130,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const bottomProfileLinkMobile = document.getElementById('bottomProfileLinkMobile');
         const slideoutUserInfo = document.getElementById('slideout-user-info');
         
-        if (user) {
-            // LOGGED IN STATE FOR MOBILE
-            if (authLinkMobile) authLinkMobile.classList.add('hidden');
-            if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
-            if (bottomProfileLinkMobile) bottomProfileLinkMobile.classList.remove('hidden');
-            if (slideoutUserInfo) {
-                slideoutUserInfo.classList.remove('hidden');
-                
-                // Elements inside slideoutUserInfo
-                const slideoutProfilePic = document.getElementById('slideoutProfilePic');
-                const slideoutDisplayName = document.getElementById('slideoutDisplayName');
-                const slideoutEmail = document.getElementById('slideoutEmail');
-                
-                const initials = (user.displayName || user.email || "U").charAt(0).toUpperCase();
-                const photoSrc = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+        const isLoggedIn = !!user; // True if user object exists, false otherwise
 
-                if (slideoutProfilePic) slideoutProfilePic.src = photoSrc;
-                if (slideoutDisplayName) slideoutDisplayName.textContent = user.displayName || 'User';
-                if (slideoutEmail) slideoutEmail.textContent = user.email ? `@${user.email.split('@')[0]}` : '';
-            }
-        } else {
-            // LOGGED OUT STATE FOR MOBILE
-            if (authLinkMobile) authLinkMobile.classList.remove('hidden');
-            if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
-            if (bottomProfileLinkMobile) bottomProfileLinkMobile.classList.add('hidden');
-            if (slideoutUserInfo) slideoutUserInfo.classList.add('hidden');
+        // Toggle visibility of all auth-dependent elements
+        if (authLinkMobile) authLinkMobile.classList.toggle('hidden', isLoggedIn);
+        if (logoutButtonMobile) logoutButtonMobile.classList.toggle('hidden', !isLoggedIn);
+        if (bottomProfileLinkMobile) bottomProfileLinkMobile.classList.toggle('hidden', !isLoggedIn);
+        if (slideoutUserInfo) slideoutUserInfo.classList.toggle('hidden', !isLoggedIn);
+        
+        // If logged in, update the user-specific details
+        if (isLoggedIn && slideoutUserInfo) {
+            const slideoutProfilePic = document.getElementById('slideoutProfilePic');
+            const slideoutDisplayName = document.getElementById('slideoutDisplayName');
+            const slideoutEmail = document.getElementById('slideoutEmail');
+            
+            const initials = (user.displayName || user.email || "U").charAt(0).toUpperCase();
+            const photoSrc = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${initials}`;
+
+            if (slideoutProfilePic) slideoutProfilePic.src = photoSrc;
+            if (slideoutDisplayName) slideoutDisplayName.textContent = user.displayName || 'User';
+            if (slideoutEmail) slideoutEmail.textContent = user.email ? `@${user.email.split('@')[0]}` : '';
         }
 
         setActiveNavLink();
