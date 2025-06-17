@@ -129,10 +129,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const logoutButtonMobile = document.getElementById('logoutButtonMobile');
         const bottomProfileLinkMobile = document.getElementById('bottomProfileLinkMobile');
         const slideoutUserInfo = document.getElementById('slideout-user-info');
-
-        if (authLinkMobile && logoutButtonMobile && bottomProfileLinkMobile && slideoutUserInfo) {
-            if (user) {
-                // User is logged in: Show profile, logout, and user info. Hide login.
+        
+        if (user) {
+            // LOGGED IN STATE FOR MOBILE
+            if (authLinkMobile) authLinkMobile.classList.add('hidden');
+            if (logoutButtonMobile) logoutButtonMobile.classList.remove('hidden');
+            if (bottomProfileLinkMobile) bottomProfileLinkMobile.classList.remove('hidden');
+            if (slideoutUserInfo) {
+                slideoutUserInfo.classList.remove('hidden');
+                
+                // Elements inside slideoutUserInfo
                 const slideoutProfilePic = document.getElementById('slideoutProfilePic');
                 const slideoutDisplayName = document.getElementById('slideoutDisplayName');
                 const slideoutEmail = document.getElementById('slideoutEmail');
@@ -143,19 +149,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (slideoutProfilePic) slideoutProfilePic.src = photoSrc;
                 if (slideoutDisplayName) slideoutDisplayName.textContent = user.displayName || 'User';
                 if (slideoutEmail) slideoutEmail.textContent = user.email ? `@${user.email.split('@')[0]}` : '';
-                
-                slideoutUserInfo.classList.remove('hidden');
-                authLinkMobile.classList.add('hidden');
-                logoutButtonMobile.classList.remove('hidden');
-                bottomProfileLinkMobile.classList.remove('hidden');
-            } else {
-                // User is logged out: Show login. Hide profile, logout, and user info.
-                slideoutUserInfo.classList.add('hidden');
-                authLinkMobile.classList.remove('hidden');
-                logoutButtonMobile.classList.add('hidden');
-                bottomProfileLinkMobile.classList.add('hidden');
             }
+        } else {
+            // LOGGED OUT STATE FOR MOBILE
+            if (authLinkMobile) authLinkMobile.classList.remove('hidden');
+            if (logoutButtonMobile) logoutButtonMobile.classList.add('hidden');
+            if (bottomProfileLinkMobile) bottomProfileLinkMobile.classList.add('hidden');
+            if (slideoutUserInfo) slideoutUserInfo.classList.add('hidden');
         }
+
         setActiveNavLink();
     }
     
