@@ -39,13 +39,14 @@ function initializeHeaderFunctionality() {
 
     // Set up a listener that updates the UI whenever the user's login state changes.
     // This is the single source of truth and prevents UI glitches.
-    auth.onAuthStateChanged(updateAuthUI);
+auth.onAuthStateChanged(user => {
+    // First call
+    updateAuthUI(user);
 
-    // Fix for centering the desktop navigation links
-    const desktopNavContainer = document.querySelector('.hidden.md\\:block .flex.items-center.space-x-2');
-    if (desktopNavContainer) {
-        desktopNavContainer.classList.add('justify-center', 'w-full');
-    }
+    // Second call — once header DOM is surely injected
+    requestAnimationFrame(() => updateAuthUI(user));
+});
+
 
     // Set up mobile menu toggling
     setupMobileMenu(auth);
@@ -61,35 +62,39 @@ function initializeHeaderFunctionality() {
  * @param {firebase.User | null} user The authenticated user object, or null if logged out.
  */
 function updateAuthUI(user) {
-    const isLoggedIn = !!user;
+    // Defer until all DOM nodes are available
+    requestAnimationFrame(() => {
+        const isLoggedIn = !!user;
 
-    // Toggle visibility of desktop login/profile links
-    document.getElementById('authLinkDesktopLogin')?.classList.toggle('hidden', isLoggedIn);
-    document.getElementById('profileLinkDesktop')?.classList.toggle('hidden', !isLoggedIn);
+        // Desktop
+        document.getElementById('authLinkDesktopLogin')?.classList.toggle('hidden', isLoggedIn);
+        document.getElementById('profileLinkDesktop')?.classList.toggle('hidden', !isLoggedIn);
 
-    // Update the profile picture in the main header
-    const navProfilePic = document.getElementById('navProfilePic');
-    if (navProfilePic) {
-        if (isLoggedIn) {
-            navProfilePic.src = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email[0].toUpperCase()}`;
-            navProfilePic.style.display = 'block';
-        } else {
-            navProfilePic.style.display = 'none';
+        const pic = document.getElementById('navProfilePic');
+        if (pic) {
+            if (isLoggedIn) {
+                const photo = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email[0].toUpperCase()}`;
+                pic.src = photo;
+                pic.style.display = 'block';
+            } else {
+                pic.style.display = 'none';
+            }
         }
-    }
 
-    // Update the slide-out mobile menu based on login state
-    document.getElementById('slideout-user-info')?.classList.toggle('hidden', !isLoggedIn);
-    document.getElementById('authLinkMobile')?.classList.toggle('hidden', isLoggedIn);
-    document.getElementById('bottomProfileLinkMobile')?.classList.toggle('hidden', !isLoggedIn);
-    document.getElementById('logoutButtonMobile')?.classList.toggle('hidden', !isLoggedIn);
+        // ✅ Mobile — make sure these are updating AFTER DOM is ready
+        document.getElementById('authLinkMobile')?.classList.toggle('hidden', isLoggedIn);
+        document.getElementById('bottomProfileLinkMobile')?.classList.toggle('hidden', !isLoggedIn);
+        document.getElementById('logoutButtonMobile')?.classList.toggle('hidden', !isLoggedIn);
+        document.getElementById('slideout-user-info')?.classList.toggle('hidden', !isLoggedIn);
 
-    if (isLoggedIn) {
-        document.getElementById('slideoutProfilePic').src = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email[0].toUpperCase()}`;
-        document.getElementById('slideoutDisplayName').textContent = user.displayName || 'User';
-        document.getElementById('slideoutEmail').textContent = user.email ? `@${user.email.split('@')[0]}` : '';
-    }
+        if (isLoggedIn) {
+            document.getElementById('slideoutProfilePic').src = user.photoURL || `https://placehold.co/40x40/2C2F33/EAEAEA?text=${user.email[0].toUpperCase()}`;
+            document.getElementById('slideoutDisplayName').textContent = user.displayName || 'User';
+            document.getElementById('slideoutEmail').textContent = `@${user.email.split('@')[0]}`;
+        }
+    });
 }
+
 
 /**
  * Sets up the event listeners for opening and closing the mobile slideout menu.
