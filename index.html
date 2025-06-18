@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Linq - Your Energy News</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +20,10 @@
     <script src="articles_past.js?v=20250612v4" defer></script>
 
     <style>
-        html { scroll-behavior: smooth; }
+        html { 
+            scroll-behavior: smooth;
+            background-color: #000000; /* Set background for the safe area */
+        }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
             background-color: #0B0C10;
@@ -29,7 +32,7 @@
             display: flex;
             flex-direction: column;
             font-weight: 400;
-            padding-top: 64px;
+            padding-top: calc(64px + env(safe-area-inset-top)); /* Adjust body padding */
         }
         body.overflow-hidden { overflow: hidden; }
         
@@ -448,36 +451,24 @@
          * @returns {{title: string}}
          */
         function getPageDateInfo(page) {
-            // Page 1 is always 'Latest News'
             if (page === 1) {
                 return { title: 'Latest News' };
             }
-
-            // Get the articles for the requested page
+        
             const articlesForPage = allDaysData[page - 1];
-
-            // Check if there are any articles for this day
             if (articlesForPage && articlesForPage.length > 0) {
-                // Get the date string from the first article, e.g., "June 16, 2025"
                 const dateStringFromData = articlesForPage[0].date;
-                // Attempt to parse the date. 'Month Day, Year' is parsable by new Date().
                 const dateForPage = new Date(dateStringFromData);
-
-                // Check if the date is valid after parsing
+        
                 if (!isNaN(dateForPage.getTime())) {
                     const dayName = dateForPage.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'UTC' });
                     const dateDisplay = dateForPage.toLocaleDateString('en-US', { month: 'long', day: 'numeric', timeZone: 'UTC' });
                     return { title: `${dayName}, ${dateDisplay}` };
                 }
             }
-
-            // Fallback for empty pages or if date is invalid, using a calculated date
-            const today = new Date('2025-06-17T12:00:00Z');
-            const calculatedDate = new Date(today);
-            calculatedDate.setDate(today.getDate() - (page - 1));
-            const dayName = calculatedDate.toLocaleDateString('en-US', { weekday: 'long' });
-            const dateString = calculatedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-            return { title: `${dayName}, ${dateString}` };
+        
+            // Fallback if data is missing or date is invalid
+            return { title: `News from Day ${page}` };
         }
 
 
