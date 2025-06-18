@@ -1,4 +1,4 @@
-// /community_posts.js
+// /js/community_posts.js
 // This file contains the data for community posts, making it easily shareable
 // across different pages like community.html and favorites.html.
 
@@ -64,28 +64,28 @@ window.communityPostsData = [
         title: "Lotta 'WWIII' talk on the timeline, but IMHO that relies on a pretty charitable view of Iran's alliances",
         meta: "Rory Johnston • June 17, 2025",
         category: "Policy",
-        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Lotta "WWIII" talk on the timeline, but IMHO that relies on a pretty charitable view of Iran\'s alliances.</p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1935049541893366204?ref_src=twsrc%5Etfw">June 17, 2025</a></blockquote>'
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Lotta "WWIII" talk on the timeline, but IMHO that relies on a pretty charitable view of Iran\\\'s alliances.</p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1935049541893366204?ref_src=twsrc%5Etfw">June 17, 2025</a></blockquote>'
     },
     {
         id: "1935047559887696251",
         title: "Crude up ~$3.5/bbl today as Iran risks climb",
         meta: "Rory Johnston • June 17, 2025",
         category: "Market Analysis",
-        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Crude up ~$3.5/bbl today as Iran risks climb, with the US certainly looking like it\'s about to get involved in some meaningful capacity. <a href="https://t.co/8kylTrSMRT">pic.twitter.com/8kylTrSMRT</a></p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1935047559887696251?ref_src=twsrc%5Etfw">June 17, 2025</a></blockquote>'
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Crude up ~$3.5/bbl today as Iran risks climb, with the US certainly looking like it\\\'s about to get involved in some meaningful capacity. <a href="https://t.co/8kylTrSMRT">pic.twitter.com/8kylTrSMRT</a></p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1935047559887696251?ref_src=twsrc%5Etfw">June 17, 2025</a></blockquote>'
     },
     {
         id: "1935044060139438414",
         title: "Oil equities still not buying the huge geopolitical rally",
         meta: "World's Worst Investor • June 17, 2025",
         category: "Market Analysis",
-        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Oil equities still not buying the huge geopolitical rally, unlike during the Russia-Ukraine one.<br><br>They look tempting after this big run in oil.</p>&mdash; World\'s Worst Investor (@tradeoilstocks) <a href="https://twitter.com/tradeoilstocks/status/1935044060139438414?ref_src=twsrc%5Etfw">June 17, 2025</a></blockquote>'
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Oil equities still not buying the huge geopolitical rally, unlike during the Russia-Ukraine one.<br><br>They look tempting after this big run in oil.</p>&mdash; World\\\'s Worst Investor (@tradeoilstocks) <a href="https://twitter.com/tradeoilstocks/status/1935044060139438414?ref_src=twsrc%5Etfw">June 17, 2025</a></blockquote>'
     },
     {
         id: "1935035997839900742",
         title: "BREAKING: Iran's Crude Oil Exports Remain Robust",
         meta: "TankerTrackers.com • June 17, 2025",
         category: "Crude Oil",
-        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">BREAKING: Iran\'s Crude Oil Exports Remain Robust <a href="https://twitter.com/hashtag/OOTT?src=hash&amp;ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; TankerTrackers.com, Inc. (@TankerTrackers) <a href="https://twitter.com/TankerTrackers/status/1935035997839900742?ref_src=twsrc%5Etfw">June 17, 2025</a></blockquote>'
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">BREAKING: Iran\\\'s Crude Oil Exports Remain Robust <a href="https://twitter.com/hashtag/OOTT?src=hash&amp;ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; TankerTrackers.com, Inc. (@TankerTrackers) <a href="https://twitter.com/TankerTrackers/status/1935035997839900742?ref_src=twsrc%5Etfw">June 17, 2025</a></blockquote>'
     },
     {
         id: "1934983369378455697",
@@ -106,7 +106,7 @@ window.communityPostsData = [
         title: "First official public explanation of Spain's blackout",
         meta: "Javier Blas • June 17, 2025",
         category: "Power",
-        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">First official public explanation of Spain\'s blackout: <br><br>"The grid didn't have enough capacity to control voltage dynamically [with thermal power stations]," Spanish energy minister said.<br><br>For background, here: <a href="https://t.co/iXnn1GOxqq">https://t.co/iXnn1GOxqq</a> and here: <a href="https://t.co/ymd7oxsg8D">https://t.co/ymd7oxsg8D</a><a href="https://twitter.com/hashtag/Apagon?src=hash&amp;ref_src=twsrc%5Etfw">#Apagon</a> <a href="https://t.co/njV0WbETAr">pic.twitter.com/njV0WbETAr</a></p>&mdash; Javier Blas (@JavierBlas) <a href="https://twitter.com/JavierBlas/status/1934978148674003195?ref_src=twsrc%5Etfw">June 17, 2025</a></blockquote>'
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">First official public explanation of Spain\\\'s blackout: <br><br>"The grid didn\\\'t have enough capacity to control voltage dynamically [with thermal power stations]," Spanish energy minister said.<br><br>For background, here: <a href="https://t.co/iXnn1GOxqq">https://t.co/iXnn1GOxqq</a> and here: <a href="https://t.co/ymd7oxsg8D">https://t.co/ymd7oxsg8D</a><a href="https://twitter.com/hashtag/Apagon?src=hash&amp;ref_src=twsrc%5Etfw">#Apagon</a> <a href="https://t.co/njV0WbETAr">pic.twitter.com/njV0WbETAr</a></p>&mdash; Javier Blas (@JavierBlas) <a href="https://twitter.com/JavierBlas/status/1934978148674003195?ref_src=twsrc%5Etfw">June 17, 2025</a></blockquote>'
     },
     {
         id: "1934823940720869448",
@@ -127,7 +127,7 @@ window.communityPostsData = [
         title: "Who's ready for $120 a barrel?",
         meta: "OSINTdefender • June 17, 2025",
         category: "Crude Oil",
-        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Who\'s ready for $120 a barrel?</p>&mdash; OSINTdefender (@sentdefender) <a href="https://twitter.com/sentdefender/status/1934801325591591592?ref_src=twsrc%5Etfw">June 17, 2025</a></blockquote>'
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Who\\\'s ready for $120 a barrel?</p>&mdash; OSINTdefender (@sentdefender) <a href="https://twitter.com/sentdefender/status/1934801325591591592?ref_src=twsrc%5Etfw">June 17, 2025</a></blockquote>'
     },
     {
         id: "1934795373366657424",
@@ -148,6 +148,6 @@ window.communityPostsData = [
         title: "Keep watching oil markets: President Trump just told 'everyone [to] evacuate Tehran immediately'",
         meta: "The Kobeissi Letter • June 16, 2025",
         category: "Crude Oil",
-        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Keep watching oil markets:<br><br>President Trump just told "everyone [to] evacuate Tehran immediately."<br><br>Yet, oil prices are up a mere +1.5% on the news.<br><br>Oil markets continue to price-in a short-lived conflict.<br><br>Ignore the noise and follow the money. <a href="https://t.co/6NjobgjYk3">pic.twitter.com/6NjobgjYk3</a></p>&mdash; The Kobeissi Letter (@KobeissiLetter) <a href="https://twitter.com/KobeissiLetter/status/1934754393619890412?ref_src=twsrc%5Etfw">June 16, 2025</a></blockquote>'
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Keep watching oil markets:<br><br>President Trump just told \\\'everyone [to] evacuate Tehran immediately.\\\'<br><br>Yet, oil prices are up a mere +1.5% on the news.<br><br>Oil markets continue to price-in a short-lived conflict.<br><br>Ignore the noise and follow the money. <a href="https://t.co/6NjobgjYk3">pic.twitter.com/6NjobgjYk3</a></p>&mdash; The Kobeissi Letter (@KobeissiLetter) <a href="https://twitter.com/KobeissiLetter/status/1934754393619890412?ref_src=twsrc%5Etfw">June 16, 2025</a></blockquote>'
     }
 ];
