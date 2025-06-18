@@ -249,20 +249,31 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // FIX: This function now waits for data before rendering posts.
+            function waitForDataAndRender() {
+                const dataCheckInterval = setInterval(() => {
+                    if (window.communityPostsData) {
+                        clearInterval(dataCheckInterval);
+                        filterAndDisplayPosts();
+                    }
+                }, 50); // Check for data every 50ms
+            }
+
             authInstance.onAuthStateChanged(user => {
-                if (unsubscribeUserListener) unsubscribeUserListener();
+                if (unsubscribeUserListener) unsubscribeUserListener(); // Detach old listener to prevent memory leaks
                 if (user) {
                     unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
                         communityFavorites = doc.exists && doc.data().communityBookmarks ? doc.data().communityBookmarks : [];
-                        filterAndDisplayPosts();
+                        waitForDataAndRender();
                     }, err => {
                         console.error("Error listening to community bookmarks:", err);
                         communityFavorites = [];
-                        filterAndDisplayPosts();
+                        waitForDataAndRender();
                     });
                 } else {
+                    // User is logged out
                     communityFavorites = [];
-                    filterAndDisplayPosts();
+                    waitForDataAndRender();
                 }
             });
 
@@ -289,7 +300,6 @@
                 const shareButton = event.target.closest('.share-btn');
                 if (shareButton) handleShareClick(shareButton);
             });
-            // UPDATED selector for event listener
             document.querySelectorAll('#categoryFiltersCommunity .filter-button-mobile').forEach(button => {
                 button.addEventListener('click', () => {
                     button.classList.toggle('active');
