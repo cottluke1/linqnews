@@ -445,21 +445,39 @@
         /**
          * Gets the title and date for a specific page number.
          * @param {number} page The page number.
-         * @returns {{title: string, date: Date | null}}
+         * @returns {{title: string}}
          */
         function getPageDateInfo(page) {
-            if (page === 1) return { title: 'Latest News', date: new Date('2025-06-17T12:00:00Z') };
-            
-            const articlesForPage = allDaysData[page - 1];
-            if (articlesForPage && articlesForPage.length > 0) {
-                const dateForPage = new Date(articlesForPage[0].date + 'T12:00:00Z');
-                const dayName = dateForPage.toLocaleDateString('en-US', { weekday: 'long' });
-                const dateString = dateForPage.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-                return { title: `${dayName}, ${dateString}`, date: dateForPage };
+            // Page 1 is always 'Latest News'
+            if (page === 1) {
+                return { title: 'Latest News' };
             }
 
-            // Fallback for empty pages or if data is missing
-            return { title: `Page ${page}`, date: null };
+            // Get the articles for the requested page
+            const articlesForPage = allDaysData[page - 1];
+
+            // Check if there are any articles for this day
+            if (articlesForPage && articlesForPage.length > 0) {
+                // Get the date string from the first article, e.g., "June 16, 2025"
+                const dateStringFromData = articlesForPage[0].date;
+                // Attempt to parse the date. 'Month Day, Year' is parsable by new Date().
+                const dateForPage = new Date(dateStringFromData);
+
+                // Check if the date is valid after parsing
+                if (!isNaN(dateForPage.getTime())) {
+                    const dayName = dateForPage.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'UTC' });
+                    const dateDisplay = dateForPage.toLocaleDateString('en-US', { month: 'long', day: 'numeric', timeZone: 'UTC' });
+                    return { title: `${dayName}, ${dateDisplay}` };
+                }
+            }
+
+            // Fallback for empty pages or if date is invalid, using a calculated date
+            const today = new Date('2025-06-17T12:00:00Z');
+            const calculatedDate = new Date(today);
+            calculatedDate.setDate(today.getDate() - (page - 1));
+            const dayName = calculatedDate.toLocaleDateString('en-US', { weekday: 'long' });
+            const dateString = calculatedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+            return { title: `${dayName}, ${dateString}` };
         }
 
 
@@ -481,7 +499,6 @@
                 btn.addEventListener('click', () => {
                     if (pageNumber) {
                         displayArticlesForPage(pageNumber);
-                        // CHANGE 1: Scroll to top on page change
                         mainContent.scrollIntoView({ behavior: 'smooth' });
                     }
                 });
@@ -511,7 +528,6 @@
                 btn.classList.toggle('active', isNowActive);
             });
             
-            // CHANGE 3: Use currentPage instead of hardcoded 1
             displayArticlesForPage(currentPage);
         }
         
@@ -554,7 +570,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             desktopCategoryFilters.addEventListener('click', handleCategoryFilter);
             mobileCategoryFilters.addEventListener('click', handleCategoryFilter);
-            // CHANGE 3 (Consistency): Apply the same logic to the search input
             searchInput.addEventListener('input', () => displayArticlesForPage(currentPage));
             newsGrid.addEventListener('click', (e) => {
                 const favButton = e.target.closest('.favorite-btn');
