@@ -10,12 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
-    <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     
-    <!-- Article Data Scripts -->
     <script src="source_images.js?v=20250612v2" defer></script>
     <script src="articles_present.js?v=20250612v2" defer></script>
     <script src="articles_premium.js?v=20250612v2" defer></script>
@@ -270,11 +268,9 @@
                         </div>
                     </div>
 
-                    <!-- Mobile Filters -->
                     <div id="mobileFilterContainer" class="lg:hidden">
                         <div id="mobileCategoryFilters" class="mobile-filter-scroll-container">
-                            <!-- Mobile category buttons will be inserted here -->
-                        </div>
+                            </div>
                     </div>
 
                     <div class="space-y-6" id="newsGrid"></div>
@@ -285,8 +281,7 @@
                 <div class="filter-panel p-6 blurred-panel">
                     <h3 class="filter-title">Filter by Category</h3>
                     <div id="desktopCategoryFilters" class="space-y-3">
-                        <!-- Desktop category buttons will be inserted here -->
-                    </div>
+                        </div>
                 </div>
             </aside>
         </div>
@@ -450,17 +445,23 @@
         /**
          * Gets the title and date for a specific page number.
          * @param {number} page The page number.
-         * @returns {{title: string, date: Date}}
+         * @returns {{title: string, date: Date | null}}
          */
         function getPageDateInfo(page) {
-            const today = new Date('2025-06-17T12:00:00Z'); // Using a fixed "today" for consistent display
-            if (page === 1) return { title: 'Latest News', date: today };
-            const dateForPage = new Date(today);
-            dateForPage.setDate(today.getDate() - (page - 1));
-            const dayName = dateForPage.toLocaleDateString('en-US', { weekday: 'long' });
-            const dateString = dateForPage.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-            return { title: `${dayName}, ${dateString}`, date: dateForPage };
+            if (page === 1) return { title: 'Latest News', date: new Date('2025-06-17T12:00:00Z') };
+            
+            const articlesForPage = allDaysData[page - 1];
+            if (articlesForPage && articlesForPage.length > 0) {
+                const dateForPage = new Date(articlesForPage[0].date + 'T12:00:00Z');
+                const dayName = dateForPage.toLocaleDateString('en-US', { weekday: 'long' });
+                const dateString = dateForPage.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+                return { title: `${dayName}, ${dateString}`, date: dateForPage };
+            }
+
+            // Fallback for empty pages or if data is missing
+            return { title: `Page ${page}`, date: null };
         }
+
 
         /**
          * Creates and manages the pagination controls.
@@ -480,6 +481,7 @@
                 btn.addEventListener('click', () => {
                     if (pageNumber) {
                         displayArticlesForPage(pageNumber);
+                        // CHANGE 1: Scroll to top on page change
                         mainContent.scrollIntoView({ behavior: 'smooth' });
                     }
                 });
@@ -508,8 +510,9 @@
             allMatchingButtons.forEach(btn => {
                 btn.classList.toggle('active', isNowActive);
             });
-
-            displayArticlesForPage(1);
+            
+            // CHANGE 3: Use currentPage instead of hardcoded 1
+            displayArticlesForPage(currentPage);
         }
         
         /**
@@ -551,7 +554,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             desktopCategoryFilters.addEventListener('click', handleCategoryFilter);
             mobileCategoryFilters.addEventListener('click', handleCategoryFilter);
-            searchInput.addEventListener('input', () => displayArticlesForPage(1));
+            // CHANGE 3 (Consistency): Apply the same logic to the search input
+            searchInput.addEventListener('input', () => displayArticlesForPage(currentPage));
             newsGrid.addEventListener('click', (e) => {
                 const favButton = e.target.closest('.favorite-btn');
                 if (favButton) toggleFavorite(favButton.dataset.id);
