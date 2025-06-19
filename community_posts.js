@@ -3,6 +3,125 @@
 // across different pages like community.html and favorites.html.
 
 window.communityPostsData = [
+        {
+        id: "1935719969787969961",
+        title: "Such a massive split in petroleum product performance over the past week",
+        meta: "Rory Johnston • June 19, 2025",
+        category: "Market Analysis",
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Such a massive split in petroleum product performance over the past week.<br><br>Crude up $9/bbl<br>Gasoline up $8/bbl<br><br>🤯 Diesel up a staggering **$21/bbl**<br><br>Highest since early 2024.<br><br>(US diesel prices in USD/Bbl below) <a href="https://t.co/TzyXaaBOsL">pic.twitter.com/TzyXaaBOsL</a></p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1935719969787969961?ref_src=twsrc%5Etfw">June 19, 2025</a></blockquote>'
+    },
+    {
+        id: "1935778749393649690",
+        title: "Iran \"deliberately\" struck Israel's Soroka Hospital, according to IDF Spokesman Brig. Gen. Effie Defrin",
+        meta: "Energy Headline News • June 19, 2025",
+        category: "Crude Oil",
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Iran &quot;deliberately&quot; struck Israel&#39;s Soroka Hospital, according to IDF Spokesman Brig. Gen. Effie Defrin.<br><br>"Let there be no doubt, the Iranian regime deliberately and maliciously fired at the hospital and population center with the intent to harm civilians."<a href="https://twitter.com/KassyAkiva?ref_src=twsrc%5Etfw">@KassyAkiva</a></p>&mdash; Energy Headline News (@OilHeadlineNews) <a href="https://twitter.com/OilHeadlineNews/status/1935778749393649690?ref_src=twsrc%5Etfw">June 19, 2025</a></blockquote>'
+    },
+    {
+        id: "1935767362503897124",
+        title: "Tanker rates surge - Bloomberg",
+        meta: "Energy Headline News • June 19, 2025",
+        category: "Crude Oil",
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="et" dir="ltr">Tanker rates surge - Bloomberg <a href="https://t.co/vBBZu04Ucg">pic.twitter.com/vBBZu04Ucg</a></p>&mdash; Energy Headline News (@OilHeadlineNews) <a href="https://twitter.com/OilHeadlineNews/status/1935767362503897124?ref_src=twsrc%5Etfw">June 19, 2025</a></blockquote>'
+    },
+    {
+        id: "1935660395869667611",
+        title: "MUST READ: From Saudi Arabia to Oman, the Arab neighbors of Iran got caught off guard by Israel's attack",
+        meta: "Javier Blas • June 19, 2025",
+        category: "Policy",
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">MUST READ: From Saudi Arabia to Oman, the Arab neighbors of Iran got caught off guard by Israel&#39;s attack.<br><br>They had spent years cultivating a détente with Iran. Now they find their economic goals (plus their oil) are in danger.<a href="https://twitter.com/samdagher?ref_src=twsrc%5Etfw">@samdagher</a> <a href="https://twitter.com/hashtag/Iran?src=hash&amp;ref_src=twsrc%5Etfw">#Iran</a> <a href="https://twitter.com/hashtag/OOTT?src=hash&amp;ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://t.co/HmdU6O4690">https://t.co/HmdU6O4690</a></p>&mdash; Javier Blas (@JavierBlas) <a href="https://twitter.com/JavierBlas/status/1935660395869667611?ref_src=twsrc%5Etfw">June 19, 2025</a></blockquote>'
+    },
+    {
+        id: "1935589214504075566",
+        title: "OIL MARKET: Wouldn't be ironic if Iranian crude production was to hit a fresh 7-year high in June",
+        meta: "Javier Blas • June 19, 2025",
+        category: "Crude Oil",
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">OIL MARKET: Wouldn&#39;t be ironic if Iranian crude production was to hit a fresh 7-year high in June, probably above 3.5 million barrels a day (excluding other liquids)? Because month-to-date, it certainly appears that&#39;s heading into that direction | <a href="https://twitter.com/hashtag/OOTT?src=hash&amp;ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; Javier Blas (@JavierBlas) <a href="https://twitter.com/JavierBlas/status/1935589214504075566?ref_src=twsrc%5Etfw">June 19, 2025</a></blockquote>'
+    },
+    {
+        id: "1935364887904915674",
+        title: "This is what Spanish grid operator Red Electrica said today",
+        meta: "Javier Blas • June 18, 2025",
+        category: "Power",
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">This is what Spanish grid operator Red Electrica said today:<br><br>That&#39;s a lot of solar trouble. <br>Plus, gas-fired plants not absorbing reactive<br>Plus &quot;many&quot; renewable, co-generation and biomass plants (RCR) &quot;fail[ing] to comply with their obligations&quot;<br><br>Report: <a href="https://t.co/7niTXMWHri">https://t.co/7niTXMWHri</a> <a href="https://t.co/2cNV7wfhmz">pic.twitter.com/2cNV7wfhmz</a></p>&mdash; Javier Blas (@JavierBlas) <a href="https://twitter.com/JavierBlas/status/1935364887904915674?ref_src=twsrc%5Etfw">June 18, 2025</a></blockquote>'
+    },
+    {
+        id: "1935765676364644832",
+        title: "CNN Reporter in Tel Aviv: \"it's safe to speculate that Israel will be disappointed by this decision\"",
+        meta: "Amena Bakr • June 19, 2025",
+        category: "Policy",
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">CNN Reporter in Tel Aviv: "it's safe to speculate that Israel will be disappointed by this decision" (Re Trumps 2 weeks decision on the US's further involvement on Iran ) <a href="https://twitter.com/hashtag/OOTT?src=hash&amp;ref_src=twsrc%5Etfw">#OOTT</a></p>&mdash; Amena Bakr (@Amena__Bakr) <a href="https://twitter.com/Amena__Bakr/status/1935765676364644832?ref_src=twsrc%5Etfw">June 19, 2025</a></blockquote>'
+    },
+    {
+        id: "1935752975583969685",
+        title: "\"The Gulf capitals' advice to President Trump: Don't let Netanyahu drag you into an illegal war with Iran\"",
+        meta: "Amena Bakr • June 19, 2025",
+        category: "Policy",
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">"The Gulf capitals&#39; advice to President Trump: Don&#39;t let Netanyahu drag you into an illegal war with Iran" <a href="https://twitter.com/hashtag/OOTT?src=hash&amp;ref_src=twsrc%5Etfw">#OOTT</a> <a href="https://t.co/g4T0v8333C">https://t.co/g4T0v8333C</a></p>&mdash; Amena Bakr (@Amena__Bakr) <a href="https://twitter.com/Amena__Bakr/status/1935752975583969685?ref_src=twsrc%5Etfw">June 19, 2025</a></blockquote>'
+    },
+    {
+        id: "1935745424281014533",
+        title: "\"Oil's rallies will be capped … I can't see how we go to 70 or 80 dollars unless there's a big geopolitical outage.\" - Amrita Sen",
+        meta: "Energy Headline News • June 19, 2025",
+        category: "Market Analysis",
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">&quot;Oil&#39;s rallies will be capped … I can&#39;t see how we go to 70 or 80 dollars unless there&#39;s a big geopolitical outage.&quot; - Amrita Sen<br><br>June 3, 2025<br><br>Energy Aspects Founder and Director of Market Intelligence, Dr Amrita Sen, joined CNBC Squawk Box</p>&mdash; Energy Headline News (@OilHeadlineNews) <a href="https://twitter.com/OilHeadlineNews/status/1935745424281014533?ref_src=twsrc%5Etfw">June 19, 2025</a></blockquote>'
+    },
+    {
+        id: "1935768744716124251",
+        title: "Every single day. Rinse and repeat.",
+        meta: "Just call me....Duff • June 19, 2025",
+        category: "Market Analysis",
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Every single day.<br>Rinse and repeat. <a href="https://t.co/alQ9YoevPf">pic.twitter.com/alQ9YoevPf</a></p>&mdash; Just call me....Duff (@jim_duffus) <a href="https://twitter.com/jim_duffus/status/1935768744716124251?ref_src=twsrc%5Etfw">June 19, 2025</a></blockquote>'
+    },
+    {
+        id: "1935760805527490634",
+        title: "Crude drops ~$2.50/bbl on Trump's \"two weeks\" to decide on US involvement in Iran comment",
+        meta: "Rory Johnston • June 19, 2025",
+        category: "Market Analysis",
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Crude drops ~$2.50/bbl on Trump&#39;s &quot;two weeks&quot; to decide on US involvement in Iran comment.<br><br>Similar to sharp pullbacks we&#39;ve seen repeatedly over the past week following every &quot;negotiation&quot; headline. <a href="https://t.co/88H799ljhY">pic.twitter.com/88H799ljhY</a></p>&mdash; Rory Johnston (@Rory_Johnston) <a href="https://twitter.com/Rory_Johnston/status/1935760805527490634?ref_src=twsrc%5Etfw">June 19, 2025</a></blockquote>'
+    },
+    {
+        id: "1935685557448786341",
+        title: "\"We think the worst case is far from priced in,\" Barclays analyst Amarpreet Singh said",
+        meta: "Art Berman • June 19, 2025",
+        category: "Market Analysis",
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">"We think the worst case is far from priced in," Barclays analyst Amarpreet Singh said. <br><br>"In the worst case scenario of a wider conflagration, we would expect prices to move past $100 a barrel."<a href="https://t.co/dQ4fxaXeuT">https://t.co/dQ4fxaXeuT</a><a href="https://twitter.com/hashtag/energy?src=hash&amp;ref_src=twsrc%5Etfw">#energy</a> <a href="https://twitter.com/hashtag/politics?src=hash&amp;ref_src=twsrc%5Etfw">#politics</a> <a href="https://twitter.com/hashtag/geopolitics?src=hash&amp;ref_src=twsrc%5Etfw">#geopolitics</a> <a href="https://twitter.com/hashtag/MiddleEast?src=hash&amp;ref_src=twsrc%5Etfw">#MiddleEast</a> <a href="https://twitter.com/hashtag/iranisraelwar?src=hash&amp;ref_src=twsrc%5Etfw">#iranisraelwar</a>… <a href="https://t.co/OQzVjOGCNQ">pic.twitter.com/OQzVjOGCNQ</a></p>&mdash; Art Berman (@aeberman12) <a href="https://twitter.com/aeberman12/status/1935685557448786341?ref_src=twsrc%5Etfw">June 19, 2025</a></blockquote>'
+    },
+    {
+        id: "1935697921137422582",
+        title: "Forget about oil babe, this is a distillates story",
+        meta: "Oil Bandit 🛢️ • June 19, 2025",
+        category: "Market Analysis",
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Forget about oil babe, this is a distillates story <a href="https://t.co/yTrLkeTdf3">pic.twitter.com/yTrLkeTdf3</a></p>&mdash; Oil Bandit 🛢️ (@OilCfd) <a href="https://twitter.com/OilCfd/status/1935697921137422582?ref_src=twsrc%5Etfw">June 19, 2025</a></blockquote>'
+    },
+    {
+        id: "1935712848338174451",
+        title: "WTI oil price is $77.06 and NYMEX natural gas price is $4.06",
+        meta: "Peter Linder • June 19, 2025",
+        category: "Market Analysis",
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">WTI oil price is $77.06 and NYMEX natural gas price is $4.06. <a href="https://twitter.com/search?q=%24WCP&amp;src=ctag&amp;ref_src=twsrc%5Etfw">$WCP</a> is trading at a healthy $9.65.<br>The US markets are closed today and trade volumes are way down.<br>If oil/gas prices remain near current levels or even higher tomorrow, <a href="https://twitter.com/search?q=%24WCP&amp;src=ctag&amp;ref_src=twsrc%5Etfw">$WCP</a>/others will be much higher. <br>Why wait?</p>&mdash; Peter Linder (@RealPeterLinder) <a href="https://twitter.com/RealPeterLinder/status/1935712848338174451?ref_src=twsrc%5Etfw">June 19, 2025</a></blockquote>'
+    },
+    {
+        id: "1935753099022680433",
+        title: "BREAKING: White House says: Trump will make the decision on whether to attack Iran within two weeks",
+        meta: "unusual_whales • June 19, 2025",
+        category: "Policy",
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">BREAKING: White House says: Trump will make the decision on whether to attack Iran within two weeks.</p>&mdash; unusual_whales (@unusual_whales) <a href="https://twitter.com/unusual_whales/status/1935753099022680433?ref_src=twsrc%5Etfw">June 19, 2025</a></blockquote>'
+    },
+    {
+        id: "1935675643523403979",
+        title: "Up another 1% today, Brent crude oil is approaching the $78 per barrel mark",
+        meta: "Mohamed A. El-Erian • June 19, 2025",
+        category: "Market Analysis",
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Up another 1% today, Brent crude oil is approaching the $78 per barrel mark.<br>The longer the price remains at or above this level, the greater the concerns about risks to both economic growth and inflation, especially as geopolitical tensions continue to drive volatility in energy… <a href="https://t.co/PL7WvCbqEd">pic.twitter.com/PL7WvCbqEd</a></p>&mdash; Mohamed A. El-Erian (@elerianm) <a href="https://twitter.com/elerianm/status/1935675643523403979?ref_src=twsrc%5Etfw">June 19, 2025</a></blockquote>'
+    },
+    {
+        id: "1935728046968807656",
+        title: "Iran held direct talks with US amid intensifying conflict with Israel, diplomats say",
+        meta: "Giovanni Staunovo🛢 • June 19, 2025",
+        category: "Policy",
+        tweetContent: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Iran held direct talks with US amid intensifying conflict with Israel, diplomats say<br>Trump envoy, Iran&#39;s foreign minister held several phone calls<br><br>Iran says it will only return to talks if Israel halts attacks<br><br>Trump says Iran must end uranium enrichment on its soil<br><br>Europeans…</p>&mdash; Giovanni Staunovo🛢 (@staunovo) <a href="https://twitter.com/staunovo/status/1935728046968807656?ref_src=twsrc%5Etfw">June 19, 2025</a></blockquote>'
+    },
     {
         id: "1935109579039195181",
         title: "API INVENTORY DATA – JUNE 17",
