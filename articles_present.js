@@ -1,317 +1,39 @@
 // /js/articles_present.js
 // Data is assigned to the global 'window' object to be accessible by other scripts.
 window.presentDayArticles = [
-    {
-        id: "p1",
-        category: 'Crude Oil',
-        title: 'Oil Prices Extend Rise as Iran-Israel Conflict Enters Sixth Day',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/oil-prices-extend-rise-iran-israel-conflict-enters-sixth-day-2025-06-18/'
-    },
-    {
-        id: "p2",
-        category: 'Natural Gas',
-        title: 'Israel to Resume Natural Gas Exports When Military Deems It Safe, Energy Minister Says',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/israel-resume-natural-gas-exports-when-military-deems-its-safe-energy-minister-2025-06-18/'
-    },
-    {
-        id: "p3",
-        category: 'Petrochemicals',
-        title: 'Repsol\'s Petrochemical Complex Shut Down After Power Supply Failure',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/repsols-petrochemical-complex-shut-down-after-power-supply-failure-2025-06-16/'
-    },
-    {
-        id: "p4",
-        category: 'Power',
-        title: 'Spain\'s Grid Operator to Release Own Report on April Blackout',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/spains-grid-operator-release-own-report-april-blackout-2025-06-18/'
-    },
-
-    {
-        id: "p6",
-        category: 'Company News',
-        title: 'Trump\'s Oil and Gas Industry Donors',
-        date: 'June 18, 2025',
-        source: 'The Guardian',
-        link: 'https://www.theguardian.com/us-news/2025/jun/18/trump-oil-gas-industry-donors'
-    },
-    {
-        id: "p7",
-        category: 'Earnings',
-        title: 'Sempra Infrastructure and JERA Sign Heads Agreement for US LNG Supply',
-        date: 'June 18, 2025',
-        source: 'Sempra',
-        link: 'https://www.sempra.com/newsroom/press-releases/sempra-infrastructure-and-jera-sign-heads-agreement-us-lng-supply'
-    },
-    {
-        id: "p8",
-        category: 'Crude Oil',
-        title: 'Oil Markets See Closure of Hormuz Strait as Unlikely, Eni CEO Says',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/oil-markets-see-closure-hormuz-strait-unlikely-eni-ceo-says-2025-06-18/'
-    },
-    {
-        id: "p9",
-        category: 'Natural Gas',
-        title: 'Canada Could Produce First LNG by This Weekend, Sources Say',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/canada-could-produce-first-lng-by-this-weekend-sources-say-2025-06-18/'
-    },
-    {
-        id: "p10",
-        category: 'Petrochemicals',
-        title: 'Shell Reports Fire at Furnace Unit at Shell Pennsylvania Petrochemicals Complex',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/shell-reports-fire-furnace-unit-shell-pennsylvania-petrochemicals-complex-2025-06-06/'
-    },
-    {
-        id: "p11",
-        category: 'Power',
-        title: 'What Caused Iberian Power Outage and What Happens Next',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/what-caused-iberian-power-outage-what-happens-next-2025-06-18/'
-    },
-    {
-        id: "p12",
-        category: 'Renewables',
-        title: 'US Senate Floats Full Phase-Out of Solar, Wind Energy Tax Credits by 2028',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/sustainability/climate-energy/us-senate-floats-full-phase-out-solar-wind-energy-tax-credits-by-2028-2025-06-16/'
-    },
-    {
-        id: "p13",
-        category: 'Company News',
-        title: 'Oil Refineries Closing: Gas Price Impact',
-        date: 'June 18, 2025',
-        source: 'Spectrum News',
-        link: 'https://spectrumnews1.com/ca/southern-california/business/2025/06/18/oil-refineries-closing-gas-price'
-    },
-    {
-        id: "p14",
-        category: 'Earnings',
-        title: 'NRG Energy Stock Soars as Q1 Results Handily Top Estimates',
-        date: 'June 18, 2025',
-        source: 'Investopedia',
-        link: 'https://www.investopedia.com/nrg-energy-stock-soars-as-q1-results-handily-top-estimates-11732937'
-    },
-    {
-        id: "p15",
-        category: 'Crude Oil',
-        title: 'US Crude Stockpiles Slump, Products Build, EIA Says',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/us-crude-stockpiles-slump-products-build-eia-says-2025-06-18/'
-    },
-    {
-        id: "p16",
-        category: 'Natural Gas',
-        title: 'Serbia Seeks New Gas Deal with Russia for Best Price in Europe',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/serbia-seeks-new-gas-deal-with-russia-best-price-europe-2025-06-18/'
-    },
-    {
-        id: "p17",
-        category: 'Petrochemicals',
-        title: 'US Ethane Exports to China Hit New Roadblock with License Requirement',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/us-ethane-exports-china-hit-new-roadblock-with-licence-requirement-2025-05-30/'
-    },
-    {
-        id: "p18",
-        category: 'Power',
-        title: 'Investigation into Spain\'s April 28 Blackout Shows No Evidence of Cyberattack',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/investigation-into-spains-april-28-blackout-shows-no-evidence-cyberattack-2025-06-17/'
-    },
-    {
-        id: "p19",
-        category: 'Renewables',
-        title: 'Renewable Energy Remains Cheapest Power as New Gas Plants Get Pricier',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/sustainability/climate-energy/renewable-energy-remains-cheapest-power-builds-new-gas-plants-get-pricier-2025-06-16/'
-    },
-    {
-        id: "p20",
-        category: 'Company News',
-        title: 'Commonwealth LNG Confirms 20-Year Sale and Purchase Agreement with Petronas',
-        date: 'June 18, 2025',
-        source: 'PR Newswire',
-        link: 'https://www.prnewswire.com/news-releases/commonwealth-lng-confirms-20-year-sale-and-purchase-agreement-with-petronas-302483300.html'
-    },
-    {
-        id: "p21",
-        category: 'Earnings',
-        title: 'Energy, Oil, Natural Gas Stocks Analysis',
-        date: 'June 18, 2025',
-        source: 'Barron\'s',
-        link: 'https://www.barrons.com/articles/energy-oil-natural-gas-stocks-ced9622f'
-    },
-    {
-        id: "p22",
-        category: 'Crude Oil',
-        title: 'Global Markets View: USA',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/finance/global-markets-view-usa-2025-06-18/'
-    },
-    {
-        id: "p23",
-        category: 'Natural Gas',
-        title: 'PetroChina Eyes North American LNG Volumes to Reduce Risk, Says Exec',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/petrochina-eyes-north-american-lng-volumes-reduce-risk-says-exec-2025-06-17/'
-    },
-    {
-        id: "p24",
-        category: 'Petrochemicals',
-        title: 'Energy Majors Lock Onto Southeast Asia Race for More Gas, AI Power Demand',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/energy-majors-lock-onto-southeast-asia-race-more-gas-ai-power-demand-2025-06-18/'
-    },
-    {
-        id: "p25",
-        category: 'Power',
-        title: 'India Proposes Virtual Power Agreements to Boost Renewable Energy Trading',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/sustainability/climate-energy/india-proposes-virtual-power-agreements-boost-renewable-energy-trading-power-2025-06-17/'
-    },
-    {
-        id: "p26",
-        category: 'Renewables',
-        title: 'TotalEnergies, Saft to Build Fukushima Battery Storage Site',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/totalenergies-saft-build-fukushima-battery-storage-site-2025-06-12/'
-    },
-    {
-        id: "p27",
-        category: 'Company News',
-        title: 'Wall Street Rises as Oil Prices Ease and Countdown Ticks to Fed\'s Decision on Interest Rates',
-        date: 'June 18, 2025',
-        source: 'The Columbian',
-        link: 'https://www.columbian.com/news/2025/jun/18/wall-street-rises-as-oil-prices-ease-and-the-countdown-ticks-to-the-feds-decision-on-interest-rates/'
-    },
-    {
-        id: "p28",
-        category: 'Earnings',
-        title: 'Dominion Beats Quarterly Estimates on Virginia, South Carolina Power Demand',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/dominion-beats-quarterly-estimates-virginia-south-carolina-power-demand-2025-05-01/'
-    },
-    {
-        id: "p29",
-        category: 'Crude Oil',
-        title: 'Oil Futures, S&P500, Nasdaq: Israel-Iran Trump Tehran Evacuation Warning',
-        date: 'June 18, 2025',
-        source: 'Business Insider',
-        link: 'https://markets.businessinsider.com/news/commodities/oil-futures-sp500-nasdaq-israel-iran-trump-tehran-evacuation-warning-2025-6'
-    },
-    {
-        id: "p30",
-        category: 'Natural Gas',
-        title: 'World Oil Demand to Keep Growing This Decade Despite 2027 China Peak, IEA Says',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/world-oil-demand-keep-growing-this-decade-despite-2027-china-peak-iea-says-2025-06-17/'
-    },
-    {
-        id: "p31",
-        category: 'Petrochemicals',
-        title: 'Survival of the Fittest: Petrochemical Makers Battle Global Glut',
-        date: 'June 18, 2025',
-        source: 'Energy Now',
-        link: 'https://energynow.ca/2024/08/survival-of-the-fittest-petrochemical-makers-battle-global-glut/'
-    },
-    {
-        id: "p32",
-        category: 'Power',
-        title: 'US Energy Investors Juggle Exposure as Tax Bill Debate Rolls On',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/markets/commodities/us-energy-investors-juggle-exposure-tax-bill-debate-rolls-maguire-2025-06-18/'
-    },
-    {
-        id: "p33",
-        category: 'Renewables',
-        title: 'Lobbying Intense on Climate Law Credits',
-        date: 'June 18, 2025',
-        source: 'Politico',
-        link: 'https://www.politico.com/news/2025/06/18/lobbying-intense-on-climate-law-credits-00410668'
-    },
-    {
-        id: "p34",
-        category: 'Company News',
-        title: 'Financial Times Energy Coverage',
-        date: 'June 18, 2025',
-        source: 'Financial Times',
-        link: 'https://www.ft.com/content/46e6dab5-db5e-4207-b339-aca5dd5c0ea6'
-    },
-    {
-        id: "p35",
-        category: 'Earnings',
-        title: 'Earnings Call Transcript: Expand Energy Q1 2025 Beats EPS, Stock Dips',
-        date: 'June 18, 2025',
-        source: 'Investing.com',
-        link: 'https://www.investing.com/news/transcripts/earnings-call-transcript-expand-energy-q1-2025-beats-eps-stock-dips-93CH-4013822'
-    },
-    {
-        id: "p36",
-        category: 'Crude Oil',
-        title: 'Oil Prices Spike on Trump\'s Threat to Iran, Then Level Off',
-        date: 'June 18, 2025',
-        source: 'Times of India',
-        link: 'https://timesofindia.indiatimes.com/business/international-business/oil-prices-spike-on-trumps-threat-to-iran-then-level-off-asian-equities-slip-amid-geopolitical-jitters/articleshow/121923784.cms'
-    },
-    {
-        id: "p37",
-        category: 'Natural Gas',
-        title: 'Louisiana\'s New Bill Would Codify Gas as Green Energy',
-        date: 'June 18, 2025',
-        source: 'The Lens NOLA',
-        link: 'https://thelensnola.org/2025/06/18/louisianas-new-bill-would-codify-gas-as-green-energy/'
-    },
-    {
-        id: "p38",
-        category: 'Petrochemicals',
-        title: 'PetroChina to Close Last Unit at Biggest North China Refinery by End June',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/business/energy/petrochina-close-last-unit-biggest-north-china-refinery-end-june-sources-say-2025-06-04/'
-    },
-    {
-        id: "p39",
-        category: 'Power',
-        title: 'US Energy Investors Juggle Exposure as Tax Bill Debate Rolls On',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/markets/commodities/us-energy-investors-juggle-exposure-tax-bill-debate-rolls-maguire-2025-06-18/'
-    },
-    {
-        id: "p40",
-        category: 'Renewables',
-        title: 'Turning Coalmines into Solar Energy Plants: Renewables Report',
-        date: 'June 18, 2025',
-        source: 'The Guardian',
-        link: 'https://www.theguardian.com/environment/2025/jun/18/turning-coalmines-into-solar-energy-plants-renewables-gem-report'
-    }
+    // Crude
+    { id: "present_1", category: 'Crude Oil', title: 'Global Stocks Fall, Oil Futures Rise on a Report U.S. May Soon Strike Iran', date: 'June 19, 2025', source: 'MarketWatch', link: 'https://www.marketwatch.com/story/global-stocks-fall-oil-futures-rise-on-a-report-u-s-may-soon-strike-iran-234f474e?utm_source=chatgpt.com', premium: false },
+    { id: "present_2", category: 'Crude Oil', title: 'Russia, US, Saudi Arabia Could Act Jointly to Stabilise Oil', date: 'June 19, 2025', source: 'Reuters', link: 'https://www.reuters.com/business/energy/russias-dmitriev-says-russia-us-saudi-arabia-could-act-jointly-stabilise-oil-2025-06-19/?utm_source=chatgpt.com', premium: false },
+    { id: "present_3", category: 'Crude Oil', title: 'Saudi Energy Minister: Potential Loss of Iranian Oil, We Only React to Realities', date: 'June 19, 2025', source: 'Reuters', link: 'https://www.reuters.com/business/energy/saudi-energy-minister-potential-loss-iranian-oil-we-only-react-realities-2025-06-19/?utm_source=chatgpt.com', premium: false },
+    // Natural Gas
+    { id: "present_4", category: 'Natural Gas', title: "Asia's Only LNG Bright Spot May Be About to Get Red Hot", date: 'June 19, 2025', source: 'Reuters', link: 'https://www.reuters.com/markets/commodities/asias-only-lng-bright-spot-may-be-about-get-red-hot-2025-06-19/?utm_source=chatgpt.com', premium: false },
+    { id: "present_5", category: 'Natural Gas', title: 'Canada Could Begin First Pacific LNG Production This Weekend', date: 'June 19, 2025', source: 'TankTerminals', link: 'https://tankterminals.com/news/canada-could-begin-first-pacific-lng-production-this-weekend/?utm_source=chatgpt.com', premium: false },
+    { id: "present_6", category: 'Natural Gas', title: 'FERC Takes Action to Remove Barriers to Building Natural Gas Facilities', date: 'June 19, 2025', source: 'FERC', link: 'https://www.ferc.gov/news-events/news/ferc-takes-action-remove-barriers-building-natural-gas-facilities?utm_source=chatgpt.com', premium: false },
+    { id: "present_7", category: 'Natural Gas', title: 'Natural Gas Projects Reboot After Officials Wake Up to Stark Realities', date: 'June 19, 2025', source: 'RealClearEnergy', link: 'https://www.realclearenergy.org/articles/2025/06/19/natural_gas_projects_reboot_after_officials_wake_up_to_stark_realities_1117107.html?utm_source=chatgpt.com', premium: false },
+    { id: "present_8", category: 'Natural Gas', title: 'How EU Plans to Ban Russian Gas', date: 'June 19, 2025', source: 'Reuters', link: 'https://www.reuters.com/sustainability/boards-policy-regulation/how-eu-plans-ban-russian-gas-2025-06-17/?utm_source=chatgpt.com', premium: false },
+    // Petrochemicals
+    { id: "present_9", category: 'Petrochemicals', title: "New Administration Hits the Gas on Revival of Korea's Struggling Petrochemical Industry", date: 'June 19, 2025', source: 'Korea JoongAng Daily', link: 'https://koreajoongangdaily.joins.com/news/2025-06-19/business/economy/New-administration-hits-the-gas-on-revival-of-Koreas-struggling-petrochemical-industry/2334267', premium: false },
+    { id: "present_10", category: 'Petrochemicals', title: 'Shawkwei & Partners Completes Acquisition and Delisting of PEC Ltd', date: 'June 19, 2025', source: 'PR Newswire', link: 'https://www.prnewswire.co.uk/news-releases/shawkwei--partners-completes-acquisition-and-delisting-of-pec-ltd-302485353.html', premium: false },
+    { id: "present_11", category: 'Petrochemicals', title: 'SP Global Commodity Insights', date: 'June 19, 2025', source: 'S&P Global', link: 'https://www.spglobal.com/commodity-insights/es', premium: false },
+    { id: "present_12", category: 'Petrochemicals', title: 'Energy Equation: Shawkwei PEC Acquisition Reinvents Playbook for Energy Transition Leaders', date: 'June 19, 2025', source: 'AInvest', link: 'https://www.ainvest.com/news/energy-equation-shawkwei-pec-acquisition-reinvents-playbook-energy-transition-leaders-2506/', premium: false },
+    { id: "present_13", category: 'Petrochemicals', title: 'Chemical Industry Outlook', date: 'June 19, 2025', source: 'Deloitte', link: 'https://www.deloitte.com/us/en/insights/industry/chemicals-and-specialty-materials/chemical-industry-outlook.html', premium: false },
+    { id: "present_14", category: 'Petrochemicals', title: 'Chemical Trends H1 2025', date: 'June 19, 2025', source: 'S&P Global', link: 'https://www.spglobal.com/content/dam/spglobal/ci/en/documents/news-research/special-reports/Chemical%20Trends%20H1%202025.pdf', premium: false },
+    // Power
+    { id: "present_15", category: 'Power', title: 'South Carolina Energy Power Plants Bill Signing', date: 'June 19, 2025', source: 'AP News', link: 'https://apnews.com/article/south-carolina-energy-power-plants-bill-signing-74542913fb3527389ab6de436aeeac11', premium: false },
+    { id: "present_16", category: 'Power', title: 'CERC Suggests Wider Over-the-Counter Power Market Scope', date: 'June 19, 2025', source: 'Mercom India', link: 'https://www.mercomindia.com/daily-news-wrap-up-cerc-suggests-wider-over-the-counter-power-market-scope', premium: false },
+    { id: "present_17", category: 'Power', title: 'New Marine Energy Taskforce Sets Sights on £50bn Tidal Power Potential', date: 'June 19, 2025', source: 'Energy Live News', link: 'https://www.energylivenews.com/2025/06/19/new-marine-energy-taskforce-sets-sights-on-50bn-tidal-power-potential/', premium: false },
+    { id: "present_18", category: 'Power', title: 'North Sea Renewable Energy Wind, Wave and Tidal Projects Map 2025', date: 'June 19, 2025', source: 'Globe Newswire', link: 'https://www.globenewswire.com/news-release/2025/06/19/3102062/28124/en/North-Sea-Renewable-Energy-Wind-Wave-and-Tidal-Projects-Map-2025.html', premium: false },
+    { id: "present_19", category: 'Power', title: 'North America Offshore Wind Projects Map 2025', date: 'June 19, 2025', source: 'Globe Newswire', link: 'https://www.globenewswire.com/news-release/2025/06/19/3102063/0/en/North-America-Offshore-Wind-Projects-Map-2025-Great-Lakes-East-Coast-California-and-Hawaii.html', premium: false },
+    // Renewables
+    { id: "present_20", category: 'Renewables', title: "Realizing Indonesia's Ambitious Renewable Energy Goals Calls New Approach", date: 'June 19, 2025', source: 'IEEFA', link: 'https://ieefa.org/resources/realizing-indonesias-ambitious-renewable-energy-goals-calls-new-approach', premium: false },
+    { id: "present_21", category: 'Renewables', title: 'North Sea Renewable Energy Wind, Wave and Tidal Projects Map 2025', date: 'June 19, 2025', source: 'Globe Newswire', link: 'https://www.globenewswire.com/news-release/2025/06/19/3102062/0/en/North-Sea-Renewable-Energy-Wind-Wave-and-Tidal-Projects-Map-2025.html', premium: false },
+    { id: "present_22", category: 'Renewables', title: 'EU Greenlights €142.77M in Potential Funding for H2Silesia Hydrogen Project by Polenergia', date: 'June 19, 2025', source: 'FuelCellsWorks', link: 'https://fuelcellsworks.com/2025/06/19/electrolyzer/eu-greenlights-142-77m-in-potential-funding-for-h2silesia-hydrogen-project-by-polenergia', premium: false },
+    { id: "present_23", category: 'Renewables', title: 'WEF: Global Energy Transition Picks Up Pace', date: 'June 19, 2025', source: 'Balkan Green Energy News', link: 'https://balkangreenenergynews.com/wef-global-energy-transition-picks-up-pace/', premium: false },
+    { id: "present_24", category: 'Renewables', title: "Renewable Energy Firm Citicore Inks $120M Deal with Indonesia's Pertamina NRE", date: 'June 19, 2025', source: 'GMA News', link: 'https://www.gmanetwork.com/news/money/companies/949933/renewable-energy-firm-citicore-inks-120-m-deal-with-indonesia-s-pertamina-nre/story/', premium: false },
+    { id: "present_25", category: 'Renewables', title: 'Germany Invests $50 Million in Renewable Energy Workforce Training in Vietnam', date: 'June 19, 2025', source: 'VIR', link: 'https://vir.com.vn/germany-invests-50-million-usd-in-renewable-energy-workforce-training-in-vietnam-130871.html', premium: false },
+    // Company News
+    { id: "present_26", category: 'Company News', title: 'Willow Biosciences Inc. Announces Completion of Transformative Recapitalization Transactions to Form Atlas Energy Corp.', date: 'June 19, 2025', source: 'Newswire', link: 'https://www.newswire.ca/news-releases/willow-biosciences-inc-announces-completion-of-transformative-recapitalization-transactions-to-form-atlas-energy-corp--854265175.html', premium: false },
+    { id: "present_27", category: 'Company News', title: 'Alain Rhéume Announces His Retirement as Chair of the Board of Directors of Boralex', date: 'June 19, 2025', source: 'Globe Newswire', link: 'https://www.globenewswire.com/news-release/2025/06/19/3102197/0/en/Alain-Rh%C3%A9ume-Announces-His-Retirement-as-Chair-of-the-Board-of-Directors-of-Boralex.html', premium: false },
+    { id: "present_28", category: 'Company News', title: 'Electra Commences Early Works to Support Restart of North America\'s Only Cobalt Refinery', date: 'June 19, 2025', source: 'Globe Newswire', link: 'https://www.globenewswire.com/news-release/2025/06/19/3102139/0/en/Electra-Commences-Early-Works-to-Support-Restart-of-North-America-s-Only-Cobalt-Refinery.html', premium: false },
+    { id: "present_29", category: 'Company News', title: 'Nvidia Backs $650M Funding Round for Bill Gates Nuclear Firm TerraPower', date: 'June 19, 2025', source: 'Tribune', link: 'https://tribune.com.pk/story/2551648/nvidia-backs-650m-funding-round-for-bill-gates-nuclear-firm-terrapower', premium: false }
 ];
