@@ -33,14 +33,7 @@ window.presentDayArticles = [
         source: 'Reuters',
         link: 'https://www.reuters.com/business/energy/spains-grid-operator-release-own-report-april-blackout-2025-06-18/'
     },
-    {
-        id: "p5",
-        category: 'Renewables',
-        title: 'Clean Energy Has Fans in Trump\'s America, Complicating Budget Talks',
-        date: 'June 18, 2025',
-        source: 'Reuters',
-        link: 'https://www.reuters.com/sustainability/climate-energy/clean-energy-has-fans-trumps-america-complicating-budget-talks-2025-06-18/'
-    },
+
     {
         id: "p6",
         category: 'Company News',
