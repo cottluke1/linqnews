@@ -502,10 +502,7 @@
             paginationContainer.appendChild(createButton('&rarr;', page + 1, page === totalPages));
         }
 
-        /**
-         * Handles clicks on category filter buttons.
-         * @param {Event} e The click event.
-         */
+        
         function handleCategoryFilter(e) {
             const button = e.target.closest('.filter-button-desktop, .filter-button-mobile');
             if (!button) return;
@@ -521,14 +518,11 @@
             displayArticlesForPage(currentPage);
         }
         
-        /**
-         * Toggles an article's favorite status in Firestore.
-         * @param {string} articleId The ID of the article to toggle.
-         */
+
         async function toggleFavorite(articleId) {
             const user = auth.currentUser;
             if (!user) {
-                window.location.href = 'login.html'; // Redirect to login if not authenticated
+                window.location.href = 'login.html';
                 return;
             }
             const idStr = String(articleId);
@@ -546,9 +540,7 @@
             }
         }
 
-        /**
-         * Updates the visual state of all favorite icons on the page.
-         */
+
         function updateFavoriteIcons() {
             document.querySelectorAll('.favorite-btn').forEach(button => {
                 const isFavorited = favorites.includes(String(button.dataset.id));
@@ -570,11 +562,11 @@
             auth.onAuthStateChanged(user => {
                 if (unsubscribeUserListener) unsubscribeUserListener(); // Detach previous listener
                 if (user) {
-                    // User is signed in, set up a real-time listener for their data
+
                     unsubscribeUserListener = db.collection('users').doc(user.uid).onSnapshot(doc => {
                         isSubscribed = doc.exists && doc.data().isSubscribed === true;
                         favorites = doc.exists ? doc.data().bookmarks || [] : [];
-                        initializeAppLogic(); // Re-render the page with the latest data
+                        initializeAppLogic();
                     }, error => {
                         console.error("Error with real-time listener:", error);
                         isSubscribed = false;
@@ -582,7 +574,7 @@
                         initializeAppLogic();
                     });
                 } else { 
-                    // User is signed out, reset state and re-render
+
                     isSubscribed = false;
                     favorites = [];
                     initializeAppLogic();
