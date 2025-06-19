@@ -68,8 +68,7 @@
         </div>
 
         <div id="earnings-container">
-             <!-- Earnings cards will be dynamically inserted here -->
-        </div>
+             </div>
     </main>
 
     <footer class="footer">
@@ -203,6 +202,10 @@
             const cardEl = document.createElement('div');
             cardEl.className = 'earnings-card';
             
+            if (!isSubscribed) {
+                cardEl.classList.add('locked');
+            }
+            
             const initials = call.ticker || call.company.substring(0, 3).toUpperCase();
             const dateDisplay = call.date === 'TBD' ? 'TBD' : new Date(call.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
             const timeDisplay = call.time === 'TBD' ? 'TBD' : call.time;
@@ -242,6 +245,13 @@
                         <button class="action-btn add-to-calendar-btn" data-company="${call.company}" data-ticker="${call.ticker}" data-date="${call.date}" data-time="${call.time}" data-timezone="ET" data-period="${call.period}">
                             <i class="fas fa-calendar-plus"></i> Add to Calendar
                         </button>
+                    </div>
+                </div>
+                 <div class="locked-overlay" onclick="location.href='linqplus.html'">
+                    <div class="locked-overlay-content">
+                        <h4>Premium Feature</h4>
+                        <p>Upgrade to view the upcoming earnings calendar.</p>
+                        <a href="linqplus.html" class="upgrade-btn">Go Premium</a>
                     </div>
                 </div>`;
             return cardEl;
