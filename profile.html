@@ -63,6 +63,7 @@
                     <a href="#profile" class="nav-tab active-link">Profile</a>
                     <a href="#subscription" class="nav-tab">Subscription</a>
                     <a href="#security" class="nav-tab">Security</a>
+                    <a href="#contact" class="nav-tab">Contact</a>
                 </nav>
             </div>
 
@@ -71,10 +72,6 @@
                     <div class="card-body flex flex-col md:flex-row items-center gap-8">
                         <div class="avatar-section">
                             <img src="https://placehold.co/140x140/1A1A1A/FFFFFF?text=U&font=inter" alt="User Avatar" class="avatar" id="profileAvatar">
-                            <input type="file" id="avatarUpload" class="hidden" accept="image/png, image/jpeg">
-                            <button id="changeAvatarButton" class="btn btn-glass mt-4 w-full">Change Picture</button>
-                            <div id="avatar-form-message" class="mt-2"></div>
-                            <button id="saveAvatarButton" class="btn btn-primary mt-2 w-full hidden">Save Picture</button>
                         </div>
                         <div class="w-full flex-grow grid grid-cols-1 sm:grid-cols-2 gap-6 text-center md:text-left">
                             <div class="info-item">
@@ -100,7 +97,7 @@
                      <div class="card-body">
                          <p class="text-lg">Your current plan: <span id="current-plan-name" class="font-bold text-cyan-400">Loading...</span></p>
                          <p class="text-gray-400" id="subscription-status-text">Checking your subscription status.</p>
-                         <div class="mt-6 flex flex-wrap gap-4" id="subscriptionActions">
+                         <div class="mt-6" id="subscriptionActions">
                              <a id="upgrade-plan-button" href="linqplus.html" class="btn btn-glass">Upgrade to Premium</a>
                          </div>
                      </div>
@@ -127,6 +124,20 @@
                     </div>
                 </div>
             </div>
+             <div id="contact" class="content-section">
+                <div class="card glass-ui">
+                    <div class="card-header">
+                        <h3>Contact Us</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-lg">For any questions, support, or inquiries, please reach out to our support team.</p>
+                        <div class="mt-4 info-item">
+                            <label>Support Email</label>
+                            <a href="mailto:support@linqnews.com" class="text-cyan-400 hover:underline text-xl font-semibold">support@linqnews.com</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -136,6 +147,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Firebase configuration
             const firebaseConfig = {
                 apiKey: "AIzaSyD_FCx8sIkrCoQMoKm5xQIvlyAmlqptETk",
                 authDomain: "linq-b27a8.firebaseapp.com",
@@ -149,40 +161,19 @@
             const db = firebase.firestore();
             const storage = firebase.storage();
 
+            // DOM elements
             const navTabs = document.querySelectorAll('.nav-tab');
             const contentSections = document.querySelectorAll('.content-section');
-            const changeAvatarButton = document.getElementById('changeAvatarButton');
-            const avatarUploadInput = document.getElementById('avatarUpload');
-            const saveAvatarButton = document.getElementById('saveAvatarButton');
             const profileAvatar = document.getElementById('profileAvatar');
-            const avatarFormMessage = document.getElementById('avatar-form-message');
             const logoutButton = document.getElementById('logoutButton');
 
-            let selectedFile = null;
+            // State
             let unsubscribeUserListener = null;
 
+            // Event listeners
             if(logoutButton) logoutButton.addEventListener('click', () => auth.signOut());
-            if(changeAvatarButton) changeAvatarButton.addEventListener('click', () => avatarUploadInput.click());
-            
-            if (avatarUploadInput) {
-                avatarUploadInput.addEventListener('change', (e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                        selectedFile = file;
-                        const reader = new FileReader();
-                        reader.onload = (event) => {
-                            profileAvatar.src = event.target.result;
-                        };
-                        reader.readAsDataURL(file);
-                        saveAvatarButton.classList.remove('hidden');
-                    }
-                });
-            }
 
-            if(saveAvatarButton) {
-                saveAvatarButton.addEventListener('click', handleAvatarUpload);
-            }
-
+            // Auth state change handler
             auth.onAuthStateChanged(user => {
                 if (user) {
                     if (unsubscribeUserListener) unsubscribeUserListener();
@@ -194,12 +185,14 @@
                     }, error => {
                         console.error("Error listening to user document:", error);
                         populateUserProfile(user, {});
+                        updateSubscriptionInfo({});
                     });
                 } else {
                     window.location.href = 'login.html';
                 }
             });
 
+            // Functions
             function populateUserProfile(user, userData) {
                 document.getElementById('profileDisplayName').textContent = userData.displayName || user.displayName || 'N/A';
                 document.getElementById('profileEmail').textContent = userData.email || user.email || 'N/A';
@@ -216,36 +209,6 @@
                 }
             }
             
-            async function handleAvatarUpload() {
-                const user = auth.currentUser;
-                if (!user || !selectedFile) return;
-
-                saveAvatarButton.disabled = true;
-                saveAvatarButton.textContent = 'Uploading...';
-                showAvatarMessage('Uploading, please wait...', 'success');
-
-                const filePath = `profile_pictures/${user.uid}/${selectedFile.name}`;
-                const fileRef = storage.ref(filePath);
-                
-                try {
-                    const uploadTask = await fileRef.put(selectedFile);
-                    const downloadURL = await uploadTask.ref.getDownloadURL();
-
-                    await user.updateProfile({ photoURL: downloadURL });
-                    await db.collection('users').doc(user.uid).update({ photoURL: downloadURL });
-
-                    showAvatarMessage('Profile picture updated!', 'success');
-                    selectedFile = null;
-                    saveAvatarButton.classList.add('hidden');
-                } catch (error) {
-                    console.error("Avatar upload error:", error);
-                    showAvatarMessage('Upload failed. Please try again.', 'error');
-                } finally {
-                    saveAvatarButton.disabled = false;
-                    saveAvatarButton.textContent = 'Save Picture';
-                }
-            }
-
             function updateSubscriptionInfo(userData) {
                 const planNameEl = document.getElementById('current-plan-name');
                 const statusTextEl = document.getElementById('subscription-status-text');
@@ -254,18 +217,16 @@
                 if (userData && userData.isSubscribed) {
                     planNameEl.textContent = 'Premium';
                     statusTextEl.textContent = 'Your premium subscription is active.';
-                    subscriptionActionsEl.innerHTML = '<a href="#" class="btn btn-glass">Manage Subscription</a>';
+                    subscriptionActionsEl.innerHTML = `
+                        <div class="flex flex-col items-start">
+                            <a href="mailto:support@linqnews.com" class="btn btn-glass">Cancel Subscription</a>
+                            <p class="text-gray-400 mt-3 text-sm">To cancel your subscription, please email us at support@linqnews.com and we will process your request.</p>
+                        </div>`;
                 } else {
                     planNameEl.textContent = 'Free Plan';
                     statusTextEl.textContent = 'You have access to basic news and community features.';
                     subscriptionActionsEl.innerHTML = '<a href="linqplus.html" class="btn btn-glass">Upgrade to Premium</a>';
                 }
-            }
-
-            function showAvatarMessage(message, type) {
-                avatarFormMessage.textContent = message;
-                avatarFormMessage.className = `mt-2 ${type}`;
-                avatarFormMessage.style.display = 'block';
             }
 
             function showSection(sectionId) {
@@ -278,6 +239,7 @@
                     if (link.getAttribute('href') === `#${sectionId}`) link.classList.add('active-link');
                 });
             }
+
             navTabs.forEach(link => {
                 link.addEventListener('click', e => {
                     e.preventDefault();
@@ -288,12 +250,14 @@
                     }
                 });
             });
+
             function activateSectionFromHash() {
                 let hash = window.location.hash.substring(1);
                 const validHashes = Array.from(navTabs).map(t => t.getAttribute('href').substring(1));
                 if (!hash || !validHashes.includes(hash)) hash = 'profile';
                 showSection(hash);
             }
+            
             activateSectionFromHash();
             window.addEventListener('hashchange', activateSectionFromHash);
         });
