@@ -20,9 +20,44 @@
         main { flex-grow: 1; }
         main .container { padding-top: 2.5rem; padding-bottom: 4rem; }
         .glass-ui { background: rgba(22, 22, 22, 0.6); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
-        .profile-nav-container { display: flex; justify-content: center; margin-bottom: 2.5rem; }
-        .profile-nav { display: inline-flex; gap: 8px; padding: 8px; border-radius: var(--border-radius-lg); }
-        .nav-tab { padding: 12px 24px; font-weight: 600; color: #A0A0A0; cursor: pointer; border-radius: var(--border-radius-md); transition: all 0.2s ease-in-out; display: flex; align-items: center; gap: 8px; border: 2px solid transparent; }
+        
+        /* Mobile Navigation Fix: Allows tabs to wrap on smaller screens */
+        .profile-nav-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .profile-nav {
+            display: flex;
+            flex-wrap: wrap; /* This is the key change to allow wrapping */
+            justify-content: center; /* Center the tabs as they wrap */
+            gap: 8px;
+            padding: 8px;
+            border-radius: var(--border-radius-lg);
+        }
+        
+        .nav-tab {
+            padding: 10px 16px; /* Padding for smaller screens */
+            font-weight: 600;
+            color: #A0A0A0;
+            cursor: pointer;
+            border-radius: var(--border-radius-md);
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid transparent;
+        }
+
+        /* On medium screens and up, restore larger padding */
+        @media (min-width: 768px) {
+            .nav-tab {
+                padding: 12px 24px;
+            }
+        }
+        /* End Mobile Navigation Fix */
+
         .nav-tab:hover { background-color: rgba(255, 255, 255, 0.05); color: #FFFFFF; }
         .nav-tab.active-link { color: #FFFFFF; background-color: rgba(0, 191, 255, 0.15); border-color: var(--accent-cyan); }
         .content-section { display: none; animation: fadeIn 0.5s ease-in-out; }
@@ -34,9 +69,6 @@
         .card-body { padding: 2rem 1.5rem; }
         @media (min-width: 768px) { .card-body { padding: 30px; } }
         .avatar-section { position: relative; text-align: center; }
-        /* This class ensures the avatar is a perfect circle. 
-           Both width and height are equal (140px) and border-radius is 50%. 
-           object-fit: cover handles non-square images without distortion. */
         .avatar { width: 140px; height: 140px; border-radius: 50%; border: 4px solid rgba(255, 255, 255, 0.1); object-fit: cover; margin: 0 auto; }
         .info-item label { display: block; color: #A0A0A0; font-size: 0.9em; margin-bottom: 6px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
         .info-item p { color: #F5F5F5; font-size: 1.1em; margin: 0; font-weight: 500;}
