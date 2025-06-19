@@ -3,7 +3,7 @@
 // across different pages like community.html and favorites.html.
 
 window.communityPostsData = [
-        {
+    {
         id: "1935719969787969961",
         title: "Such a massive split in petroleum product performance over the past week",
         meta: "Rory Johnston • June 19, 2025",
