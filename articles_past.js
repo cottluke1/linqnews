@@ -47,6 +47,9 @@ window.pastArticles = [
         { id: "past_d2_41", category: 'Power', title: 'Power Grid Analysis and Energy Storage Solutions', date: 'June 18, 2025', source: 'arXiv', link: 'https://arxiv.org/abs/2411.16962', premium: true },
         { id: "past_d2_42", category: 'Renewables', title: 'Q1 2025 Energy Sector Earnings: Key Highlights and Market Reactions', date: 'June 18, 2025', source: 'YCharts', link: 'https://get.ycharts.com/resources/blog/q1-2025-energy-sector-earnings-key-highlights-market-reactions/', premium: true },
         { id: "past_d2_43", category: 'Company News', title: 'Financial Times Energy Market Analysis', date: 'June 18, 2025', source: 'Financial Times', link: 'https://www.ft.com/content/814baa49-3093-4aea-8227-2da9419b6a3f', premium: true },
+    ],
+
+    [
         { id: "past_d3_1", category: 'Crude Oil', title: 'Israel-Iran Tensions Impact: Crude Oil Climbs Over 1% Amid Geopolitical Concerns', date: 'June 17, 2025', source: 'Times of India', link: 'https://timesofindia.indiatimes.com/business/india-business/israel-iran-tensions-impact-crude-oil-climbs-over-1-amid-geopoliitcal-concerns-evacuation-fears-hit-global-markets/articleshow/121909149.cms', premium: true },
         { id: "past_d3_2", category: 'Crude Oil', title: 'Oil Prices Add to Gains After Israel Hits Iran Energy Facilities', date: 'June 17, 2025', source: 'MarketWatch', link: 'https://www.marketwatch.com/story/oil-prices-add-to-gains-after-israel-hits-iran-energy-facilities-stocks-taking-turmoil-in-stride-abfb2cb3', premium: true },
         { id: "past_d3_3", category: 'Natural Gas', title: 'Natural Gas Price Outlook: Natural Gas Continues to See Buying', date: 'June 17, 2025', source: 'FX Empire', link: 'https://www.fxempire.com/forecasts/article/natural-gas-price-outlook-natural-gas-continues-to-see-buying-1526732', premium: true },
