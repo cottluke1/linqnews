@@ -1,5 +1,5 @@
 window.pastArticles = [
-        [
+     [
         // All present and premium articles as premium, added June 20, 2025
         { id: "past_d2_1", category: 'Crude Oil', title: 'Oil Set to Rise for Third Week on Escalating Israel-Iran Conflict', date: 'June 20, 2025', source: 'Reuters', link: 'https://www.reuters.com/world/middle-east/oil-set-rise-third-week-escalating-israel-iran-conflict-2025-06-20/?utm_source=chatgpt.com', premium: true },
         { id: "past_d2_2", category: 'Crude Oil', title: 'Global Markets Oil Graphic', date: 'June 20, 2025', source: 'Reuters', link: 'https://www.reuters.com/business/energy/global-markets-oil-graphic-2025-06-20/?utm_source=chatgpt.com', premium: true },
