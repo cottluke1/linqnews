@@ -3,8 +3,6 @@
 // across different pages like community.html and favorites.html.
 
 window.communityPostsData = [
-```javascript
-window.communityPostsData = [
   {
     id: "1937190807737356767",
     title: "BREAKING: Oil prices fall over -3% as Iran launches missiles at US bases in Qatar.",
