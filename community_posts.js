@@ -3,48 +3,48 @@
 // across different pages like community.html and favorites.html.
 
 window.communityPostsData = [
-  {
-    id: "1937190807737356767",
-    title: "BREAKING: Oil prices fall over -3% as Iran launches missiles at US bases in Qatar.",
-    meta: "The Kobeissi Letter • June 23, 2025",
-    category: "Crude Oil",
-    tweetContent: `<blockquote class="twitter-tweet"><p lang="en" dir="ltr">BREAKING: Oil prices fall over -3% as Iran launches missiles at US bases in Qatar.<br><br>The market is pricing-out uncertainty as Iran responds.<br><br>All signs continue to point toward a short-lived war. <a href="https://t.co/UKe38V0rj0">pic.twitter.com/UKe38V0rj0</a></p>&mdash; The Kobeissi Letter (@KobeissiLetter) <a href="https://twitter.com/KobeissiLetter/status/1937190807737356767?ref_src=twsrc%5Etfw">June 23, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`
-  },
-  {
-    id: "1937053992196165899",
-    title: "Oil bounce remains muted (+3.7% YTD, -7.8% in last 12 months).",
-    meta: "Daniel Lacalle • June 23, 2025",
-    category: "Market Analysis",
-    tweetContent: `<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Oil bounce remains muted (+3.7% YTD, -7.8% in last 12 months).<br><br>Shipping costs reflect rising geopolitical risk.<br><br>via Bloomberg <a href="https://t.co/Ivt7gqbmgQ">pic.twitter.com/Ivt7gqbmgQ</a></p>&mdash; Daniel Lacalle (@dlacalle_IA) <a href="https://twitter.com/dlacalle_IA/status/1937053992196165899?ref_src=twsrc%5Etfw">June 23, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`
-  },
-  {
-    id: "1937215137556861035",
-    title: "Oil prices declined by more than 6%😂😂😂",
-    meta: "Anas Alhajji • June 23, 2025",
-    category: "Crude Oil",
-    tweetContent: `<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Oil prices declined by more than 6%😂😂😂 <a href="https://t.co/TCarfCUaD3">https://t.co/TCarfCUaD3</a></p>&mdash; Anas Alhajji (@anasalhajji) <a href="https://twitter.com/anasalhajji/status/1937215137556861035?ref_src=twsrc%5Etfw">June 23, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`
-  },
-  {
-    id: "1937152610634743850",
-    title: "WTI is currently down 1% trading at $73 a barrel.",
-    meta: "annmarie hordern • June 23, 2025",
-    category: "Crude Oil",
-    tweetContent: `<blockquote class="twitter-tweet"><p lang="en" dir="ltr">WTI is currently down 1% trading at $73 a barrel. <a href="https://t.co/LUf8bk58hZ">pic.twitter.com/LUf8bk58hZ</a></p>&mdash; annmarie hordern (@annmarie) <a href="https://twitter.com/annmarie/status/1937152610634743850?ref_src=twsrc%5Etfw">June 23, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`
-  },
-  {
-    id: "1937208858319221003",
-    title: "What a fakeout in Crude Oil 🚨 The trendline holds ✅",
-    meta: "Barchart • June 23, 2025",
-    category: "Market Analysis",
-    tweetContent: `<blockquote class="twitter-tweet"><p lang="en" dir="ltr">What a fakeout in Crude Oil 🚨 The trendline holds ✅ <a href="https://t.co/k1LCnBVieF">pic.twitter.com/k1LCnBVieF</a></p>&mdash; Barchart (@Barchart) <a href="https://twitter.com/Barchart/status/1937208858319221003?ref_src=twsrc%5Etfw">June 23, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`
-  },
-  {
-    id: "1937205360797929902",
-    title: "OIL \"The most obvious result of the conflict is that shorts will get run out of the market...\"",
-    meta: "Warren Pies • June 23, 2025",
-    category: "Market Analysis",
-    tweetContent: `<blockquote class="twitter-tweet"><p lang="en" dir="ltr">OIL<br><br>&quot;The most obvious result of the conflict is that shorts will get run out of the market. W/o a full curtailment of Iranian production, the market will be left w/ little futures support and the same fundamental backdrop.&quot;<br><br>Excerpt from our 6.19 client note <a href="https://t.co/E2aJcKiWrC">pic.twitter.com/E2aJcKiWrC</a></p>&mdash; Warren Pies (@WarrenPies) <a href="https://twitter.com/WarrenPies/status/1937205360797929902?ref_src=twsrc%5Etfw">June 23, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`
-  },
+    {
+      id: "1937190807737356767",
+      title: "BREAKING: Oil prices fall over -3% as Iran launches missiles at US bases in Qatar.",
+      meta: "The Kobeissi Letter • June 23, 2025",
+      category: "Crude Oil",
+      tweetContent: `<blockquote class="twitter-tweet"><p lang="en" dir="ltr">BREAKING: Oil prices fall over -3% as Iran launches missiles at US bases in Qatar.<br><br>The market is pricing-out uncertainty as Iran responds.<br><br>All signs continue to point toward a short-lived war. <a href="https://t.co/UKe38V0rj0">pic.twitter.com/UKe38V0rj0</a></p>&mdash; The Kobeissi Letter (@KobeissiLetter) <a href="https://twitter.com/KobeissiLetter/status/1937190807737356767?ref_src=twsrc%5Etfw">June 23, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`
+    },
+    {
+      id: "1937053992196165899",
+      title: "Oil bounce remains muted (+3.7% YTD, -7.8% in last 12 months).",
+      meta: "Daniel Lacalle • June 23, 2025",
+      category: "Market Analysis",
+      tweetContent: `<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Oil bounce remains muted (+3.7% YTD, -7.8% in last 12 months).<br><br>Shipping costs reflect rising geopolitical risk.<br><br>via Bloomberg <a href="https://t.co/Ivt7gqbmgQ">pic.twitter.com/Ivt7gqbmgQ</a></p>&mdash; Daniel Lacalle (@dlacalle_IA) <a href="https://twitter.com/dlacalle_IA/status/1937053992196165899?ref_src=twsrc%5Etfw">June 23, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`
+    },
+    {
+      id: "1937215137556861035",
+      title: "Oil prices declined by more than 6%😂😂😂",
+      meta: "Anas Alhajji • June 23, 2025",
+      category: "Crude Oil",
+      tweetContent: `<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Oil prices declined by more than 6%😂😂😂 <a href="https://t.co/TCarfCUaD3">https://t.co/TCarfCUaD3</a></p>&mdash; Anas Alhajji (@anasalhajji) <a href="https://twitter.com/anasalhajji/status/1937215137556861035?ref_src=twsrc%5Etfw">June 23, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`
+    },
+    {
+      id: "1937152610634743850",
+      title: "WTI is currently down 1% trading at $73 a barrel.",
+      meta: "annmarie hordern • June 23, 2025",
+      category: "Crude Oil",
+      tweetContent: `<blockquote class="twitter-tweet"><p lang="en" dir="ltr">WTI is currently down 1% trading at $73 a barrel. <a href="https://t.co/LUf8bk58hZ">pic.twitter.com/LUf8bk58hZ</a></p>&mdash; annmarie hordern (@annmarie) <a href="https://twitter.com/annmarie/status/1937152610634743850?ref_src=twsrc%5Etfw">June 23, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`
+    },
+    {
+      id: "1937208858319221003",
+      title: "What a fakeout in Crude Oil 🚨 The trendline holds ✅",
+      meta: "Barchart • June 23, 2025",
+      category: "Market Analysis",
+      tweetContent: `<blockquote class="twitter-tweet"><p lang="en" dir="ltr">What a fakeout in Crude Oil 🚨 The trendline holds ✅ <a href="https://t.co/k1LCnBVieF">pic.twitter.com/k1LCnBVieF</a></p>&mdash; Barchart (@Barchart) <a href="https://twitter.com/Barchart/status/1937208858319221003?ref_src=twsrc%5Etfw">June 23, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`
+    },
+    {
+      id: "1937205360797929902",
+      title: "OIL \"The most obvious result of the conflict is that shorts will get run out of the market...\"",
+      meta: "Warren Pies • June 23, 2025",
+      category: "Market Analysis",
+      tweetContent: `<blockquote class="twitter-tweet"><p lang="en" dir="ltr">OIL<br><br>&quot;The most obvious result of the conflict is that shorts will get run out of the market. W/o a full curtailment of Iranian production, the market will be left w/ little futures support and the same fundamental backdrop.&quot;<br><br>Excerpt from our 6.19 client note <a href="https://t.co/E2aJcKiWrC">pic.twitter.com/E2aJcKiWrC</a></p>&mdash; Warren Pies (@WarrenPies) <a href="https://twitter.com/WarrenPies/status/1937205360797929902?ref_src=twsrc%5Etfw">June 23, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`
+    },
     {
         id: "1935719969787969961",
         title: "Such a massive split in petroleum product performance over the past week",
